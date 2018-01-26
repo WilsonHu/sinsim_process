@@ -267,9 +267,40 @@
                             scope="scope"
                             label="已计划 / 总工序" >
                         <template scope="scope" >
-                            <span>{{scope.row.planedTaskNum}}/{{scope.row.totalTaskNum}}</span>
+                            <el-button style="font-size: 14px; font-weight: bold" type="primary" size="mini">{{scope.row.planedTaskNum}} / {{scope.row.totalTaskNum}}</el-button>
                         </template>
-
+                    </el-table-column >
+                    <el-table-column
+                            align="center"
+                            label="已计划工序状态" >
+                            <el-table-column
+                                    align="center"
+                                    scope="scope"
+                                    label="未开始" >
+                                <template scope="scope" >
+                                    <el-tag type="danger" style="font-weight: bold" v-if="getInitialTaskNum(scope.row) != ''">{{getInitialTaskNum(scope.row)}}</el-tag>
+                                </template>
+                            </el-table-column >
+                            <el-table-column
+                                    align="center"
+                                    scope="scope"
+                                    label="安装" >
+                                <template scope="scope" >
+                                    <el-tag type="warning" style="font-weight: bold">{{scope.row.installingTaskNum}}</el-tag>
+                                    <el-tag type="success" style="font-weight: bold">{{scope.row.installedTaskNum}}</el-tag>
+                                    <el-tag type="danger" style="font-weight: bold">{{scope.row.installAbnormalTaskNum}}</el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    scope="scope"
+                                    label="质检" >
+                                <template scope="scope" >
+                                    <el-tag type="warning" style="font-weight: bold">{{scope.row.qualityDoingTaskNum}}</el-tag>
+                                    <el-tag type="success" style="font-weight: bold">{{scope.row.qualityDoneTaskNum}}</el-tag>
+                                    <el-tag type="danger" style="font-weight: bold">{{scope.row.qualityAbnormalTaskNum}}</el-tag>
+                                </template>
+                            </el-table-column>
                     </el-table-column >
                     <el-table-column
                             align="center"
@@ -336,6 +367,58 @@
                 </div >
             </el-tab-pane>
         </el-tabs>
+        <el-dialog :visible.sync="doPlaningDialogVisible" fullscreen append-to-body>
+            <el-form :model="machineDoPlaning" label-position="right" label-width="110px" >
+                <el-row >
+                    <el-col :span="4">
+                        <el-form-item label="需求单号:" >
+                            <el-input v-model="machineDoPlaning.orderNum"
+                                      placeholder="需求单号"
+                                      auto-complete="off"
+                                      disabled></el-input >
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="4" >
+                        <el-form-item label="机器编号:" >
+                            <el-input v-model="machineDoPlaning.machineId"
+                                      placeholder="机器编号"
+                                      auto-complete="off"
+                                      disabled></el-input >
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="4" >
+                        <el-form-item label="机型:" >
+                            <el-select v-model="machineDoPlaning.machineType" disabled >
+                                <el-option
+                                        v-for="item in allMachineType"
+                                        :value="item.id"
+                                        :label="item.name" >
+                                </el-option >
+                            </el-select >
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="4" :offset="1">
+                        <el-form-item label="合同交货时间:" >
+                            <span style="font-size: 15px" >{{machineDoPlaning.contractShipDate | filterDateString}}</span >
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="4" :offset="1">
+                        <el-form-item label="计划交货时间:" >
+                            <span style="font-size: 15px" >{{machineDoPlaning.planShipDate | filterDateString}}</span >
+                        </el-form-item >
+                    </el-col >
+                </el-row >
+            </el-form >
+            <el-row style="margin-top: 5px">
+                <el-col :span="7" :style="getProcessViewStyle()"></el-col>
+
+                <el-col :span="17"></el-col>
+            </el-row>
+            <span slot="footer" class="dialog-footer" >
+                    <el-button @click="doPlaningDialogVisible = false" icon="el-icon-back" >取 消</el-button >
+                    <el-button type="primary" @click="savePlaning" icon="el-icon-check" >确 定</el-button >
+                </span >
+        </el-dialog >
     </el-main >
 </template >
 
@@ -359,6 +442,8 @@
                 //机器类型
                 allMachineType:[],
 
+                pageHeight: 0,
+
                 formLabelWidth: '100px',
                 filters: {
                     orderNum:'',
@@ -370,6 +455,9 @@
                 },
                 allRoles: [],
                 loadingUI: false,
+
+                doPlaningDialogVisible:false,
+                machineDoPlaning:{},
 
                 machineStatusList : MachineStatusList,
                 searchDateType : SearchDateType,
@@ -406,7 +494,33 @@
         },
         methods: {
 
-            doPlan(machineItem) {
+            getProcessViewStyle() {
+                if(this.pageHeight == 0) {
+                    return "border: solid 1px;border-color:gray; background-color: white; height: 500px";
+                }else {
+                    return "border: solid 1px;border-color:gray; background-color: white; height:" + this.pageHeight + "px";
+                }
+            },
+            getInitialTaskNum(task) {
+                if(task != null) {
+                    let num = task.planedTaskNum - task.installingTaskNum - task.installedTaskNum
+                                - task.qualityDoingTaskNum - task.qualityDoneTaskNum - task.installAbnormalTaskNum - task.qualityAbnormalTaskNum;
+                    if(num >=0) {
+                        return num;
+                    }else {
+                        return "";
+                    }
+                }else {
+                    return "";
+                }
+            },
+
+            doPlan(planItem) {
+                this.pageHeight = document.documentElement.scrollHeight - 215;
+                this.doPlaningDialogVisible = true;
+                this.machineDoPlaning = copyObjectByJSON(planItem);
+            },
+            savePlaning() {
 
             },
 
