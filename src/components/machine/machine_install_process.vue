@@ -206,7 +206,7 @@
                                 <el-col :span="24" :offset="0">
                                     <el-form-item label="流程模板：">
                                         <el-select
-                                                :clearable="true"
+                                                clearable
                                                 v-model="addForm.groupId"
                                                 placeholder="请选择">
                                             <el-option

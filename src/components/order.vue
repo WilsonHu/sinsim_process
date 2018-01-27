@@ -223,7 +223,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="销售人员：" :label-width="formLabelWidth" >
                                 <!--<el-select v-model="form.sellman"-->
-                                <!--:clearable="true"-->
+                                <!--clearable-->
                                 <!--placeholder="请选择" >-->
                                 <!--<el-option-->
                                 <!--v-for="item in allQualification"-->
@@ -245,7 +245,7 @@
                                 <el-select
                                         disabled
                                         v-model="form.packageMethod"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in packageModeList"
@@ -302,7 +302,7 @@
                                 <el-select
                                         disabled
                                         v-model="form.country"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in countryList"
@@ -328,7 +328,7 @@
                                         disabled
                                         style="width: 100%"
                                         v-model="form.machineType"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in allMachineType"
@@ -407,7 +407,7 @@
                                         disabled
                                         style="width: 100%"
                                         v-model="form.orderDetail.specialTowelColor"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in specialTowelColorList"
@@ -424,7 +424,7 @@
                                         disabled
                                         style="width: 100%"
                                         v-model="form.orderDetail.specialTowelDaxle"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in specialTowelDaxleList"
@@ -440,7 +440,7 @@
                                         disabled
                                         style="width: 100%"
                                         v-model="form.orderDetail.specialTowelHaxle"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in specialTowelHaxleList"
@@ -456,7 +456,7 @@
                                         disabled
                                         style="width: 100%"
                                         v-model="form.orderDetail.specialTowelMotor"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in specialTowelMotorList"
@@ -472,7 +472,7 @@
                                         disabled
                                         style="width: 100%"
                                         v-model="form.orderDetail.specialTapingHead"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in specialTapingHeadList"
@@ -488,7 +488,7 @@
                                         disabled
                                         style="width: 100%"
                                         v-model="form.orderDetail.specialTowelNeedle"
-                                        :clearable="true"
+                                        clearable
                                         placeholder="请选择" >
                                     <el-option
                                             v-for="item in specialTowelNeedleList"
@@ -510,7 +510,7 @@
                         <el-col :span="6" >
                             <el-form-item label="电脑：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.electricPc"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -524,7 +524,7 @@
                         <el-col :span="6" >
                             <el-form-item label="语言：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.PClanguage"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -538,7 +538,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="主电机：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.electricMotor"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -553,7 +553,7 @@
                             <el-form-item label="XY电机：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.electricMotorXy"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -569,7 +569,7 @@
                             <el-form-item label="剪线方式：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.electricTrim"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -584,7 +584,7 @@
                         <el-col :span="6" >
                             <el-form-item label="电源：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.electricPower"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -598,7 +598,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="按钮开关：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.electricSwitch"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -613,7 +613,7 @@
                             <el-form-item label="加油系统：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.electricOil"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -638,7 +638,7 @@
                             <el-form-item label="夹线器：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.axleSplit"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -654,7 +654,7 @@
                             <el-form-item label="面板：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.axlePanel"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -669,7 +669,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="机针：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.axleNeedle"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -683,7 +683,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="机头导轨：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.axleRail"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -697,7 +697,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="底检方式：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.axleDownCheck"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -711,7 +711,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="旋梭：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.axleHook"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -726,7 +726,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="跳跃方式：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.axleJump"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -741,7 +741,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="面线夹持：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.axleUpperThread"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -776,7 +776,7 @@
                             <el-form-item label="机架颜色：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.frameworkColor"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -792,7 +792,7 @@
                             <el-form-item label="台板：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.frameworkPlaten"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -808,7 +808,7 @@
                             <el-form-item label="台板颜色：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.frameworkPlatenColor"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -824,7 +824,7 @@
                             <el-form-item label="吊环：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.frameworkRing"
-                                               :clearable="true"
+                                               clearable
 
                                                disabled
                                                placeholder="请选择" >
@@ -841,7 +841,7 @@
                             <el-form-item label="电脑托架：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.frameworkBracket"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -857,7 +857,7 @@
                             <el-form-item label="急停装置：" :label-width="formLabelWidth" >
                                 <template scope="scope" >
                                     <el-select v-model="form.orderDetail.frameworkStop"
-                                               :clearable="true"
+                                               clearable
                                                disabled
                                                placeholder="请选择" >
                                         <el-option
@@ -872,7 +872,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="日光灯：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.frameworkLight"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -894,7 +894,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="驱动类型：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.driverType" style="width: 100%;"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -908,7 +908,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="驱动方式：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.driverMethod"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -922,7 +922,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="绷孔架：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.driverReelHole"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option
@@ -936,7 +936,7 @@
                         <el-col :span="6" :offset="0" >
                             <el-form-item label="绷架：" :label-width="formLabelWidth" >
                                 <el-select v-model="form.orderDetail.driverReel"
-                                           :clearable="true"
+                                           clearable
                                            disabled
                                            placeholder="请选择" >
                                     <el-option

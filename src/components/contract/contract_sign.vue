@@ -359,7 +359,7 @@
                                                             <el-form-item label="国家：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'country', false)">
                                                                 <el-select v-model="item.machineOrder.country"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -386,7 +386,7 @@
                                                                 <el-select
                                                                         style="width: 100%"
                                                                         v-model="item.machineOrder.machineType"
-                                                                        :clearable="true"
+                                                                        clearable
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                         placeholder="请选择" >
                                                                     <el-option
@@ -468,7 +468,7 @@
                                                                         style="width: 100%"
                                                                         v-model="item.orderDetail.specialTowelColor"
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        :clearable="true"
+                                                                        clearable
                                                                         placeholder="请选择" >
                                                                     <el-option
                                                                             v-for="item in specialTowelColorList"
@@ -485,7 +485,7 @@
                                                                 <el-select
                                                                         style="width: 100%"
                                                                         v-model="item.orderDetail.specialTowelDaxle"
-                                                                        :clearable="true"
+                                                                        clearable
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                         placeholder="请选择" >
                                                                     <el-option
@@ -504,7 +504,7 @@
                                                                         style="width: 100%"
                                                                         v-model="item.orderDetail.specialTowelHaxle"
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        :clearable="true"
+                                                                        clearable
                                                                         placeholder="请选择" >
                                                                     <el-option
                                                                             v-for="item in specialTowelHaxleList"
@@ -522,7 +522,7 @@
                                                                         style="width: 100%"
                                                                         v-model="item.orderDetail.specialTowelMotor"
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        :clearable="true"
+                                                                        clearable
                                                                         placeholder="请选择" >
                                                                     <el-option
                                                                             v-for="item in specialTowelMotorList"
@@ -540,7 +540,7 @@
                                                                         style="width: 100%"
                                                                         v-model="item.orderDetail.specialTapingHead"
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        :clearable="true"
+                                                                        clearable
                                                                         placeholder="请选择" >
                                                                     <el-option
                                                                             v-for="item in specialTapingHeadList"
@@ -558,7 +558,7 @@
                                                                         style="width: 100%"
                                                                         v-model="item.orderDetail.specialTowelNeedle"
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        :clearable="true"
+                                                                        clearable
                                                                         placeholder="请选择" >
                                                                     <el-option
                                                                             v-for="item in specialTowelNeedleList"
@@ -581,7 +581,7 @@
                                                             <el-form-item label="电脑：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'electricPc', true)">
                                                                 <el-select v-model="item.orderDetail.electricPc"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -597,7 +597,7 @@
                                                             <el-form-item label="主电机：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'electricMotor', true)">
                                                                 <el-select v-model="item.orderDetail.electricMotor"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -614,7 +614,7 @@
                                                                           :class="classWithDifferentValue(item, 'electricMotorXy', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.electricMotorXy"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -632,7 +632,7 @@
                                                                           :class="classWithDifferentValue(item, 'electricTrim', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.electricTrim"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -650,7 +650,7 @@
                                                                           :class="classWithDifferentValue(item, 'electricPower', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.electricPower"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -668,7 +668,7 @@
                                                                           :class="classWithDifferentValue(item, 'electricSwitch', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.electricSwitch"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -686,7 +686,7 @@
                                                                           :class="classWithDifferentValue(item, 'electricOil', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.electricOil"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -711,7 +711,7 @@
                                                                           :class="classWithDifferentValue(item, 'axleSplit', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.axleSplit"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -729,7 +729,7 @@
                                                                           :class="classWithDifferentValue(item, 'axlePanel', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.axlePanel"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -747,7 +747,7 @@
                                                                           :class="classWithDifferentValue(item, 'axleNeedle', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.axleNeedle"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -765,7 +765,7 @@
                                                                           :class="classWithDifferentValue(item, 'axleRail', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.axleRail"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -782,7 +782,7 @@
                                                             <el-form-item label="底检方式：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'axleDownCheck', true)">
                                                                 <el-select v-model="item.orderDetail.axleDownCheck"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -798,7 +798,7 @@
                                                             <el-form-item label="旋梭：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'axleHook', true)">
                                                                 <el-select v-model="item.orderDetail.axleHook"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -815,7 +815,7 @@
                                                             <el-form-item label="跳跃方式：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'axleJump', true)">
                                                                 <el-select v-model="item.orderDetail.axleJump"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -832,7 +832,7 @@
                                                             <el-form-item label="面线夹持：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'axleUpperThread', true)">
                                                                 <el-select v-model="item.orderDetail.axleUpperThread"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -871,7 +871,7 @@
                                                                           :class="classWithDifferentValue(item, 'frameworkColor', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.frameworkColor"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -889,7 +889,7 @@
                                                                           :class="classWithDifferentValue(item, 'frameworkPlaten', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.frameworkPlaten"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -907,7 +907,7 @@
                                                                           :class="classWithDifferentValue(item, 'frameworkPlatenColor', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.frameworkPlatenColor"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -925,7 +925,7 @@
                                                                           :class="classWithDifferentValue(item, 'frameworkRing', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.frameworkRing"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -943,7 +943,7 @@
                                                                           :class="classWithDifferentValue(item, 'frameworkBracket', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.frameworkBracket"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -961,7 +961,7 @@
                                                                           :class="classWithDifferentValue(item, 'frameworkStop', true)">
                                                                 <template scope="scope" >
                                                                     <el-select v-model="item.orderDetail.frameworkStop"
-                                                                               :clearable="true"
+                                                                               clearable
                                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                placeholder="请选择" >
                                                                         <el-option
@@ -978,7 +978,7 @@
                                                             <el-form-item label="日光灯：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'frameworkLight', true)">
                                                                 <el-select v-model="item.orderDetail.frameworkLight"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -1001,7 +1001,7 @@
                                                             <el-form-item label="驱动类型：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'driverType', true)">
                                                                 <el-select v-model="item.orderDetail.driverType" style="width: 100%;"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -1017,7 +1017,7 @@
                                                             <el-form-item label="驱动方式：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'driverMethod', true)">
                                                                 <el-select v-model="item.orderDetail.driverMethod"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -1033,7 +1033,7 @@
                                                             <el-form-item label="绷孔架：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'driverReelHole', true)">
                                                                 <el-select v-model="item.orderDetail.driverReelHole"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -1049,7 +1049,7 @@
                                                             <el-form-item label="绷架：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'driverReel', true)">
                                                                 <el-select v-model="item.orderDetail.driverReel"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -1098,7 +1098,7 @@
                                                             <el-form-item label="包装方式：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'packageMethod', false)">
                                                                 <el-select v-model="item.machineOrder.packageMethod"
-                                                                           :clearable="true"
+                                                                           clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择" >
                                                                     <el-option
@@ -1203,7 +1203,7 @@
                                                                     <el-select
                                                                             style="margin: 10px;margin: 10px;width: 90%"
                                                                             v-model="item.machineOrder.champion"
-                                                                            :clearable="true"
+                                                                            clearable
                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                             placeholder="请选择" >
                                                                         <el-option
@@ -1239,7 +1239,7 @@
                                                                     <el-select
                                                                             style="margin: 10px;margin: 10px;width: 90%"
                                                                             v-model="item.machineOrder.jiazixiu"
-                                                                            :clearable="true"
+                                                                            clearable
                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                             placeholder="请选择" >
                                                                         <el-option

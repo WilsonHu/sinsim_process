@@ -245,7 +245,7 @@
 		                <el-col :span="6" :offset="0" >
 		                    <el-form-item label="销售人员：" :label-width="formLabelWidth" >
 			                    <!--<el-select v-model="form.sellman"-->
-			                    <!--:clearable="true"-->
+			                    <!--clearable-->
 			                    <!--placeholder="请选择" >-->
 			                    <!--<el-option-->
 			                    <!--v-for="item in allQualification"-->
@@ -263,7 +263,7 @@
 		                <el-col :span="6" :offset="0" >
 		                    <el-form-item label="包装方式：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.packageMethod"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in packageModeList"
@@ -313,7 +313,7 @@
 		                <el-col :span="6" :offset="0" >
 		                    <el-form-item label="国家：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.country"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in countryList"
@@ -336,7 +336,7 @@
 								<el-select
 										style="width: 100%"
 										v-model="form.machineType"
-										:clearable="true"
+										clearable
 										placeholder="请选择" >
 						                    <el-option
 								                    v-for="item in allMachineType"
@@ -461,7 +461,7 @@
 		                <el-col :span="6" >
 		                    <el-form-item label="电脑：" :label-width="formLabelWidth" >
 		                        <el-select v-model="form.electricPc"
-		                                   :clearable="true"
+		                                   clearable
 		                                   placeholder="请选择" >
 		                            <el-option
 				                            v-for="item in pcModeList"
@@ -474,7 +474,7 @@
 		                <el-col :span="6" :offset="0" >
 		                    <el-form-item label="主电机：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.electricMotor"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in electricMotorList"
@@ -488,7 +488,7 @@
 		                    <el-form-item label="XY电机：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.electricMotorXy"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in xyMotorList"
@@ -503,7 +503,7 @@
 		                    <el-form-item label="剪线方式：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.electricTrim"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in trimList"
@@ -518,7 +518,7 @@
 		                    <el-form-item label="电源：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.electricPower"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in electricPowerList"
@@ -533,7 +533,7 @@
 		                    <el-form-item label="按钮开关：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.electricSwitch"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in electricSwitchList"
@@ -548,7 +548,7 @@
 		                    <el-form-item label="加油系统：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.electricOil"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in electricOilList"
@@ -572,7 +572,7 @@
 		                    <el-form-item label="夹线器：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.axleSplit"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in axleSplitList"
@@ -587,7 +587,7 @@
 		                    <el-form-item label="面板：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.axlePanel"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in axlePanelList"
@@ -602,7 +602,7 @@
 		                    <el-form-item label="机针：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.axleNeedle"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in axleNeedleList"
@@ -617,7 +617,7 @@
 		                    <el-form-item label="机头导轨：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.axleRail"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in axleRailList"
@@ -631,7 +631,7 @@
 		                <el-col :span="6" :offset="0" >
 		                    <el-form-item label="底检方式：" :label-width="formLabelWidth" >
 									<el-select v-model="form.axleDownCheck"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in axleDownCheckList"
@@ -644,7 +644,7 @@
 		                <el-col :span="6" :offset="0" >
 		                    <el-form-item label="旋梭：" :label-width="formLabelWidth" >
 									<el-select v-model="form.axleHook"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in axleHookList"
@@ -658,7 +658,7 @@
 		                <el-col :span="6" :offset="0" >
 		                    <el-form-item label="跳跃方式：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.axleJump"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in axleJumpList"
@@ -672,7 +672,7 @@
 		                <el-col :span="6" :offset="0" >
 		                    <el-form-item label="面线夹持：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.axleUpperThread"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in axleUpperThreadList"
@@ -704,7 +704,7 @@
 		                    <el-form-item label="机架颜色：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.frameworkColor"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in frameworkColorList"
@@ -719,7 +719,7 @@
 		                    <el-form-item label="台板：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.frameworkPlaten"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in frameworkPlatenList"
@@ -734,7 +734,7 @@
 		                    <el-form-item label="台板颜色：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.frameworkPlatenColor"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in frameworkPlatenColorList"
@@ -749,7 +749,7 @@
 		                    <el-form-item label="吊环：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.frameworkRing"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in frameworkRingList"
@@ -764,7 +764,7 @@
 		                    <el-form-item label="电脑托架：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.frameworkBracket"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in frameworkBracketList"
@@ -779,7 +779,7 @@
 		                    <el-form-item label="急停装置：" :label-width="formLabelWidth" >
 								<template scope="scope" >
 									<el-select v-model="form.frameworkStop"
-									           :clearable="true"
+									           clearable
 									           placeholder="请选择" >
 										<el-option
 												v-for="item in frameworkStopList"
@@ -793,7 +793,7 @@
 		                 <el-col :span="6" :offset="0" >
 		                    <el-form-item label="日光灯：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.frameworkLight"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in frameworkLightList"
@@ -814,7 +814,7 @@
 		                 <el-col :span="6" :offset="0" >
 		                    <el-form-item label="驱动类型：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.driverType" style="width: 100%;"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in driverTypeList"
@@ -827,7 +827,7 @@
 		                 <el-col :span="6" :offset="0" >
 		                    <el-form-item label="驱动方式：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.driverMethod"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in friverMethodList"
@@ -840,7 +840,7 @@
 		                 <el-col :span="6" :offset="0" >
 		                    <el-form-item label="绷孔架：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.driverReelHole"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in driverReelHoleList"
@@ -853,7 +853,7 @@
 		                 <el-col :span="6" :offset="0" >
 		                    <el-form-item label="绷架：" :label-width="formLabelWidth" >
 			                    <el-select v-model="form.driverReel"
-			                               :clearable="true"
+			                               clearable
 			                               placeholder="请选择" >
 				                    <el-option
 						                    v-for="item in driverReelList"
@@ -906,7 +906,7 @@
 									<el-select
 											style="margin: 10px;margin: 10px;width: 90%"
 											v-model="form.champion"
-											:clearable="true"
+											clearable
 											placeholder="请选择" >
 						                    <el-option
 								                    v-for="item in championGoldList"
@@ -939,7 +939,7 @@
 									<el-select
 											style="margin: 10px;margin: 10px;width: 90%"
 											v-model="form.jiazixiu"
-											:clearable="true"
+											clearable
 											placeholder="请选择" >
 					                    <el-option
 							                    v-for="item in jiaZiXiuPricelList"

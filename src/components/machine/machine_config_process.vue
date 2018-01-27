@@ -208,7 +208,7 @@
                                         <el-select
                                                 v-model="addForm.processId"
                                                 @change="onSelectedChange"
-                                                :clearable="true"
+                                                clearable
                                                 filterable
                                                 remote
                                                 reserve-keyword
