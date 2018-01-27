@@ -1606,7 +1606,7 @@
                         </el-table-column>
                         <el-table-column
                                 align="center"
-                                prop="machineId"
+                                prop="machineStrId"
                                 label="机器编号">
                         </el-table-column>
                         <el-table-column

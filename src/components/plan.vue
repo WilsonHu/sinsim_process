@@ -22,7 +22,7 @@
                         </el-col >
                         <el-col :span="4" :offset="1">
                             <el-form-item label="机器编号:" >
-                                <el-input v-model="filters.machineId"
+                                <el-input v-model="filters.machineStrId"
                                           placeholder="机器编号"
                                           auto-complete="off"
                                           clearable></el-input >
@@ -95,7 +95,7 @@
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            prop="machineId"
+                            prop="machineStrId"
                             label="机器编号" >
                     </el-table-column >
                     <el-table-column
@@ -165,7 +165,7 @@
                         </el-col >
                         <el-col :span="4" :offset="1">
                             <el-form-item label="机器编号:" >
-                                <el-input v-model="filters.machineId"
+                                <el-input v-model="filters.machineStrId"
                                           placeholder="机器编号"
                                           auto-complete="off"
                                           clearable></el-input >
@@ -259,7 +259,7 @@
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            prop="machineId"
+                            prop="machineStrId"
                             label="机器编号" >
                     </el-table-column >
                     <el-table-column
@@ -380,7 +380,7 @@
                     </el-col >
                     <el-col :span="4" >
                         <el-form-item label="机器编号:" >
-                            <el-input v-model="machineDoPlaning.machineId"
+                            <el-input v-model="machineDoPlaning.machineStrId"
                                       placeholder="机器编号"
                                       auto-complete="off"
                                       disabled></el-input >
@@ -409,15 +409,63 @@
                     </el-col >
                 </el-row >
             </el-form >
-            <el-row style="margin-top: 5px">
-                <el-col :span="7" :style="getProcessViewStyle()"></el-col>
+            <el-row style="margin-top: 10px">
+                <el-row>
+                    <el-col :span="6" :style="getProcessViewHeight()" style="margin-left: 25px;border-radius: 5px;
+                                          border: solid 1px; border-color:#DCDFE6; background-color: white;"></el-col>
 
-                <el-col :span="17"></el-col>
+                    <el-col :span="16" :offset="1" >
+                        <el-row class="well">
+                            <el-row>
+                                <el-col :span="6">
+                                    <el-form :model="planForm" label-position="right" label-width="100px" >
+                                        <el-row>
+                                            <el-form-item label="计划方式：">
+                                                <el-select v-model="planForm.planType">
+                                                    <el-option
+                                                            v-for="item in planTypeArray"
+                                                            :value="item.value"
+                                                            :label="item.name" >
+                                                    </el-option >
+                                                </el-select >
+                                            </el-form-item>
+                                        </el-row>
+                                    </el-form>
+                                </el-col>
+                                <el-col :span="6" style="margin-left: 15px">
+                                    <el-form :model="planForm" label-position="right" label-width="100px" >
+                                        <el-row>
+                                            <el-form-item :label="planForm.planType == 1 ? '完成日期：' : '截止日期：' ">
+                                                <el-date-picker
+                                                        v-model="planForm.planDate"
+                                                        align="right"
+                                                        type="date"
+                                                        placeholder="选择日期"
+                                                        :picker-options="pickerOptions1">
+                                                </el-date-picker>
+                                            </el-form-item>
+                                        </el-row>
+                                    </el-form>
+                                </el-col >
+                            </el-row>
+                            <el-row>
+                                <el-transfer
+                                        style="margin-left: 25px; margin-top: 10px"
+                                        v-model="toPlanTasks"
+                                        :titles="['未计划工序', '添加计划中']"
+                                        :data="generateTasks()">
+                                </el-transfer>
+                            </el-row>
+                        </el-row>
+                        <el-row style="margin-top: 10px">
+                            <el-col :span="4" :offset="20">
+                                <el-button @click="doPlaningDialogVisible = false" icon="el-icon-back" >取 消</el-button >
+                                <el-button type="primary" @click="addTaskPlans" icon="el-icon-check" :disabled="toPlanTasks.length <= 0">确 定</el-button >
+                            </el-col>
+                        </el-row >
+                    </el-col>
+                </el-row>
             </el-row>
-            <span slot="footer" class="dialog-footer" >
-                    <el-button @click="doPlaningDialogVisible = false" icon="el-icon-back" >取 消</el-button >
-                    <el-button type="primary" @click="savePlaning" icon="el-icon-check" >确 定</el-button >
-                </span >
         </el-dialog >
     </el-main >
 </template >
@@ -432,6 +480,7 @@
         data () {
             _this = this;
             return {
+                userInfo:"",
                 errorMsg: '',
                 totalNum: 0,
                 tableData: [],
@@ -447,7 +496,7 @@
                 formLabelWidth: '100px',
                 filters: {
                     orderNum:'',
-                    machineId:'',
+                    machineStrId:'',
                     status: '',
                     machineType: "",
                     selectDate: '',
@@ -456,11 +505,30 @@
                 allRoles: [],
                 loadingUI: false,
 
-                doPlaningDialogVisible:false,
-                machineDoPlaning:{},
-
                 machineStatusList : MachineStatusList,
                 searchDateType : SearchDateType,
+                planForm:{
+                    planType: 1,
+                    planDate: new Date()
+                },
+                doPlaningDialogVisible:false,
+                machineDoPlaning:{},
+                notPlanedTasks:[],
+                toPlanTasks:[],
+
+                planTypeArray:[
+                    {
+                        name:"日计划",value:1
+                    },
+                    {
+                        name:"弹性计划",value:2
+                    }
+                ],
+                pickerOptions1: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now();
+                    }
+                },
 
                 pickerOptions: {
                     shortcuts: [{
@@ -488,17 +556,27 @@
                             picker.$emit('pick', [start, end]);
                         }
                     }]
-                }
+                },
             }
 
         },
         methods: {
+            generateTasks() {
+                const data = [];
+                this.notPlanedTasks.forEach((task, index) => {
+                    data.push({
+                        label: task.taskName,
+                        key: task.id,
+                    });
+                });
+                return data;
+            },
 
-            getProcessViewStyle() {
+            getProcessViewHeight() {
                 if(this.pageHeight == 0) {
-                    return "border: solid 1px;border-color:gray; background-color: white; height: 500px";
+                    return "height: 500px";
                 }else {
-                    return "border: solid 1px;border-color:gray; background-color: white; height:" + this.pageHeight + "px";
+                    return "height:" + this.pageHeight + "px";
                 }
             },
             getInitialTaskNum(task) {
@@ -516,12 +594,55 @@
             },
 
             doPlan(planItem) {
+                //这里215是估计值
                 this.pageHeight = document.documentElement.scrollHeight - 215;
                 this.doPlaningDialogVisible = true;
                 this.machineDoPlaning = copyObjectByJSON(planItem);
-            },
-            savePlaning() {
+                $.ajax({
+                    url: HOST + "task/record/selectNotPlanedTaskRecord",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {processRecordID:planItem.processRecordID},
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.notPlanedTasks = data.data.list;
+                            _this.originalNotPlanedTasks = copyObjectByJSON(_this.notPlanedTasks);//用于保存弹性计划下，直接使用的数据
+                        }
+                    }
+                })
 
+            },
+            addTaskPlans() {
+
+                let addedTasks = [];
+                if(this.planForm.planType == 1) {
+                    //日计划,保存task_record的ID值
+                    addedTasks = this.toPlanTasks;
+                }else if(this.planForm.planType == 2) {
+                    for(let i=0; i<this.notPlanedTasks.length; i++) {
+                        addedTasks.push(this.notPlanedTasks[i].id);
+                    }
+                }else {
+                    showMessage(this,"获取计划方式失败！", 0);
+                }
+                if(addedTasks.length == 0) {
+                    showMessage(this,"添加计划工序为空！", 0)
+                }else {
+                    $.ajax({
+                        url: HOST + "task/plan/addTaskPlans",
+                        type: 'POST',
+                        dataType: 'json',
+                        traditional:true,
+                        data: {taskRecordIds:addedTasks, planType: _this.planForm.planType, planDate:_this.planForm.planDate, userId:_this.userInfo.id},
+                        success: function (data) {
+                            if (data.code == 200) {
+                                showMessage(_this,"添加计划成功！", 1);
+                            }else {
+                                showMessage(_this,data.message, 0);
+                            }
+                        }
+                    })
+                }
             },
 
             handleCurrentChange(val) {
@@ -536,7 +657,7 @@
                     id: _this.filters.id,
                     orderNum: _this.filters.orderNum,
                     machineType: _this.filters.machineType,
-                    machineId: _this.filters.machineId,
+                    machineStrId: _this.filters.machineStrId,
                     status: _this.filters.status,
                     dateType: _this.filters.dateType,
                     query_start_time: '',
@@ -544,10 +665,6 @@
                     page:this.currentPage,
                     size:this.pageSize
                 };
-                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
-                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
-                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
-                }
                 $.ajax({
                     url: HOST + "machine/selectPlanningMachines",
                     type: 'POST',
@@ -631,8 +748,8 @@
             }
         },
         created: function () {
-            this.userinfo = JSON.parse(sessionStorage.getItem('user'));
-            if (isNull(this.userinfo)) {
+            this.userInfo = JSON.parse(sessionStorage.getItem('user'));
+            if (isNull(this.userInfo)) {
                 this.$router.push({path: '/Login'});
                 return;
             }
@@ -648,5 +765,13 @@
 
 </script >
 <style >
-
+    .el-transfer-panel{
+        width: 270px;
+    }
+    .el-transfer-panel__body{
+        height:550px
+    }
+    .el-transfer-panel__list{
+        height:550px
+    }
 </style >

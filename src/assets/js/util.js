@@ -57,6 +57,12 @@ let SIGN_INITIAL = 0;
 let SIGN_APPROVE = 1;
 let SIGN_REJECT = 2;
 
+/**
+ *计划方式: 日计划、弹性计划
+ */
+let DAILY_PLAN= 1;
+let FLEX_PLAN= 2;
+
 
 function loadXMLDoc(xml_name){
     var xmlDoc;
