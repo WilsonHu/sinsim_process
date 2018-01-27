@@ -1,193 +1,448 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div>
-        <el-col class="well well-lg" style="background-color: white;" v-show="!addDialogVisible">
-            <div align="right" style="margin-bottom: 20px">
-                <el-button
-                        icon="el-icon-plus"
-                        size="normal"
-                        type="primary"
-                        :disabled="isNotAdmin"
-                        @click="addDialogShow">安装流程
-                </el-button>
-            </div>
+        <div style="text-align: left;">
+            待配置安装流程机器
+        </div>
+        <el-col class="well well-lg" style="background-color: white;">
+            <el-form :model="filters" label-position="right" label-width="80px">
+                <el-row>
+                    <el-col :span="6">
+                        <el-form-item label="订单号:">
+                            <el-input v-model="filters.orderNum"
+                                      placeholder="订单号"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="合同编号:">
+                            <el-input v-model="filters.contract_num"
+                                      placeholder="合同编号"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-form-item label="配置状态:">
+                            <el-select v-model="filters.configStatus" clearable>
+                                <el-option
+                                        v-for="item in configStatusList"
+                                        :value="item.value"
+                                        :label="item.name">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-button
+                                icon="el-icon-search"
+                                size="normal"
+                                type="primary"
+                                @click="search">查询
+                        </el-button>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="6">
+                        <el-form-item label="机器编号:">
+                            <el-input v-model="filters.machine_id"
+                                      placeholder="机器编号"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="选择日期:">
+                            <el-date-picker
+                                    v-model="filters.selectDate"
+                                    type="daterange"
+                                    align="left"
+                                    unlink-panels
+                                    range-separator="—"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                    :picker-options="pickerOptions">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
             <el-table
+                    v-loading="loadingUI"
+                    element-loading-text="获取数据中..."
                     :data="tableData"
                     border
-                    style="width: 100%"
-                    @selection-change="handleSelectionChange"
-                    v-loading="listLoading">
-                <!--<el-table-column-->
-                <!--type="selection"-->
-                <!--align="center"-->
-                <!--width="55">-->
-                <!--</el-table-column>-->
-                <el-table-column label="序号" width="70" align="center">
-                    <template scope="scope">{{ scope.$index+1}}</template>
-                </el-table-column>
-                <el-table-column label="流程名称" align="center">
-                    <template scope="scope">{{ scope.row.name }}</template>
-                </el-table-column>
+                    empty-text="暂无数据..."
+                    show-overflow-tooltip="true"
+                    style="width: 100%; ">
                 <el-table-column
-                        width="120"
-                        label="创建日期"
-                        align="center">
-                    <template slot-scope="scope">
-		                    <span>
-			                    {{(scope.row.createTime)|filterDateString}}
-		                    </span>
+                        width="75"
+                        align="center"
+                        label="序号">
+                    <template scope="scope">
+                        {{scope.$index+startRow}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单号"
+                                 align="center"
+                                 prop="orderNum">
+                    <template scope="scope">
+                        <div>
+                            {{scope.row.orderNum}}
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        width="120"
-                        label="修改日期"
-                        align="center">
-                    <template slot-scope="scope">
-                                <span>
-                                    {{(scope.row.updateTime)|filterDateString}}
-                                </span>
+                        align="center"
+                        prop="contractNum"
+                        label="合同号">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="machineId"
+                        label="机器编号">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="nameplate"
+                        label="铭牌号">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="location"
+                        label="位置">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="machineType"
+                        label="机型">
+                    <template scope="scope">
+                        <div>
+                            {{scope.row.machineType|filterMachineType}}
+                        </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="编辑" width="70" align="center">
+
+                <el-table-column
+                        align="center"
+                        label="配置状态">
+                    <template scope="scope">
+                        <div v-if="scope.row.processRecordId!=''"
+                             style="color: #2b542c"
+                        >
+                            已配置
+                        </div>
+                        <div v-else style="color: darkred">
+                            未配置
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="createTime"
+                        label="创建时间">
+                    <template slot-scope="scope">
+                        <span>
+                            {{(scope.row.createTime)|filterDateString}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="shipTime"
+                        label="发货时间">
+                    <template slot-scope="scope">
+                        <span>
+                            {{(scope.row.shipTime)|filterDateString}}
+                        </span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        label="操作" width="100" align="center">
                     <template scope="scope" style="text-align: center">
                         <el-button
                                 size="small"
                                 type="primary"
                                 :disabled="cantEdit"
-                                @click="editWithItem(scope.$index, scope.row)">编辑
-                        </el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column label="删除" width="70" align="center">
-                    <template scope="scope" style="text-align: center">
-                        <el-button
-                                size="small"
-                                type="danger"
-                                @click="deleteWithItem(scope.row)">
-                            删除
+                                @click="editWithItem(scope.$index, scope.row)">配置流程
                         </el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <br>
-            <div class="block" align="center">
+            <div class="block" style="text-align: center; margin-top: 20px">
                 <el-pagination
+                        background
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-size="pageSize"
-                        layout="total,prev, pager, next, jumper"
-                        :total="totalNum">
+                        layout="total, prev, pager, next, jumper"
+                        :total="totalRecords">
                 </el-pagination>
             </div>
-            <br>
         </el-col>
-        <el-dialog title="提示" :visible.sync="deleteConfirmVisible"
-                   append-to-body>
-            <span>确认要删除选定的工作过程信息吗？</span>
-            <span slot="footer" class="dialog-footer">
-	      <el-button @click="deleteConfirmVisible = false">取 消</el-button>
-	      <el-button type="primary" @click="onConfirmDelete">确 定</el-button>
-	      </span>
-        </el-dialog>
-        <el-dialog :visible.sync="addDialogVisible" fullscreen
-                   :title="dialogTitle"
+
+        <el-dialog title="机器配置流程" :visible.sync="addDialogVisible"
+                   fullscreen
                    @open="onopened">
             <table style="width: 100%">
                 <tr style="width: 100%;vertical-align: text-top;">
-                    <td style="width: 15%">
-                <tr style="height: 20%;">
-                    <el-form :inline="true" :model="addForm" style="vertical-align: text-top;height: 20%;">
-                        <el-form-item label="工作内容名称：">
-                            <el-input type="text" style="width: 100%"
-                                      autosize v-model="addForm.name" auto-complete="off"
-                                      placeholder="工作内容名称">
-                            </el-input>
-                        </el-form-item>
-                    </el-form>
-                </tr>
-                <tr style="height: 20%;">
-                    <el-button
-                            icon="check"
-                            size="normal"
-                            type="primary"
-                            @click="onSave">保存
-                    </el-button>
-                    <el-button
-                            icon="close"
-                            size="normal"
-                            type="primary"
-                            @click="onClose">关闭
-                    </el-button>
-                </tr>
-                </td>
-                <td style="width: 100%">
-                    <div id="sample">
-                        <div style="width:100%; white-space:nowrap; ">
+                    <td style="width: 20%; padding-right: 5px">
+                        <el-row>
+                            <el-form :model="addForm">
+                                <el-col :span="24">
+                                    <el-form-item label="机器编号：">
+                                        <el-input type="text"
+                                                  disabled
+                                                  v-model="addForm.machineId"
+                                                  style="width:100%"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="24" :offset="0">
+                                    <el-form-item label="机型：">
+                                        <el-input type="text"
+                                                  disabled
+                                                  v-model="addForm.machineType|filterMachineType"
+                                                  style="width:100%"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="24" :offset="0">
+                                    <el-form-item label="流程模板：">
+                                        <el-select
+                                                :clearable="true"
+                                                v-model="addForm.groupId"
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in groupList"
+                                                    :label="item.groupName"
+                                                    :value="item.id">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </el-form>
+                        </el-row>
+                        <br>
+                        <el-row>
+                            <el-button
+                                    icon="check"
+                                    size="normal"
+                                    type="primary"
+                                    @click="onSubmit">保存
+                            </el-button>
+                            <el-button
+                                    icon="close"
+                                    size="normal"
+                                    type="danger"
+                                    @click="addDialogVisible = false">关闭
+                            </el-button>
+                        </el-row>
+                    </td>
+                    <td style="width: 80%">
+                        <div id="sample">
+                            <div style="width:100%; white-space:nowrap; ">
 			                <span style="display: inline-block; vertical-align: top; width:20%">
 			                  <div id="myPaletteDiv" style="border: solid 1px black; height:720px;"></div>
 			                </span>
-                            <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
+                                <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
 			                    <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
 			                </span>
+                            </div>
                         </div>
-                    </div>
-                </td>
+                    </td>
                 </tr>
             </table>
         </el-dialog>
-
     </div>
 </template>
 
 <script>
-    import Vue from 'vue';
-    import {Notification} from 'element-ui';
+    import Vue from 'vue'
     import {Loading} from 'element-ui';
     var _this;
     var myDiagram;
     var myPalette;
     var subParts = new go.List();
     export default {
-        name: "process_manage",
+        name: "machine_config_process",
         components: {},
         data () {
             _this = this;
             return {
-                userInfo: {},
-                deleteUrl: HOST + "process/delete",
-                addUrl: HOST + "process/add",
-                editProcessUrl: HOST + "process/update",
+                queryDataUrl: HOST + "machine/selectConfigMachine",
                 taskContentNameUrl: HOST + "task/list",
-                listLoading: false,
-                groupList: [],
+                errorMsg: '',
+                selectedItem: {},
+                queryUserRoleUrl: HOST + "role/list",
+                queryMachineTypeURL: HOST + "machine/type/list",
                 tableData: [],
-                multipleSelection: [],
+                //分页
                 pageSize: EveryPageNum,//每一页的num
                 currentPage: 1,
-                startRow: 1,
-                totalNum: 0,
-                modifyDialogVisible: false,
-                isEdit: false,
-                addDialogVisible: false,
-                cantEdit: false,
-                modifyForm: {},
-                addForm: {
-                    name: "",
-                    taskList: "",
+                startRow: 0,
+                totalRecords: 0,
+                configStatusList: ConfigStatusList,
+                filters: {
+                    machine_id: '',
+                    contract_num: '',
+                    order_status: '',
+                    orderNum: '',
+                    configStatus: 1,
+                    selectDate: '',
                 },
-                dialogLoading: true,
-                deleteConfirmVisible: false,
-                deletedItem: {
-                    data: [],
+
+                allRoles: [],
+                loadingUI: false,
+                pickerOptions: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
                 },
+                addForm: {},
                 selectedItem: {},
-                errorMsg: '',
+                cantEdit: false,
+                addDialogVisible: false,
                 isError: false,
-                loadingInstance: {},
-                dialogTitle: '新增工作流程',
             }
 
         },
         methods: {
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.startRow = this.pageSize * (this.currentPage - 1)
+            },
+            search() {
+                this.onSearchDetailData();
+            },
+            onSearchDetailData()
+            {
+                var condition = {
+                    machine_id: _this.filters.machine_id,
+                    orderNum: _this.filters.orderNum,
+                    contract_num: _this.filters.contract_num,
+                    query_start_time: '',
+                    query_finish_time: '',
+                    configStatus: _this.filters.configStatus,
+//                    page:_this.currentPage,
+//                    size:_this.pageSize
+                };
+                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
+                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
+                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
+                $.ajax({
+                    url: _this.queryDataUrl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: condition,
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.totalRecords = res.data.total;
+                            _this.tableData = res.data.list;
+                            _this.startRow = res.data.startRow;
+                        }
+                        _this.loadingUI = false;
+                    }
+                })
+            },
+
+            editWithItem(index, data){
+                _this.selectedItem = data;
+                _this.isError = false;
+                _this.addForm = _this.selectedItem;
+                _this.addDialogVisible = true;
+            },
+
+            onSubmit()
+            {
+                if (isStringEmpty(this.addForm.taskName)) {
+                    showMessage(_this, "作业内容不能为空", 0)
+                    _this.isError = true;
+                    return;
+                }
+
+            },
+            initAllRoles()
+            {
+                $.ajax({
+                    url: _this.queryUserRoleUrl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.allRoles = res.data.list;
+                        }
+                    }
+                })
+            },
+
+            initMachineType()
+            {
+                _this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
+                if (_this.allMachineType == null || _this.allMachineType.length == 0) {
+                    $.ajax({
+                        url: _this.queryMachineTypeURL,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {},
+                        success: function (res) {
+                            if (res.code == 200) {
+                                _this.allMachineType = res.data.list;
+                                sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
+                            }
+                        }
+                    })
+                }
+            },
+
+            getTaskContentName(){
+                $.ajax({
+                    url: _this.taskContentNameUrl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: null,
+                    success: function (res) {
+                        if (res.code == 200) {
+                            taskContentArray = [];
+                            for (var i = res.data.list.length - 1; i >= 0; i--) {
+                                var str = {
+                                    "text": res.data.list[i].taskName,
+                                    "task_status": "0",
+                                    "begin_time": "",
+                                    "end_time": "",
+                                    "group_id": res.data.list[i].groupId,
+                                    "group_name": _this.filterGroup(res.data.list[i].groupId),
+                                };
+                                taskContentArray.push(str);
+                            }
+                        }
+                        else {
+
+                        }
+                    }
+                })
+            },
+
             getGroupData()
             {
                 _this.groupList = JSON.parse(sessionStorage.getItem('groupList'));
@@ -206,103 +461,6 @@
                         }
                     },
                 })
-            },
-
-            handleSelectionChange(val) {
-                if (val.length <= 0) {
-                    this.cantEdit = false;
-                } else {
-                    this.cantEdit = true;
-                }
-                this.multipleSelection = val;
-            },
-            getTaskContentName(){
-                $.ajax({
-                    url: _this.taskContentNameUrl,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: null,
-                    success: function (res) {
-                        if (res.code == 200) {
-                            jsonArray = [];
-                            for (var i = res.data.list.length - 1; i >= 0; i--) {
-                                var str = {
-                                    "text": res.data.list[i].taskName,
-                                    "task_status": "0",
-                                    "begin_time": "",
-                                    "end_time": "",
-                                    "group_id": res.data.list[i].groupId,
-                                    "group_name": _this.filterGroup(res.data.list[i].groupId),
-                                };
-                                jsonArray.push(str);
-                            }
-                        }
-                        else {
-
-                        }
-                    }
-                })
-            },
-            getProcessData() {
-
-                $.ajax({
-                    url: HOST + "process/list",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {},
-                    success: function (res) {
-                        if (res.code == 200) {
-                            _this.tableData = res.data.list;
-                            _this.totalNum = res.data.total;
-                            _this.startRow = res.data.startRow;
-                        } else {
-                            // _this.tableData = data.info
-                            _this.tableData = [];
-                        }
-                    }
-                })
-            },
-            deleteWithItem(data){
-//                _this.deletedItem.data = [];
-//                if (_this.multipleSelection.length >= 1) {
-//                    for (var i = _this.multipleSelection.length - 1; i >= 0; i--) {
-//                        _this.deletedItem.data.push(_this.multipleSelection[i].id);
-//                    }
-//                } else {
-//                    _this.deletedItem.data.push(data.id);
-//                }
-
-                _this.selectedItem = data;
-                _this.deleteConfirmVisible = true;
-
-            },
-            onConfirmDelete(){
-                _this.deleteConfirmVisible = false;
-
-                $.ajax({
-                    url: _this.deleteUrl,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        id: parseInt(_this.selectedItem.id)
-                    },
-                    success: function (res) {
-                        if (res.code == 200) {
-                            showMessage(_this, "删除成功", 1)
-                            _this.getProcessData();
-                        } else {
-                            showMessage(_this, "删除失败", 0)
-                        }
-                    }
-                })
-            },
-
-            editWithItem(index, data){
-                _this.dialogTitle = '修改工作流程';
-                _this.selectedItem = data;
-                _this.addDialogVisible = true;
-                _this.isEdit = true;
-                _this.addForm = data;
             },
             onopened()
             {
@@ -350,84 +508,6 @@
                     }
                 }, 1200)
             },
-
-            addDialogShow(){
-                _this.dialogTitle = '新增工作流程';
-                _this.isEdit = false;
-                _this.addDialogVisible = true;
-            },
-            onSubmitAsEdit(){
-                $.ajax({
-                    url: _this.editProcessUrl,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        id: _this.addForm.id,
-                        name: _this.addForm.name,
-//                            createTime: '',
-                        updateTime: new Date(),
-                        taskList: _this.addForm.taskList,
-                    },
-                    success: function (res) {
-                        if (res.code == 200) {
-                            showMessage(_this, "修改成功", 1)
-                            _this.getProcessData();
-
-                        } else {
-                            showMessage(_this, "修改失败", 0)
-                        }
-                        _this.addDialogVisible = false;
-                        _this.isEdit = false;
-                    },
-                })
-            },
-            onSubmitAsNew(){
-                var d = new Date().format("yyyy-MM-dd hh:mm:ss");
-                $.ajax({
-                    url: _this.addUrl,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        name: _this.addForm.name,
-                        createTime: new Date(),
-                        updateTime: new Date(),
-                        taskList: _this.addForm.taskList,
-                    },
-                    success: function (res) {
-                        if (res.code == 200) {
-                            showMessage(_this, "添加成功", 1)
-                            _this.getProcessData();
-                        } else {
-                            showMessage(_this, "添加失败", 0)
-                        }
-                        _this.addDialogVisible = false;
-                    },
-                })
-            },
-            onSave(){
-                _this.addForm.taskList = myDiagram.model.toJson();
-                if (_this.isEdit == true) {
-                    _this.onSubmitAsEdit();
-                } else {
-                    _this.onSubmitAsNew();
-                }
-            },
-            onClose(){
-                _this.addDialogVisible = false;
-            },
-
-            handleCurrentChange(val) {
-                this.currentPage = val;
-                this.startRow = (this.currentPage - 1) * this.form.length;
-                this.getProcessData();
-            },
-
-            // Show the diagram's model in JSON format that the user may edit
-            save() {
-                document.getElementById("mySavedModel").value = myDiagram.model.toJson();
-                myDiagram.isModified = false;
-            },
-
             filterGroup(id) {
                 let result = "";
                 for (let i = 0; i < _this.groupList.length; i++) {
@@ -439,43 +519,59 @@
                 return result;
             },
         },
+        computed: {},
         filters: {
-            filterGroup(id) {
-                let result = "";
-                for (let i = 0; i < _this.groupList.length; i++) {
-                    if (_this.groupList[i].id == id) {
-                        result = _this.groupList[i].groupName;
-                        break;
-                    }
-                }
-                return result;
-            },
             filterDateString(strDate)
             {
                 var resDate = new Date(strDate);
                 return resDate.format("yyyy-MM-dd");
             },
 
-        },
-        computed: {
-            isNotAdmin() {
-                var userinfo = JSON.parse(sessionStorage.getItem('user'));
-                return userinfo.account != "admin";
-            }
-        },
+            filterConfigStatus(id)
+            {
 
+                var result = _this.configStatusList[0].name;
+                for (var i = 0; i < _this.configStatusList.length; i++) {
+                    if (id == _this.configStatusList[i].value) {
+                        result = _this.configStatusList[i].name;
+                        break;
+                    }
+                }
+                return result;
+            },
+            filterMachineType(id)
+            {
+                var result = '';
+                for (var i = 0; i < _this.allMachineType.length; i++) {
+                    if (id == _this.allMachineType[i].id) {
+                        result = _this.allMachineType[i].name;
+                        break;
+                    }
+                }
+                return result;
+            },
+
+        },
         created: function () {
+            this.userinfo = JSON.parse(sessionStorage.getItem('user'));
+            if (isNull(this.userinfo)) {
+                this.$router.push({path: '/Login'});
+                return;
+            }
+            _this.initAllRoles();
+            _this.initMachineType();
             _this.getGroupData();
             _this.getTaskContentName();
-            _this.getProcessData();
-        },
-        mounted: function () {
+//            _this.getProcessData();
 
         },
-        destroyed: function () {
-        }
+        mounted: function () {
+            _this.filters.configStatus = 1;
+            _this.search();
+        },
     }
-    var jsonArray = [];
+
+    var taskContentArray = [];
     function resetDiagram() {
         var objDiagram = document.getElementById("myDiagramDiv");
         try {
@@ -761,7 +857,7 @@
                         {
                             "animationManager.duration": 100, // slightly longer than default (600ms) animation
                             nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
-                            model: new go.GraphLinksModel(jsonArray)
+                            model: new go.GraphLinksModel(taskContentArray)
                         });
 
         // The following code overrides GoJS focus to stop the browser from scrolling
@@ -800,46 +896,15 @@
 
 </script>
 <style>
-    .process_container {
-        background-color: whitesmoke;
-        position: absolute;
-        overflow-y: scroll;
-        width: 65%;
-        height: 90%;
-        padding: 5px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-left: 30%;
-    }
-
-    .other_container {
-        background-color: whitesmoke;
-        position: absolute;
-        overflow-y: scroll;
-        width: 30%;
-        height: 90%;
-        padding: 5px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    .all_container {
-        background-color: whitesmoke;
-        position: absolute;
+    .el-select {
         width: 100%;
-        height: 100%;
-        padding: 5px;
-
     }
 
-    .close_button {
-        position: fixed;
-        bottom: 0;
-        left: 0;
+    .el-input-number {
         width: 100%;
-        height: 30px;
-        padding: 10px;
-        /*margin-right: 10px;*/
-        /*margin-top: 80%;*/
+        float: left;
     }
+
 </style>
+
+

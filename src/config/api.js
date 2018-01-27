@@ -17,6 +17,12 @@ var ScrollTimerInterval = 5000;
 var DisableScroll = 1;
 var COM_CMD_INTERVAL = 5000;
 
+//需求单状态
+var ConfigStatusList = [
+	{value:0,name:'全部'},
+	{value:1,name:'未配置'},
+	{value:2,name:'已配置'},
+];
 
 //需求单状态
 var OrderStatusList = [

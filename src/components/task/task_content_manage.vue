@@ -91,6 +91,7 @@
                     <el-col :span="8" :offset="1">
                         <el-form-item label="工作小组：">
                             <el-select
+			            :clearable="true"
                                     v-model="addForm.groupId"
                                     placeholder="请选择">
                                 <el-option

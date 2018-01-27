@@ -33,6 +33,8 @@ import Plan from "../components/plan.vue"
 
 //Machine
 import Machine from "../components/machine.vue"
+import MachineConfigProcess from "../components/machine/machine_config_process.vue"
+import MachineInstallProcess from "../components/machine/machine_install_process.vue"
 
 export default
 [
@@ -108,8 +110,21 @@ export default
                 component: Machine,
                 name: 'Machine',
                 meta: "机器管理",
+                // redirect: '/home/machine/machine_config_process',
                 children: [
-                ],
+                    {
+                        path: '/home/machine/machine_config_process',
+                        component: MachineConfigProcess,
+                        name: 'machine_config_process',
+                        meta: '配置流程'
+                    },
+                    {
+                        path: '/home/machine/machine_install_process',
+                        component: MachineInstallProcess,
+                        name: 'machine_install_process',
+                        meta: '安装进度'
+                    },
+                ]
             },
 
             {
@@ -117,8 +132,7 @@ export default
                 component: Plan,
                 name: 'Plan',
                 meta: "计划管理",
-                children: [
-                ],
+                children: [],
             },
 
             {
@@ -127,8 +141,7 @@ export default
                 redirect: '/home/abnormal',
                 name: 'Abnormal',
                 meta: "异常管理",
-                children: [
-                ],
+                children: [],
             },
 
 
