@@ -778,9 +778,6 @@
         myPalette.doFocus = customFocus;
         document.getElementById("myPaletteDiv").style.height = document.body.scrollHeight + "px";
 
-        myDiagram.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
-        myPalette.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
-
         if (document.body.scrollHeight == 0) {
             document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
             document.getElementById("myPaletteDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";

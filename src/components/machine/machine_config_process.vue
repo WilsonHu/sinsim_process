@@ -139,9 +139,9 @@
                         prop="createTime"
                         label="创建时间">
                     <template slot-scope="scope">
-                        <span>
-                            {{(scope.row.createTime)|filterDateString}}
-                        </span>
+                    <span>
+                    {{(scope.row.createTime)|filterDateString}}
+        </span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -149,9 +149,9 @@
                         prop="shipTime"
                         label="发货时间">
                     <template slot-scope="scope">
-                        <span>
-                            {{(scope.row.shipTime)|filterDateString}}
-                        </span>
+                    <span>
+                    {{(scope.row.shipTime)|filterDateString}}
+        </span>
                     </template>
                 </el-table-column>
 
@@ -206,6 +206,7 @@
                                 <el-col :span="24" :offset="0">
                                     <el-form-item label="流程模板：">
                                         <el-select
+                                                :disabled="addForm.isTaskOngoing"
                                                 v-model="addForm.processId"
                                                 @change="onSelectedChange"
                                                 clearable
@@ -245,12 +246,12 @@
                     <td style="width: 80%">
                         <div id="sample">
                             <div style="width:100%; white-space:nowrap; ">
-			                <span style="display: inline-block; vertical-align: top; width:20%">
-			                  <div id="myPaletteDiv" style="border: solid 1px black; height:720px;"></div>
-			                </span>
+                    <span style="display: inline-block; vertical-align: top; width:20%">
+                    <div id="myPaletteDiv" style="border: solid 1px black; height:720px;"></div>
+                    </span>
                                 <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
-			                    <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
-			                </span>
+                    <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
+                    </span>
                             </div>
                         </div>
                     </td>
@@ -341,6 +342,7 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.startRow = this.pageSize * (this.currentPage - 1)
+                _this.search();
             },
             search() {
                 this.onSearchDetailData();
@@ -381,17 +383,108 @@
                 _this.selectedItem = data;
                 _this.isError = false;
                 _this.addForm = _this.selectedItem;
-                _this.addForm.machineTypeName=_this.filterMachineType(_this.addForm.machineType);
-                _this.addDialogVisible = true;
+                _this.addForm.isTaskOngoing = false;
+                _this.addForm.machineTypeName = _this.filterMachineType(_this.addForm.machineType);
+                if (_this.selectedItem.processRecordId != '') {
+                    /*
+                     已配置需要判断安装状态
+                     如果已经安装，则不能修改
+                     */
+                    _this.loading = true;
+                    $.ajax({
+                        url: HOST + "task/record/getTaskRecordData",
+                        type: 'POST',
+                        dataType: 'json',
+                        traditional: true,
+                        data: {
+                            processRecordId: _this.selectedItem.processRecordId,
+                        },
+                        success: function (res) {
+                            _this.loading = false;
+                            if (res.code == 200) {
+
+                                res.data.list.forEach(item=> {
+                                    _this.addForm.isTaskOngoing = item.status == 2;
+                                    return;
+                                });
+                                if (_this.addForm.isTaskOngoing == true) {//进行中
+                                    showMessage(_this, "请先停止安装流程，再修改流程配置!", 0)
+                                }
+                                else {
+                                    var taskList = DefaultTaskList;
+                                    taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
+                                    taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
+                                    _this.addForm.taskList = JSON.stringify(taskList);
+
+                                    _this.addDialogVisible = true;
+                                }
+                            }
+                        },
+                        error: function (info) {
+                            showMessage("服务器访问出错");
+                        }
+                    })
+
+                }
+                else {
+                    _this.addForm.processId = '';
+                    _this.addForm.taskList = '';
+                    _this.isError = false;
+                    _this.addDialogVisible = true;
+                }
             },
 
             onSubmit()
             {
-                if (isStringEmpty(this.addForm.taskName)) {
-                    showMessage(_this, "作业内容不能为空", 0)
+                if (_this.addForm.processId == "") {
+                    showMessage(_this, "作业流程不能为空", 0)
                     _this.isError = true;
                     return;
                 }
+                var taskList = JSON.parse(_this.addForm.taskList);
+
+                if (taskList == null || taskList.nodeDataArray.length < 2) {
+                    showMessage(_this, "当前还没有可用流程，请添加后再保存", 0)
+                    return;
+                }
+                var trObjList = new Array();
+
+                taskList.nodeDataArray.forEach(item=> {
+                    if (isUndefined(item.category) || item.category == null) {
+                        trObjList.push({
+                            taskName: item.text,
+                            nodeKey: item.key,
+                            status: 1,
+                        });
+                    }
+                });
+
+                var prObj = {
+                    machineId: _this.addForm.id,
+                    processId: _this.addForm.processId,
+                    linkData: taskList.linkDataArray,
+                    nodeData: taskList.nodeDataArray
+                };
+
+                $.ajax({
+                    url: HOST + "process/record/addProcessForMachine",
+                    type: 'POST',
+                    dataType: 'json',
+                    traditional: true,
+                    data: {
+                        taskRecords: JSON.stringify(trObjList),
+                        processRecord: JSON.stringify(prObj),
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.onSearchDetailData();
+                            _this.addDialogVisible = false;
+                            showMessage(_this, "保存成功!", 1)
+                        }else {
+                            showMessage(_this, "保存失败!", 0)
+                        }
+                    }
+                })
 
             },
             initAllRoles()
@@ -506,9 +599,20 @@
                 _this.errorMsg = '';
                 resetDiagram();
                 _this.remoteMethod('');
+                _this.loadingInstance = Loading.service(
+                        {
+                            fullscreen: true,
+                            text: "正在加载中，请稍后..."
+                        });
                 window.setTimeout(()=> {
+
                     init();
-                }, 1200);
+
+                    if (_this.addForm.taskList != null && _this.addForm.taskList.length > 0) {
+                        _this.renderDiagramDataToUI();
+                    }
+                    _this.loadingInstance.close();
+                }, 1400);
 
             },
             filterGroup(id) {
@@ -568,42 +672,12 @@
                         if (res.code == 200) {
                             if (res.data.list != null && res.data.list.length > 0) {
                                 _this.addForm.taskList = res.data.list[0].taskList;
-                                window.setTimeout(()=> {
-                                    try {
-                                        //init();
-                                        //_this.selectedItem.processRecordId == ''
-                                        if (_this.addForm.taskList == '') {
-                                            myDiagram.model = go.Model.fromJson({
-                                                "class": "go.GraphLinksModel",
-                                                "linkFromPortIdProperty": "fromPort",
-                                                "linkToPortIdProperty": "toPort",
-                                                "nodeDataArray": [
-                                                    {
-                                                        "category": "Start",
-                                                        "text": "开始",
-                                                        "key": -1,
-                                                        "loc": "207 39.99999999999999"
-                                                    },
-                                                    {
-                                                        "category": "End",
-                                                        "text": "结束",
-                                                        "key": -4,
-                                                        "loc": "207 216.26768871290687"
-                                                    }
-                                                ],
-                                                "linkDataArray": []
-                                            });
-                                        } else {//edit
-                                            myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
-                                        }
-                                    } catch (ex) {
-                                        console.log(ex.toString());
-                                    } finally {
-                                        _this.loadingInstance.close();
-                                    }
-                                }, 1200)
+                                _this.renderDiagramDataToUI();
                             }
                         }
+                    },
+                    error:function (info) {
+                        _this.loadingInstance.close();
                     }
                 })
             },
@@ -611,7 +685,44 @@
             onSelectedChange(item)
             {
                 _this.getDetailProcess(item);
-            }
+            },
+
+            renderDiagramDataToUI()
+            {
+                window.setTimeout(()=> {
+                    try {
+                        //init();
+                        if (_this.addForm.taskList == '') {
+                            myDiagram.model = go.Model.fromJson({
+                                "class": "go.GraphLinksModel",
+                                "linkFromPortIdProperty": "fromPort",
+                                "linkToPortIdProperty": "toPort",
+                                "nodeDataArray": [
+                                    {
+                                        "category": "Start",
+                                        "text": "开始",
+                                        "key": -1,
+                                        "loc": "207 39.99999999999999"
+                                    },
+                                    {
+                                        "category": "End",
+                                        "text": "结束",
+                                        "key": -4,
+                                        "loc": "207 216.26768871290687"
+                                    }
+                                ],
+                                "linkDataArray": []
+                            });
+                        } else {//edit
+                            myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
+                        }
+                    } catch (ex) {
+                        console.log(ex.toString());
+                    } finally {
+                        _this.loadingInstance.close();
+                    }
+                }, 500);
+            },
 
         },
 
@@ -693,7 +804,7 @@
         }
     }
     function init() {
-//        resetDiagram();
+        resetDiagram();
         //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
         var $ = go.GraphObject.make;  // for conciseness in defining templates
 
@@ -935,16 +1046,6 @@
         myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
         myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
-//        myDiagram.model = go.Model.fromJson({
-//            "class": "go.GraphLinksModel",
-//            "linkFromPortIdProperty": "fromPort",
-//            "linkToPortIdProperty": "toPort",
-//            "nodeDataArray": [
-//                {"category": "Start", "text": "Start", "key": -1, "loc": "207.15625000000003 39.99999999999999"},
-//                {"category": "End", "text": "End", "key": -4, "loc": "208.5960057626528 216.26768871290687"}
-//            ],
-//            "linkDataArray": []
-//        });
         if (myPalette != null) {
             myPalette.div = null;
         }
@@ -970,8 +1071,8 @@
         myPalette.doFocus = customFocus;
         document.getElementById("myPaletteDiv").style.height = document.body.scrollHeight + "px";
 
-        myDiagram.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
-        myPalette.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
+//        myDiagram.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
+//        myPalette.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
 
         if (document.body.scrollHeight == 0) {
             document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
