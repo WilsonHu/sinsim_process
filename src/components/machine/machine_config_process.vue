@@ -349,12 +349,13 @@
             onSearchDetailData()
             {
                 var condition = {
-                    machine_strid: _this.filters.machine_strid,
-                    orderNum: _this.filters.orderNum,
-                    contract_num: _this.filters.contract_num,
+                    machine_strid: _this.filters.machine_strid.trim(),
+                    orderNum: _this.filters.orderNum.trim(),
+                    contractNum: _this.filters.contract_num.trim(),
                     query_start_time: '',
                     query_finish_time: '',
                     configStatus: _this.filters.configStatus,
+                    is_fuzzy: true,
 //                    page:_this.currentPage,
 //                    size:_this.pageSize
                 };
@@ -373,8 +374,7 @@
                             _this.tableData = res.data.list;
                             _this.startRow = res.data.startRow;
                             _this.tableData.forEach(item=> {
-                                item.canConfig = item.processRecordId == null
-                                        || item.processRecordId.length == 0
+                                item.canConfig = item.status <= 1;
                             });
                         }
                         _this.loadingUI = false;
@@ -468,6 +468,9 @@
                     linkData: taskList.linkDataArray,
                     nodeData: taskList.nodeDataArray
                 };
+//                if (_this.addForm.processRecordId != "") {
+//                    prObj._this.addForm.processRecordId;
+//                }
 
                 $.ajax({
                     url: HOST + "process/record/addProcessForMachine",
@@ -477,6 +480,10 @@
                     data: {
                         taskRecords: JSON.stringify(trObjList),
                         processRecord: JSON.stringify(prObj),
+                        machine: JSON.stringify({
+                            id: _this.addForm.id,
+                            status: _this.addForm.status,
+                        }),
                     },
                     success: function (res) {
                         if (res.code == 200) {
