@@ -4,62 +4,76 @@
             <el-tab-pane label="已计划">
                 <el-form :model="filters" label-position="right" label-width="80px" >
                     <el-row >
-                        <el-col :span="4" >
-                            <el-form-item label="合同号:" >
-                                <el-input v-model="filters.contractNum"
-                                          placeholder="合同号"
-                                          auto-complete="off"
-                                          clearable></el-input >
-                            </el-form-item >
-                        </el-col >
-                        <el-col :span="4" :offset="1">
+                        <el-col :span="4">
                             <el-form-item label="需求单号:" >
-                                <el-input v-model="filters.orderNum"
+                                <el-input v-model="planedFilters.orderNum"
                                           placeholder="需求单号"
                                           auto-complete="off"
                                           clearable></el-input >
                             </el-form-item >
                         </el-col >
-                        <el-col :span="4" :offset="1">
+                        <el-col :span="4" >
                             <el-form-item label="机器编号:" >
-                                <el-input v-model="filters.machineStrId"
+                                <el-input v-model="planedFilters.machineStrId"
                                           placeholder="机器编号"
                                           auto-complete="off"
                                           clearable></el-input >
                             </el-form-item >
                         </el-col >
-                        <el-col :span="4" :offset="1">
-                            <el-form-item label="安装状态:" >
-                                <el-select v-model="filters.status" clearable >
+                        <el-col :span="4" >
+                            <el-form-item label="机型:" >
+                                <el-select v-model="planedFilters.machineType" clearable filterable>
                                     <el-option
-                                            v-for="item in machineStatusList"
-                                            v-bind:value="item.value"
-                                            v-bind:label="item.name" >
+                                            v-for="item in allMachineType"
+                                            :value="item.id"
+                                            :label="item.name" >
                                     </el-option >
                                 </el-select >
                             </el-form-item >
                         </el-col >
-                        <el-col :span="1" :offset="3">
+                        <el-col :span="4">
+                            <el-form-item label="工序:" >
+                                <el-select v-model="planedFilters.taskName" clearable filterable>
+                                    <el-option
+                                            v-for="item in allTasks"
+                                            :value="item.taskName"
+                                            :label="item.taskName" >
+                                    </el-option >
+                                </el-select >
+                            </el-form-item >
+                        </el-col >
+                        <el-col :span="4">
+                            <el-form-item label="安装状态:" >
+                                <el-select v-model="planedFilters.installStatus" clearable >
+                                    <el-option
+                                            v-for="item in installStatusList"
+                                            :value="item.value"
+                                            :label="item.name" >
+                                    </el-option >
+                                </el-select >
+                            </el-form-item >
+                        </el-col >
+                        <el-col :span="1" :offset="2">
                             <el-button
                                     icon="el-icon-search"
                                     size="normal"
                                     type="primary"
-                                    @click="search" >查询
+                                    @click="searchPlaned" >查询
                             </el-button >
                         </el-col >
                     </el-row >
                     <el-row>
                         <el-col :span="3" >
-                            <el-form-item label="选择日期:" >
+                            <el-form-item label="统计周期:" >
                                 <el-date-picker
-                                        v-model="filters.selectDate"
+                                        v-model="planedFilters.selectDate"
                                         type="daterange"
                                         align="left"
                                         unlink-panels
                                         clearable
                                         range-separator="—"
-                                        start-placeholder="开始日期"
-                                        end-placeholder="结束日期"
+                                        start-placeholder="开始日期（计划）"
+                                        end-placeholder="结束日期（计划）"
                                         :picker-options="pickerOptions" >
                                 </el-date-picker >
                             </el-form-item >
@@ -69,7 +83,7 @@
                 <el-table
                         v-loading="loadingUI"
                         element-loading-text="获取数据中..."
-                        :data="tableData"
+                        :data="tableDataPlaned"
                         border
                         empty-text="暂无数据..."
                         show-overflow-tooltip="true"
@@ -79,63 +93,106 @@
                             width="75"
                             label="序号" >
                         <template scope="scope" >
-                            {{scope.$index+startRow}}
+                            {{scope.$index+startRowPlaned}}
                         </template >
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            label="订单号"
-                            prop="orderNum" >
+                            label="需求单号">
                         <template scope="scope" >
-                            <div v-on:click="onDetail(scope.row)"
-                                 style="font-weight: bold;">
-                                {{scope.row.orderNum}}
-                            </div >
+                                {{scope.row.machineOrder.orderNum}}
                         </template >
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            prop="machineStrId"
                             label="机器编号" >
+                        <template scope="scope" >
+                                {{scope.row.machine.machineStrId}}
+                        </template >
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            prop="machineType"
                             label="机型" >
                         <template scope="scope" >
                             <div >
-                                {{scope.row.machineType|filterMachineType}}
+                                {{scope.row.machine.machineType|filterMachineType}}
                             </div >
                         </template >
                     </el-table-column >
-
                     <el-table-column
                             align="center"
-                            prop="status"
+                            label="工序" >
+                        <template scope="scope" >
+                            <div style="font-weight: bold;color: #409EFF">
+                                {{scope.row.taskName}}
+                            </div >
+                        </template >
+                    </el-table-column >
+                    <el-table-column
+                            align="center"
+                            label="计划完成时间" >
+                        <template scope="scope" >
+                            <div style="color: #E6A23C">
+                                {{scope.row.taskPlan.planTime | filterDateString}}
+                            </div >
+                        </template >
+                    </el-table-column >
+                    <el-table-column
+                            align="center"
                             label="状态" >
                         <template scope="scope" >
-                            <div >
-                                {{scope.row.status|filterMachineStatus}}
+                            <div :class="scope.row|filterTaskInstallStatusStyle">
+                                {{scope.row.qualityEndTime != null && (scope.row.qualityEndTime <= scope.row.taskPlan.planTime) ? '完成' : '未完成'}}
                             </div >
                         </template >
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            prop="contractShipDate"
+                            label="安装" >
+                        <el-table-column
+                                align="center"
+                                prop="installBeginTime"
+                                label="开始时间" >
+
+                        </el-table-column>
+                        <el-table-column
+                                align="center"
+                                prop="installEndTime"
+                                label="结束时间" >
+
+                        </el-table-column>
+                    </el-table-column>
+                    <el-table-column
+                            align="center"
+                            label="质检" >
+                        <el-table-column
+                                align="center"
+                                prop="qualityBeginTime"
+                                label="开始时间" >
+
+                        </el-table-column>
+                        <el-table-column
+                                align="center"
+                                prop="qualityEndTime"
+                                label="结束时间" >
+
+                        </el-table-column>
+                    </el-table-column>
+                    <el-table-column
+                            align="center"
                             label="合同交货日期" >
                         <template slot-scope="scope" >
                     <span >
-                        {{(scope.row.contractShipDate)|filterDateString}}
+                        {{(scope.row.machineOrder.contractShipDate)|filterDateString}}
                     </span >
                         </template >
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            prop="planShipDate"
                             label="计划交货日期" >
                         <template slot-scope="scope" >
                     <span >
-                        {{(scope.row.planShipDate)|filterDateString}}
+                        {{(scope.row.machineOrder.planShipDate)|filterDateString}}
                     </span >
                         </template >
 
@@ -173,7 +230,7 @@
                         </el-col >
                         <el-col :span="4" :offset="1">
                             <el-form-item label="机型:" >
-                                <el-select v-model="filters.machineType" clearable >
+                                <el-select v-model="filters.machineType" clearable filterable>
                                     <el-option
                                             v-for="item in allMachineType"
                                             :value="item.id"
@@ -203,7 +260,7 @@
                         </el-col >
                     </el-row >
                     <el-row>
-                        <el-col :span="3">
+                        <el-col :span="4">
                             <el-form-item label="日期类型:" >
                                 <el-select v-model="filters.dateType" clearable
                                            placeholder="日期类型">
@@ -248,7 +305,7 @@
                             {{scope.$index+startRow}}
                         </template >
                     </el-table-column >
-                    <el-table-column label="订单号" align="center">
+                    <el-table-column label="需求单号" align="center">
                         <template scope="scope"
                                   prop="orderNum">
                             <div
@@ -482,18 +539,40 @@
             return {
                 userInfo:"",
                 errorMsg: '',
+                //未计划
                 totalNum: 0,
+                //已计划
+                totalNumPlaned: 0,
+                //未计划table数据（机器）
                 tableData: [],
+                //已计划table数据（工序）
+                tableDataPlaned: [],
                 //分页
                 pageSize: EveryPageNum,//每一页的num
+                //未计划
                 currentPage: 1,
-                startRow: 0,
+                //已计划
+                currentPagePlaned: 1,
+                startRowPlaned: 0,
                 //机器类型
                 allMachineType:[],
+                //所有工序名称
+                allTasks:[],
 
                 pageHeight: 0,
 
                 formLabelWidth: '100px',
+                //已计划
+                planedFilters: {
+                    orderNum:'',
+                    machineStrId:'',
+                    taskName:"",
+                    installStatus: '',
+                    machineType: "",
+                    selectDate: [new Date(), new Date()],
+                },
+                installStatusList: [{name:"完成",value:1},{name:"未完成",value:2}],
+
                 filters: {
                     orderNum:'',
                     machineStrId:'',
@@ -652,9 +731,11 @@
             search() {
                 this.onSearchNotPlanedData();
             },
+            searchPlaned() {
+                this.onSearchPlanedData();
+            },
             onSearchNotPlanedData(){
                 var condition = {
-                    id: _this.filters.id,
                     orderNum: _this.filters.orderNum,
                     machineType: _this.filters.machineType,
                     machineStrId: _this.filters.machineStrId,
@@ -665,6 +746,10 @@
                     page:this.currentPage,
                     size:this.pageSize
                 };
+                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
+                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
+                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
                 $.ajax({
                     url: HOST + "machine/selectPlanningMachines",
                     type: 'POST',
@@ -677,6 +762,46 @@
                             _this.startRow = data.data.startRow;
                         }
                         _this.loadingUI = false;
+                    },
+                    error: function (data) {
+                        showMessage(_this, data.message, 0);
+                    }
+                })
+            },
+
+            onSearchPlanedData() {
+                var condition = {
+                    orderNum: _this.planedFilters.orderNum,
+                    machineType: _this.planedFilters.machineType,
+                    machineStrId: _this.planedFilters.machineStrId,
+                    installStatus: _this.planedFilters.installStatus,
+                    taskName: _this.planedFilters.taskName,
+                    query_start_time: '',
+                    query_finish_time: '',
+                    page:this.currentPagePlaned,
+                    size:this.pageSize
+                };
+                if (_this.planedFilters.selectDate != null && _this.planedFilters.selectDate.length > 0) {
+                    condition.query_start_time = _this.planedFilters.selectDate[0].format("yyyy-MM-dd");
+                    condition.query_finish_time = _this.planedFilters.selectDate[1].format("yyyy-MM-dd");
+                }
+                $.ajax({
+                    url: HOST + "task/record/selectPlanedTaskRecords",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: condition,
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.tableDataPlaned = data.data.list;
+                            _this.totalNumPlaned = data.data.total;
+                            _this.startRowPlaned = data.data.startRow;
+                        }else {
+                            showMessage(_this,"获取已计划工序失败！", 0);
+                        }
+                        _this.loadingUI = false;
+                    },
+                    error: function (data) {
+                        showMessage(_this, data.message, 0);
                     }
                 })
             },
@@ -711,6 +836,25 @@
                         }
                     })
                 }
+            },
+
+            initAllTasks() {
+                $.ajax({
+                    url: HOST + "task/list",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.allTasks = res.data.list;
+                        }else {
+                            showMessage(_this,res.message, 0);
+                        }
+                    },
+                    error:function (res) {
+                        showMessage(_this,"获取服务器数据失败！", 0);
+                    }
+                })
             }
         },
         computed: {},
@@ -745,7 +889,14 @@
                     }
                 }
                 return result;
-            }
+            },
+            filterTaskInstallStatusStyle(item){
+                if(item.qualityEndTime == null || item.qualityEndTime == "" || item.qualityEndTime > item.taskPlan.planTime) {
+                    return "divTaskStatusUnFinished";
+                }else {
+                    return "divTaskStatusFinished";
+                }
+            },
         },
         created: function () {
             this.userInfo = JSON.parse(sessionStorage.getItem('user'));
@@ -753,10 +904,11 @@
                 this.$router.push({path: '/Login'});
                 return;
             }
-            _this.initAllRoles();
-            _this.initMachineType();
-            _this.onSearchNotPlanedData();
-
+            this.initAllRoles();
+            this.initMachineType();
+            this.initAllTasks();
+            this.onSearchNotPlanedData();
+            this.onSearchPlanedData();
         },
         mounted: function () {
 
@@ -773,5 +925,13 @@
     }
     .el-transfer-panel__list{
         height:550px
+    }
+
+    .divTaskStatusFinished {
+        color: #67C23A;
+    }
+
+    .divTaskStatusUnFinished {
+        color: #F56C6C;
     }
 </style >

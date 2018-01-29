@@ -1270,7 +1270,7 @@
                     result = "divOrderStatusUnChecked";
                 } else if (id == 2) {
                     result = "divOrderStatusFinished";
-                } else if (id == 1 || id == 3 | id == 4) {
+                } else if (id == 1 || id == 3 || id == 4) {
                     result = "divOrderStatusChecking";
                 }
                 return result;
