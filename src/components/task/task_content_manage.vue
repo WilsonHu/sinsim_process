@@ -18,9 +18,9 @@
                     style="width: 100%;"
                     @selection-change="handleSelectionChange" v-loading="listLoading">
                 <!--<el-table-column-->
-                        <!--type="selection"-->
-                        <!--align="center"-->
-                        <!--width="55">-->
+                <!--type="selection"-->
+                <!--align="center"-->
+                <!--width="55">-->
                 <!--</el-table-column>-->
                 <el-table-column label="序号" width="70" align="center">
                     <template scope="scope">{{ scope.$index+startRow}}</template>
@@ -77,7 +77,7 @@
         </el-dialog>
 
         <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="50%" append-to-body>
-            <el-form :model="addForm" >
+            <el-form :model="addForm">
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="工作名称：">
@@ -91,7 +91,7 @@
                     <el-col :span="8" :offset="1">
                         <el-form-item label="工作小组：">
                             <el-select
-			            clearable
+                                    clearable
                                     v-model="addForm.groupId"
                                     placeholder="请选择">
                                 <el-option
@@ -187,14 +187,14 @@
                         }
                         _this.listLoading = false;
                     },
-                    error:function (res) {
+                    error: function (res) {
                         _this.listLoading = false;
                         showMessage(_this, "服务器访问失败!", 0);
                     }
                 })
             },
             deleteWithItem(data){
-                _this.selectedItem = data;
+                _this.selectedItem = copyObject(data);
                 _this.deleteConfirmVisible = true;
             },
             onConfirmDelete(){
@@ -218,11 +218,11 @@
                 })
             },
             editWithItem(index, data){
-                _this.selectedItem = data;
+                _this.selectedItem = copyObject(data);
                 _this.dialogTitle = "修改工作子项";
                 _this.isEdit = true;
                 _this.isError = false;
-                _this.addForm = data;
+                _this.addForm = copyObject(data);
                 _this.errorMsg = '';
                 _this.addDialogVisible = true;
 

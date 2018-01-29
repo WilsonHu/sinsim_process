@@ -272,7 +272,7 @@
 //                    _this.deletedItem.data.push(data.id);
 //                }
 
-                _this.selectedItem = data;
+                _this.selectedItem = copyObject(data);
                 _this.deleteConfirmVisible = true;
 
             },
@@ -299,7 +299,7 @@
 
             editWithItem(index, data){
                 _this.dialogTitle = '修改工作流程';
-                _this.selectedItem = data;
+                _this.selectedItem = copyObject(data);
                 _this.addDialogVisible = true;
                 _this.isEdit = true;
                 _this.addForm = data;

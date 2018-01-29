@@ -327,7 +327,6 @@
                     }]
                 },
                 addForm: {},
-                selectedItem: {},
                 addDialogVisible: false,
                 isError: false,
 
@@ -383,51 +382,21 @@
             },
 
             editWithItem(index, data){
-                _this.selectedItem = data;
+                _this.selectedItem = copyObject(data);
                 _this.isError = false;
-                _this.addForm = _this.selectedItem;
+                _this.addForm = copyObject(_this.selectedItem);
                 _this.addForm.isTaskOngoing = false;
                 _this.addForm.machineTypeName = _this.filterMachineType(_this.addForm.machineType);
-                if (_this.selectedItem.processRecordId != '') {
+                if (_this.addForm.processRecordId != '') {
                     /*
-                     已配置需要判断安装状态
-                     如果已经安装，则不能修改
+                     已配置显示当前数据
                      */
-                    _this.loading = true;
-                    $.ajax({
-                        url: HOST + "task/record/getTaskRecordData",
-                        type: 'POST',
-                        dataType: 'json',
-                        traditional: true,
-                        data: {
-                            processRecordId: _this.selectedItem.processRecordId,
-                        },
-                        success: function (res) {
-                            _this.loading = false;
-                            if (res.code == 200) {
+                    var taskList = DefaultTaskList;
+                    taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
+                    taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
+                    _this.addForm.taskList = JSON.stringify(taskList);
 
-                                res.data.list.forEach(item=> {
-                                    _this.addForm.isTaskOngoing = item.status == 2;
-                                    return;
-                                });
-                                if (_this.addForm.isTaskOngoing == true) {//进行中
-                                    showMessage(_this, "请先停止安装流程，再修改流程配置!", 0)
-                                }
-                                else {
-                                    var taskList = DefaultTaskList;
-                                    taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
-                                    taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
-                                    _this.addForm.taskList = JSON.stringify(taskList);
-
-                                    _this.addDialogVisible = true;
-                                }
-                            }
-                        },
-                        error: function (info) {
-                            showMessage("服务器访问出错");
-                        }
-                    })
-
+                    _this.addDialogVisible = true;
                 }
                 else {
                     _this.addForm.processId = '';
@@ -458,6 +427,7 @@
                             taskName: item.text,
                             nodeKey: item.key,
                             status: 1,
+                            processRecordId: _this.addForm.processRecordId
                         });
                     }
                 });
@@ -468,9 +438,10 @@
                     linkData: taskList.linkDataArray,
                     nodeData: taskList.nodeDataArray
                 };
-//                if (_this.addForm.processRecordId != "") {
-//                    prObj._this.addForm.processRecordId;
-//                }
+                if (_this.addForm.processRecordId != ""
+                        && _this.addForm.processRecordId != 0) {
+                    prObj.id = parseInt(_this.addForm.processRecordId);
+                }
 
                 $.ajax({
                     url: HOST + "process/record/addProcessForMachine",
