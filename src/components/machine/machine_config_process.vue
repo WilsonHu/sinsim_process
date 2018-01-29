@@ -161,7 +161,7 @@
                         <el-button
                                 size="small"
                                 type="primary"
-                                :disabled="cantEdit"
+                                :disabled="!scope.row.canConfig"
                                 @click="editWithItem(scope.$index, scope.row)">配置流程
                         </el-button>
                     </template>
@@ -328,7 +328,6 @@
                 },
                 addForm: {},
                 selectedItem: {},
-                cantEdit: false,
                 addDialogVisible: false,
                 isError: false,
 
@@ -373,6 +372,10 @@
                             _this.totalRecords = res.data.total;
                             _this.tableData = res.data.list;
                             _this.startRow = res.data.startRow;
+                            _this.tableData.forEach(item=> {
+                                item.canConfig = item.processRecordId == null
+                                        || item.processRecordId.length == 0
+                            });
                         }
                         _this.loadingUI = false;
                     }
@@ -479,8 +482,8 @@
                         if (res.code == 200) {
                             _this.onSearchDetailData();
                             _this.addDialogVisible = false;
-                            showMessage(_this, "保存成功!", 1)
-                        }else {
+                            showMessage(_this, "保存成功! 请到安装进度页面或计划管理页面查看", 1)
+                        } else {
                             showMessage(_this, "保存失败!", 0)
                         }
                     }
@@ -676,7 +679,7 @@
                             }
                         }
                     },
-                    error:function (info) {
+                    error: function (info) {
                         _this.loadingInstance.close();
                     }
                 })
