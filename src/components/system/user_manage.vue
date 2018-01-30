@@ -78,37 +78,46 @@
 		                    border
 		                    style="width: 100%;" >
                         <el-table-column
-		                        width="80"
+		                        width="75"
+                                align="center"
 		                        label="序号" >
                             <template scope="scope">
                                 {{scope.$index+startRow}}
                             </template>
                         </el-table-column>
                         <el-table-column
+                                align="center"
                                 prop="account"
                                 label="账号">
                         </el-table-column>
                         <el-table-column
+                                align="center"
                                 prop="name"
                                 label="姓名">
                         </el-table-column>
 
                         <el-table-column
+                                align="center"
 		                        prop="role.roleName"
 		                        label="角色" >
                         </el-table-column >
                         <el-table-column
+                                align="center"
                                 prop="group.groupName"
                                 label="安装组" >
                         </el-table-column >
                         <el-table-column
+                                align="center"
                                 prop="valid"
                                 label="在职情况" >
                             <template scope="scope">
                                 {{scope.row.valid == 1 ? "在职" : "离职"}}
                             </template>
                         </el-table-column >
-                        <el-table-column label="操作" width="200" >
+                        <el-table-column
+                                align="center"
+                                label="操作"
+                                width="150" >
                             <template scope="scope" >
                                 <el-button
 		                                size="small"

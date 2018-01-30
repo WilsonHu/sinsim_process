@@ -14,7 +14,8 @@
                     border
                     style="width: 100%">
                 <el-table-column
-                        width="80"
+                        width="75"
+                        align="center"
                         prop="id"
                         label="序号">
                         <template scope="scope" >
@@ -22,14 +23,19 @@
                         </template >
                 </el-table-column>
                 <el-table-column
+                        align="center"
                         prop="roleName"
                         label="角色名称">
                 </el-table-column>
                 <el-table-column
+                        align="center"
                         prop="roleDes"
                         label="角色描述">
                 </el-table-column>
-                <el-table-column label="操作" width="150">
+                <el-table-column
+                        align="center"
+                        label="操作"
+                        width="150">
                     <template scope="scope">
                         <el-button
                                 size="small"

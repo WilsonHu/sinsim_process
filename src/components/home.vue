@@ -5,7 +5,7 @@
                 <el-row>
                     <el-col :span="2">
                         <span style="cursor: pointer;color: #409eff;font-size: 26px; font-weight: bolder; float: left" @click="goToHome()">
-                            <img src="/src/assets/img/sinsim_logo.png" style="height: 30px; margin-left: 10px">
+                            <img src="../assets/img/sinsim_logo.png" style="height: 30px; margin-left: 10px">
                         </span>
                     </el-col >
                     <el-col :span="16">

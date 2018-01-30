@@ -43,7 +43,7 @@
                             </el-form-item >
                         </el-col >
                         <el-col :span="4">
-                            <el-form-item label="安装状态:" >
+                            <el-form-item label="完成状态:" >
                                 <el-select v-model="planedFilters.installStatus" clearable >
                                     <el-option
                                             v-for="item in installStatusList"
@@ -130,19 +130,10 @@
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            label="计划完成时间" >
-                        <template scope="scope" >
-                            <div style="color: #E6A23C">
-                                {{scope.row.taskPlan.planTime | filterDateString}}
-                            </div >
-                        </template >
-                    </el-table-column >
-                    <el-table-column
-                            align="center"
                             label="状态" >
                         <template scope="scope" >
-                            <div :class="scope.row|filterTaskInstallStatusStyle">
-                                {{scope.row.qualityEndTime != null && (scope.row.qualityEndTime <= scope.row.taskPlan.planTime) ? '完成' : '未完成'}}
+                            <div :class="scope.row.status|filterTaskInstallStatusStyle">
+                                {{scope.row.status | filterTaskStatus}}
                             </div >
                         </template >
                     </el-table-column >
@@ -178,6 +169,15 @@
 
                         </el-table-column>
                     </el-table-column>
+                    <el-table-column
+                            align="center"
+                            label="计划完成时间" >
+                        <template scope="scope" >
+                            <div style="color: #E6A23C">
+                                {{scope.row.taskPlan.planTime | filterDateString}}
+                            </div >
+                        </template >
+                    </el-table-column >
                     <el-table-column
                             align="center"
                             label="合同交货日期" >
@@ -550,6 +550,7 @@
                 //分页
                 pageSize: EveryPageNum,//每一页的num
                 //未计划
+                startRow:0,
                 currentPage: 1,
                 //已计划
                 currentPagePlaned: 1,
@@ -585,6 +586,7 @@
                 loadingUI: false,
 
                 machineStatusList : MachineStatusList,
+                taskStatusList:TaskStatusList,
                 searchDateType : SearchDateType,
                 planForm:{
                     planType: 1,
@@ -726,15 +728,15 @@
 
             handleCurrentChange(val) {
                 this.currentPage = val;
-                this.onSearchNotPlanedData();
+                this.onSearchPlanningData();
             },
             search() {
-                this.onSearchNotPlanedData();
+                this.onSearchPlanningData();
             },
             searchPlaned() {
                 this.onSearchPlanedData();
             },
-            onSearchNotPlanedData(){
+            onSearchPlanningData(){
                 var condition = {
                     orderNum: _this.filters.orderNum,
                     machineType: _this.filters.machineType,
@@ -890,13 +892,43 @@
                 }
                 return result;
             },
-            filterTaskInstallStatusStyle(item){
-                if(item.qualityEndTime == null || item.qualityEndTime == "" || item.qualityEndTime > item.taskPlan.planTime) {
-                    return "divTaskStatusUnFinished";
-                }else {
-                    return "divTaskStatusFinished";
+            filterTaskInstallStatusStyle(status){
+                let style = "";
+                switch (status) {
+                    case 0:
+                        style = "divTaskStatusInitial";
+                        break;
+                    case 1:
+                        style = "divTaskStatusInstalling";
+                        break;
+                    case 2:
+                        style = "divTaskStatusInstallFinished";
+                        break;
+                    case 3:
+                        style = "divTaskStatusQualitying";
+                        break;
+                    case 4:
+                        style = "divTaskStatusQualityFinished";
+                        break;
+                    case 5:
+                    case 6:
+                        style = "divTaskStatusAbnormal";
+                        break;
+                    default:
+                        style = "divTaskStatusInitial";
                 }
+                return style;
             },
+            filterTaskStatus(status) {
+                let result = "";
+                for (let i=0; i< _this.taskStatusList.length; i++) {
+                    if(status == _this.taskStatusList[i].value){
+                        result = _this.taskStatusList[i].name;
+                        break;
+                    }
+                }
+                return result;
+            }
         },
         created: function () {
             this.userInfo = JSON.parse(sessionStorage.getItem('user'));
@@ -907,7 +939,7 @@
             this.initAllRoles();
             this.initMachineType();
             this.initAllTasks();
-            this.onSearchNotPlanedData();
+            this.onSearchPlanningData();
             this.onSearchPlanedData();
         },
         mounted: function () {
@@ -927,11 +959,28 @@
         height:550px
     }
 
-    .divTaskStatusFinished {
+    .divTaskStatusInitial {
+        color: #909399;
+    }
+
+    .divTaskStatusInstalling {
+        color: yellowgreen;
+
+    }
+
+    .divTaskStatusInstallFinished {
         color: #67C23A;
     }
 
-    .divTaskStatusUnFinished {
+    .divTaskStatusQualitying {
+        color: #E6A23C;
+    }
+
+    .divTaskStatusQualityFinished {
+        color: green;
+    }
+
+    .divTaskStatusAbnormal {
         color: #F56C6C;
     }
 </style >

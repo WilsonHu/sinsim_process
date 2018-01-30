@@ -364,7 +364,6 @@
         methods: {
             handleCurrentChange(val) {
                 this.currentPage = val;
-                this.startRow = this.pageSize * (this.currentPage - 1)
                 _this.search();
             },
             search() {
@@ -380,8 +379,8 @@
                     query_finish_time: '',
                     status: _this.filters.status,
                     is_fuzzy: true,
-//                    page:_this.currentPage,
-//                    size:_this.pageSize
+                    page:_this.currentPage,
+                    size:_this.pageSize
                 };
                 if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
                     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");

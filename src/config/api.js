@@ -60,6 +60,16 @@ var MachineStatusList = [
     {value: 6, name: '已取消'}
 ];
 
+//安装工序状态
+let TaskStatusList = [
+    {value: 0, name: '待安装'},
+    {value: 1, name: '开始安装'},
+    {value: 2, name: '安装完成'},
+    {value: 3, name: '质检中'},
+    {value: 4, name: '质检完成'},
+    {value: 5, name: '安装异常'},
+    {value: 6, name: '质检异常'}];
+
 //查询日期类型
 var SearchDateType = [
     {value: 1, name: '合同交货日期'},

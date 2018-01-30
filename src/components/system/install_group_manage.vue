@@ -14,18 +14,23 @@
                     border
                     style="width: 100%">
                 <el-table-column
-                        width="80"
+                        width="75"
                         prop="id"
+                        align="center"
                         label="序号">
                         <template scope="scope" >
                             {{scope.$index+startRow}}
                         </template >
                 </el-table-column>
                 <el-table-column
+                        align="center"
                         prop="groupName"
                         label="安装组名称">
                 </el-table-column>
-                <el-table-column label="操作" width="150">
+                <el-table-column
+                        label="操作"
+                        width="150"
+                        align="center">
                     <template scope="scope">
                         <el-button
                                 size="small"
