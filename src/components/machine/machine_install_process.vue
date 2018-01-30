@@ -162,7 +162,7 @@
                         label="完成时间">
                     <template slot-scope="scope">
                         <span v-if="scope.row.processEndTime==null"
-                          style="color: darkorange">
+                              style="color: darkorange">
                             未完成
                         </span>
                         <span v-else>
@@ -177,7 +177,6 @@
                         <el-button
                                 size="small"
                                 type="primary"
-                                :disabled="!scope.row.canConfig"
                                 @click="editWithItem(scope.$index, scope.row)">查看进度
                         </el-button>
                     </template>
@@ -200,74 +199,86 @@
                    @open="onopened">
             <table style="width: 100%">
                 <tr style="width: 100%;vertical-align: text-top;">
-                    <td style="width: 20%; padding-right: 5px">
-                        <el-row>
-                            <el-form :model="addForm">
-                                <el-col :span="24">
-                                    <el-form-item label="机器编号：">
-                                        <el-input type="text"
-                                                  disabled
-                                                  v-model="addForm.machineStrId"
-                                                  style="width:100%"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="24" :offset="0">
-                                    <el-form-item label="机型：">
-                                        <el-input type="text"
-                                                  disabled
-                                                  v-model="addForm.machineTypeName"
-                                                  style="width:100%"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="24" :offset="0">
-                                    <el-form-item label="流程模板：">
-                                        <el-select
-                                                v-model="addForm.processId"
-                                                @change="onSelectedChange"
-                                                clearable
-                                                filterable
-                                                remote
-                                                reserve-keyword
-                                                placeholder="请输入关键词"
-                                                :remote-method="remoteMethod"
-                                                :loading="loading">
-                                            <el-option
-                                                    v-for="item in allProcessList"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
-                            </el-form>
-                        </el-row>
-                        <br>
-                        <el-row>
-                            <el-button
-                                    icon="check"
-                                    size="normal"
-                                    type="primary"
-                                    @click="onSubmit">保存
-                            </el-button>
-                            <el-button
-                                    icon="close"
-                                    size="normal"
-                                    type="danger"
-                                    @click="addDialogVisible = false">关闭
-                            </el-button>
-                        </el-row>
+                    <td style="padding-right: 5px">
+                        <div>
+                            <el-row>
+                                <el-form :model="addForm" label-position="right" label-width="120px">
+
+                                    <el-col :span="10">
+                                        <el-form-item label="订单号：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.orderNum"
+                                                      style="width:100%"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="10" :offset="1">
+                                        <el-form-item label="机器编号：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.machineStrId"
+                                                      style="width:100%"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="10">
+                                        <el-form-item label="铭牌号：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.nameplate"
+                                                      style="width:100%"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="10" :offset="1">
+                                        <el-form-item label="机型：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.machineTypeName"
+                                                      style="width:100%"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="10">
+                                        <el-form-item label="开始时间：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.processCreateTime"
+                                                      style="width:100%"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="10" :offset="1">
+                                        <el-form-item label="完成时间：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.processEndTime"
+                                                      style="width:100%"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="10">
+                                        <el-form-item label="位置：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.location"
+                                                      style="width:100%"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form>
+                            </el-row>
+                            <br>
+                            <el-row>
+                                <el-button
+                                        icon="close"
+                                        size="normal"
+                                        type="danger"
+                                        @click="addDialogVisible = false">
+                                    关闭
+                                </el-button>
+                            </el-row>
+                        </div>
                     </td>
-                    <td style="width: 80%">
-                        <div id="sample">
-                            <div style="width:100%; white-space:nowrap; ">
-                    <span style="display: inline-block; vertical-align: top; width:20%">
-                    <div id="myPaletteDiv" style="border: solid 1px black; height:720px;"></div>
-                    </span>
-                                <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
-                    <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
-                    </span>
-                            </div>
+                    <td style="width: 50%">
+                        <div id="sample" style="width:100%; white-space:nowrap; ">
+                            <span style="display: inline-block; vertical-align: top; text-align: center;width:100%">
+                                <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
+                            </span>
                         </div>
                     </td>
                 </tr>
@@ -281,7 +292,6 @@
     import {Loading} from 'element-ui';
     var _this;
     var myDiagram;
-    var myPalette;
     var subParts = new go.List();
     export default {
         name: "machine_config_process",
@@ -399,87 +409,35 @@
                 _this.addForm = copyObject(_this.selectedItem);
                 _this.addForm.isTaskOngoing = false;
                 _this.addForm.machineTypeName = _this.filterMachineType(_this.addForm.machineType);
+                if (_this.addForm.processCreateTime != null) {
+                    _this.addForm.processCreateTime = _this.filterDateString(_this.addForm.processCreateTime)
+                }
+                if (_this.addForm.processEndTime != null) {
+                    _this.addForm.processEndTime = _this.filterDateString(_this.addForm.processEndTime)
+                }
                 if (_this.addForm.processRecordId != '') {
                     /*
                      已配置显示当前数据
                      */
                     var taskList = DefaultTaskList;
-                    taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
-                    taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
-                    _this.addForm.taskList = JSON.stringify(taskList);
-
+                    try {
+                        taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
+                        taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
+                        _this.addForm.taskList = JSON.stringify(taskList);
+                    } catch (ex) {
+                        showMessage(_this, "图形流程JSON数据解析失败！", 0)
+                        console.log(ex.toString());
+                        return;
+                    }
                     _this.addDialogVisible = true;
                 }
                 else {
-                    _this.addForm.processId = '';
                     _this.addForm.taskList = '';
                     _this.isError = false;
                     _this.addDialogVisible = true;
                 }
             },
 
-            onSubmit()
-            {
-                if (_this.addForm.processId == "") {
-                    showMessage(_this, "作业流程不能为空", 0)
-                    _this.isError = true;
-                    return;
-                }
-                var taskList = JSON.parse(_this.addForm.taskList);
-
-                if (taskList == null || taskList.nodeDataArray.length < 2) {
-                    showMessage(_this, "当前还没有可用流程，请添加后再保存", 0)
-                    return;
-                }
-                var trObjList = new Array();
-
-                taskList.nodeDataArray.forEach(item=> {
-                    if (isUndefined(item.category) || item.category == null) {
-                        trObjList.push({
-                            taskName: item.text,
-                            nodeKey: item.key,
-                            status: 1,
-                            processRecordId: _this.addForm.processRecordId
-                        });
-                    }
-                });
-
-                var prObj = {
-                    machineId: _this.addForm.id,
-                    processId: _this.addForm.processId,
-                    linkData: taskList.linkDataArray,
-                    nodeData: taskList.nodeDataArray
-                };
-                if (_this.addForm.processRecordId != ""
-                        && _this.addForm.processRecordId != 0) {
-                    prObj.id = parseInt(_this.addForm.processRecordId);
-                }
-
-                $.ajax({
-                    url: HOST + "process/record/addProcessForMachine",
-                    type: 'POST',
-                    dataType: 'json',
-                    traditional: true,
-                    data: {
-                        taskRecords: JSON.stringify(trObjList),
-                        processRecord: JSON.stringify(prObj),
-                        machine: JSON.stringify({
-                            id: _this.addForm.id,
-                            status: _this.addForm.status,
-                        }),
-                    },
-                    success: function (res) {
-                        if (res.code == 200) {
-                            _this.onSearchDetailData();
-                            _this.addDialogVisible = false;
-                            showMessage(_this, "保存成功! 请到安装进度页面或计划管理页面查看", 1)
-                        } else {
-                            showMessage(_this, "保存失败!", 0)
-                        }
-                    }
-                })
-
-            },
             initAllRoles()
             {
                 $.ajax({
@@ -530,7 +488,7 @@
                                     "begin_time": "",
                                     "end_time": "",
                                     "group_id": res.data.list[i].groupId,
-                                    "group_name": _this.filterGroup(res.data.list[i].groupId),
+                                    //"group_name": _this.filterGroup(res.data.list[i].groupId),
                                 };
                                 taskContentArray.push(str);
                             }
@@ -565,22 +523,27 @@
             {
                 _this.isError = false;
                 _this.errorMsg = '';
-                resetDiagram();
-                _this.remoteMethod('');
                 _this.loadingInstance = Loading.service(
                         {
                             fullscreen: true,
                             text: "正在加载中，请稍后..."
                         });
+                if (myDiagram != null) {
+                    resetDiagram();
+                }
                 window.setTimeout(()=> {
-
-                    init();
-
-                    if (_this.addForm.taskList != null && _this.addForm.taskList.length > 0) {
-                        _this.renderDiagramDataToUI();
+                    try {
+                        init();
+                        if (_this.addForm.taskList != null && _this.addForm.taskList.length > 0) {
+                            myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
+                        }
+                    } catch (ex) {
+                        showMessage(_this, "图形流程数据加载失败！", 0)
+                        console.log(ex.toString());
+                    } finally {
+                        _this.loadingInstance.close();
                     }
-                    _this.loadingInstance.close();
-                }, 1400);
+                }, 200);
 
             },
             filterGroup(id) {
@@ -606,92 +569,11 @@
                 return result;
             },
 
-            remoteMethod(query) {
-                if (query !== '') {
-                    _this.loading = true;
-                    setTimeout(() => {
-                        _this.loading = false;
-                        _this.allProcessList = _this.allProcessTemplate.filter(item => {
-                            return item.label.toLowerCase()
-                                            .indexOf(query.toLowerCase()) > -1;
-                        });
-                    }, 200);
-                } else {
-                    _this.allProcessList = this.allProcessTemplate;
-                }
-            },
-
-            getDetailProcess(id)
+            filterDateString(strDate)
             {
-                _this.loadingInstance = Loading.service(
-                        {
-                            fullscreen: true,
-                            text: "正在加载中，请稍后..."
-                        });
-                $.ajax({
-                    url: HOST + "process/selectProcess",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        id: id,
-                        isSimple: false,
-                    },
-                    success: function (res) {
-                        if (res.code == 200) {
-                            if (res.data.list != null && res.data.list.length > 0) {
-                                _this.addForm.taskList = res.data.list[0].taskList;
-                                _this.renderDiagramDataToUI();
-                            }
-                        }
-                    },
-                    error: function (info) {
-                        _this.loadingInstance.close();
-                    }
-                })
+                var resDate = new Date(strDate);
+                return resDate.format("yyyy-MM-dd");
             },
-
-            onSelectedChange(item)
-            {
-                _this.getDetailProcess(item);
-            },
-
-            renderDiagramDataToUI()
-            {
-                window.setTimeout(()=> {
-                    try {
-                        //init();
-                        if (_this.addForm.taskList == '') {
-                            myDiagram.model = go.Model.fromJson({
-                                "class": "go.GraphLinksModel",
-                                "linkFromPortIdProperty": "fromPort",
-                                "linkToPortIdProperty": "toPort",
-                                "nodeDataArray": [
-                                    {
-                                        "category": "Start",
-                                        "text": "开始",
-                                        "key": -1,
-                                        "loc": "207 39.99999999999999"
-                                    },
-                                    {
-                                        "category": "End",
-                                        "text": "结束",
-                                        "key": -4,
-                                        "loc": "207 216.26768871290687"
-                                    }
-                                ],
-                                "linkDataArray": []
-                            });
-                        } else {//edit
-                            myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
-                        }
-                    } catch (ex) {
-                        console.log(ex.toString());
-                    } finally {
-                        _this.loadingInstance.close();
-                    }
-                }, 500);
-            },
-
         },
 
         computed: {},
@@ -733,7 +615,7 @@
                 return;
             }
             _this.initAllRoles();
-            _this.getGroupData();
+            //_this.getGroupData();
             _this.initMachineType();
         },
         mounted: function () {
@@ -753,13 +635,6 @@
                     document.getElementById("myDiagramDiv").removeChild(childList[i]);
                 }
             }
-//            var objPalette = document.getElementById("myPaletteDiv");
-//            var childList2 = objPalette.childNodes;
-//            if (childList2 != null && childList2.length > 0) {
-//                for (var i = childList2.length - 1; i >= 0; i--) {
-//                    document.getElementById("myPaletteDiv").removeChild(childList2[i]);
-//                }
-//            }
             if (myDiagram != null) {
                 myDiagram.div = null;
             }
@@ -776,7 +651,7 @@
                 $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
                         {
                             initialContentAlignment: go.Spot.Top,
-                            allowDrop: true,  // must be true to accept drops from the Palette
+                            allowDrop: false,  // must be true to accept drops from the Palette
                             "LinkDrawn": showLinkLabel,  // this DiagramEvent listener is defined below
                             "LinkRelinked": showLinkLabel,
                             "animationManager.duration": 100, // slightly longer than default (600ms) animation
@@ -1010,17 +885,6 @@
         myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
         myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
-        if (myPalette != null) {
-            myPalette.div = null;
-        }
-        myPalette =
-                $(go.Palette, "myPaletteDiv",  // must name or refer to the DIV HTML element
-                        {
-                            "animationManager.duration": 100, // slightly longer than default (600ms) animation
-                            nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
-                            model: new go.GraphLinksModel(taskContentArray)
-                        });
-
         // The following code overrides GoJS focus to stop the browser from scrolling
         // the page when either the Diagram or Palette are clicked or dragged onto.
 
@@ -1032,15 +896,11 @@
         }
 
         myDiagram.doFocus = customFocus;
-        myPalette.doFocus = customFocus;
-        document.getElementById("myPaletteDiv").style.height = document.body.scrollHeight + "px";
 
 //        myDiagram.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
-//        myPalette.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
 
         if (document.body.scrollHeight == 0) {
             document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
-            document.getElementById("myPaletteDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
         }
 
 

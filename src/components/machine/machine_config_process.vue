@@ -254,12 +254,17 @@
                     <td style="width: 80%">
                         <div id="sample">
                             <div style="width:100%; white-space:nowrap; ">
-                    <span style="display: inline-block; vertical-align: top; width:20%">
-                    <div id="myPaletteDiv" style="border: solid 1px black; height:720px;"></div>
-                    </span>
+                                <span style="display: inline-block; vertical-align: top; width:20%">
+                                    <div id="myPaletteDiv"
+                                     style="border: solid 1px black; height:720px;">
+                                    </div>
+                                </span>
                                 <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
-                    <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
-                    </span>
+                                    <div id="myDiagramDiv"
+                                         style="border: solid 1px black;height:720px; ">
+
+                                    </div>
+                                </span>
                             </div>
                         </div>
                     </td>
@@ -586,7 +591,9 @@
             {
                 _this.isError = false;
                 _this.errorMsg = '';
-                resetDiagram();
+                if (myDiagram != null) {
+                    resetDiagram();
+                }
                 _this.remoteMethod('');
                 _this.loadingInstance = Loading.service(
                         {
@@ -601,7 +608,7 @@
                         _this.renderDiagramDataToUI();
                     }
                     _this.loadingInstance.close();
-                }, 1400);
+                }, 200);
 
             },
             filterGroup(id) {
@@ -680,7 +687,6 @@
             {
                 window.setTimeout(()=> {
                     try {
-                        //init();
                         if (_this.addForm.taskList == '') {
                             myDiagram.model = go.Model.fromJson({
                                 "class": "go.GraphLinksModel",
@@ -710,7 +716,7 @@
                     } finally {
                         _this.loadingInstance.close();
                     }
-                }, 500);
+                }, 200);
             },
 
         },
