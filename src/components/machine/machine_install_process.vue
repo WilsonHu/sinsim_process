@@ -1,7 +1,7 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div>
         <div style="text-align: left;">
-            待配置安装流程机器
+            查看机器安装流程
         </div>
         <el-col class="well well-lg" style="background-color: white;">
             <el-form :model="filters" label-position="right" label-width="80px">
@@ -21,10 +21,10 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
-                        <el-form-item label="配置状态:">
-                            <el-select v-model="filters.configStatus" clearable>
+                        <el-form-item label="完成状态:">
+                            <el-select v-model="filters.status" clearable>
                                 <el-option
-                                        v-for="item in configStatusList"
+                                        v-for="item in statusList"
                                         :value="item.value"
                                         :label="item.name">
                                 </el-option>
@@ -43,7 +43,7 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="机器编号:">
-                            <el-input v-model="filters.machine_id"
+                            <el-input v-model="filters.machine_strid"
                                       placeholder="机器编号"
                                       auto-complete="off"></el-input>
                         </el-form-item>
@@ -96,7 +96,7 @@
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        prop="machineId"
+                        prop="machineStrId"
                         label="机器编号">
                 </el-table-column>
                 <el-table-column
@@ -122,35 +122,51 @@
 
                 <el-table-column
                         align="center"
-                        label="配置状态">
+                        label="安装状态">
                     <template scope="scope">
-                        <div v-if="scope.row.processRecordId!=''"
-                             style="color: #2b542c"
-                        >
-                            已配置
-                        </div>
-                        <div v-else style="color: darkred">
+                        <div v-if="scope.row.status==0"
+                             style="color: #686868">
                             未配置
+                        </div>
+                        <div v-if="scope.row.status==1"
+                             style="color: #8b6c0e">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==2"
+                             style="color: #13678b">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==3"
+                             style="color: #198b57">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==4"
+                             style="color: darkred">
+                            {{scope.row.status|filterStatus}}
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        prop="createTime"
-                        label="创建时间">
+                        prop="processCreateTime"
+                        label="开始时间">
                     <template slot-scope="scope">
                         <span>
-                            {{(scope.row.createTime)|filterDateString}}
+                            {{(scope.row.processCreateTime)|filterDateString}}
                         </span>
                     </template>
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        prop="shipTime"
-                        label="发货时间">
+                        prop="processEndTime"
+                        label="完成时间">
                     <template slot-scope="scope">
-                        <span>
-                            {{(scope.row.shipTime)|filterDateString}}
+                        <span v-if="scope.row.processEndTime==null"
+                          style="color: darkorange">
+                            未完成
+                        </span>
+                        <span v-else>
+                            {{(scope.row.processEndTime)|filterDateString}}
                         </span>
                     </template>
                 </el-table-column>
@@ -161,8 +177,8 @@
                         <el-button
                                 size="small"
                                 type="primary"
-                                :disabled="cantEdit"
-                                @click="editWithItem(scope.$index, scope.row)">配置流程
+                                :disabled="!scope.row.canConfig"
+                                @click="editWithItem(scope.$index, scope.row)">查看进度
                         </el-button>
                     </template>
                 </el-table-column>
@@ -191,7 +207,7 @@
                                     <el-form-item label="机器编号：">
                                         <el-input type="text"
                                                   disabled
-                                                  v-model="addForm.machineId"
+                                                  v-model="addForm.machineStrId"
                                                   style="width:100%"></el-input>
                                     </el-form-item>
                                 </el-col>
@@ -199,20 +215,27 @@
                                     <el-form-item label="机型：">
                                         <el-input type="text"
                                                   disabled
-                                                  v-model="addForm.machineType|filterMachineType"
+                                                  v-model="addForm.machineTypeName"
                                                   style="width:100%"></el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="24" :offset="0">
                                     <el-form-item label="流程模板：">
                                         <el-select
+                                                v-model="addForm.processId"
+                                                @change="onSelectedChange"
                                                 clearable
-                                                v-model="addForm.groupId"
-                                                placeholder="请选择">
+                                                filterable
+                                                remote
+                                                reserve-keyword
+                                                placeholder="请输入关键词"
+                                                :remote-method="remoteMethod"
+                                                :loading="loading">
                                             <el-option
-                                                    v-for="item in groupList"
-                                                    :label="item.groupName"
-                                                    :value="item.id">
+                                                    v-for="item in allProcessList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
                                             </el-option>
                                         </el-select>
                                     </el-form-item>
@@ -238,12 +261,12 @@
                     <td style="width: 80%">
                         <div id="sample">
                             <div style="width:100%; white-space:nowrap; ">
-			                <span style="display: inline-block; vertical-align: top; width:20%">
-			                  <div id="myPaletteDiv" style="border: solid 1px black; height:720px;"></div>
-			                </span>
+                    <span style="display: inline-block; vertical-align: top; width:20%">
+                    <div id="myPaletteDiv" style="border: solid 1px black; height:720px;"></div>
+                    </span>
                                 <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
-			                    <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
-			                </span>
+                    <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
+                    </span>
                             </div>
                         </div>
                     </td>
@@ -266,7 +289,7 @@
         data () {
             _this = this;
             return {
-                queryDataUrl: HOST + "machine/selectConfigMachine",
+                queryDataUrl: HOST + "machine/selectProcessMachine",
                 taskContentNameUrl: HOST + "task/list",
                 errorMsg: '',
                 selectedItem: {},
@@ -278,16 +301,17 @@
                 currentPage: 1,
                 startRow: 0,
                 totalRecords: 0,
-                configStatusList: ConfigStatusList,
+                statusList: ProcessStatusList,
                 filters: {
-                    machine_id: '',
+                    machine_strid: '',
                     contract_num: '',
                     order_status: '',
                     orderNum: '',
-                    configStatus: 1,
+                    status: '',
                     selectDate: '',
                 },
 
+                allMachineType: [],
                 allRoles: [],
                 loadingUI: false,
                 pickerOptions: {
@@ -318,10 +342,12 @@
                     }]
                 },
                 addForm: {},
-                selectedItem: {},
-                cantEdit: false,
                 addDialogVisible: false,
                 isError: false,
+
+                loading: false,
+                allProcessTemplate: [],
+                allProcessList: []
             }
 
         },
@@ -329,6 +355,7 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.startRow = this.pageSize * (this.currentPage - 1)
+                _this.search();
             },
             search() {
                 this.onSearchDetailData();
@@ -336,12 +363,13 @@
             onSearchDetailData()
             {
                 var condition = {
-                    machine_id: _this.filters.machine_id,
-                    orderNum: _this.filters.orderNum,
-                    contract_num: _this.filters.contract_num,
+                    machine_strid: _this.filters.machine_strid.trim(),
+                    orderNum: _this.filters.orderNum.trim(),
+                    contractNum: _this.filters.contract_num.trim(),
                     query_start_time: '',
                     query_finish_time: '',
-                    configStatus: _this.filters.configStatus,
+                    status: _this.filters.status,
+                    is_fuzzy: true,
 //                    page:_this.currentPage,
 //                    size:_this.pageSize
                 };
@@ -366,19 +394,90 @@
             },
 
             editWithItem(index, data){
-                _this.selectedItem = data;
+                _this.selectedItem = copyObject(data);
                 _this.isError = false;
-                _this.addForm = _this.selectedItem;
-                _this.addDialogVisible = true;
+                _this.addForm = copyObject(_this.selectedItem);
+                _this.addForm.isTaskOngoing = false;
+                _this.addForm.machineTypeName = _this.filterMachineType(_this.addForm.machineType);
+                if (_this.addForm.processRecordId != '') {
+                    /*
+                     已配置显示当前数据
+                     */
+                    var taskList = DefaultTaskList;
+                    taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
+                    taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
+                    _this.addForm.taskList = JSON.stringify(taskList);
+
+                    _this.addDialogVisible = true;
+                }
+                else {
+                    _this.addForm.processId = '';
+                    _this.addForm.taskList = '';
+                    _this.isError = false;
+                    _this.addDialogVisible = true;
+                }
             },
 
             onSubmit()
             {
-                if (isStringEmpty(this.addForm.taskName)) {
-                    showMessage(_this, "作业内容不能为空", 0)
+                if (_this.addForm.processId == "") {
+                    showMessage(_this, "作业流程不能为空", 0)
                     _this.isError = true;
                     return;
                 }
+                var taskList = JSON.parse(_this.addForm.taskList);
+
+                if (taskList == null || taskList.nodeDataArray.length < 2) {
+                    showMessage(_this, "当前还没有可用流程，请添加后再保存", 0)
+                    return;
+                }
+                var trObjList = new Array();
+
+                taskList.nodeDataArray.forEach(item=> {
+                    if (isUndefined(item.category) || item.category == null) {
+                        trObjList.push({
+                            taskName: item.text,
+                            nodeKey: item.key,
+                            status: 1,
+                            processRecordId: _this.addForm.processRecordId
+                        });
+                    }
+                });
+
+                var prObj = {
+                    machineId: _this.addForm.id,
+                    processId: _this.addForm.processId,
+                    linkData: taskList.linkDataArray,
+                    nodeData: taskList.nodeDataArray
+                };
+                if (_this.addForm.processRecordId != ""
+                        && _this.addForm.processRecordId != 0) {
+                    prObj.id = parseInt(_this.addForm.processRecordId);
+                }
+
+                $.ajax({
+                    url: HOST + "process/record/addProcessForMachine",
+                    type: 'POST',
+                    dataType: 'json',
+                    traditional: true,
+                    data: {
+                        taskRecords: JSON.stringify(trObjList),
+                        processRecord: JSON.stringify(prObj),
+                        machine: JSON.stringify({
+                            id: _this.addForm.id,
+                            status: _this.addForm.status,
+                        }),
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.onSearchDetailData();
+                            _this.addDialogVisible = false;
+                            showMessage(_this, "保存成功! 请到安装进度页面或计划管理页面查看", 1)
+                        } else {
+                            showMessage(_this, "保存失败!", 0)
+                        }
+                    }
+                })
 
             },
             initAllRoles()
@@ -467,17 +566,101 @@
                 _this.isError = false;
                 _this.errorMsg = '';
                 resetDiagram();
+                _this.remoteMethod('');
                 _this.loadingInstance = Loading.service(
                         {
                             fullscreen: true,
                             text: "正在加载中，请稍后..."
                         });
+                window.setTimeout(()=> {
 
+                    init();
+
+                    if (_this.addForm.taskList != null && _this.addForm.taskList.length > 0) {
+                        _this.renderDiagramDataToUI();
+                    }
+                    _this.loadingInstance.close();
+                }, 1400);
+
+            },
+            filterGroup(id) {
+                let result = "";
+                for (let i = 0; i < _this.groupList.length; i++) {
+                    if (_this.groupList[i].id == id) {
+                        result = _this.groupList[i].groupName;
+                        break;
+                    }
+                }
+                return result;
+            },
+
+            filterMachineType(id)
+            {
+                var result = '';
+                for (var i = 0; i < _this.allMachineType.length; i++) {
+                    if (id == _this.allMachineType[i].id) {
+                        result = _this.allMachineType[i].name;
+                        break;
+                    }
+                }
+                return result;
+            },
+
+            remoteMethod(query) {
+                if (query !== '') {
+                    _this.loading = true;
+                    setTimeout(() => {
+                        _this.loading = false;
+                        _this.allProcessList = _this.allProcessTemplate.filter(item => {
+                            return item.label.toLowerCase()
+                                            .indexOf(query.toLowerCase()) > -1;
+                        });
+                    }, 200);
+                } else {
+                    _this.allProcessList = this.allProcessTemplate;
+                }
+            },
+
+            getDetailProcess(id)
+            {
+                _this.loadingInstance = Loading.service(
+                        {
+                            fullscreen: true,
+                            text: "正在加载中，请稍后..."
+                        });
+                $.ajax({
+                    url: HOST + "process/selectProcess",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id: id,
+                        isSimple: false,
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            if (res.data.list != null && res.data.list.length > 0) {
+                                _this.addForm.taskList = res.data.list[0].taskList;
+                                _this.renderDiagramDataToUI();
+                            }
+                        }
+                    },
+                    error: function (info) {
+                        _this.loadingInstance.close();
+                    }
+                })
+            },
+
+            onSelectedChange(item)
+            {
+                _this.getDetailProcess(item);
+            },
+
+            renderDiagramDataToUI()
+            {
                 window.setTimeout(()=> {
                     try {
-                        init();
-                        if (_this.isEdit == false) {//add
-                            _this.addForm = {};
+                        //init();
+                        if (_this.addForm.taskList == '') {
                             myDiagram.model = go.Model.fromJson({
                                 "class": "go.GraphLinksModel",
                                 "linkFromPortIdProperty": "fromPort",
@@ -506,19 +689,11 @@
                     } finally {
                         _this.loadingInstance.close();
                     }
-                }, 1200)
+                }, 500);
             },
-            filterGroup(id) {
-                let result = "";
-                for (let i = 0; i < _this.groupList.length; i++) {
-                    if (_this.groupList[i].id == id) {
-                        result = _this.groupList[i].groupName;
-                        break;
-                    }
-                }
-                return result;
-            },
+
         },
+
         computed: {},
         filters: {
             filterDateString(strDate)
@@ -527,13 +702,12 @@
                 return resDate.format("yyyy-MM-dd");
             },
 
-            filterConfigStatus(id)
+            filterStatus(id)
             {
-
-                var result = _this.configStatusList[0].name;
-                for (var i = 0; i < _this.configStatusList.length; i++) {
-                    if (id == _this.configStatusList[i].value) {
-                        result = _this.configStatusList[i].name;
+                var result = _this.statusList[0].name;
+                for (var i = 0; i < _this.statusList.length; i++) {
+                    if (id == _this.statusList[i].value) {
+                        result = _this.statusList[i].name;
                         break;
                     }
                 }
@@ -559,35 +733,33 @@
                 return;
             }
             _this.initAllRoles();
-            _this.initMachineType();
             _this.getGroupData();
-            _this.getTaskContentName();
-//            _this.getProcessData();
-
+            _this.initMachineType();
         },
         mounted: function () {
-            _this.filters.configStatus = 1;
+            _this.filters.status = "";
             _this.search();
         },
     }
 
     var taskContentArray = [];
     function resetDiagram() {
-        var objDiagram = document.getElementById("myDiagramDiv");
+
         try {
+            var objDiagram = document.getElementById("myDiagramDiv");
             var childList = objDiagram.childNodes;
             if (childList != null && childList.length > 0) {
                 for (var i = childList.length - 1; i >= 0; i--) {
                     document.getElementById("myDiagramDiv").removeChild(childList[i]);
                 }
             }
-            var objPalette = document.getElementById("myPaletteDiv");
-            var childList2 = objPalette.childNodes;
-            if (childList2 != null && childList2.length > 0) {
-                for (var i = childList2.length - 1; i >= 0; i--) {
-                    document.getElementById("myPaletteDiv").removeChild(childList2[i]);
-                }
-            }
+//            var objPalette = document.getElementById("myPaletteDiv");
+//            var childList2 = objPalette.childNodes;
+//            if (childList2 != null && childList2.length > 0) {
+//                for (var i = childList2.length - 1; i >= 0; i--) {
+//                    document.getElementById("myPaletteDiv").removeChild(childList2[i]);
+//                }
+//            }
             if (myDiagram != null) {
                 myDiagram.div = null;
             }
@@ -596,7 +768,7 @@
         }
     }
     function init() {
-//        resetDiagram();
+        resetDiagram();
         //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
         var $ = go.GraphObject.make;  // for conciseness in defining templates
 
@@ -838,17 +1010,6 @@
         myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
         myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
-        //load();  // load an initial diagram from some JSON text
-        myDiagram.model = go.Model.fromJson({
-            "class": "go.GraphLinksModel",
-            "linkFromPortIdProperty": "fromPort",
-            "linkToPortIdProperty": "toPort",
-            "nodeDataArray": [
-                {"category": "Start", "text": "Start", "key": -1, "loc": "207.15625000000003 39.99999999999999"},
-                {"category": "End", "text": "End", "key": -4, "loc": "208.5960057626528 216.26768871290687"}
-            ],
-            "linkDataArray": []
-        });
         if (myPalette != null) {
             myPalette.div = null;
         }
@@ -874,8 +1035,8 @@
         myPalette.doFocus = customFocus;
         document.getElementById("myPaletteDiv").style.height = document.body.scrollHeight + "px";
 
-        myDiagram.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
-        myPalette.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
+//        myDiagram.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
+//        myPalette.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
 
         if (document.body.scrollHeight == 0) {
             document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";

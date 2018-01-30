@@ -23,9 +23,17 @@ var DefaultTaskList = {
     "linkToPortIdProperty": "toPort",
 }
 
-//需求单状态
+//机器安装完成状态
+var ProcessStatusList = [
+    // {value: 0, name: '未配置'},
+    {value: 1, name: '待安装'},
+    {value: 2, name: '进行中'},
+    {value: 3, name: '已完成'},
+    {value: 4, name: '异常'},
+];
+
+//机器流程配置状态
 var ConfigStatusList = [
-    {value: 0, name: '全部'},
     {value: 1, name: '未配置'},
     {value: 2, name: '已配置'},
 ];

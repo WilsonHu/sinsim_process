@@ -139,9 +139,13 @@
                         prop="createTime"
                         label="创建时间">
                     <template slot-scope="scope">
-                    <span>
-                    {{(scope.row.createTime)|filterDateString}}
-        </span>
+                        <span v-if="scope.row.createTime==null"
+                              style="color: darkorange">
+                            无
+                        </span>
+                        <span v-else>
+                            {{(scope.row.createTime)|filterDateString}}
+                        </span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -149,9 +153,13 @@
                         prop="shipTime"
                         label="发货时间">
                     <template slot-scope="scope">
-                    <span>
-                    {{(scope.row.shipTime)|filterDateString}}
-        </span>
+                        <span v-if="scope.row.shipTime==null"
+                                style="color: darkorange">
+                            无
+                        </span>
+                        <span v-else>
+                            {{(scope.row.shipTime)|filterDateString}}
+                        </span>
                     </template>
                 </el-table-column>
 
