@@ -333,9 +333,9 @@
                             <el-table-column
                                     align="center"
                                     scope="scope"
-                                    label="未开始" >
+                                    label="初始状态" >
                                 <template scope="scope" >
-                                    <el-tag type="danger" style="font-weight: bold" v-if="getInitialTaskNum(scope.row) != ''">{{getInitialTaskNum(scope.row)}}</el-tag>
+                                    <el-tag type="danger" style="font-weight: bold">{{scope.row.initialTaskNum}}</el-tag>
                                 </template>
                             </el-table-column >
                             <el-table-column
@@ -353,7 +353,7 @@
                                     scope="scope"
                                     label="质检" >
                                 <template scope="scope" >
-                                    <el-tag type="warning" style="font-weight: bold">{{scope.row.qualityDoingTaskNum}}</el-tag>
+                                    <el-tag type="warning" style="font-weight: bold" v-popover:popover1>{{scope.row.qualityDoingTaskNum}}</el-tag>
                                     <el-tag type="success" style="font-weight: bold">{{scope.row.qualityDoneTaskNum}}</el-tag>
                                     <el-tag type="danger" style="font-weight: bold">{{scope.row.qualityAbnormalTaskNum}}</el-tag>
                                 </template>
@@ -662,7 +662,7 @@
             },
             getInitialTaskNum(task) {
                 if(task != null) {
-                    let num = task.planedTaskNum - task.installingTaskNum - task.installedTaskNum
+                    var num = task.planedTaskNum - task.installingTaskNum - task.installedTaskNum
                                 - task.qualityDoingTaskNum - task.qualityDoneTaskNum - task.installAbnormalTaskNum - task.qualityAbnormalTaskNum;
                     if(num >=0) {
                         return num;
