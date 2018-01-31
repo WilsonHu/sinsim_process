@@ -151,7 +151,7 @@
                         label="发货时间">
                     <template slot-scope="scope">
                         <span v-if="scope.row.shipTime==null"
-                                style="color: darkorange">
+                              style="color: darkorange">
                             无
                         </span>
                         <span v-else>
@@ -253,7 +253,7 @@
                             <div style="width:100%; white-space:nowrap; ">
                                 <span style="display: inline-block; vertical-align: top; width:20%">
                                     <div id="myPaletteDiv"
-                                     style="border: solid 1px black; height:720px;">
+                                         style="border: solid 1px black; height:720px;">
                                     </div>
                                 </span>
                                 <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
@@ -364,8 +364,8 @@
                     query_finish_time: '',
                     configStatus: _this.filters.configStatus,
                     is_fuzzy: true,
-                    page:_this.currentPage,
-                    size:_this.pageSize
+                    page: _this.currentPage,
+                    size: _this.pageSize
                 };
                 if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
                     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
@@ -422,6 +422,7 @@
                     _this.isError = true;
                     return;
                 }
+                _this.addForm.taskList = myDiagram.model.toJson();
                 var taskList = JSON.parse(_this.addForm.taskList);
 
                 if (taskList == null || taskList.nodeDataArray.length < 2) {
