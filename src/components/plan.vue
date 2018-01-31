@@ -201,11 +201,11 @@
                 <div class="block" style="text-align: center; margin-top: 20px" >
                     <el-pagination
                             background
-                            @current-change="handleCurrentChange"
-                            :current-page="currentPage"
+                            @current-change="handleCurrentChangePlaned"
+                            :current-page="currentPagePlaned"
                             :page-size="pageSize"
-                            layout="prev, pager, next, jumper"
-                            :total="totalNum" >
+                            layout="total, prev, pager, next, jumper"
+                            :total="totalNumPlaned" >
                     </el-pagination >
                 </div >
             </el-tab-pane>
@@ -729,6 +729,10 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.onSearchPlanningData();
+            },
+            handleCurrentChangePlaned(val) {
+                this.currentPagePlaned = val;
+                this.onSearchPlanedData();
             },
             search() {
                 this.onSearchPlanningData();
