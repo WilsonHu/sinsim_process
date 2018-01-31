@@ -257,6 +257,7 @@
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
+
                                     <el-col :span="10" :offset="1">
                                         <el-form-item label="当前流程：">
                                             <el-input type="text"
@@ -265,14 +266,31 @@
                                                       style="width:100%;"></el-input>
                                         </el-form-item>
                                     </el-col>
-                                    <el-col :span="1" :offset="1">
-                                        <div
-                                                style="width: 50px;height:30px;
-                                                background-color: yellow;
-                                                border: solid 0.5px grey;
-                                                margin-top: 5px;
-                                                margin-left: -20px;
-                                                "></div>
+                                    <el-col :span="1">
+                                        <div class="colorDiv"
+                                             style="background-color: yellow;"></div>
+                                    </el-col>
+
+                                    <el-col :span="10">
+                                        <el-form-item label="流程总数：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.totalTaskCount"
+                                                      style="width:100%;"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+
+                                    <el-col :span="10" :offset="1">
+                                        <el-form-item label="已完成数：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.finishedCount"
+                                                      style="width:100%;"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="1">
+                                        <div class="colorDiv"
+                                             style="background-color: gray;"></div>
                                     </el-col>
 
                                     <el-col :span="10">
@@ -286,6 +304,20 @@
                                                          :percentage="addForm.currentProgress"></el-progress>
                                         </el-form-item>
                                     </el-col>
+
+                                    <el-col :span="10" :offset="1">
+                                        <el-form-item label="未完成数：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.totalTaskCount-addForm.finishedCount"
+                                                      style="width:100%;"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="1">
+                                        <div class="colorDiv"
+                                             style="background-color: #00A9C9;"></div>
+                                    </el-col>
+
                                 </el-form>
                             </el-row>
                             <br>
@@ -430,7 +462,6 @@
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
                 _this.addForm = copyObject(_this.selectedItem);
-                _this.addForm.isTaskOngoing = false;
                 _this.addForm.machineTypeName = _this.filterMachineType(_this.addForm.machineType);
                 if (_this.addForm.processCreateTime != null) {
                     _this.addForm.processCreateTime = _this.filterDateString(_this.addForm.processCreateTime)
@@ -446,27 +477,28 @@
                     try {
                         taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
                         taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
-                        var finishedCount = 0;
                         _this.addForm.progressStatus = PROGRESSTYPE.NORMAL;
+                        _this.addForm.finishedCount = 0;
+                        _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
                         taskList.nodeDataArray.forEach(item=> {
                             if (item.task_status == 1)//进行中
                             {
                                 item.category = ProcessCatergory.Working;
                                 _this.addForm.currentTaskName = item.text;
-                                finishedCount++;
                             }
                             else if (parseInt(item.task_status) > 1 && parseInt(item.task_status) <= 4) {//完成
                                 item.category = ProcessCatergory.Finished;
-                                finishedCount++;
+                                _this.addForm.finishedCount++;
                             }
                             else if (parseInt(item.task_status) > 4)//异常
                             {
                                 _this.addForm.progressStatus = PROGRESSTYPE.EXCEPTION
                             }
                         });
-                        _this.addForm.currentProgress = (finishedCount / (taskList.nodeDataArray.length - 2)) * 100;
+
+                        _this.addForm.currentProgress = ( _this.addForm.finishedCount / _this.addForm.totalTaskCount) * 100;
                         _this.addForm.currentProgress = parseInt(_this.addForm.currentProgress);
-                        if (finishedCount == taskList.nodeDataArray.length) {
+                        if (_this.addForm.finishedCount == _this.addForm.totalTaskCount) {
                             _this.addForm.progressStatus = PROGRESSTYPE.SUCCESS
                         }
                         _this.addForm.taskList = JSON.stringify(taskList);
@@ -860,7 +892,7 @@
                                         {
                                             font: "bold 11pt Helvetica, Arial, sans-serif",
                                             stroke: lightText,
-                                            editable: true,
+                                            editable: false,
                                             textAlign: 'center',
                                             isMultiline: true
                                         },
@@ -876,11 +908,13 @@
                 $(go.Node, "Spot", nodeStyle(),
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Circle",
-                                        {minSize: new go.Size(40, 40), fill: "#DC3C00", stroke: null}),
+                                        {minSize: new go.Size(48, 48), fill: "#DC3C00", stroke: null}),
                                 $(go.TextBlock, "End",
                                         {
-                                            font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText,
+                                            font: "bold 11pt Helvetica, Arial, sans-serif",
+                                            stroke: lightText,
                                             textAlign: 'center',
+                                            editable: false,
                                             isMultiline: true
                                         },
                                         new go.Binding("text"))
@@ -901,7 +935,7 @@
                                     maxSize: new go.Size(200, NaN),
                                     wrap: go.TextBlock.WrapFit,
                                     textAlign: "center",
-                                    editable: true,
+                                    editable: false,
                                     font: "bold 12pt Helvetica, Arial, sans-serif",
                                     stroke: '#454545'
                                 },
@@ -999,6 +1033,15 @@
     .el-input-number {
         width: 100%;
         float: left;
+    }
+
+    .colorDiv {
+        width: 40px;
+        height: 30px;
+        background-color: gray;
+        border: solid 0.5px grey;
+        margin-top: 5px;
+        margin-left: 10px;
     }
 
 </style>

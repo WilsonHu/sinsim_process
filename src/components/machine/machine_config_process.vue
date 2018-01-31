@@ -821,6 +821,10 @@
                 if (idx >= 0) document.title = document.title.substr(0, idx);
             }
         });
+        //PartResized
+        myDiagram.addDiagramListener("PartResized", function (e) {
+            console.log("PartResized")
+        });
 
         // helper definitions for node templates
 
@@ -934,7 +938,7 @@
                                         {
                                             font: "bold 11pt Helvetica, Arial, sans-serif",
                                             stroke: lightText,
-                                            editable: true,
+                                            editable: false,
                                             textAlign: 'center',
                                             isMultiline: true
                                         },
@@ -950,10 +954,12 @@
                 $(go.Node, "Spot", nodeStyle(),
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Circle",
-                                        {minSize: new go.Size(40, 40), fill: "#DC3C00", stroke: null}),
+                                        {minSize: new go.Size(48, 48), fill: "#DC3C00", stroke: null}),
                                 $(go.TextBlock, "End",
                                         {
-                                            font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText,
+                                            font: "bold 11pt Helvetica, Arial, sans-serif",
+                                            stroke: lightText,
+                                            editable: false,
                                             textAlign: 'center',
                                             isMultiline: true
                                         },

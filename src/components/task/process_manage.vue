@@ -640,7 +640,7 @@
                                         {
                                             font: "bold 11pt Helvetica, Arial, sans-serif",
                                             stroke: lightText,
-                                            editable: true,
+                                            editable: false,
                                             textAlign: 'center',
                                             isMultiline: true
                                         },
@@ -656,10 +656,12 @@
                 $(go.Node, "Spot", nodeStyle(),
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Circle",
-                                        {minSize: new go.Size(40, 40), fill: "#DC3C00", stroke: null}),
+                                        {minSize: new go.Size(48, 48), fill: "#DC3C00", stroke: null}),
                                 $(go.TextBlock, "End",
                                         {
-                                            font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText,
+                                            font: "bold 11pt Helvetica, Arial, sans-serif",
+                                            stroke: lightText,
+                                            editable: false,
                                             textAlign: 'center',
                                             isMultiline: true
                                         },
@@ -681,7 +683,7 @@
                                     maxSize: new go.Size(200, NaN),
                                     wrap: go.TextBlock.WrapFit,
                                     textAlign: "center",
-                                    editable: true,
+                                    editable: false,
                                     font: "bold 12pt Helvetica, Arial, sans-serif",
                                     stroke: '#454545'
                                 },
