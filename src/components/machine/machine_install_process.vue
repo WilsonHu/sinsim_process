@@ -553,7 +553,7 @@
                     return;
                 }
                 $.ajax({
-                    url: _this.groupUrl,
+                    url: HOST + "/install/group/list",
                     type: 'POST',
                     dataType: 'JSON',
                     data: {},

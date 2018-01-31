@@ -571,7 +571,7 @@
                     return;
                 }
                 $.ajax({
-                    url: _this.groupUrl,
+                    url: HOST + "/install/group/list",
                     type: 'POST',
                     dataType: 'JSON',
                     data: {},
@@ -596,10 +596,9 @@
                             fullscreen: true,
                             text: "正在加载中，请稍后..."
                         });
+
                 window.setTimeout(()=> {
-
                     init();
-
                     if (_this.addForm.taskList != null && _this.addForm.taskList.length > 0) {
                         _this.renderDiagramDataToUI();
                     }
@@ -608,8 +607,8 @@
 
             },
             filterGroup(id) {
-                let result = "";
-                for (let i = 0; i < _this.groupList.length; i++) {
+                var result = "";
+                for (var i = 0; i < _this.groupList.length; i++) {
                     if (_this.groupList[i].id == id) {
                         result = _this.groupList[i].groupName;
                         break;

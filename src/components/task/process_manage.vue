@@ -157,6 +157,7 @@
                 addUrl: HOST + "process/add",
                 editProcessUrl: HOST + "process/update",
                 taskContentNameUrl: HOST + "task/list",
+                groupUrl: HOST + "/install/group/list",
                 listLoading: false,
                 groupList: [],
                 tableData: [],
