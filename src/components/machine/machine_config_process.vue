@@ -1,8 +1,5 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div>
-        <div style="text-align: left;">
-            待配置安装流程机器
-        </div>
         <el-col class="well well-lg" style="background-color: white;">
             <el-form :model="filters" label-position="right" label-width="80px">
                 <el-row>
@@ -1069,8 +1066,8 @@
 //        myPalette.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
 
         if (document.body.scrollHeight == 0) {
-            document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
-            document.getElementById("myPaletteDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
+            document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
+            document.getElementById("myPaletteDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
         }
 
 

@@ -1,8 +1,5 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div>
-        <div style="text-align: left;">
-            查看机器安装流程
-        </div>
         <el-col class="well well-lg" style="background-color: white;">
             <el-form :model="filters" label-position="right" label-width="80px">
                 <el-row>
@@ -194,7 +191,7 @@
             </div>
         </el-col>
 
-        <el-dialog title="机器配置流程" :visible.sync="addDialogVisible"
+        <el-dialog title="机器安装进度" :visible.sync="addDialogVisible"
                    fullscreen
                    @open="onopened">
             <table style="width: 100%">
@@ -260,6 +257,35 @@
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
+                                    <el-col :span="10" :offset="1">
+                                        <el-form-item label="当前流程：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.currentTaskName"
+                                                      style="width:100%;"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="1" :offset="1">
+                                        <div
+                                                style="width: 50px;height:30px;
+                                                background-color: yellow;
+                                                border: solid 0.5px grey;
+                                                margin-top: 5px;
+                                                margin-left: -20px;
+                                                "></div>
+                                    </el-col>
+
+                                    <el-col :span="10">
+                                        <el-form-item label="当前进度：">
+
+                                            <el-progress type="circle"
+                                                         :text-inside="false"
+                                                         :stroke-width="15"
+                                                         show-text
+                                                         :status="addForm.progressStatus"
+                                                         :percentage="addForm.currentProgress"></el-progress>
+                                        </el-form-item>
+                                    </el-col>
                                 </el-form>
                             </el-row>
                             <br>
@@ -275,10 +301,8 @@
                         </div>
                     </td>
                     <td style="width: 50%">
-                        <div id="sample" style="width:100%; white-space:nowrap; ">
-                            <span style="display: inline-block; vertical-align: top; text-align: center;width:100%">
-                                <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
-                            </span>
+                        <div id="sample" style="width:100%; white-space:nowrap;">
+                            <div id="myDiagramDiv" style="border: solid 1px black;height:720px;"></div>
                         </div>
                     </td>
                 </tr>
@@ -379,8 +403,8 @@
                     query_finish_time: '',
                     status: _this.filters.status,
                     is_fuzzy: true,
-                    page:_this.currentPage,
-                    size:_this.pageSize
+                    page: _this.currentPage,
+                    size: _this.pageSize
                 };
                 if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
                     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
@@ -418,10 +442,33 @@
                     /*
                      已配置显示当前数据
                      */
-                    var taskList = DefaultTaskList;
+                    var taskList = copyObject(DefaultTaskList);
                     try {
-                        taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
                         taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
+                        taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
+                        var finishedCount = 0;
+                        _this.addForm.progressStatus = PROGRESSTYPE.NORMAL;
+                        taskList.nodeDataArray.forEach(item=> {
+                            if (item.task_status == 1)//进行中
+                            {
+                                item.category = ProcessCatergory.Working;
+                                _this.addForm.currentTaskName = item.text;
+                                finishedCount++;
+                            }
+                            else if (parseInt(item.task_status) > 1 && parseInt(item.task_status) <= 4) {//完成
+                                item.category = ProcessCatergory.Finished;
+                                finishedCount++;
+                            }
+                            else if (parseInt(item.task_status) > 4)//异常
+                            {
+                                _this.addForm.progressStatus = PROGRESSTYPE.EXCEPTION
+                            }
+                        });
+                        _this.addForm.currentProgress = (finishedCount / (taskList.nodeDataArray.length - 2)) * 100;
+                        _this.addForm.currentProgress = parseInt(_this.addForm.currentProgress);
+                        if (finishedCount == taskList.nodeDataArray.length) {
+                            _this.addForm.progressStatus = PROGRESSTYPE.SUCCESS
+                        }
                         _this.addForm.taskList = JSON.stringify(taskList);
                     } catch (ex) {
                         showMessage(_this, "图形流程JSON数据解析失败！", 0)
@@ -628,10 +675,13 @@
 
         try {
             var objDiagram = document.getElementById("myDiagramDiv");
-            var childList = objDiagram.childNodes;
-            if (childList != null && childList.length > 0) {
-                for (var i = childList.length - 1; i >= 0; i--) {
-                    document.getElementById("myDiagramDiv").removeChild(childList[i]);
+            if (objDiagram != null) {
+
+                var childList = objDiagram.childNodes;
+                if (childList != null && childList.length > 0) {
+                    for (var i = childList.length - 1; i >= 0; i--) {
+                        document.getElementById("myDiagramDiv").removeChild(childList[i]);
+                    }
                 }
             }
             if (myDiagram != null) {
@@ -753,8 +803,37 @@
                                         new go.Binding("figure", "figure")),
                                 $(go.TextBlock,
                                         {
-                                            font: "bold 11pt Helvetica, Arial, sans-serif",
+                                            font: "bold 11pt Arial",
                                             stroke: "black",
+                                            margin: 8,
+//                                            maxSize: new go.Size(160, NaN),
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
+
+
+        myDiagram.nodeTemplateMap.add("Finished",  // the default category
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "gray", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: lightText,
                                             margin: 8,
 //                                            maxSize: new go.Size(160, NaN),
                                             maxSize: new go.Size(160, 160),
@@ -896,13 +975,10 @@
 
         myDiagram.doFocus = customFocus;
 
-//        myDiagram.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
-
+        myDiagram.isReadOnly = true;  // Disable the diagram!
         if (document.body.scrollHeight == 0) {
-            document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
+            document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
         }
-
-
     } // end init
 
     // Make all ports on a node visible when the mouse is over the node

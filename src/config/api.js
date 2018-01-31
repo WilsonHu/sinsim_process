@@ -17,14 +17,25 @@ var ScrollTimerInterval = 5000;
 var DisableScroll = 1;
 var COM_CMD_INTERVAL = 5000;
 
-var DefaultTaskList = {
+const PROGRESSTYPE = {
+    NORMAL: "",
+    EXCEPTION: "exception",
+    SUCCESS: "success"
+}
+
+const ProcessCatergory = {
+    Working: "Working",
+    Finished: "Finished"
+}
+
+const DefaultTaskList = {
     "class": "go.GraphLinksModel",
     "linkFromPortIdProperty": "fromPort",
     "linkToPortIdProperty": "toPort",
 }
 
 //机器安装完成状态
-var ProcessStatusList = [
+const ProcessStatusList = [
     // {value: 0, name: '未配置'},
     {value: 1, name: '待安装'},
     {value: 2, name: '进行中'},
@@ -33,13 +44,13 @@ var ProcessStatusList = [
 ];
 
 //机器流程配置状态
-var ConfigStatusList = [
+const ConfigStatusList = [
     {value: 1, name: '未配置'},
     {value: 2, name: '已配置'},
 ];
 
 //需求单状态
-var OrderStatusList = [
+const OrderStatusList = [
     {value: 0, name: '未提交审核'},
     {value: 1, name: '审核中'},
     {value: 2, name: '审核完成'},
@@ -50,7 +61,7 @@ var OrderStatusList = [
 ];
 
 //机器状态
-var MachineStatusList = [
+const MachineStatusList = [
     {value: 0, name: '未计划'},
     {value: 1, name: '已计划'},
     {value: 2, name: '生产中'},
@@ -71,13 +82,13 @@ let TaskStatusList = [
     {value: 6, name: '质检异常'}];
 
 //查询日期类型
-var SearchDateType = [
+const SearchDateType = [
     {value: 1, name: '合同交货日期'},
     {value: 2, name: '计划交货日期'},
 ];
 
 //包装方式
-var PackageModeList =
+const PackageModeList =
     [
         {
             value: 0,
@@ -90,7 +101,7 @@ var PackageModeList =
     ];
 
 //国家
-var CountryList = [
+const CountryList = [
     {"text": "安哥拉"},
     {"text": "阿富汗"},
     {"text": "阿尔巴尼亚"},
@@ -275,7 +286,7 @@ var CountryList = [
 ];
 
 //色数
-var SpecialTowelColorList = [
+const SpecialTowelColorList = [
     {
         value: 0,
         text: "无"
@@ -291,7 +302,7 @@ var SpecialTowelColorList = [
 ];
 
 //盘带头
-var SpecialTapingHeadList = [
+const SpecialTapingHeadList = [
     {
         value: 0,
         text: "无"
@@ -311,7 +322,7 @@ var SpecialTapingHeadList = [
 ];
 
 //D轴上
-var SpecialTowelDaxleList = [
+const SpecialTowelDaxleList = [
     {
         value: 0,
         text: "无"
@@ -327,7 +338,7 @@ var SpecialTowelDaxleList = [
 ];
 
 //H轴下
-var SpecialTowelHaxleList = [
+const SpecialTowelHaxleList = [
     {
         value: 0,
         text: "无"
@@ -343,7 +354,7 @@ var SpecialTowelHaxleList = [
 ];
 
 //主电机
-var SpecialTowelMotorList = [
+const SpecialTowelMotorList = [
     {
         value: 0,
         text: "无"
@@ -363,7 +374,7 @@ var SpecialTowelMotorList = [
 ];
 
 //毛巾机针
-var SpecialTowelNeedleList = [
+const SpecialTowelNeedleList = [
     {
         value: 0,
         text: "无"
@@ -381,7 +392,7 @@ var SpecialTowelNeedleList = [
 
 //M98,C29,528,322,328,366,316,C98,C88,C19,C16,
 //电脑型号
-var PCModeList =
+const PCModeList =
     [
         {
             value: 0,
@@ -432,7 +443,7 @@ var PCModeList =
 
 //英语,中文,西班牙,法语,葡萄牙,土耳其,韩语,俄语,阿拉伯语
 //语言
-var LanguageList =
+const LanguageList =
     [
         {
             value: 0,
@@ -475,7 +486,7 @@ var LanguageList =
 
 //电气主电机
 //大豪,松下,儒竞
-var ElectricMotorList =
+const ElectricMotorList =
     [
         {
             value: 0,
@@ -493,7 +504,7 @@ var ElectricMotorList =
 
 //XY主电机
 //三相步进,五相步进,伺服
-var XYMotorList =
+const XYMotorList =
     [
         {
             value: 0,
@@ -511,7 +522,7 @@ var XYMotorList =
 
 //剪线方式
 //电机剪线,普通剪线,不剪线
-var TrimList =
+const TrimList =
     [
         {
             value: 0,
@@ -529,7 +540,7 @@ var TrimList =
 
 //电源
 //220V,380V
-var ElectricPowerList =
+const ElectricPowerList =
     [
         {
             value: 0,
@@ -543,7 +554,7 @@ var ElectricPowerList =
 
 //按钮开关
 //无,1个,2个,3个,Y驱动数,Y驱动数+1
-var ElectricSwitchList =
+const ElectricSwitchList =
     [
         {
             value: 0,
@@ -573,7 +584,7 @@ var ElectricSwitchList =
 
 //加油系统
 //上机壳旁油盒下点动,上机壳旁油盒下自动,下点动,下自动,无
-var ElectricOilList =
+const ElectricOilList =
     [
         {
             value: 0,
@@ -599,7 +610,7 @@ var ElectricOilList =
 
 //夹线器
 //伟龙款,15款信胜普通,15款信胜高速,信胜普通,信胜高速,仿田岛,上海,固定式
-var AxleSplitList =
+const AxleSplitList =
     [
         {
             value: 0,
@@ -637,7 +648,7 @@ var AxleSplitList =
 
 //面板
 //上下分体面板,上塑料下铁,上塑料下复合,上塑料下塑料
-var AxlePanelList =
+const AxlePanelList =
     [
         {
             value: 0,
@@ -659,7 +670,7 @@ var AxlePanelList =
 
 //机针
 //9,11,12,14,16,18
-var AxleNeedleList =
+const AxleNeedleList =
     [
         {
             value: 0,
@@ -688,7 +699,7 @@ var AxleNeedleList =
     ];
 
 //SUK
-var SUKList =
+const SUKList =
     [
         {
             value: 0,
@@ -698,7 +709,7 @@ var SUKList =
 
 
 //机头导轨
-var AxleRailList =
+const AxleRailList =
     [
         {
             value: 0,
@@ -712,7 +723,7 @@ var AxleRailList =
     ];
 
 //底检方式
-var AxleDownCheckList =
+const AxleDownCheckList =
     [
         {
             value: 0,
@@ -728,7 +739,7 @@ var AxleDownCheckList =
 //旋梭
 //广濑1.6倍高速,广濑1.6倍,佐伩12-R,佐伩12-RP,佐伩12-RY,佐伩12RYP,佐文,韩大,韩大黑芯,广濑普通,广濑高速,SINSIM,
 // 德盛精品,广濑AO(MG1),广濑ATR(MG1),广濑ATR(MG1QF)黑心
-var AxleHookList =
+const AxleHookList =
     [
         {
             value: 0,
@@ -799,7 +810,7 @@ var AxleHookList =
 
 //跳跃方式
 //电磁铁跳跃,电机跳跃,电磁铁跳跃带轴承
-var AxleJumpList =
+const AxleJumpList =
     [
         {
             value: 0,
@@ -816,7 +827,7 @@ var AxleJumpList =
     ];
 
 //面线夹持
-var AxleUpperThreadList =
+const AxleUpperThreadList =
     [
         {
             value: 0,
@@ -830,7 +841,7 @@ var AxleUpperThreadList =
 
 //机架颜色
 //田岛绿桔纹,4201,乳白色
-var FrameworkColorList =
+const FrameworkColorList =
     [
         {
             value: 0,
@@ -847,7 +858,7 @@ var FrameworkColorList =
     ];
 
 //台板
-var FrameworkPlatenList =
+const FrameworkPlatenList =
     [
         {
             value: 0,
@@ -857,7 +868,7 @@ var FrameworkPlatenList =
 
 //台板颜色
 //鲁冰花浅灰边,浅绿
-var FrameworkPlatenColorList =
+const FrameworkPlatenColorList =
     [
         {
             value: 0,
@@ -871,7 +882,7 @@ var FrameworkPlatenColorList =
 
 
 //吊环
-var FrameworkRingList =
+const FrameworkRingList =
     [
         {
             value: 0,
@@ -885,7 +896,7 @@ var FrameworkRingList =
 
 //电脑托架
 //梁上,台板上
-var FrameworkBracketList =
+const FrameworkBracketList =
     [
         {
             value: 0,
@@ -899,7 +910,7 @@ var FrameworkBracketList =
 
 //急停装置
 //无,1个托架下,1个托架下，一个另一侧梁上长杆,左侧梁壁上,一个托架下，一个左侧台板下,一个左侧台板下
-var FrameworkStopList =
+const FrameworkStopList =
     [
         {
             value: 0,
@@ -928,7 +939,7 @@ var FrameworkStopList =
     ];
 
 //日光灯
-var FrameworkLightList =
+const FrameworkLightList =
     [
         {
             value: 0,
@@ -941,7 +952,7 @@ var FrameworkLightList =
     ];
 
 //驱动类型
-var DriverTypeList =
+const DriverTypeList =
     [
         {
             value: 0,
@@ -951,7 +962,7 @@ var DriverTypeList =
 
 //驱动方式
 //普通,宽幅(中传动)
-var DriverMethodList =
+const DriverMethodList =
     [
         {
             value: 0,
@@ -964,7 +975,7 @@ var DriverMethodList =
     ];
 
 //绷孔架
-var DriverReelHoleList =
+const DriverReelHoleList =
     [
         {
             value: 0,
@@ -974,7 +985,7 @@ var DriverReelHoleList =
 
 
 //绷架
-var DriverReelList =
+const DriverReelList =
     [
         {
             value: 0,
@@ -983,7 +994,7 @@ var DriverReelList =
     ];
 
 //佳字绳绣
-var JiaZiXiuPricelList =
+const JiaZiXiuPricelList =
     [
         {
             value: 0,
@@ -992,7 +1003,7 @@ var JiaZiXiuPricelList =
     ];
 
 //冠军金片
-var ChampionGoldList =
+const ChampionGoldList =
     [
         {
             value: 0,
