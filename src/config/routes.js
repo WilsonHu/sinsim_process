@@ -138,7 +138,6 @@ export default
             {
                 path: '/home/abnormal',
                 component: Abnormal,
-                redirect: '/home/abnormal',
                 name: 'Abnormal',
                 meta: "异常管理",
                 children: [],
