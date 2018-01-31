@@ -436,7 +436,7 @@
                         trObjList.push({
                             taskName: item.text,
                             nodeKey: item.key,
-                            status: 1,
+                            status: 0,
                             processRecordId: _this.addForm.processRecordId
                         });
                     }
