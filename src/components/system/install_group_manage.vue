@@ -69,7 +69,7 @@
             </el-alert >
             <div slot="footer" class="dialog-footer">
                 <el-button @click="addDialogVisible = false" size="small">取 消</el-button>
-                <el-button type="primary" @click="addDevice" size="small">确 定</el-button>
+                <el-button type="primary" @click="addGroup" size="small">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -88,7 +88,7 @@
             </el-alert >
             <div slot="footer" class="dialog-footer">
                 <el-button @click="modifyDialogVisible = false" size="small">取 消</el-button>
-                <el-button type="primary" @click="modifyDevice" size="small">确 定</el-button>
+                <el-button type="primary" @click="modifyGroup" size="small">确 定</el-button>
             </div>
         </el-dialog>
         <el-dialog title="提示" :visible.sync="deleteConfirmVisible" width="20%" >
@@ -171,12 +171,12 @@
                 this.addDialogVisible = true;
             },
 
-            addDevice() {
+            addGroup() {
                 $.ajax({
-                    url: HOST + "device/add",
+                    url: HOST + "install/group/add",
                     type: 'POST',
                     dataType: 'json',
-                    data: {'device': JSON.stringify(_this.form)},
+                    data: {installGroup: JSON.stringify(_this.form)},
                     success: function (data) {
                         _this.isError = data.status == 0;
                         if (!_this.isError) {
@@ -203,13 +203,13 @@
                 _this.modifyDialogVisible = true;
             },
 
-            modifyDevice() {
+            modifyGroup() {
                 //TODO:必须检查当前安装组是否被使用，如果使用就不能被编辑，或者说当前安装小组名称被使用，就disable修改按钮
                 $.ajax({
                     url: HOST + "install/group/update",
                     type: 'POST',
                     dataType: 'json',
-                    data: {'device': JSON.stringify(_this.modifyForm)},
+                    data: {installGroup: JSON.stringify(_this.modifyForm)},
                     success: function (data) {
                         if (data.code == 200) {
                             _this.modifyDialogVisible = false;
