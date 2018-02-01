@@ -95,7 +95,7 @@
                    @open="onopened">
             <table style="width: 100%">
                 <tr style="width: 100%;vertical-align: text-top;">
-                    <td style="width: 15%">
+                    <td>
                         <el-row>
                             <el-form :model="addForm"
                                      style="vertical-align: text-top;padding-right: 10px">
@@ -113,19 +113,19 @@
                         <el-row>
                             <el-button
                                     icon="el-icon-check"
-                                    size="normal"
+                                    size="small"
                                     type="primary"
                                     @click="onSave">保存
                             </el-button>
                             <el-button
                                     icon="el-icon-close"
-                                    size="normal"
+                                    size="small"
                                     type="danger"
                                     @click="onClose">关闭
                             </el-button>
                         </el-row>
                     </td>
-                    <td style="width: 85%">
+                    <td style="width: 80%">
                         <div id="sample">
                             <div style="width:100%; white-space:nowrap; ">
                                 <span style="display: inline-block; vertical-align: top; width: 15%;">
