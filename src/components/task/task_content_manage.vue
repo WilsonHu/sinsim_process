@@ -38,6 +38,7 @@
                         <el-button
                                 size="small"
                                 type="primary"
+                                icon="el-icon-edit"
                                 :disabled="cantEdit"
                                 @click="editWithItem(scope.$index, scope.row)">编辑
                         </el-button>
@@ -47,6 +48,7 @@
                     <template scope="scope" style="text-align: center">
                         <el-button
                                 size="small"
+                                icon="el-icon-delete"
                                 type="danger"
                                 @click="deleteWithItem(scope.row)">删除
                         </el-button>
@@ -71,15 +73,15 @@
                    append-to-body>
             <span>确认要删除选定的工作内容信息吗？</span>
             <span slot="footer" class="dialog-footer">
-      <el-button @click="deleteConfirmVisible = false">取 消</el-button>
-      <el-button type="primary" @click="onConfirmDelete">确 定</el-button>
+      <el-button @click="deleteConfirmVisible = false" icon="el-icon-close">取 消</el-button>
+      <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
     </span>
         </el-dialog>
 
-        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="50%" append-to-body>
-            <el-form :model="addForm">
+        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="50%">
+            <el-form :model="addForm" label-position="right" label-width="120px">
                 <el-row>
-                    <el-col :span="8">
+                    <el-col :span="10">
                         <el-form-item label="工作名称：">
                             <el-input type="text"
                                       v-model="addForm.taskName"
@@ -88,7 +90,7 @@
                                       clearable></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8" :offset="1">
+                    <el-col :span="11" :offset="1">
                         <el-form-item label="工作小组：">
                             <el-select
                                     clearable
@@ -112,8 +114,8 @@
             </el-alert>
             <div slot="footer" class="dialog-footer" style="margin-bottom: 70px;margin-top: 30px">
                 <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
-                    <el-button @click="addDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="onSubmit">确 定</el-button>
+                    <el-button type="primary" @click="onSubmit" icon="el-icon-check">确 定</el-button>
+                    <el-button type="danger" @click="addDialogVisible = false" icon="el-icon-close">取 消</el-button>
                 </el-col>
             </div>
         </el-dialog>

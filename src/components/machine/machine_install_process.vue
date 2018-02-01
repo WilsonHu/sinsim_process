@@ -174,7 +174,8 @@
                         <el-button
                                 size="small"
                                 type="primary"
-                                @click="editWithItem(scope.$index, scope.row)">查看进度
+                                icon="el-icon-view"
+                                @click="editWithItem(scope.$index, scope.row)">查看
                         </el-button>
                     </template>
                 </el-table-column>
@@ -323,11 +324,11 @@
                             <br>
                             <el-row>
                                 <el-button
-                                        icon="close"
+                                        icon="el-icon-close"
                                         size="normal"
                                         type="danger"
                                         @click="addDialogVisible = false">
-                                    关闭
+                                        关闭
                                 </el-button>
                             </el-row>
                         </div>
@@ -1006,13 +1007,9 @@
             go.Diagram.prototype.doFocus.call(this);
             window.scrollTo(x, y);
         }
-
         myDiagram.doFocus = customFocus;
-
         myDiagram.isReadOnly = true;  // Disable the diagram!
-        if (document.body.scrollHeight == 0) {
-            document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
-        }
+        document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
     } // end init
 
     // Make all ports on a node visible when the mouse is over the node

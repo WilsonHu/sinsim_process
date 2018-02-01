@@ -47,21 +47,23 @@
                                 </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="编辑" width="70" align="center">
+                <el-table-column label="编辑" width="100" align="center">
                     <template scope="scope" style="text-align: center">
                         <el-button
                                 size="small"
                                 type="primary"
+                                icon="el-icon-edit"
                                 :disabled="cantEdit"
                                 @click="editWithItem(scope.$index, scope.row)">编辑
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="删除" width="70" align="center">
+                <el-table-column label="删除" width="100" align="center">
                     <template scope="scope" style="text-align: center">
                         <el-button
                                 size="small"
                                 type="danger"
+                                icon="el-icon-delete"
                                 @click="deleteWithItem(scope.row)">
                             删除
                         </el-button>
@@ -84,8 +86,8 @@
                    append-to-body>
             <span>确认要删除选定的工作过程信息吗？</span>
             <span slot="footer" class="dialog-footer">
-	      <el-button @click="deleteConfirmVisible = false">取 消</el-button>
-	      <el-button type="primary" @click="onConfirmDelete">确 定</el-button>
+	      <el-button @click="deleteConfirmVisible = false" icon="el-icon-close">取 消</el-button>
+	      <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
 	      </span>
         </el-dialog>
         <el-dialog :visible.sync="addDialogVisible" fullscreen
@@ -94,43 +96,47 @@
             <table style="width: 100%">
                 <tr style="width: 100%;vertical-align: text-top;">
                     <td style="width: 15%">
-                <tr style="height: 20%;">
-                    <el-form :inline="true" :model="addForm" style="vertical-align: text-top;height: 20%;">
-                        <el-form-item label="工作内容名称：">
-                            <el-input type="text" style="width: 100%"
-                                      autosize v-model="addForm.name" auto-complete="off"
-                                      placeholder="工作内容名称">
-                            </el-input>
-                        </el-form-item>
-                    </el-form>
-                </tr>
-                <tr style="height: 20%;">
-                    <el-button
-                            icon="check"
-                            size="normal"
-                            type="primary"
-                            @click="onSave">保存
-                    </el-button>
-                    <el-button
-                            icon="close"
-                            size="normal"
-                            type="primary"
-                            @click="onClose">关闭
-                    </el-button>
-                </tr>
-                </td>
-                <td style="width: 100%">
-                    <div id="sample">
-                        <div style="width:100%; white-space:nowrap; ">
-			                <span style="display: inline-block; vertical-align: top; width:20%">
-			                  <div id="myPaletteDiv" style="border: solid 1px black; height:720px;"></div>
-			                </span>
-                            <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
-			                    <div id="myDiagramDiv" style="border: solid 1px black;height:720px; "></div>
-			                </span>
+                        <el-row>
+                            <el-form :model="addForm"
+                                     style="vertical-align: text-top;padding-right: 10px">
+                                <el-col :span="24">
+                                    <el-form-item label="工作内容名称：">
+                                        <el-input type="text" style="width: 100%"
+                                                  autosize v-model="addForm.name" auto-complete="off"
+                                                  placeholder="工作内容名称">
+                                        </el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-form>
+                        </el-row>
+                        <br>
+                        <el-row>
+                            <el-button
+                                    icon="el-icon-check"
+                                    size="normal"
+                                    type="primary"
+                                    @click="onSave">保存
+                            </el-button>
+                            <el-button
+                                    icon="el-icon-close"
+                                    size="normal"
+                                    type="danger"
+                                    @click="onClose">关闭
+                            </el-button>
+                        </el-row>
+                    </td>
+                    <td style="width: 85%">
+                        <div id="sample">
+                            <div style="width:100%; white-space:nowrap; ">
+                                <span style="display: inline-block; vertical-align: top; width: 15%;">
+                                  <div id="myPaletteDiv" style="border: solid 1px black;"></div>
+                                </span>
+                                <span style="display: inline-block; vertical-align: top; text-align: center;width:85%">
+			                        <div id="myDiagramDiv" style="border: solid 1px black;"></div>
+			                    </span>
+                            </div>
                         </div>
-                    </div>
-                </td>
+                    </td>
                 </tr>
             </table>
         </el-dialog>
@@ -680,7 +686,8 @@
                         $(go.TextBlock,
                                 {
                                     margin: 5,
-                                    maxSize: new go.Size(200, NaN),
+                                    maxSize: new go.Size(220, NaN),
+                                    minSize: new go.Size(160, 30),
                                     wrap: go.TextBlock.WrapFit,
                                     textAlign: "center",
                                     editable: false,
@@ -779,14 +786,9 @@
 
         myDiagram.doFocus = customFocus;
         myPalette.doFocus = customFocus;
-        document.getElementById("myPaletteDiv").style.height = document.body.scrollHeight + "px";
 
-        if (document.body.scrollHeight == 0) {
-            document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
-            document.getElementById("myPaletteDiv").style.height = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) + "px";
-        }
-
-
+        document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
+        document.getElementById("myPaletteDiv").style.height = document.getElementById("myDiagramDiv").style.height;
     } // end init
 
     // Make all ports on a node visible when the mouse is over the node

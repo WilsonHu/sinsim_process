@@ -166,8 +166,9 @@
                         <el-button
                                 size="small"
                                 type="primary"
+                                icon="el-icon-setting"
                                 :disabled="!scope.row.canConfig"
-                                @click="editWithItem(scope.$index, scope.row)">配置流程
+                                @click="editWithItem(scope.$index, scope.row)">配置
                         </el-button>
                     </template>
                 </el-table-column>
@@ -189,7 +190,7 @@
                    @open="onopened">
             <table style="width: 100%">
                 <tr style="width: 100%;vertical-align: text-top;">
-                    <td style="width: 20%; padding-right: 5px">
+                    <td style="width: 20%; padding-right: 10px">
                         <el-row>
                             <el-form :model="addForm">
                                 <el-col :span="24">
@@ -235,13 +236,13 @@
                         <br>
                         <el-row>
                             <el-button
-                                    icon="check"
+                                    icon="el-icon-check"
                                     size="normal"
                                     type="primary"
                                     @click="onSubmit">保存
                             </el-button>
                             <el-button
-                                    icon="close"
+                                    icon="el-icon-close"
                                     size="normal"
                                     type="danger"
                                     @click="addDialogVisible = false">关闭
@@ -251,17 +252,12 @@
                     <td style="width: 80%">
                         <div id="sample">
                             <div style="width:100%; white-space:nowrap; ">
-                                <span style="display: inline-block; vertical-align: top; width:20%">
-                                    <div id="myPaletteDiv"
-                                         style="border: solid 1px black; height:720px;">
-                                    </div>
+                                <span style="display: inline-block; vertical-align: top; width: 15%;">
+                                  <div id="myPaletteDiv" style="border: solid 1px black;"></div>
                                 </span>
-                                <span style="display: inline-block; vertical-align: top; text-align: center;width:80%">
-                                    <div id="myDiagramDiv"
-                                         style="border: solid 1px black;height:720px; ">
-
-                                    </div>
-                                </span>
+                                <span style="display: inline-block; vertical-align: top; text-align: center;width:85%">
+			                        <div id="myDiagramDiv" style="border: solid 1px black;"></div>
+			                    </span>
                             </div>
                         </div>
                     </td>
@@ -609,10 +605,12 @@
             },
             filterGroup(id) {
                 var result = "";
-                for (var i = 0; i < _this.groupList.length; i++) {
-                    if (_this.groupList[i].id == id) {
-                        result = _this.groupList[i].groupName;
-                        break;
+                if (_this.groupList != null && _this.groupList.length > 0) {
+                    for (var i = 0; i < _this.groupList.length; i++) {
+                        if (_this.groupList[i].id == id) {
+                            result = _this.groupList[i].groupName;
+                            break;
+                        }
                     }
                 }
                 return result;
@@ -1066,16 +1064,11 @@
 
         myDiagram.doFocus = customFocus;
         myPalette.doFocus = customFocus;
-        document.getElementById("myPaletteDiv").style.height = document.body.scrollHeight + "px";
 
 //        myDiagram.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
 //        myPalette.isReadOnly = _this.isNotAdmin;  // Disable the diagram!
-
-        if (document.body.scrollHeight == 0) {
-            document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
-            document.getElementById("myPaletteDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
-        }
-
+        document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
+        document.getElementById("myPaletteDiv").style.height = document.getElementById("myDiagramDiv").style.height;
 
     } // end init
 

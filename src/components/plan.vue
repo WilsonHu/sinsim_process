@@ -407,6 +407,7 @@
                             <el-button
                                     size="small"
                                     type="primary"
+                                    icon="el-icon-tickets"
                                     @click="doPlan(scope.row)" >计划
                             </el-button >
                         </template >

@@ -117,16 +117,18 @@
                         <el-table-column
                                 align="center"
                                 label="操作"
-                                width="150" >
+                                width="200" >
                             <template scope="scope" >
                                 <el-button
 		                                size="small"
-		                                type="primary"
+                                        icon="el-icon-edit"
+                                        type="primary"
 		                                @click="handleEdit(scope.$index, scope.row)" >编辑
                                 </el-button >
                                 <el-button
 		                                size="small"
 		                                type="danger"
+                                        icon="el-icon-delete"
 		                                :disabled="scope.row.account=='admin'"
 		                                @click="handleDelete(scope.$index, scope.row)" >删除
                                 </el-button >
@@ -210,8 +212,8 @@
                       show-icon >
             </el-alert >
             <div slot="footer" class="dialog-footer" style="margin-bottom: 20px" >
-                <el-button @click="addDialogVisible = false" >取 消</el-button >
-                <el-button type="primary" @click="onAdd" >确 定</el-button >
+                <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
+                <el-button type="primary" @click="onAdd" icon="el-icon-check">确 定</el-button >
             </div >
         </el-dialog >
 
@@ -278,16 +280,16 @@
                       show-icon >
             </el-alert >
             <div slot="footer" class="dialog-footer" style="margin-bottom: 20px" >
-                <el-button @click="modifyDialogVisible = false" >取 消</el-button >
-                <el-button type="primary" @click="onEidt" >确 定</el-button >
+                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
+                <el-button type="primary" @click="onEidt" icon="el-icon-check">确 定</el-button >
             </div >
         </el-dialog >
 
         <el-dialog title="提示" :visible.sync="deleteConfirmVisible"  width="30%">
             <span >确认要删除账号为[ <b >{{selectedItem.account}}</b > ]的用户吗？</span >
             <span slot="footer" class="dialog-footer" >
-	    <el-button @click="deleteConfirmVisible = false" >取 消</el-button >
-	    <el-button type="primary" @click="onConfirmDelete" >确 定</el-button >
+	    <el-button @click="deleteConfirmVisible = false" icon="el-icon-close" >取 消</el-button >
+	    <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button >
 	  </span >
         </el-dialog >
     </div >

@@ -35,15 +35,17 @@
                                 style="margin-left: 10px">{{getRoleNameById(item.roleId)}}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="150">
+                <el-table-column label="操作" width="200">
                     <template scope="scope">
                         <el-button
                                 size="small"
                                 type="primary"
+                                icon="el-icon-edit"
                                 @click="handleEdit(scope.row)">编辑</el-button>
                         <el-button
                                 size="small"
                                 type="danger"
+                                icon="el-icon-delete"
                                 @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -116,6 +118,7 @@
                                     <el-button
                                             size="mini"
                                             type="danger"
+                                            icon="el-icon-delete"
                                             @click="handleDeleteRole(scope.$index)">删除</el-button>
                                 </template>
                             </el-table-column>
@@ -191,6 +194,7 @@
                                     <el-button
                                             size="mini"
                                             type="danger"
+                                            icon="el-icon-delete"
                                             @click="handleEditDeleteRole(scope.$index)">删除</el-button>
                                 </template>
                             </el-table-column>
@@ -204,15 +208,15 @@
                       show-icon >
             </el-alert >
             <div slot="footer" class="dialog-footer">
-                <el-button @click="modifyDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="modifySignProcess">确 定</el-button>
+                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button>
+                <el-button type="primary" @click="modifySignProcess" icon="el-icon-check">确 定</el-button>
             </div>
         </el-dialog>
         <el-dialog title="提示" :visible.sync="deleteConfirmVisible" width="20%" >
 		  <span >确认要删除[ <b >{{selectedItem.processName}}</b > ]的签核流程吗？</span >
 		  <span slot="footer" class="dialog-footer" >
-		    <el-button @click="deleteConfirmVisible = false" >取 消</el-button >
-		    <el-button type="primary" @click="onConfirmDelete" >确 定</el-button >
+		    <el-button @click="deleteConfirmVisible = false" icon="el-icon-close">取 消</el-button >
+		    <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button >
 		  </span >
 		</el-dialog >
     </div>

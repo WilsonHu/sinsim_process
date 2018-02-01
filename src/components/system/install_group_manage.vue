@@ -29,15 +29,17 @@
                 </el-table-column>
                 <el-table-column
                         label="操作"
-                        width="150"
+                        width="200"
                         align="center">
                     <template scope="scope">
                         <el-button
                                 size="small"
                                 type="primary"
+                                icon="el-icon-edit"
                                 @click="handleEdit(scope.row)">编辑</el-button>
                         <el-button
                                 size="small"
+                                icon="el-icon-delete"
                                 type="danger"
                                 @click="handleDelete(scope.row)">删除</el-button>
                     </template>
@@ -87,15 +89,15 @@
                       show-icon >
             </el-alert >
             <div slot="footer" class="dialog-footer">
-                <el-button @click="modifyDialogVisible = false" size="small">取 消</el-button>
-                <el-button type="primary" @click="modifyGroup" size="small">确 定</el-button>
+                <el-button @click="modifyDialogVisible = false" type="danger" size="small" icon="el-icon-close">取 消</el-button>
+                <el-button type="primary" @click="modifyGroup" size="small" icon="el-icon-check">确 定</el-button>
             </div>
         </el-dialog>
         <el-dialog title="提示" :visible.sync="deleteConfirmVisible" width="20%" >
 		  <span >确认要删除[ <b >{{selectedItem.groupName}}</b > ]的安装组吗？</span >
 		  <span slot="footer" class="dialog-footer" >
-		    <el-button @click="deleteConfirmVisible = false" >取 消</el-button >
-		    <el-button type="primary" @click="onConfirmDelete" >确 定</el-button >
+		    <el-button @click="deleteConfirmVisible = false" type="danger" icon="el-icon-close">取 消</el-button >
+		    <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button >
 		  </span >
 		</el-dialog >
     </div>

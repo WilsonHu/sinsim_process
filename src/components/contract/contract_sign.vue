@@ -168,19 +168,20 @@
                             </el-table-column >
                             <el-table-column
                                     align="center"
-                                    label="操作" width="240" >
+                                    label="操作" width="280" >
                                 <template scope="scope" >
                                     <el-button
                                         v-if="userInfo.role.roleName !='销售员'"
                                         size="small"
                                         type="primary"
-                                        class="el-icon-edit"
+                                        icon="el-icon-check"
                                         @click="handleSign(scope.$index, scope.row)" >审核
                                     </el-button>
                                     <el-button
                                             v-if="userInfo.role.roleName =='销售员' || userInfo.role.id == 1"
                                             size="small"
                                             type="primary"
+                                            icon="el-icon-edit"
                                             @click="handleEdit(scope.$index, scope.row)" >编辑
                                     </el-button >
                                     <!--<el-button-->
@@ -192,6 +193,7 @@
                                     <el-button
                                         size="small"
                                         type="danger"
+                                        icon="el-icon-download"
                                         @click="handleDownload(scope.$index, scope.row)" >下载
                                     </el-button >
                                 </template >
@@ -245,6 +247,7 @@
                             <el-button
                                     size="normal"
                                     type="danger"
+                                    icon="el-icon-check"
                                     @click="startToSign">提交审核
                             </el-button >
                         </el-col>
