@@ -30,7 +30,7 @@
                                     <el-form-item label="合同号:" >
                                         <el-input v-model="filters.contractNum"
                                                   placeholder="合同号"
-                                                  auto-complete="off" ></el-input >
+                                                  auto-complete="off" clearable></el-input >
                                     </el-form-item >
                                 </el-col >
                                 <el-col :span="4" >
@@ -39,7 +39,7 @@
                                             <el-option
                                                     v-for="item in allRoles"
                                                     :key="item.id"
-                                                    :value="item.id"
+                                                    :value="item.roleName"
                                                     :label="item.roleName" >
                                             </el-option >
                                         </el-select >
@@ -61,7 +61,8 @@
                                     <el-form-item label="销售人员:" >
                                         <el-input v-model="filters.sellman"
                                                   placeholder="销售人员"
-                                                  auto-complete="off" ></el-input >
+                                                  auto-complete="off"
+                                                  clearable></el-input >
                                     </el-form-item >
                                 </el-col >
                                 <el-col :span="4" >
@@ -1865,10 +1866,10 @@
                 rejectContractSignResultVisible: false,
                 signResultObj:"",
 			    filters: {
-				    name: "",
-				    account: "",
-				    role_id: "",
-				    role_name: "",
+                    contractNum: "",
+                    roleName: "",
+				    status: "",
+				    sellman: "",
 				    selectDate: "",
 			    },
 
@@ -2192,17 +2193,30 @@
 		    },
 
 		    search() {
-
+                this.selectContracts();
 		    },
 
 		    selectContracts(){
-			    _this.filters.page = _this.currentPage;
-			    _this.filters.size = _this.pageSize;
+                var condition = {
+                    id: _this.filters.id,
+                    contractNum: _this.filters.contractNum,
+                    status: _this.filters.status,
+                    sellman: _this.filters.sellman,
+                    roleName: _this.filters.roleName,
+                    query_start_time: '',
+                    query_finish_time: '',
+                    page:_this.currentPage,
+                    size:_this.pageSize
+                };
+                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
+                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
+                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
 			    $.ajax({
 				    url: HOST + "contract/selectContracts",
 				    type: 'POST',
 				    dataType: 'json',
-				    data: _this.filters,
+				    data: condition,
 				    success: function (data) {
 					    if (data.code == 200) {
 						    _this.tableData = data.data.list;
