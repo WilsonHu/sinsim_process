@@ -42,7 +42,7 @@
                                 </el-select >
                             </el-form-item >
                         </el-col >
-                        <el-col :span="4">
+                        <el-col :span="3">
                             <el-form-item label="完成状态:" >
                                 <el-select v-model="planedFilters.installStatus" clearable >
                                     <el-option
@@ -53,12 +53,20 @@
                                 </el-select >
                             </el-form-item >
                         </el-col >
-                        <el-col :span="1" :offset="2">
+                        <el-col :span="1" :offset="1">
                             <el-button
                                     icon="el-icon-search"
                                     size="normal"
                                     type="primary"
                                     @click="searchPlaned" >查询
+                            </el-button >
+                        </el-col >
+                        <el-col :span="1" :offset="1">
+                            <el-button
+                                    icon="el-icon-share"
+                                    size="normal"
+                                    type="danger"
+                                    @click="exportData" >导出
                             </el-button >
                         </el-col >
                     </el-row >
@@ -643,6 +651,9 @@
 
         },
         methods: {
+            exportData() {
+                showMessage(_this, "暂无实现！", 0);
+            },
             generateTasks() {
                 const data = [];
                 this.notPlanedTasks.forEach((task, index) => {
