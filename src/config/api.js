@@ -25,7 +25,8 @@ const PROGRESSTYPE = {
 
 const ProcessCatergory = {
     Working: "Working",
-    Finished: "Finished"
+    Finished: "Finished",
+    Abnormal: "Abnormal"
 }
 
 const DefaultTaskList = {
