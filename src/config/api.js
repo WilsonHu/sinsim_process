@@ -34,15 +34,6 @@ const DefaultTaskList = {
     "linkToPortIdProperty": "toPort",
 }
 
-//机器安装完成状态
-const ProcessStatusList = [
-    // {value: 0, name: '未配置'},
-    {value: 1, name: '待安装'},
-    {value: 2, name: '进行中'},
-    {value: 3, name: '已完成'},
-    {value: 4, name: '异常'},
-];
-
 //机器流程配置状态
 const ConfigStatusList = [
     {value: 1, name: '未配置'},

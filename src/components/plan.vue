@@ -516,7 +516,7 @@
                             </el-row>
                         </el-row>
                         <el-row style="margin-top: 10px">
-                            <el-col :span="4" :offset="20">
+                            <el-col :span="6" :offset="18">
                                 <el-button @click="doPlaningDialogVisible = false" icon="el-icon-back" >取 消</el-button >
                                 <el-button type="primary" @click="addTaskPlans" icon="el-icon-check" :disabled="toPlanTasks.length <= 0">确 定</el-button >
                             </el-col>
