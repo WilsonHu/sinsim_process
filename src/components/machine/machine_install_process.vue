@@ -10,14 +10,14 @@
                                       auto-complete="off"></el-input>
                         </el-form-item>
                     </el-col>
+                    <!--<el-col :span="6">-->
+                        <!--<el-form-item label="合同编号:">-->
+                            <!--<el-input v-model="filters.contract_num"-->
+                                      <!--placeholder="合同编号"-->
+                                      <!--auto-complete="off"></el-input>-->
+                        <!--</el-form-item>-->
+                    <!--</el-col>-->
                     <el-col :span="6">
-                        <el-form-item label="合同编号:">
-                            <el-input v-model="filters.contract_num"
-                                      placeholder="合同编号"
-                                      auto-complete="off"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4">
                         <el-form-item label="完成状态:">
                             <el-select v-model="filters.status" clearable>
                                 <el-option
@@ -86,11 +86,11 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column
-                        align="center"
-                        prop="contractNum"
-                        label="合同号">
-                </el-table-column>
+                <!--<el-table-column-->
+                        <!--align="center"-->
+                        <!--prop="contractNum"-->
+                        <!--label="合同号">-->
+                <!--</el-table-column>-->
                 <el-table-column
                         align="center"
                         prop="machineStrId"
@@ -119,11 +119,21 @@
 
                 <el-table-column
                         align="center"
+                        label="已完成/总工序">
+                    <template scope="scope">
+                        <span style="color: limegreen;font-weight: bold;">{{scope.row.finishedCount}}</span>
+                        <span>/</span>
+                        <span style="color: darkslategrey;font-weight: bold;">{{scope.row.totalTaskCount}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        align="center"
                         label="安装状态">
                     <template scope="scope">
                         <div v-if="scope.row.status==0"
                              style="color: #686868">
-                            未配置
+                            {{scope.row.status|filterStatus}}
                         </div>
                         <div v-if="scope.row.status==1"
                              style="color: #8b6c0e">
@@ -139,6 +149,14 @@
                         </div>
                         <div v-if="scope.row.status==4"
                              style="color: darkred">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==5"
+                             style="color: indianred">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==6"
+                             style="color: red">
                             {{scope.row.status|filterStatus}}
                         </div>
                     </template>
@@ -328,14 +346,14 @@
                                         size="normal"
                                         type="danger"
                                         @click="addDialogVisible = false">
-                                        关闭
+                                    关闭
                                 </el-button>
                             </el-row>
                         </div>
                     </td>
                     <td style="width: 50%">
                         <div id="sample" style="width:100%; white-space:nowrap;">
-                            <div id="myDiagramDiv" style="border: solid 1px black;height:720px;"></div>
+                            <div id="myDiagramDiv" style="border: solid 1px black;"></div>
                         </div>
                     </td>
                 </tr>
@@ -368,7 +386,7 @@
                 currentPage: 1,
                 startRow: 0,
                 totalRecords: 0,
-                statusList: ProcessStatusList,
+                statusList: MachineStatusList,
                 filters: {
                     machine_strid: '',
                     contract_num: '',
@@ -453,6 +471,23 @@
                             _this.totalRecords = res.data.total;
                             _this.tableData = res.data.list;
                             _this.startRow = res.data.startRow;
+                            _this.tableData.forEach(itemObj=> {
+                                itemObj.finishedCount = 0;
+                                itemObj.totalTaskCount = 0;
+                                try {
+                                    var nodeDataArray = JSON.parse(itemObj.nodeData);
+                                } catch (ex) {
+                                    console.log(ex.toString());
+                                }
+                                if (nodeDataArray != null && nodeDataArray.length > 0) {
+                                    itemObj.totalTaskCount = nodeDataArray.length - 2;//去掉开始，结束.
+                                    nodeDataArray.forEach(item=> {
+                                        if (parseInt(item.task_status) > 1 && parseInt(item.task_status) <= 4) {//完成
+                                            itemObj.finishedCount++;
+                                        }
+                                    });
+                                }
+                            });
                         }
                         _this.loadingUI = false;
                     }
@@ -1007,6 +1042,7 @@
             go.Diagram.prototype.doFocus.call(this);
             window.scrollTo(x, y);
         }
+
         myDiagram.doFocus = customFocus;
         myDiagram.isReadOnly = true;  // Disable the diagram!
         document.getElementById("myDiagramDiv").style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
