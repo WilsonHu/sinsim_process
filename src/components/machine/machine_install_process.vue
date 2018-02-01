@@ -11,11 +11,11 @@
                         </el-form-item>
                     </el-col>
                     <!--<el-col :span="6">-->
-                        <!--<el-form-item label="合同编号:">-->
-                            <!--<el-input v-model="filters.contract_num"-->
-                                      <!--placeholder="合同编号"-->
-                                      <!--auto-complete="off"></el-input>-->
-                        <!--</el-form-item>-->
+                    <!--<el-form-item label="合同编号:">-->
+                    <!--<el-input v-model="filters.contract_num"-->
+                    <!--placeholder="合同编号"-->
+                    <!--auto-complete="off"></el-input>-->
+                    <!--</el-form-item>-->
                     <!--</el-col>-->
                     <el-col :span="6">
                         <el-form-item label="完成状态:">
@@ -87,9 +87,9 @@
                     </template>
                 </el-table-column>
                 <!--<el-table-column-->
-                        <!--align="center"-->
-                        <!--prop="contractNum"-->
-                        <!--label="合同号">-->
+                <!--align="center"-->
+                <!--prop="contractNum"-->
+                <!--label="合同号">-->
                 <!--</el-table-column>-->
                 <el-table-column
                         align="center"
@@ -482,7 +482,7 @@
                                 if (nodeDataArray != null && nodeDataArray.length > 0) {
                                     itemObj.totalTaskCount = nodeDataArray.length - 2;//去掉开始，结束.
                                     nodeDataArray.forEach(item=> {
-                                        if (parseInt(item.task_status) > 1 && parseInt(item.task_status) <= 4) {//完成
+                                        if (parseInt(item.task_status) == 4) {//完成
                                             itemObj.finishedCount++;
                                         }
                                     });
@@ -517,12 +517,12 @@
                         _this.addForm.finishedCount = 0;
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
                         taskList.nodeDataArray.forEach(item=> {
-                            if (item.task_status == 1)//进行中
+                            if (parseInt(item.task_status) >= 1 && parseInt(item.task_status) < 4)//进行中
                             {
                                 item.category = ProcessCatergory.Working;
                                 _this.addForm.currentTaskName = item.text;
                             }
-                            else if (parseInt(item.task_status) > 1 && parseInt(item.task_status) <= 4) {//完成
+                            else if (parseInt(item.task_status) == 4) {//完成
                                 item.category = ProcessCatergory.Finished;
                                 _this.addForm.finishedCount++;
                             }

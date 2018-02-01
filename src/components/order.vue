@@ -4,7 +4,7 @@
             <el-col class="well well-lg" style="background-color: white;">
                 <el-form :model="filters" label-position="right" label-width="80px" >
                     <el-row >
-                        <el-col :span="3" >
+                        <el-col :span="6" >
                             <el-form-item label="订单号:">
                                 <el-input v-model="filters.id"
                                           placeholder="订单号"
@@ -12,7 +12,7 @@
                                           clearable></el-input >
                             </el-form-item >
                         </el-col >
-                        <el-col :span="3" >
+                        <el-col :span="6" >
                             <el-form-item label="合同号:" >
                                 <el-input v-model="filters.contract_num"
                                           placeholder="合同号"
@@ -20,7 +20,7 @@
                                           clearable></el-input >
                             </el-form-item >
                         </el-col >
-                        <el-col :span="3" >
+                        <el-col :span="6" >
                             <el-form-item label="审核状态:">
                                 <el-select v-model="filters.status" clearable>
                                     <el-option
@@ -31,23 +31,8 @@
                                 </el-select >
                             </el-form-item >
                         </el-col >
-                        <el-col :span="3" >
-                            <el-form-item label="客户:">
-                                <el-input v-model="filters.customer"
-                                          placeholder="客户"
-                                          auto-complete="off"
-                                          clearable></el-input >
-                            </el-form-item >
-                        </el-col >
-                        <el-col :span="3" >
-                            <el-form-item label="销售员:">
-                                <el-input v-model="filters.sellman"
-                                          placeholder="销售员"
-                                          auto-complete="off"
-                                          clearable></el-input >
-                            </el-form-item >
-                        </el-col >
-                        <el-col :span="4" >
+
+                        <el-col :span="6" >
                             <el-button
                                     icon="el-icon-search"
                                     size="normal"
@@ -57,7 +42,23 @@
                         </el-col >
                     </el-row >
                     <el-row >
-                        <el-col :span="4" >
+                        <el-col :span="6" >
+                            <el-form-item label="客户:">
+                                <el-input v-model="filters.customer"
+                                          placeholder="客户"
+                                          auto-complete="off"
+                                          clearable></el-input >
+                            </el-form-item >
+                        </el-col >
+                        <el-col :span="6" >
+                            <el-form-item label="销售员:">
+                                <el-input v-model="filters.sellman"
+                                          placeholder="销售员"
+                                          auto-complete="off"
+                                          clearable></el-input >
+                            </el-form-item >
+                        </el-col >
+                        <el-col :span="6" >
                             <el-form-item label="选择日期:" >
                                 <el-date-picker
                                         v-model="filters.selectDate"
