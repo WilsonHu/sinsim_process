@@ -721,11 +721,11 @@
                             taskList.linkDataArray = JSON.parse(data.data.list[0].linkData);
                             taskList.nodeDataArray = JSON.parse(data.data.list[0].nodeData);
                             taskList.nodeDataArray.forEach(item=> {
-                                if (item.task_status == 1)//进行中
+                                if (parseInt(item.task_status) >= 1 && parseInt(item.task_status) < 4)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
                                 }
-                                else if (parseInt(item.task_status) > 1 && parseInt(item.task_status) <= 4) {//完成
+                                else if (parseInt(item.task_status) == 4) {//完成
                                     item.category = ProcessCatergory.Finished;
                                 }
                                 else if (parseInt(item.task_status) > 4)//异常
@@ -1344,13 +1344,13 @@
 </script >
 <style >
     .el-transfer-panel{
-        width: 270px;
+        width: 250px;
     }
     .el-transfer-panel__body{
-        height:550px
+        height:420px
     }
     .el-transfer-panel__list{
-        height:550px
+        height:420px
     }
 
     .divTaskStatusInitial {
