@@ -337,6 +337,19 @@
                                              style="background-color: #00A9C9;"></div>
                                     </el-col>
 
+                                    <el-col :span="10" :offset="1">
+                                        <el-form-item label="异常数：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.abnormalCount"
+                                                      style="width:100%;"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="1">
+                                        <div class="colorDiv"
+                                             style="background-color: red;"></div>
+                                    </el-col>
+
                                 </el-form>
                             </el-row>
                             <br>
@@ -515,23 +528,26 @@
                         taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
                         _this.addForm.progressStatus = PROGRESSTYPE.NORMAL;
                         _this.addForm.finishedCount = 0;
+                        _this.addForm.abnormalCount = 0;
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
                         taskList.nodeDataArray.forEach(item=> {
-                            if (parseInt(item.task_status) >= 1 && parseInt(item.task_status) < 4)//进行中
-                            {
-                                item.category = ProcessCatergory.Working;
-                                _this.addForm.currentTaskName = item.text;
-                            }
-                            else if (parseInt(item.task_status) == 4) {//完成
-                                item.category = ProcessCatergory.Finished;
-                                _this.addForm.finishedCount++;
-                            }
-                            else if (parseInt(item.task_status) > 4)//异常
-                            {
-                                _this.addForm.progressStatus = PROGRESSTYPE.EXCEPTION
+                            if (item.category != "Start" && item.category != "End") {
+                                if (parseInt(item.task_status) >= 1 && parseInt(item.task_status) < 4)//进行中
+                                {
+                                    item.category = ProcessCatergory.Working;
+                                    _this.addForm.currentTaskName = item.text;
+                                }
+                                else if (parseInt(item.task_status) == 4) {//完成
+                                    item.category = ProcessCatergory.Finished;
+                                    _this.addForm.finishedCount++;
+                                }
+                                else if (parseInt(item.task_status) > 4)//异常
+                                {
+                                    item.category = ProcessCatergory.Abnormal;
+                                    _this.addForm.abnormalCount++;
+                                }
                             }
                         });
-
                         _this.addForm.currentProgress = ( _this.addForm.finishedCount / _this.addForm.totalTaskCount) * 100;
                         _this.addForm.currentProgress = parseInt(_this.addForm.currentProgress);
                         if (_this.addForm.finishedCount == _this.addForm.totalTaskCount) {
@@ -862,7 +878,7 @@
                         makePort("R", go.Spot.Right, true, true),
                         makePort("B", go.Spot.Bottom, true, false)
                 ));
-        myDiagram.nodeTemplateMap.add("Working",  // the default category
+        myDiagram.nodeTemplateMap.add("Working",  //category
                 $(go.Node, "Spot", nodeStyle(),
                         // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
                         $(go.Panel, "Auto",
@@ -891,12 +907,40 @@
                 ));
 
 
-        myDiagram.nodeTemplateMap.add("Finished",  // the default category
+        myDiagram.nodeTemplateMap.add("Finished",  // Finished category
                 $(go.Node, "Spot", nodeStyle(),
                         // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Rectangle",
                                         {fill: "gray", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: lightText,
+                                            margin: 8,
+//                                            maxSize: new go.Size(160, NaN),
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
+
+        myDiagram.nodeTemplateMap.add("Abnormal",  // Abnormal category
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "red", stroke: null},
                                         new go.Binding("figure", "figure")),
                                 $(go.TextBlock,
                                         {
