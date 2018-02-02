@@ -2410,7 +2410,6 @@
                     data: {contractId : item.id},
                     success: function (data) {
                         if (data.code == 200) {
-                            alert(data.data);
                             window.location.href = data.data;
                         }else {
                             showMessage(_this, data.message, 0);
