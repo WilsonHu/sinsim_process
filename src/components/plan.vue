@@ -332,7 +332,7 @@
                             scope="scope"
                             label="已计划 / 总工序" >
                         <template scope="scope" >
-                            <el-button style="font-size: 14px; font-weight: bold" type="primary" size="mini">{{scope.row.planedTaskNum}} / {{scope.row.totalTaskNum}}</el-button>
+                            <el-button style="font-size: 14px; font-weight: bold" type="primary" size="mini">{{getAllPlanedTaskNum(scope.row)}} / {{scope.row.totalTaskNum}}</el-button>
                         </template>
                     </el-table-column >
                     <el-table-column
@@ -341,9 +341,9 @@
                             <el-table-column
                                     align="center"
                                     scope="scope"
-                                    label="初始状态" >
+                                    label="待安装" >
                                 <template scope="scope" >
-                                    <el-tag type="danger" style="font-weight: bold">{{scope.row.initialTaskNum}}</el-tag>
+                                    <el-tag type="danger" style="font-weight: bold">{{scope.row.planedTaskNum}}</el-tag>
                                 </template>
                             </el-table-column >
                             <el-table-column
@@ -678,10 +678,10 @@
                     return "height:" + this.pageHeight + "px";
                 }
             },
-            getInitialTaskNum(task) {
+            getAllPlanedTaskNum(task) {
                 if(task != null) {
-                    var num = task.planedTaskNum - task.installingTaskNum - task.installedTaskNum
-                                - task.qualityDoingTaskNum - task.qualityDoneTaskNum - task.installAbnormalTaskNum - task.qualityAbnormalTaskNum;
+                    var num = task.planedTaskNum + task.installingTaskNum + task.installedTaskNum
+                                + task.qualityDoingTaskNum + task.qualityDoneTaskNum + task.installAbnormalTaskNum + task.qualityAbnormalTaskNum;
                     if(num >=0) {
                         return num;
                     }else {
@@ -775,7 +775,7 @@
                         type: 'POST',
                         dataType: 'json',
                         traditional:true,
-                        data: {taskRecordIds:addedTasks, planType: _this.planForm.planType, planDate:_this.planForm.planDate, userId:_this.userInfo.id},
+                        data: {taskRecordIds:addedTasks, planType: _this.planForm.planType, machineStrId: _this.machineDoPlaning.machineStrId, planDate:_this.planForm.planDate, userId:_this.userInfo.id},
                         success: function (data) {
                             if (data.code == 200) {
                                 showMessage(_this,"添加计划成功！", 1);
