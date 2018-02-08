@@ -98,6 +98,19 @@ const PackageModeList =
         },
     ];
 
+//保修方式
+const MaintainTypeList =
+    [
+        {
+            value: 0,
+            text: "SinSim保修"
+        },
+        {
+            value: 1,
+            text: "代理商保修"
+        },
+    ];
+
 //国家
 const CountryList = [
     {"text": "安哥拉"},

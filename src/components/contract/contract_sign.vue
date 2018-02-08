@@ -352,7 +352,7 @@
                                                     </div >
                                                     <div class="panel-body" >
                                                         <el-col :span="6">
-                                                            <el-form-item label="客户：" :label-width="formLabelWidth" >
+                                                            <el-form-item label="客户：" :label-width="formLabelWidth" clearable>
                                                                 <el-input v-model="contractForm.customerName"
                                                                           placeholder="客户" disabled
                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
@@ -361,7 +361,7 @@
                                                         </el-col >
                                                         <el-col :span="6">
                                                             <el-form-item label="国家：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'country', false)">
+                                                                          :class="classWithDifferentValue(item, 'country', false)" clearable>
                                                                 <el-select v-model="item.machineOrder.country"
                                                                            clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
@@ -377,7 +377,7 @@
                                                         </el-col >
 
                                                         <el-col :span="6">
-                                                            <el-form-item label="商标：" :label-width="formLabelWidth"
+                                                            <el-form-item label="商标：" :label-width="formLabelWidth" clearable
                                                                           :class="classWithDifferentValue(item, 'brand', false)">
                                                                 <el-input v-model="item.machineOrder.brand"
                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
@@ -385,7 +385,7 @@
                                                             </el-form-item >
                                                         </el-col >
                                                         <el-col :span="6">
-                                                            <el-form-item label="机型：" :label-width="formLabelWidth"
+                                                            <el-form-item label="机型：" :label-width="formLabelWidth" clearable
                                                                           :class="classWithDifferentValue(item, 'machineType', false)">
                                                                 <el-select
                                                                         style="width: 100%"
@@ -1159,7 +1159,7 @@
                                                         <el-col :span="6">
                                                             <el-form-item label="销售人员：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'sellman', false)">
-                                                                <el-input v-model="item.machineOrder.sellman"
+                                                                <el-input v-model="contractForm.sellman"
                                                                           placeholder="销售人员"
                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                           auto-complete="off" >
@@ -1167,13 +1167,19 @@
                                                             </el-form-item >
                                                         </el-col >
                                                         <el-col :span="6">
-                                                            <el-form-item label="保修人员：" :label-width="formLabelWidth"
+                                                            <el-form-item label="保修方式：" :label-width="formLabelWidth"
                                                                           :class="classWithDifferentValue(item, 'sellman', false)">
-                                                                <el-input v-model="item.machineOrder.sellman"
-                                                                          placeholder="保修人员"
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                          auto-complete="off" >
-                                                                </el-input >
+                                                                <el-select v-model="item.machineOrder.maintainType"
+                                                                          placeholder=""
+                                                                          clearable
+                                                                          :disabled="changeOrderContentDisable(item.machineOrder)">
+                                                                    <el-option
+                                                                            v-for="item in maintainTypeList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text" >
+                                                                    </el-option >
+                                                                </el-select >
                                                             </el-form-item >
                                                         </el-col >
                                                         <el-col :span="22">
@@ -1740,6 +1746,7 @@
                 startRow: 1,
 
 			    packageModeList: PackageModeList,
+			    maintainTypeList: MaintainTypeList,
 			    orderStatusList: OrderStatusList,
 			    countryList: LanguageList,
 			    allMachineType: [],
@@ -2629,12 +2636,12 @@
                 //用于保存合同内容
                 this.contractForm = {
                     contractNum : "",
-                            customerName: "",
-                            sellman: "",
-                            mark:"",
-                            status:CONTRACT_INITIAL,
-                            payMethod:"",
-                            contractShipDate:""
+                    customerName: "",
+                    sellman: "",
+                    mark:"",
+                    status:CONTRACT_INITIAL,
+                    payMethod:"",
+                    contractShipDate:""
                 };
 
                 this.requisitionForms.splice(1);
@@ -2680,6 +2687,8 @@
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for(let i=0; i< obj.length; i++) {
                         obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                        //增加销售员信息，因为之前是绑定信息是在合同contractForm里面 --No.3
+                        obj[i].machineOrder.sellman = this.contractForm.sellman;
                     }
                     $.ajax({
                         url: HOST + "contract/add",
