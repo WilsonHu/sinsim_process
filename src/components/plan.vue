@@ -1,78 +1,78 @@
-<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" >
+<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <el-main>
         <el-tabs type="border-card">
             <el-tab-pane label="已计划">
-                <el-form :model="filters" label-position="right" label-width="80px" >
-                    <el-row >
+                <el-form :model="filters" label-position="right" label-width="80px">
+                    <el-row>
                         <el-col :span="4">
-                            <el-form-item label="需求单号:" >
+                            <el-form-item label="需求单号:">
                                 <el-input v-model="planedFilters.orderNum"
                                           placeholder="需求单号"
                                           auto-complete="off"
-                                          clearable></el-input >
-                            </el-form-item >
-                        </el-col >
-                        <el-col :span="4" >
-                            <el-form-item label="系统编号:" >
+                                          clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-form-item label="系统编号:">
                                 <el-input v-model="planedFilters.machineStrId"
                                           placeholder="系统编号"
                                           auto-complete="off"
-                                          clearable></el-input >
-                            </el-form-item >
-                        </el-col >
-                        <el-col :span="4" >
-                            <el-form-item label="机型:" >
+                                          clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-form-item label="机型:">
                                 <el-select v-model="planedFilters.machineType" clearable filterable>
                                     <el-option
                                             v-for="item in allMachineType"
                                             :value="item.id"
-                                            :label="item.name" >
-                                    </el-option >
-                                </el-select >
-                            </el-form-item >
-                        </el-col >
+                                            :label="item.name">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="4">
-                            <el-form-item label="工序:" >
+                            <el-form-item label="工序:">
                                 <el-select v-model="planedFilters.taskName" clearable filterable>
                                     <el-option
                                             v-for="item in allTasks"
                                             :value="item.taskName"
-                                            :label="item.taskName" >
-                                    </el-option >
-                                </el-select >
-                            </el-form-item >
-                        </el-col >
+                                            :label="item.taskName">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="3">
-                            <el-form-item label="完成状态:" >
-                                <el-select v-model="planedFilters.installStatus" clearable >
+                            <el-form-item label="完成状态:">
+                                <el-select v-model="planedFilters.installStatus" clearable>
                                     <el-option
                                             v-for="item in installStatusList"
                                             :value="item.value"
-                                            :label="item.name" >
-                                    </el-option >
-                                </el-select >
-                            </el-form-item >
-                        </el-col >
+                                            :label="item.name">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="1" :offset="1">
                             <el-button
                                     icon="el-icon-search"
                                     size="normal"
                                     type="primary"
-                                    @click="searchPlaned" >查询
-                            </el-button >
-                        </el-col >
+                                    @click="searchPlaned">查询
+                            </el-button>
+                        </el-col>
                         <el-col :span="1" :offset="1">
                             <el-button
                                     icon="el-icon-share"
                                     size="normal"
                                     type="danger"
-                                    @click="exportData" >导出
-                            </el-button >
-                        </el-col >
-                    </el-row >
+                                    @click="exportData">导出
+                            </el-button>
+                        </el-col>
+                    </el-row>
                     <el-row>
-                        <el-col :span="3" >
-                            <el-form-item label="统计周期:" >
+                        <el-col :span="3">
+                            <el-form-item label="统计周期:">
                                 <el-date-picker
                                         v-model="planedFilters.selectDate"
                                         type="daterange"
@@ -82,12 +82,12 @@
                                         range-separator="—"
                                         start-placeholder="开始日期（计划）"
                                         end-placeholder="结束日期（计划）"
-                                        :picker-options="pickerOptions" >
-                                </el-date-picker >
-                            </el-form-item >
-                        </el-col >
+                                        :picker-options="pickerOptions">
+                                </el-date-picker>
+                            </el-form-item>
+                        </el-col>
                     </el-row>
-                </el-form >
+                </el-form>
                 <el-table
                         v-loading="loadingUI"
                         element-loading-text="获取数据中..."
@@ -95,193 +95,193 @@
                         border
                         empty-text="暂无数据..."
                         show-overflow-tooltip="true"
-                        style="width: 100%; " >
+                        style="width: 100%; ">
                     <el-table-column
                             align="center"
                             width="75"
-                            label="序号" >
-                        <template scope="scope" >
+                            label="序号">
+                        <template scope="scope">
                             {{scope.$index+startRowPlaned}}
-                        </template >
-                    </el-table-column >
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
                             label="需求单号">
-                        <template scope="scope" >
-                                {{scope.row.machineOrder.orderNum}}
-                        </template >
-                    </el-table-column >
+                        <template scope="scope">
+                            {{scope.row.machineOrder.orderNum}}
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="系统编号" >
-                        <template scope="scope" >
-                                {{scope.row.machine.machineStrId}}
-                        </template >
-                    </el-table-column >
+                            label="系统编号">
+                        <template scope="scope">
+                            {{scope.row.machine.machineStrId}}
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="机型" >
-                        <template scope="scope" >
-                            <div >
+                            label="机型">
+                        <template scope="scope">
+                            <div>
                                 {{scope.row.machine.machineType|filterMachineType}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="工序" >
-                        <template scope="scope" >
+                            label="工序">
+                        <template scope="scope">
                             <div style="font-weight: bold;color: #409EFF">
                                 {{scope.row.taskName}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="状态" >
-                        <template scope="scope" >
+                            label="状态">
+                        <template scope="scope">
                             <div :class="scope.row.status|filterTaskInstallStatusStyle">
                                 {{scope.row.status | filterTaskStatus}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="安装" >
+                            label="安装">
                         <el-table-column
                                 align="center"
                                 prop="installBeginTime"
-                                label="开始时间" >
+                                label="开始时间">
 
                         </el-table-column>
                         <el-table-column
                                 align="center"
                                 prop="installEndTime"
-                                label="结束时间" >
+                                label="结束时间">
 
                         </el-table-column>
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="质检" >
+                            label="质检">
                         <el-table-column
                                 align="center"
                                 prop="qualityBeginTime"
-                                label="开始时间" >
+                                label="开始时间">
 
                         </el-table-column>
                         <el-table-column
                                 align="center"
                                 prop="qualityEndTime"
-                                label="结束时间" >
+                                label="结束时间">
 
                         </el-table-column>
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="计划完成时间" >
-                        <template scope="scope" >
+                            label="计划完成时间">
+                        <template scope="scope">
                             <div style="color: #E6A23C">
                                 {{scope.row.taskPlan.planTime | filterDateString}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="合同交货日期" >
-                        <template slot-scope="scope" >
-                    <span >
+                            label="合同交货日期">
+                        <template slot-scope="scope">
+                    <span>
                         {{(scope.row.machineOrder.contractShipDate)|filterDateString}}
-                    </span >
-                        </template >
-                    </el-table-column >
+                    </span>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="计划交货日期" >
-                        <template slot-scope="scope" >
-                    <span >
+                            label="计划交货日期">
+                        <template slot-scope="scope">
+                    <span>
                         {{(scope.row.machineOrder.planShipDate)|filterDateString}}
-                    </span >
-                        </template >
+                    </span>
+                        </template>
 
-                    </el-table-column >
-                </el-table >
-                <div class="block" style="text-align: center; margin-top: 20px" >
+                    </el-table-column>
+                </el-table>
+                <div class="block" style="text-align: center; margin-top: 20px">
                     <el-pagination
                             background
                             @current-change="handleCurrentChangePlaned"
                             :current-page="currentPagePlaned"
                             :page-size="pageSize"
                             layout="total, prev, pager, next, jumper"
-                            :total="totalNumPlaned" >
-                    </el-pagination >
-                </div >
+                            :total="totalNumPlaned">
+                    </el-pagination>
+                </div>
             </el-tab-pane>
             <el-tab-pane label="待计划">
-                <el-form :model="filters" label-position="right" label-width="80px" >
-                    <el-row >
+                <el-form :model="filters" label-position="right" label-width="80px">
+                    <el-row>
                         <el-col :span="4">
-                            <el-form-item label="需求单号:" >
+                            <el-form-item label="需求单号:">
                                 <el-input v-model="filters.orderNum"
                                           placeholder="需求单号"
                                           auto-complete="off"
-                                          clearable></el-input >
-                            </el-form-item >
-                        </el-col >
+                                          clearable></el-input>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="4" :offset="1">
-                            <el-form-item label="系统编号:" >
+                            <el-form-item label="系统编号:">
                                 <el-input v-model="filters.machineStrId"
                                           placeholder="系统编号"
                                           auto-complete="off"
-                                          clearable></el-input >
-                            </el-form-item >
-                        </el-col >
+                                          clearable></el-input>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="4" :offset="1">
-                            <el-form-item label="机型:" >
+                            <el-form-item label="机型:">
                                 <el-select v-model="filters.machineType" clearable filterable>
                                     <el-option
                                             v-for="item in allMachineType"
                                             :value="item.id"
-                                            :label="item.name" >
-                                    </el-option >
-                                </el-select >
-                            </el-form-item >
-                        </el-col >
+                                            :label="item.name">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="4" :offset="1">
-                            <el-form-item label="机器状态:" >
-                                <el-select v-model="filters.status" clearable >
+                            <el-form-item label="机器状态:">
+                                <el-select v-model="filters.status" clearable>
                                     <el-option
                                             v-for="item in machineStatusList"
                                             :value="item.value"
-                                            :label="item.name" >
-                                    </el-option >
-                                </el-select >
-                            </el-form-item >
-                        </el-col >
+                                            :label="item.name">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="1" :offset="3">
                             <el-button
                                     icon="el-icon-search"
                                     size="normal"
                                     type="primary"
-                                    @click="search" >查询
-                            </el-button >
-                        </el-col >
-                    </el-row >
+                                    @click="search">查询
+                            </el-button>
+                        </el-col>
+                    </el-row>
                     <el-row>
                         <el-col :span="4">
-                            <el-form-item label="日期类型:" >
+                            <el-form-item label="日期类型:">
                                 <el-select v-model="filters.dateType" clearable
                                            placeholder="日期类型">
                                     <el-option
                                             v-for="item in searchDateType"
                                             :value="item.value"
-                                            :label="item.name" >
-                                    </el-option >
-                                </el-select >
+                                            :label="item.name">
+                                    </el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="3" >
-                            <el-form-item label="选择日期:" >
+                        <el-col :span="3">
+                            <el-form-item label="选择日期:">
                                 <el-date-picker
                                         v-model="filters.selectDate"
                                         type="daterange"
@@ -291,12 +291,12 @@
                                         range-separator="—"
                                         start-placeholder="开始日期"
                                         end-placeholder="结束日期"
-                                        :picker-options="pickerOptions" >
-                                </el-date-picker >
-                            </el-form-item >
-                        </el-col >
+                                        :picker-options="pickerOptions">
+                                </el-date-picker>
+                            </el-form-item>
+                        </el-col>
                     </el-row>
-                </el-form >
+                </el-form>
                 <el-table
                         v-loading="loadingUI"
                         element-loading-text="获取数据中..."
@@ -304,177 +304,184 @@
                         border
                         empty-text="暂无数据..."
                         show-overflow-tooltip="true"
-                        style="width: 100%; " >
+                        style="width: 100%; ">
                     <el-table-column
                             align="center"
                             width="75"
-                            label="序号" >
-                        <template scope="scope" >
+                            label="序号">
+                        <template scope="scope">
                             {{scope.$index+startRow}}
-                        </template >
-                    </el-table-column >
+                        </template>
+                    </el-table-column>
                     <el-table-column label="需求单号" align="center">
                         <template scope="scope"
                                   prop="orderNum">
                             <div
-                                 style="font-weight: bold;">
+                                    style="font-weight: bold;">
                                 {{scope.row.orderNum}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
                             prop="machineStrId"
-                            label="系统编号" >
-                    </el-table-column >
+                            label="系统编号">
+                    </el-table-column>
                     <el-table-column
                             align="center"
                             scope="scope"
-                            label="已计划 / 总工序" >
-                        <template scope="scope" >
-                            <el-button style="font-size: 14px; font-weight: bold" type="primary" size="mini">{{getAllPlanedTaskNum(scope.row)}} / {{scope.row.totalTaskNum}}</el-button>
+                            label="已计划 / 总工序">
+                        <template scope="scope">
+                            <el-button style="font-size: 14px; font-weight: bold" type="primary" size="mini">
+                                {{getAllPlanedTaskNum(scope.row)}} / {{scope.row.totalTaskNum}}
+                            </el-button>
                         </template>
-                    </el-table-column >
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="已计划工序状态" >
-                            <el-table-column
-                                    align="center"
-                                    scope="scope"
-                                    label="待安装" >
-                                <template scope="scope" >
-                                    <el-tag type="danger" style="font-weight: bold">{{scope.row.planedTaskNum}}</el-tag>
-                                </template>
-                            </el-table-column >
-                            <el-table-column
-                                    align="center"
-                                    scope="scope"
-                                    label="安装" >
-                                <template scope="scope" >
-                                    <el-tag type="warning" style="font-weight: bold">{{scope.row.installingTaskNum}}</el-tag>
-                                    <el-tag type="success" style="font-weight: bold">{{scope.row.installedTaskNum}}</el-tag>
-                                    <el-tag type="danger" style="font-weight: bold">{{scope.row.installAbnormalTaskNum}}</el-tag>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    scope="scope"
-                                    label="质检" >
-                                <template scope="scope" >
-                                    <el-tag type="warning" style="font-weight: bold">{{scope.row.qualityDoingTaskNum}}</el-tag>
-                                    <el-tag type="success" style="font-weight: bold">{{scope.row.qualityDoneTaskNum}}</el-tag>
-                                    <el-tag type="danger" style="font-weight: bold">{{scope.row.qualityAbnormalTaskNum}}</el-tag>
-                                </template>
-                            </el-table-column>
-                    </el-table-column >
+                            label="已计划工序状态">
+                        <el-table-column
+                                align="center"
+                                scope="scope"
+                                label="待安装">
+                            <template scope="scope">
+                                <el-tag type="danger" style="font-weight: bold">{{scope.row.planedTaskNum}}</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                align="center"
+                                scope="scope"
+                                label="安装">
+                            <template scope="scope">
+                                <el-tag type="warning" style="font-weight: bold">{{scope.row.installingTaskNum}}
+                                </el-tag>
+                                <el-tag type="success" style="font-weight: bold">{{scope.row.installedTaskNum}}</el-tag>
+                                <el-tag type="danger" style="font-weight: bold">{{scope.row.installAbnormalTaskNum}}
+                                </el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                align="center"
+                                scope="scope"
+                                label="质检">
+                            <template scope="scope">
+                                <el-tag type="warning" style="font-weight: bold">{{scope.row.qualityDoingTaskNum}}
+                                </el-tag>
+                                <el-tag type="success" style="font-weight: bold">{{scope.row.qualityDoneTaskNum}}
+                                </el-tag>
+                                <el-tag type="danger" style="font-weight: bold">{{scope.row.qualityAbnormalTaskNum}}
+                                </el-tag>
+                            </template>
+                        </el-table-column>
+                    </el-table-column>
                     <el-table-column
                             align="center"
                             prop="machineType"
-                            label="机型" >
-                        <template scope="scope" >
-                            <div >
+                            label="机型">
+                        <template scope="scope">
+                            <div>
                                 {{scope.row.machineType|filterMachineType}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            </div>
+                        </template>
+                    </el-table-column>
 
                     <el-table-column
                             align="center"
                             prop="status"
-                            label="机器状态" >
-                        <template scope="scope" >
-                            <div >
+                            label="机器状态">
+                        <template scope="scope">
+                            <div>
                                 {{scope.row.status|filterMachineStatus}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
                             prop="contractShipDate"
-                            label="合同交货日期" >
-                        <template slot-scope="scope" >
-                            <span >
+                            label="合同交货日期">
+                        <template slot-scope="scope">
+                            <span>
                                 {{(scope.row.contractShipDate)|filterDateString}}
-                            </span >
-                        </template >
-                    </el-table-column >
+                            </span>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
                             prop="planShipDate"
-                            label="计划交货日期" >
-                        <template slot-scope="scope" >
-                            <span >
+                            label="计划交货日期">
+                        <template slot-scope="scope">
+                            <span>
                                 {{(scope.row.planShipDate)|filterDateString}}
-                            </span >
-                        </template >
-                    </el-table-column >
+                            </span>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            label="操作" width="100" >
-                        <template scope="scope" >
+                            label="操作" width="100">
+                        <template scope="scope">
                             <el-button
                                     size="small"
                                     type="primary"
                                     icon="el-icon-tickets"
-                                    @click="doPlan(scope.row)" >计划
-                            </el-button >
-                        </template >
-                    </el-table-column >
-                </el-table >
-                <div class="block" style="text-align: center; margin-top: 20px" >
+                                    @click="doPlan(scope.row)">计划
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="block" style="text-align: center; margin-top: 20px">
                     <el-pagination
                             background
                             @current-change="handleCurrentChange"
                             :current-page="currentPage"
                             :page-size="pageSize"
                             layout="total,prev, pager, next, jumper"
-                            :total="totalNum" >
-                    </el-pagination >
-                </div >
+                            :total="totalNum">
+                    </el-pagination>
+                </div>
             </el-tab-pane>
         </el-tabs>
         <el-dialog :visible.sync="doPlaningDialogVisible" fullscreen append-to-body>
-            <el-form :model="machineDoPlaning" label-position="right" label-width="110px" >
-                <el-row >
+            <el-form :model="machineDoPlaning" label-position="right" label-width="110px">
+                <el-row>
                     <el-col :span="4">
-                        <el-form-item label="需求单号:" >
+                        <el-form-item label="需求单号:">
                             <el-input v-model="machineDoPlaning.orderNum"
                                       placeholder="需求单号"
                                       auto-complete="off"
-                                      disabled></el-input >
-                        </el-form-item >
-                    </el-col >
-                    <el-col :span="4" >
-                        <el-form-item label="系统编号:" >
+                                      disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-form-item label="系统编号:">
                             <el-input v-model="machineDoPlaning.machineStrId"
                                       placeholder="系统编号"
                                       auto-complete="off"
-                                      disabled></el-input >
-                        </el-form-item >
-                    </el-col >
-                    <el-col :span="4" >
-                        <el-form-item label="机型:" >
-                            <el-select v-model="machineDoPlaning.machineType" disabled >
+                                      disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-form-item label="机型:">
+                            <el-select v-model="machineDoPlaning.machineType" disabled>
                                 <el-option
                                         v-for="item in allMachineType"
                                         :value="item.id"
-                                        :label="item.name" >
-                                </el-option >
-                            </el-select >
-                        </el-form-item >
-                    </el-col >
+                                        :label="item.name">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="4" :offset="1">
-                        <el-form-item label="合同交货时间:" >
-                            <span style="font-size: 15px" >{{machineDoPlaning.contractShipDate | filterDateString}}</span >
-                        </el-form-item >
-                    </el-col >
+                        <el-form-item label="合同交货时间:">
+                            <span style="font-size: 15px">{{machineDoPlaning.contractShipDate | filterDateString}}</span>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="4" :offset="1">
-                        <el-form-item label="计划交货时间:" >
-                            <span style="font-size: 15px" >{{machineDoPlaning.planShipDate | filterDateString}}</span >
-                        </el-form-item >
-                    </el-col >
-                </el-row >
-            </el-form >
+                        <el-form-item label="计划交货时间:">
+                            <span style="font-size: 15px">{{machineDoPlaning.planShipDate | filterDateString}}</span>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
             <el-row style="margin-top: 10px">
                 <el-row>
                     <el-col :span="6" :style="getProcessViewHeight()" style="margin-left: 25px;border-radius: 5px;
@@ -484,26 +491,26 @@
                         </div>
                     </el-col>
 
-                    <el-col :span="16" :offset="1" >
+                    <el-col :span="16" :offset="1">
                         <el-row class="well">
                             <el-row>
                                 <el-col :span="6">
-                                    <el-form :model="planForm" label-position="right" label-width="100px" >
+                                    <el-form :model="planForm" label-position="right" label-width="100px">
                                         <el-row>
                                             <el-form-item label="计划方式：">
                                                 <el-select v-model="planForm.planType">
                                                     <el-option
                                                             v-for="item in planTypeArray"
                                                             :value="item.value"
-                                                            :label="item.name" >
-                                                    </el-option >
-                                                </el-select >
+                                                            :label="item.name">
+                                                    </el-option>
+                                                </el-select>
                                             </el-form-item>
                                         </el-row>
                                     </el-form>
                                 </el-col>
                                 <el-col :span="6" style="margin-left: 15px">
-                                    <el-form :model="planForm" label-position="right" label-width="100px" >
+                                    <el-form :model="planForm" label-position="right" label-width="100px">
                                         <el-row>
                                             <el-form-item :label="planForm.planType == 1 ? '完成日期：' : '截止日期：' ">
                                                 <el-date-picker
@@ -516,7 +523,7 @@
                                             </el-form-item>
                                         </el-row>
                                     </el-form>
-                                </el-col >
+                                </el-col>
                             </el-row>
                             <el-row>
                                 <el-transfer
@@ -529,18 +536,20 @@
                         </el-row>
                         <el-row style="margin-top: 10px">
                             <el-col :span="6" :offset="18">
-                                <el-button @click="doPlaningDialogVisible = false" icon="el-icon-back" >取 消</el-button >
-                                <el-button type="primary" @click="addTaskPlans" icon="el-icon-check" :disabled="toPlanTasks.length <= 0">确 定</el-button >
+                                <el-button @click="doPlaningDialogVisible = false" icon="el-icon-back">取 消</el-button>
+                                <el-button type="primary" @click="addTaskPlans" icon="el-icon-check"
+                                           :disabled="toPlanTasks.length <= 0">确 定
+                                </el-button>
                             </el-col>
-                        </el-row >
+                        </el-row>
                     </el-col>
                 </el-row>
             </el-row>
-        </el-dialog >
-    </el-main >
-</template >
+        </el-dialog>
+    </el-main>
+</template>
 
-<script >
+<script>
     import Vue from 'vue'
     import {Loading} from 'element-ui';
     var _this;
@@ -552,7 +561,7 @@
         data () {
             _this = this;
             return {
-                userInfo:"",
+                userInfo: "",
                 errorMsg: '',
                 //未计划
                 totalNum: 0,
@@ -565,59 +574,59 @@
                 //分页
                 pageSize: EveryPageNum,//每一页的num
                 //未计划
-                startRow:0,
+                startRow: 0,
                 currentPage: 1,
                 //已计划
                 currentPagePlaned: 1,
                 startRowPlaned: 0,
                 //机器类型
-                allMachineType:[],
+                allMachineType: [],
                 //所有工序名称
-                allTasks:[],
+                allTasks: [],
 
                 pageHeight: 0,
 
                 formLabelWidth: '100px',
                 //已计划
                 planedFilters: {
-                    orderNum:'',
-                    machineStrId:'',
-                    taskName:"",
+                    orderNum: '',
+                    machineStrId: '',
+                    taskName: "",
                     installStatus: '',
                     machineType: "",
                     selectDate: [new Date(), new Date()],
                 },
-                installStatusList: [{name:"完成",value:1},{name:"未完成",value:2}],
+                installStatusList: [{name: "完成", value: 1}, {name: "未完成", value: 2}],
 
                 filters: {
-                    orderNum:'',
-                    machineStrId:'',
+                    orderNum: '',
+                    machineStrId: '',
                     status: '',
                     machineType: "",
                     selectDate: '',
-                    dateType:""
+                    dateType: ""
                 },
                 allRoles: [],
                 loadingUI: false,
 
-                machineStatusList : MachineStatusList,
-                taskStatusList:TaskStatusList,
-                searchDateType : SearchDateType,
-                planForm:{
+                machineStatusList: MachineStatusList,
+                taskStatusList: TaskStatusList,
+                searchDateType: SearchDateType,
+                planForm: {
                     planType: 1,
                     planDate: new Date()
                 },
-                doPlaningDialogVisible:false,
-                machineDoPlaning:{},
-                notPlanedTasks:[],
-                toPlanTasks:[],
+                doPlaningDialogVisible: false,
+                machineDoPlaning: {},
+                notPlanedTasks: [],
+                toPlanTasks: [],
 
-                planTypeArray:[
+                planTypeArray: [
                     {
-                        name:"日计划",value:1
+                        name: "日计划", value: 1
                     },
                     {
-                        name:"弹性计划",value:2
+                        name: "弹性计划", value: 2
                     }
                 ],
                 pickerOptions1: {
@@ -662,7 +671,7 @@
             },
             generateTasks() {
                 const data = [];
-                this.notPlanedTasks.forEach((task, index) => {
+                _this.notPlanedTasks.forEach((task, index) => {
                     data.push({
                         label: task.taskName,
                         key: task.id,
@@ -672,22 +681,22 @@
             },
 
             getProcessViewHeight() {
-                if(this.pageHeight == 0) {
+                if (this.pageHeight == 0) {
                     return "height: 500px";
-                }else {
+                } else {
                     return "height:" + this.pageHeight + "px";
                 }
             },
             getAllPlanedTaskNum(task) {
-                if(task != null) {
+                if (task != null) {
                     var num = task.planedTaskNum + task.installingTaskNum + task.installedTaskNum
-                                + task.qualityDoingTaskNum + task.qualityDoneTaskNum + task.installAbnormalTaskNum + task.qualityAbnormalTaskNum;
-                    if(num >=0) {
+                            + task.qualityDoingTaskNum + task.qualityDoneTaskNum + task.installAbnormalTaskNum + task.qualityAbnormalTaskNum;
+                    if (num >= 0) {
                         return num;
-                    }else {
+                    } else {
                         return "";
                     }
-                }else {
+                } else {
                     return "";
                 }
             },
@@ -701,11 +710,12 @@
                     url: HOST + "task/record/selectNotPlanedTaskRecord",
                     type: 'POST',
                     dataType: 'json',
-                    data: {processRecordID:planItem.processRecordID},
+                    data: {processRecordID: planItem.processRecordID},
                     success: function (data) {
                         if (data.code == 200) {
                             _this.notPlanedTasks = data.data.list;
                             _this.originalNotPlanedTasks = copyObjectByJSON(_this.notPlanedTasks);//用于保存弹性计划下，直接使用的数据
+                            _this.toPlanTasks = [];
                         }
                     }
                 });
@@ -714,23 +724,26 @@
                     url: HOST + "machine/selectProcessMachine",
                     type: 'POST',
                     dataType: 'json',
-                    data: {machine_strid:planItem.machineStrId},
+                    data: {machine_strid: planItem.machineStrId},
                     success: function (data) {
                         if (data.code == 200) {
                             var taskList = copyObject(DefaultTaskList);
                             taskList.linkDataArray = JSON.parse(data.data.list[0].linkData);
                             taskList.nodeDataArray = JSON.parse(data.data.list[0].nodeData);
                             taskList.nodeDataArray.forEach(item=> {
-                                if (parseInt(item.task_status) >= 1 && parseInt(item.task_status) < 4)//进行中
+                                if (parseInt(item.task_status) > 1 && parseInt(item.task_status) < 5)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
-                                }
-                                else if (parseInt(item.task_status) == 4) {//完成
+                                } else if (parseInt(item.task_status) == 5) {//完成
                                     item.category = ProcessCatergory.Finished;
                                 }
-                                else if (parseInt(item.task_status) > 4)//异常
+                                else if (parseInt(item.task_status) > 5 && parseInt(item.task_status) < 8)//异常
                                 {
                                     item.category = ProcessCatergory.Abnormal
+                                }
+                                else if (parseInt(item.task_status) == 8)//已跳过
+                                {
+                                    item.category = ProcessCatergory.Skip;
                                 }
                             });
                             window.setTimeout(()=> {
@@ -742,45 +755,49 @@
                                 } catch (ex) {
                                     showMessage(_this, "图形流程数据加载失败！", 0)
                                     console.log(ex.toString());
-                                } finally {
-                                    _this.loadingInstance.close();
                                 }
                             }, 200);
-
-
                         }
                     }
                 });
-
-
             },
             addTaskPlans() {
 
                 let addedTasks = [];
-                if(this.planForm.planType == 1) {
+                if (this.planForm.planType == 1) {
                     //日计划,保存task_record的ID值
                     addedTasks = this.toPlanTasks;
-                }else if(this.planForm.planType == 2) {
-                    for(let i=0; i<this.notPlanedTasks.length; i++) {
+                } else if (this.planForm.planType == 2) {
+                    for (let i = 0; i < this.notPlanedTasks.length; i++) {
                         addedTasks.push(this.notPlanedTasks[i].id);
                     }
-                }else {
-                    showMessage(this,"获取计划方式失败！", 0);
+                } else {
+                    showMessage(this, "获取计划方式失败！", 0);
                 }
-                if(addedTasks.length == 0) {
-                    showMessage(this,"添加计划工序为空！", 0)
-                }else {
+                if (addedTasks.length == 0) {
+                    showMessage(this, "添加计划工序为空！", 0)
+                } else {
                     $.ajax({
                         url: HOST + "task/plan/addTaskPlans",
                         type: 'POST',
                         dataType: 'json',
-                        traditional:true,
-                        data: {taskRecordIds:addedTasks, planType: _this.planForm.planType, machineStrId: _this.machineDoPlaning.machineStrId, planDate:_this.planForm.planDate, userId:_this.userInfo.id},
+                        traditional: true,
+                        data: {
+                            taskRecordIds: addedTasks,
+                            planType: _this.planForm.planType,
+                            machineStrId: _this.machineDoPlaning.machineStrId,
+                            planDate: _this.planForm.planDate,
+                            userId: _this.userInfo.id
+                        },
                         success: function (data) {
                             if (data.code == 200) {
-                                showMessage(_this,"添加计划成功！", 1);
-                            }else {
-                                showMessage(_this,data.message, 0);
+                                showMessage(_this, "添加计划成功！", 1);
+                                _this.doPlaningDialogVisible = false;
+                                _this.onSearchPlanningData();
+                                _this.onSearchPlanedData();
+
+                            } else {
+                                showMessage(_this, data.message, 0);
                             }
                         }
                     })
@@ -810,8 +827,8 @@
                     dateType: _this.filters.dateType,
                     query_start_time: '',
                     query_finish_time: '',
-                    page:this.currentPage,
-                    size:this.pageSize
+                    page: this.currentPage,
+                    size: this.pageSize
                 };
                 if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
                     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
@@ -845,8 +862,8 @@
                     taskName: _this.planedFilters.taskName,
                     query_start_time: '',
                     query_finish_time: '',
-                    page:this.currentPagePlaned,
-                    size:this.pageSize
+                    page: this.currentPagePlaned,
+                    size: this.pageSize
                 };
                 if (_this.planedFilters.selectDate != null && _this.planedFilters.selectDate.length > 0) {
                     condition.query_start_time = _this.planedFilters.selectDate[0].format("yyyy-MM-dd");
@@ -862,8 +879,8 @@
                             _this.tableDataPlaned = data.data.list;
                             _this.totalNumPlaned = data.data.total;
                             _this.startRowPlaned = data.data.startRow;
-                        }else {
-                            showMessage(_this,"获取已计划工序失败！", 0);
+                        } else {
+                            showMessage(_this, "获取已计划工序失败！", 0);
                         }
                         _this.loadingUI = false;
                     },
@@ -914,12 +931,12 @@
                     success: function (res) {
                         if (res.code == 200) {
                             _this.allTasks = res.data.list;
-                        }else {
-                            showMessage(_this,res.message, 0);
+                        } else {
+                            showMessage(_this, res.message, 0);
                         }
                     },
-                    error:function (res) {
-                        showMessage(_this,"获取服务器数据失败！", 0);
+                    error: function (res) {
+                        showMessage(_this, "获取服务器数据失败！", 0);
                     }
                 })
             }
@@ -928,9 +945,9 @@
         filters: {
 
             filterDateString(strDate){
-                if(strDate == null) {
+                if (strDate == null) {
                     return ""
-                }else {
+                } else {
                     var resDate = new Date(strDate);
                     return resDate.format("yyyy-MM-dd");
                 }
@@ -986,8 +1003,8 @@
             },
             filterTaskStatus(status) {
                 let result = "";
-                for (let i=0; i< _this.taskStatusList.length; i++) {
-                    if(status == _this.taskStatusList[i].value){
+                for (let i = 0; i < _this.taskStatusList.length; i++) {
+                    if (status == _this.taskStatusList[i].value) {
                         result = _this.taskStatusList[i].name;
                         break;
                     }
@@ -1038,15 +1055,15 @@
         var $ = go.GraphObject.make;  // for conciseness in defining templates
 
         myDiagram =
-            $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
-                {
-                    initialContentAlignment: go.Spot.Top,
-                    allowDrop: false,  // must be true to accept drops from the Palette
-                    "LinkDrawn": showLinkLabel,  // this DiagramEvent listener is defined below
-                    "LinkRelinked": showLinkLabel,
-                    "animationManager.duration": 100, // slightly longer than default (600ms) animation
-                    "undoManager.isEnabled": true  // enable undo & redo
-                });
+                $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
+                        {
+                            initialContentAlignment: go.Spot.Top,
+                            allowDrop: false,  // must be true to accept drops from the Palette
+                            "LinkDrawn": showLinkLabel,  // this DiagramEvent listener is defined below
+                            "LinkRelinked": showLinkLabel,
+                            "animationManager.duration": 100, // slightly longer than default (600ms) animation
+                            "undoManager.isEnabled": true  // enable undo & redo
+                        });
 
         // when the document is modified, add a "*" to the title and enable the "Save" button
         myDiagram.addDiagramListener("Modified", function (e) {
@@ -1092,16 +1109,16 @@
         function makePort(name, spot, output, input) {
             // the port is basically just a small circle that has a white stroke when it is made visible
             return $(go.Shape, "Circle",
-                {
-                    fill: "transparent",
-                    stroke: null,  // this is changed to "white" in the showPorts function
-                    desiredSize: new go.Size(6, 6),
-                    alignment: spot, alignmentFocus: spot,  // align the port on the main Shape
-                    portId: name,  // declare this object to be a "port"
-                    fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
-                    fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
-                    cursor: "pointer"  // show a different cursor to indicate potential link point
-                });
+                    {
+                        fill: "transparent",
+                        stroke: null,  // this is changed to "white" in the showPorts function
+                        desiredSize: new go.Size(6, 6),
+                        alignment: spot, alignmentFocus: spot,  // align the port on the main Shape
+                        portId: name,  // declare this object to be a "port"
+                        fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
+                        fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
+                        cursor: "pointer"  // show a different cursor to indicate potential link point
+                    });
         }
 
         // define the Node templates for regular nodes
@@ -1109,202 +1126,231 @@
         var lightText = 'whitesmoke';
 
         myDiagram.nodeTemplateMap.add("",  // the default category
-            $(go.Node, "Spot", nodeStyle(),
-                // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
-                $(go.Panel, "Auto",
-                    $(go.Shape, "Rectangle",
-                        {fill: "#00A9C9", stroke: null},
-                        new go.Binding("figure", "figure")),
-                    $(go.TextBlock,
-                        {
-                            font: "bold 11pt Helvetica, Arial, sans-serif",
-                            stroke: lightText,
-                            margin: 8,
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "#00A9C9", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Helvetica, Arial, sans-serif",
+                                            stroke: lightText,
+                                            margin: 8,
 //                                            maxSize: new go.Size(160, NaN),
-                            maxSize: new go.Size(160, 160),
-                            wrap: go.TextBlock.WrapFit,
-                            editable: false,
-                            textAlign: 'center',
-                            isMultiline: true
-                        },
-                        new go.Binding("text").makeTwoWay())
-                ),
-                // four named ports, one on each side:
-                makePort("T", go.Spot.Top, false, true),
-                makePort("L", go.Spot.Left, true, true),
-                makePort("R", go.Spot.Right, true, true),
-                makePort("B", go.Spot.Bottom, true, false)
-            ));
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
         myDiagram.nodeTemplateMap.add("Working",  // the default category
-            $(go.Node, "Spot", nodeStyle(),
-                // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
-                $(go.Panel, "Auto",
-                    $(go.Shape, "Rectangle",
-                        {fill: "yellow", stroke: null},
-                        new go.Binding("figure", "figure")),
-                    $(go.TextBlock,
-                        {
-                            font: "bold 11pt Arial",
-                            stroke: "black",
-                            margin: 8,
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "yellow", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: "black",
+                                            margin: 8,
 //                                            maxSize: new go.Size(160, NaN),
-                            maxSize: new go.Size(160, 160),
-                            wrap: go.TextBlock.WrapFit,
-                            editable: false,
-                            textAlign: 'center',
-                            isMultiline: true
-                        },
-                        new go.Binding("text").makeTwoWay())
-                ),
-                // four named ports, one on each side:
-                makePort("T", go.Spot.Top, false, true),
-                makePort("L", go.Spot.Left, true, true),
-                makePort("R", go.Spot.Right, true, true),
-                makePort("B", go.Spot.Bottom, true, false)
-            ));
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
 
 
         myDiagram.nodeTemplateMap.add("Finished",  // the default category
-            $(go.Node, "Spot", nodeStyle(),
-                // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
-                $(go.Panel, "Auto",
-                    $(go.Shape, "Rectangle",
-                        {fill: "gray", stroke: null},
-                        new go.Binding("figure", "figure")),
-                    $(go.TextBlock,
-                        {
-                            font: "bold 11pt Arial",
-                            stroke: lightText,
-                            margin: 8,
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "gray", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: lightText,
+                                            margin: 8,
 //                                            maxSize: new go.Size(160, NaN),
-                            maxSize: new go.Size(160, 160),
-                            wrap: go.TextBlock.WrapFit,
-                            editable: false,
-                            textAlign: 'center',
-                            isMultiline: true
-                        },
-                        new go.Binding("text").makeTwoWay())
-                ),
-                // four named ports, one on each side:
-                makePort("T", go.Spot.Top, false, true),
-                makePort("L", go.Spot.Left, true, true),
-                makePort("R", go.Spot.Right, true, true),
-                makePort("B", go.Spot.Bottom, true, false)
-            ));
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
 
         myDiagram.nodeTemplateMap.add("Abnormal",  // the default category
-            $(go.Node, "Spot", nodeStyle(),
-                // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
-                $(go.Panel, "Auto",
-                    $(go.Shape, "Rectangle",
-                        {fill: "red", stroke: null},
-                        new go.Binding("figure", "figure")),
-                    $(go.TextBlock,
-                        {
-                            font: "bold 11pt Arial",
-                            stroke: lightText,
-                            margin: 8,
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "red", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: lightText,
+                                            margin: 8,
 //                                            maxSize: new go.Size(160, NaN),
-                            maxSize: new go.Size(160, 160),
-                            wrap: go.TextBlock.WrapFit,
-                            editable: false,
-                            textAlign: 'center',
-                            isMultiline: true
-                        },
-                        new go.Binding("text").makeTwoWay())
-                ),
-                // four named ports, one on each side:
-                makePort("T", go.Spot.Top, false, true),
-                makePort("L", go.Spot.Left, true, true),
-                makePort("R", go.Spot.Right, true, true),
-                makePort("B", go.Spot.Bottom, true, false)
-            ));
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
+
+
+        myDiagram.nodeTemplateMap.add("Skip",  // Abnormal category
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "orange", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: lightText,
+                                            margin: 8,
+//                                            maxSize: new go.Size(160, NaN),
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
+
 
         myDiagram.nodeTemplateMap.add("Start",
-            $(go.Node, "Spot", nodeStyle(),
-                $(go.Panel, "Auto",
-                    $(go.Shape, "Circle",
-                        {minSize: new go.Size(40, 40), fill: "#79C900", stroke: null}),
-                    $(go.TextBlock, "Start",
-                        {
-                            font: "bold 11pt Helvetica, Arial, sans-serif",
-                            stroke: lightText,
-                            editable: false,
-                            textAlign: 'center',
-                            isMultiline: true
-                        },
-                        new go.Binding("text"))
-                ),
-                // three named ports, one on each side except the top, all output only:
-                makePort("L", go.Spot.Left, true, false),
-                makePort("R", go.Spot.Right, true, false),
-                makePort("B", go.Spot.Bottom, true, false)
-            ));
+                $(go.Node, "Spot", nodeStyle(),
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Circle",
+                                        {minSize: new go.Size(40, 40), fill: "#79C900", stroke: null}),
+                                $(go.TextBlock, "Start",
+                                        {
+                                            font: "bold 11pt Helvetica, Arial, sans-serif",
+                                            stroke: lightText,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text"))
+                        ),
+                        // three named ports, one on each side except the top, all output only:
+                        makePort("L", go.Spot.Left, true, false),
+                        makePort("R", go.Spot.Right, true, false),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
 
         myDiagram.nodeTemplateMap.add("End",
-            $(go.Node, "Spot", nodeStyle(),
-                $(go.Panel, "Auto",
-                    $(go.Shape, "Circle",
-                        {minSize: new go.Size(48, 48), fill: "#DC3C00", stroke: null}),
-                    $(go.TextBlock, "End",
-                        {
-                            font: "bold 11pt Helvetica, Arial, sans-serif",
-                            stroke: lightText,
-                            textAlign: 'center',
-                            editable: false,
-                            isMultiline: true
-                        },
-                        new go.Binding("text"))
-                ),
-                // three named ports, one on each side except the bottom, all input only:
-                makePort("T", go.Spot.Top, false, true),
-                makePort("L", go.Spot.Left, false, true),
-                makePort("R", go.Spot.Right, false, true)
-            ));
-
+                $(go.Node, "Spot", nodeStyle(),
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Circle",
+                                        {minSize: new go.Size(48, 48), fill: "#DC3C00", stroke: null}),
+                                $(go.TextBlock, "End",
+                                        {
+                                            font: "bold 11pt Helvetica, Arial, sans-serif",
+                                            stroke: lightText,
+                                            textAlign: 'center',
+                                            editable: false,
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text"))
+                        ),
+                        // three named ports, one on each side except the bottom, all input only:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, false, true),
+                        makePort("R", go.Spot.Right, false, true)
+                ));
 
 
         // replace the default Link template in the linkTemplateMap
         myDiagram.linkTemplate =
-            $(go.Link,  // the whole link panel
-                {
-                    routing: go.Link.AvoidsNodes,
-                    curve: go.Link.JumpOver,
-                    corner: 5, toShortLength: 4,
-                    relinkableFrom: true,
-                    relinkableTo: true,
-                    reshapable: true,
-                    resegmentable: true,
-                    // mouse-overs subtly highlight links:
-                    mouseEnter: function (e, link) {
-                        link.findObject("HIGHLIGHT").stroke = "rgba(30,144,255,0.2)";
-                    },
-                    mouseLeave: function (e, link) {
-                        link.findObject("HIGHLIGHT").stroke = "transparent";
-                    }
-                },
-                new go.Binding("points").makeTwoWay(),
-                $(go.Shape,  // the highlight shape, normally transparent
-                    {isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT"}),
-                $(go.Shape,  // the link path shape
-                    {isPanelMain: true, stroke: "gray", strokeWidth: 3}),
-                $(go.Shape,  // the arrowhead
-                    {toArrow: "standard", stroke: null, fill: "gray"}),
-                $(go.Panel, "Auto",  // the link label, normally not visible
-                    {visible: false, name: "LABEL", segmentIndex: 2, segmentFraction: 0.5},
-                    new go.Binding("visible", "visible").makeTwoWay(),
-                    $(go.Shape, "RoundedRectangle",  // the label shape
-                        {fill: "#F8F8F8", stroke: null}),
-                    $(go.TextBlock, "Yes",  // the label
+                $(go.Link,  // the whole link panel
                         {
-                            textAlign: "center",
-                            font: "10pt helvetica, arial, sans-serif",
-                            stroke: "#333333",
-                            editable: true
+                            routing: go.Link.AvoidsNodes,
+                            curve: go.Link.JumpOver,
+                            corner: 5, toShortLength: 4,
+                            relinkableFrom: true,
+                            relinkableTo: true,
+                            reshapable: true,
+                            resegmentable: true,
+                            // mouse-overs subtly highlight links:
+                            mouseEnter: function (e, link) {
+                                link.findObject("HIGHLIGHT").stroke = "rgba(30,144,255,0.2)";
+                            },
+                            mouseLeave: function (e, link) {
+                                link.findObject("HIGHLIGHT").stroke = "transparent";
+                            }
                         },
-                        new go.Binding("text").makeTwoWay())
-                )
-            );
+                        new go.Binding("points").makeTwoWay(),
+                        $(go.Shape,  // the highlight shape, normally transparent
+                                {isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT"}),
+                        $(go.Shape,  // the link path shape
+                                {isPanelMain: true, stroke: "gray", strokeWidth: 3}),
+                        $(go.Shape,  // the arrowhead
+                                {toArrow: "standard", stroke: null, fill: "gray"}),
+                        $(go.Panel, "Auto",  // the link label, normally not visible
+                                {visible: false, name: "LABEL", segmentIndex: 2, segmentFraction: 0.5},
+                                new go.Binding("visible", "visible").makeTwoWay(),
+                                $(go.Shape, "RoundedRectangle",  // the label shape
+                                        {fill: "#F8F8F8", stroke: null}),
+                                $(go.TextBlock, "Yes",  // the label
+                                        {
+                                            textAlign: "center",
+                                            font: "10pt helvetica, arial, sans-serif",
+                                            stroke: "#333333",
+                                            editable: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        )
+                );
 
         // Make link labels visible if coming out of a "conditional" node.
         // This listener is called by the "LinkDrawn" and "LinkRelinked" DiagramEvents.
@@ -1341,16 +1387,18 @@
         });
     }
 
-</script >
-<style >
-    .el-transfer-panel{
+</script>
+<style>
+    .el-transfer-panel {
         width: 250px;
     }
-    .el-transfer-panel__body{
-        height:420px
+
+    .el-transfer-panel__body {
+        height: 420px
     }
-    .el-transfer-panel__list{
-        height:420px
+
+    .el-transfer-panel__list {
+        height: 420px
     }
 
     .divTaskStatusInitial {
@@ -1377,4 +1425,4 @@
     .divTaskStatusAbnormal {
         color: #F56C6C;
     }
-</style >
+</style>
