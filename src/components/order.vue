@@ -6,7 +6,7 @@
                     <el-row >
                         <el-col :span="6" >
                             <el-form-item label="订单号:">
-                                <el-input v-model="filters.id"
+                                <el-input v-model="filters.order_num"
                                           placeholder="订单号"
                                           auto-complete="off"
                                           clearable></el-input >
@@ -1108,7 +1108,7 @@
                 },
                 formLabelWidth: '100px',
                 filters: {
-                    id: '',
+                    order_num: '',
                     contract_num: '',
                     status: '',
                     sellman: '',
@@ -1165,7 +1165,7 @@
             onSearchDetailData()
             {
                 var condition = {
-                    id: _this.filters.id,
+                    order_num: _this.filters.order_num,
                     contract_num: _this.filters.contract_num,
                     status: _this.filters.status,
                     sellman: _this.filters.sellman,

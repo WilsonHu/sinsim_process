@@ -39,9 +39,9 @@
                 </el-row>
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="机器编号:">
+                        <el-form-item label="系统编号:">
                             <el-input v-model="filters.machine_strid"
-                                      placeholder="机器编号"
+                                      placeholder="系统编号"
                                       auto-complete="off"></el-input>
                         </el-form-item>
                     </el-col>
@@ -94,12 +94,12 @@
                 <el-table-column
                         align="center"
                         prop="machineStrId"
-                        label="机器编号">
+                        label="系统编号">
                 </el-table-column>
                 <el-table-column
                         align="center"
                         prop="nameplate"
-                        label="铭牌号">
+                        label="机器编号">
                 </el-table-column>
                 <el-table-column
                         align="center"
@@ -229,7 +229,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="10" :offset="1">
-                                        <el-form-item label="机器编号：">
+                                        <el-form-item label="系统编号：">
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.machineStrId"
@@ -237,7 +237,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="10">
-                                        <el-form-item label="铭牌号：">
+                                        <el-form-item label="机器编号：">
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.nameplate"

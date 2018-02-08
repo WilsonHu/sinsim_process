@@ -39,9 +39,9 @@
                 </el-row>
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="机器编号:">
+                        <el-form-item label="系统编号:">
                             <el-input v-model="filters.machine_strid"
-                                      placeholder="机器编号"
+                                      placeholder="系统编号"
                                       auto-complete="off"></el-input>
                         </el-form-item>
                     </el-col>
@@ -94,12 +94,12 @@
                 <el-table-column
                         align="center"
                         prop="machineStrId"
-                        label="机器编号">
+                        label="系统编号">
                 </el-table-column>
                 <el-table-column
                         align="center"
                         prop="nameplate"
-                        label="铭牌号">
+                        label="机器编号">
                 </el-table-column>
                 <el-table-column
                         align="center"
@@ -194,7 +194,7 @@
                         <el-row>
                             <el-form :model="addForm">
                                 <el-col :span="24">
-                                    <el-form-item label="机器编号：">
+                                    <el-form-item label="系统编号：">
                                         <el-input type="text"
                                                   disabled
                                                   v-model="addForm.machineStrId"
@@ -378,7 +378,7 @@
                             _this.tableData = res.data.list;
                             _this.startRow = res.data.startRow;
                             _this.tableData.forEach(item=> {
-                                item.canConfig = item.status <= 1;
+                                item.canConfig = item.status <= 2;
                             });
                         }
                         _this.loadingUI = false;
@@ -459,7 +459,7 @@
                         processRecord: JSON.stringify(prObj),
                         machine: JSON.stringify({
                             id: _this.addForm.id,
-                            status: _this.addForm.status,
+                            status: MachineStatusList[1].value,//已配置
                         }),
                     },
                     success: function (res) {

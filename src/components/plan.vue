@@ -13,9 +13,9 @@
                             </el-form-item >
                         </el-col >
                         <el-col :span="4" >
-                            <el-form-item label="机器编号:" >
+                            <el-form-item label="系统编号:" >
                                 <el-input v-model="planedFilters.machineStrId"
-                                          placeholder="机器编号"
+                                          placeholder="系统编号"
                                           auto-complete="off"
                                           clearable></el-input >
                             </el-form-item >
@@ -113,7 +113,7 @@
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            label="机器编号" >
+                            label="系统编号" >
                         <template scope="scope" >
                                 {{scope.row.machine.machineStrId}}
                         </template >
@@ -229,9 +229,9 @@
                             </el-form-item >
                         </el-col >
                         <el-col :span="4" :offset="1">
-                            <el-form-item label="机器编号:" >
+                            <el-form-item label="系统编号:" >
                                 <el-input v-model="filters.machineStrId"
-                                          placeholder="机器编号"
+                                          placeholder="系统编号"
                                           auto-complete="off"
                                           clearable></el-input >
                             </el-form-item >
@@ -325,7 +325,7 @@
                     <el-table-column
                             align="center"
                             prop="machineStrId"
-                            label="机器编号" >
+                            label="系统编号" >
                     </el-table-column >
                     <el-table-column
                             align="center"
@@ -445,9 +445,9 @@
                         </el-form-item >
                     </el-col >
                     <el-col :span="4" >
-                        <el-form-item label="机器编号:" >
+                        <el-form-item label="系统编号:" >
                             <el-input v-model="machineDoPlaning.machineStrId"
-                                      placeholder="机器编号"
+                                      placeholder="系统编号"
                                       auto-complete="off"
                                       disabled></el-input >
                         </el-form-item >

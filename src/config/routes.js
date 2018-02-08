@@ -38,18 +38,18 @@ import MachineInstallProcess from "../components/machine/machine_install_process
 
 export default
 [
-	{
-		path: '/login',
-		component: Login,
-		name: 'Login',
-		hidden: true
-	},
-	{
-		path: '/404',
-		component: NotFound,
-		name: '404',
-		hidden: true
-	},
+    {
+        path: '/login',
+        component: Login,
+        name: 'Login',
+        hidden: true
+    },
+    {
+        path: '/404',
+        component: NotFound,
+        name: '404',
+        hidden: true
+    },
     {
         path: '/home',
         component: Home,
@@ -65,7 +65,7 @@ export default
             {
                 path: '/home/contract',
                 component: Contract,
-                name:'Contract',
+                name: 'Contract',
                 meta: "签核管理",
                 redirect: '/home/contract/contract_sign',
                 children: [
@@ -86,7 +86,7 @@ export default
             {
                 path: '/home/order',
                 component: Order,
-                name:'Order',
+                name: 'Order',
                 meta: "订单管理",
                 // redirect: '/home/order/order_sign',
                 // children: [
@@ -110,7 +110,7 @@ export default
                 component: Machine,
                 name: 'Machine',
                 meta: "机器管理",
-                // redirect: '/home/machine/machine_config_process',
+                redirect: '/home/machine/machine_config_process',
                 children: [
                     {
                         path: '/home/machine/machine_config_process',
@@ -174,18 +174,28 @@ export default
                 redirect: '/home/system/user_manage',
                 children: [
                     {path: '/home/system/user_manage', component: UserManage, name: 'user_manage', meta: '用户管理'},
-                    {path: '/home/system/install_group_manage', component: InstallGroupManage, name: 'install_group_manage', meta: '安装组管理'},
+                    {
+                        path: '/home/system/install_group_manage',
+                        component: InstallGroupManage,
+                        name: 'install_group_manage',
+                        meta: '安装组管理'
+                    },
                     {path: '/home/system/role_manage', component: RoleManage, name: 'role_manage', meta: '角色管理'},
                     // {path: '/home/system/qualification_manage', component: QualificationManage, name: 'qualification_manage', meta: '资质管理'},
                     // {path: '/home/system/material_statistics', component: MaterialStatistics, name: 'material_statistics', meta: '材料统计'},
-                    {path: '/home/system/device_manager', component: DeviceManager, name: 'device_manager', meta: '设备管理'},
+                    {
+                        path: '/home/system/device_manager',
+                        component: DeviceManager,
+                        name: 'device_manager',
+                        meta: '设备管理'
+                    },
                 ]
             },
         ]
     },
-	{
-		path: '*',
-		redirect: '/home',
-		hidden: true
-	},
+    {
+        path: '*',
+        redirect: '/home',
+        hidden: true
+    },
 ]
