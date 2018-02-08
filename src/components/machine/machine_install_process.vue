@@ -193,7 +193,7 @@
                                 size="small"
                                 type="primary"
                                 icon="el-icon-view"
-                                @click="editWithItem(scope.$index, scope.row)">查看
+                                @click="editWithItem(scope.row)">查看
                         </el-button>
                     </template>
                 </el-table-column>
@@ -667,7 +667,7 @@
                 })
             },
 
-            editWithItem(index, data){
+            editWithItem(data){
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
                 _this.addForm = copyObject(_this.selectedItem);
@@ -908,12 +908,11 @@
                     data: dataInfo,
                     success: function (res) {
                         if (res.code == 200) {
-                            showMessage(_this, "设置成功！", 1);
-                            _this.taskDataList.forEach(item=> {
-                                if (item.id == _this.selectedTaskItem.id) {
-                                    item.status = tRecord.status;
-                                }
-                            });
+//                            _this.taskDataList.forEach(item=> {
+//                                if (item.id == _this.selectedTaskItem.id) {
+//                                    item.status = tRecord.status;
+//                                }
+//                            });
                             _this.addForm.nodeData = JSON.stringify(pRecord.nodeData);
                             var taskList = JSON.parse(_this.addForm.taskList);
                             taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
@@ -921,27 +920,22 @@
 
 //                            myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
 
+                            var sItem = null;
                             _this.tableData.forEach(item=> {
                                 if (item.machineStrId == _this.addForm.machineStrId) {
                                     item.nodeData = _this.addForm.nodeData;
+                                    sItem = item;
+                                    return;
                                 }
                             });
-                            if (myDiagram != null) {
-                                resetDiagram();
+                            if (sItem != null) {
+                                _this.addDialogVisible = false;
+                                window.setTimeout(()=> {
+                                    _this.editWithItem(sItem);
+
+                                }, 50);
                             }
-                            init();
-                            window.setTimeout(()=> {
-                                try {
-                                    if (_this.addForm.taskList != null && _this.addForm.taskList.length > 0) {
-                                        myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
-                                    }
-                                } catch (ex) {
-                                    showMessage(_this, "图形流程数据加载失败！", 0)
-                                    console.log(ex.toString());
-                                } finally {
-                                    _this.loadingInstance.close();
-                                }
-                            }, 200);
+                            showMessage(_this, "设置成功！", 1);
                         }
                         else {
                             showMessage(_this, "设置失败！", 0);
