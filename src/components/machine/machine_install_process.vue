@@ -216,6 +216,12 @@
             <table style="width: 100%">
                 <tr style="width: 100%;vertical-align: text-top;">
                     <td style="padding-right: 5px">
+                        <div id="sample" style="width:100%; white-space:nowrap;">
+                            <div id="myDiagramDiv" style="border: solid 1px black;"></div>
+                        </div>
+
+                    </td>
+                    <td style="width: 50%">
                         <div>
                             <el-row>
                                 <el-form :model="addForm" label-position="right" label-width="120px">
@@ -302,7 +308,7 @@
                                     <el-col :span="10" :offset="1">
                                         <el-form-item label="已完成数：">
                                             <el-input type="text"
-                                                      disabled
+                                                      readonly
                                                       v-model="addForm.finishedCount"
                                                       style="width:100%;"></el-input>
                                         </el-form-item>
@@ -350,23 +356,149 @@
                                              style="background-color: red;"></div>
                                     </el-col>
 
+                                    <el-col :span="10" :offset="1">
+                                        <el-form-item label="跳过数：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.skipCount"
+                                                      style="width:100%;"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="1">
+                                        <div class="colorDiv"
+                                             style="background-color: orange;"></div>
+                                    </el-col>
+
                                 </el-form>
                             </el-row>
                             <br>
                             <el-row>
-                                <el-button
-                                        icon="el-icon-close"
-                                        size="normal"
-                                        type="danger"
-                                        @click="addDialogVisible = false">
-                                    关闭
-                                </el-button>
+                                <el-col :span="23" :offset="1">
+                                    <el-table
+                                            :data="taskDataList"
+                                            border
+                                            empty-text="暂无数据..."
+                                            show-overflow-tooltip="true"
+                                    >
+                                        <el-table-column
+                                                width="75"
+                                                align="center"
+                                                label="序号">
+                                            <template scope="scope">
+                                                {{scope.$index+1}}
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                width="120"
+                                                align="center"
+                                                label="工序名">
+                                            <template scope="scope">
+                                                {{scope.row.taskName}}
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                width="120"
+                                                align="center"
+                                                label="组长">
+                                            <template scope="scope">
+                                                {{scope.row.leader}}
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+
+                                                align="center"
+                                                label="组员">
+                                            <template scope="scope">
+                                                <div v-if="scope.row.workerList==null||scope.row.workerList.length==0 ">
+                                                    无
+                                                </div>
+                                                <el-tag v-else
+                                                        v-for="item in scope.row.workerList">
+                                                    {{item}}
+                                                </el-tag>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                width="120"
+                                                align="center"
+                                                label="状态">
+                                            <template scope="scope">
+                                                <div v-if="scope.row.status < 2"
+                                                     style="color: #00A9C9;">
+                                                    {{scope.row.status|filterTaskStatus}}
+                                                </div>
+                                                <div v-if="scope.row.status>=2&&scope.row.status<5"
+                                                     style="color: yellow">
+                                                    {{scope.row.status|filterTaskStatus}}
+                                                </div>
+                                                <div v-if="scope.row.status==5"
+                                                     style="color: gray">
+                                                    {{scope.row.status|filterTaskStatus}}
+                                                </div>
+                                                <div v-if="scope.row.status>5&&scope.row.status<8"
+                                                     style="color: red">
+                                                    {{scope.row.status|filterTaskStatus}}
+                                                </div>
+                                                <div v-if="scope.row.status==8"
+                                                     style="color: orange">
+                                                    {{scope.row.status|filterTaskStatus}}
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                align="center"
+                                                label="操作" width="120">
+                                            <template scope="scope">
+                                                <el-button v-if="scope.row.status<2"
+                                                           size="small"
+                                                           type="danger"
+                                                           icon="el-icon-tickets"
+                                                           @click="showSkip(scope.row)">跳过
+                                                </el-button>
+                                                <el-button v-if="scope.row.status==8"
+                                                           size="small"
+                                                           type="primary"
+                                                           icon="el-icon-tickets"
+                                                           @click="showRecover(scope.row)">恢复
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+
+                                    </el-table>
+
+                                </el-col>
                             </el-row>
-                        </div>
-                    </td>
-                    <td style="width: 50%">
-                        <div id="sample" style="width:100%; white-space:nowrap;">
-                            <div id="myDiagramDiv" style="border: solid 1px black;"></div>
+                            <el-row>
+                                <el-col :span="2" :offset="22">
+                                    <el-button
+                                            style="margin-top: 40px;"
+                                            icon="el-icon-close"
+                                            size="normal"
+                                            type="danger"
+                                            @click="addDialogVisible = false">
+                                        关闭
+                                    </el-button>
+                                </el-col>
+                            </el-row>
+                            <el-dialog title="跳过工序" :visible.sync="confirmSkipDialog" width="30%"
+                                       :modal="false">
+                                <span>确定要跳过这一步骤 [<b style="color: red;font-size: 18px">{{selectedTaskItem.taskName}}</b>] 吗？</span>
+                                <span slot="footer" class="dialog-footer">
+                                    <el-button @click="confirmSkipDialog = false" icon="el-icon-close">取 消</el-button>
+                                    <el-button type="primary" @click="onConfirmSkip"
+                                               icon="el-icon-check">确 定</el-button>
+                                </span>
+                            </el-dialog>
+                            <el-dialog title="恢复工序" :visible.sync="confirmRecoverDialog" width="30%"
+                                       :modal="false">
+                                <span>确定要恢复这一步骤 [<b style="color: red;font-size: 18px">{{selectedTaskItem.taskName}}</b>] 吗？</span>
+                                <span slot="footer" class="dialog-footer">
+                                    <el-button @click="confirmRecoverDialog = false"
+                                               icon="el-icon-close">取 消</el-button>
+                                    <el-button type="primary" @click="onConfirmRecover"
+                                               icon="el-icon-check">确 定</el-button>
+                                </span>
+                            </el-dialog>
                         </div>
                     </td>
                 </tr>
@@ -445,7 +577,11 @@
 
                 loading: false,
                 allProcessTemplate: [],
-                allProcessList: []
+                allProcessList: [],
+                taskDataList: [],
+                confirmSkipDialog: false,
+                confirmRecoverDialog: false,
+                selectedTaskItem: {},
             }
 
         },
@@ -495,7 +631,7 @@
                                 if (nodeDataArray != null && nodeDataArray.length > 0) {
                                     itemObj.totalTaskCount = nodeDataArray.length - 2;//去掉开始，结束.
                                     nodeDataArray.forEach(item=> {
-                                        if (parseInt(item.task_status) == 4) {//完成
+                                        if (parseInt(item.task_status) == 5) {//完成
                                             itemObj.finishedCount++;
                                         }
                                     });
@@ -503,6 +639,30 @@
                             });
                         }
                         _this.loadingUI = false;
+                    }
+                })
+            },
+
+            getTaskRecordDetail()
+            {
+
+                if (_this.addForm.processRecordId == "") {
+                    console.log("数据异常，还没有配置过对应的安装流程");
+                    return;
+                }
+                $.ajax({
+                    url: HOST + "task/record/getTaskRecordData",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {processRecordId: _this.addForm.processRecordId},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.taskDataList = res.data.list;
+//                            _this.taskDataList.forEach(itemObj=> {
+//
+//                            });
+                        }
+
                     }
                 })
             },
@@ -522,6 +682,7 @@
                     /*
                      已配置显示当前数据
                      */
+                    _this.getTaskRecordDetail();
                     var taskList = copyObject(DefaultTaskList);
                     try {
                         taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
@@ -529,22 +690,28 @@
                         _this.addForm.progressStatus = PROGRESSTYPE.NORMAL;
                         _this.addForm.finishedCount = 0;
                         _this.addForm.abnormalCount = 0;
+                        _this.addForm.skipCount = 0;
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
                         taskList.nodeDataArray.forEach(item=> {
                             if (item.category != "Start" && item.category != "End") {
-                                if (parseInt(item.task_status) >= 1 && parseInt(item.task_status) < 4)//进行中
+                                if (parseInt(item.task_status) > 1 && parseInt(item.task_status) < 5)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
                                     _this.addForm.currentTaskName = item.text;
                                 }
-                                else if (parseInt(item.task_status) == 4) {//完成
+                                else if (parseInt(item.task_status) == 5) {//完成
                                     item.category = ProcessCatergory.Finished;
                                     _this.addForm.finishedCount++;
                                 }
-                                else if (parseInt(item.task_status) > 4)//异常
+                                else if (parseInt(item.task_status) > 5 && parseInt(item.task_status) < 8)//异常
                                 {
                                     item.category = ProcessCatergory.Abnormal;
                                     _this.addForm.abnormalCount++;
+                                }
+                                else if (parseInt(item.task_status) == 8)//已跳过
+                                {
+                                    item.category = ProcessCatergory.Skip;
+                                    _this.addForm.skipCount++;
                                 }
                             }
                         });
@@ -661,6 +828,7 @@
                 if (myDiagram != null) {
                     resetDiagram();
                 }
+
                 window.setTimeout(()=> {
                     try {
                         init();
@@ -676,6 +844,112 @@
                 }, 200);
 
             },
+
+            onConfirmSkip()
+            {
+                var taskRecord = {
+                    id: _this.selectedTaskItem.id,
+                    status: TaskStatusList[8].value,
+                };
+                _this.onUpdateData(taskRecord);
+                _this.confirmSkipDialog = false;
+            },
+
+            showSkip(row)
+            {
+                _this.selectedTaskItem = copyObject(row);
+
+                _this.confirmSkipDialog = true;
+            },
+
+            onConfirmRecover()
+            {
+                var taskRecord = {
+                    id: _this.selectedTaskItem.id,
+                    status: TaskStatusList[1].value,
+                };
+                _this.onUpdateData(taskRecord);
+                _this.confirmRecoverDialog = false;
+            },
+
+            showRecover(row)
+            {
+                _this.selectedTaskItem = copyObject(row);
+                _this.confirmRecoverDialog = true;
+            },
+
+            onUpdateData(tRecord)
+            {
+                var pRecord = {
+                    id: _this.selectedTaskItem.processRecordId,
+                    nodeData: [],
+                };
+                try {
+                    var nodeData = JSON.parse(_this.addForm.nodeData);
+                    if (nodeData != null) {
+                        nodeData.forEach(item=> {
+                            if (item.key == _this.selectedTaskItem.nodeKey) {
+                                item.task_status = tRecord.status;
+                            }
+                        });
+                    }
+                    pRecord.nodeData = nodeData;
+                    var dataInfo = {
+                        taskRecord: JSON.stringify(tRecord),
+                        processRecord: JSON.stringify(pRecord)
+                    }
+                } catch (ex) {
+                    console.log(ex);
+                }
+                $.ajax({
+                    url: HOST + "task/record/updateStatus",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: dataInfo,
+                    success: function (res) {
+                        if (res.code == 200) {
+                            showMessage(_this, "设置成功！", 1);
+                            _this.taskDataList.forEach(item=> {
+                                if (item.id == _this.selectedTaskItem.id) {
+                                    item.status = tRecord.status;
+                                }
+                            });
+                            _this.addForm.nodeData = JSON.stringify(pRecord.nodeData);
+                            var taskList = JSON.parse(_this.addForm.taskList);
+                            taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
+                            _this.addForm.taskList = JSON.stringify(taskList);
+
+//                            myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
+
+                            _this.tableData.forEach(item=> {
+                                if (item.machineStrId == _this.addForm.machineStrId) {
+                                    item.nodeData = _this.addForm.nodeData;
+                                }
+                            });
+                            if (myDiagram != null) {
+                                resetDiagram();
+                            }
+                            init();
+                            window.setTimeout(()=> {
+                                try {
+                                    if (_this.addForm.taskList != null && _this.addForm.taskList.length > 0) {
+                                        myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
+                                    }
+                                } catch (ex) {
+                                    showMessage(_this, "图形流程数据加载失败！", 0)
+                                    console.log(ex.toString());
+                                } finally {
+                                    _this.loadingInstance.close();
+                                }
+                            }, 200);
+                        }
+                        else {
+                            showMessage(_this, "设置失败！", 0);
+                        }
+                    },
+                })
+            },
+
             filterGroup(id) {
                 let result = "";
                 for (let i = 0; i < _this.groupList.length; i++) {
@@ -737,6 +1011,17 @@
                 return result;
             },
 
+            filterTaskStatus(id)
+            {
+                var result = '';
+                for (var i = 0; i < TaskStatusList.length; i++) {
+                    if (id == TaskStatusList[i].value) {
+                        result = TaskStatusList[i].name;
+                        break;
+                    }
+                }
+                return result;
+            },
         },
         created: function () {
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
@@ -962,6 +1247,35 @@
                         makePort("R", go.Spot.Right, true, true),
                         makePort("B", go.Spot.Bottom, true, false)
                 ));
+
+        myDiagram.nodeTemplateMap.add("Skip",  // Abnormal category
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "orange", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: lightText,
+                                            margin: 8,
+//                                            maxSize: new go.Size(160, NaN),
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
+
 
         myDiagram.nodeTemplateMap.add("Start",
                 $(go.Node, "Spot", nodeStyle(),

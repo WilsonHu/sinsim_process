@@ -26,7 +26,8 @@ const PROGRESSTYPE = {
 const ProcessCatergory = {
     Working: "Working",
     Finished: "Finished",
-    Abnormal: "Abnormal"
+    Abnormal: "Abnormal",
+    Skip: "Skip"
 }
 
 const DefaultTaskList = {
@@ -73,7 +74,10 @@ let TaskStatusList = [
     {value: 4, name: '质检中'},
     {value: 5, name: '质检完成'},
     {value: 6, name: '安装异常'},
-    {value: 7, name: '质检异常'}];
+    {value: 7, name: '质检异常'},
+    {value: 8, name: '已跳过'},
+];
+
 
 //查询日期类型
 const SearchDateType = [
