@@ -468,18 +468,18 @@
 
                                 </el-col>
                             </el-row>
-                            <el-row>
-                                <el-col :span="2" :offset="22">
-                                    <el-button
-                                            style="margin-top: 40px;"
-                                            icon="el-icon-close"
-                                            size="normal"
-                                            type="danger"
-                                            @click="addDialogVisible = false">
-                                        关闭
-                                    </el-button>
-                                </el-col>
-                            </el-row>
+                            <!--<el-row>-->
+                                <!--<el-col :span="2" :offset="22">-->
+                                    <!--<el-button-->
+                                            <!--style="margin-top: 40px;"-->
+                                            <!--icon="el-icon-close"-->
+                                            <!--size="normal"-->
+                                            <!--type="danger"-->
+                                            <!--@click="addDialogVisible = false">-->
+                                        <!--关闭-->
+                                    <!--</el-button>-->
+                                <!--</el-col>-->
+                            <!--</el-row>-->
                             <el-dialog title="跳过工序" :visible.sync="confirmSkipDialog" width="30%"
                                        :modal="false">
                                 <span>确定要跳过这一步骤 [<b style="color: red;font-size: 18px">{{selectedTaskItem.taskName}}</b>] 吗？</span>
@@ -503,6 +503,14 @@
                     </td>
                 </tr>
             </table>
+            <div slot="footer" class="dialog-footer" >
+                <el-col :span="24" style="margin-bottom: 30px;">
+                    <el-button   icon="el-icon-close"
+                                 size="normal"
+                                 type="danger"
+                                 @click="addDialogVisible = false">关 闭</el-button>
+                </el-col>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -631,7 +639,7 @@
                                 if (nodeDataArray != null && nodeDataArray.length > 0) {
                                     itemObj.totalTaskCount = nodeDataArray.length - 2;//去掉开始，结束.
                                     nodeDataArray.forEach(item=> {
-                                        if (parseInt(item.task_status) == 5) {//完成
+                                        if (parseInt(item.task_status) == 6) {//完成
                                             itemObj.finishedCount++;
                                         }
                                     });
@@ -694,21 +702,21 @@
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
                         taskList.nodeDataArray.forEach(item=> {
                             if (item.category != "Start" && item.category != "End") {
-                                if (parseInt(item.task_status) > 1 && parseInt(item.task_status) < 5)//进行中
+                                if (parseInt(item.task_status) > 2 && parseInt(item.task_status) < 6)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
                                     _this.addForm.currentTaskName = item.text;
                                 }
-                                else if (parseInt(item.task_status) == 5) {//完成
+                                else if (parseInt(item.task_status) == 6) {//完成
                                     item.category = ProcessCatergory.Finished;
                                     _this.addForm.finishedCount++;
                                 }
-                                else if (parseInt(item.task_status) > 5 && parseInt(item.task_status) < 8)//异常
+                                else if (parseInt(item.task_status) > 6 && parseInt(item.task_status) < 9)//异常
                                 {
                                     item.category = ProcessCatergory.Abnormal;
                                     _this.addForm.abnormalCount++;
                                 }
-                                else if (parseInt(item.task_status) == 8)//已跳过
+                                else if (parseInt(item.task_status) == 9)//已跳过
                                 {
                                     item.category = ProcessCatergory.Skip;
                                     _this.addForm.skipCount++;
