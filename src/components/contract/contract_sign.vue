@@ -1,5 +1,5 @@
-<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" >
-    <div >
+<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+    <div>
         <div>
             <el-row>
                 <el-col :span="3">
@@ -17,66 +17,66 @@
                             icon="el-icon-plus"
                             size="normal"
                             type="danger"
-                            @click="handleAdd" >合同
-                    </el-button >
-                </el-col >
+                            @click="handleAdd">合同
+                    </el-button>
+                </el-col>
             </el-row>
             <el-col class="well well-lg" style="background-color: white; margin-top: 10px">
-                <el-row >
-                    <el-col >
-                        <el-form :model="filters" label-position="right" label-width="80px" >
-                            <el-row >
-                                <el-col :span="4" >
-                                    <el-form-item label="合同号:" >
+                <el-row>
+                    <el-col>
+                        <el-form :model="filters" label-position="right" label-width="80px">
+                            <el-row>
+                                <el-col :span="4">
+                                    <el-form-item label="合同号:">
                                         <el-input v-model="filters.contractNum"
                                                   placeholder="合同号"
-                                                  auto-complete="off" clearable></el-input >
-                                    </el-form-item >
-                                </el-col >
-                                <el-col :span="4" >
-                                    <el-form-item label="审核部门:" >
-                                        <el-select v-model="filters.roleName" clearable >
+                                                  auto-complete="off" clearable></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-form-item label="审核部门:">
+                                        <el-select v-model="filters.roleName" clearable>
                                             <el-option
                                                     v-for="item in allRoles"
                                                     :key="item.id"
                                                     :value="item.roleName"
-                                                    :label="item.roleName" >
-                                            </el-option >
-                                        </el-select >
-                                    </el-form-item >
-                                </el-col >
-                                <el-col :span="4" >
-                                    <el-form-item label="审核状态:" >
-                                        <el-select v-model="filters.status" clearable >
+                                                    :label="item.roleName">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-form-item label="审核状态:">
+                                        <el-select v-model="filters.status" clearable>
                                             <el-option
                                                     v-for="item in orderStatusList"
                                                     :key="item.value"
                                                     :value="item.value"
-                                                    :label="item.name" >
-                                            </el-option >
-                                        </el-select >
-                                    </el-form-item >
-                                </el-col >
-                                <el-col :span="4" >
-                                    <el-form-item label="销售人员:" >
+                                                    :label="item.name">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-form-item label="销售人员:">
                                         <el-input v-model="filters.sellman"
                                                   placeholder="销售人员"
                                                   auto-complete="off"
-                                                  clearable></el-input >
-                                    </el-form-item >
-                                </el-col >
-                                <el-col :span="4" >
+                                                  clearable></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4">
                                     <el-button
                                             icon="el-icon-search"
                                             size="normal"
                                             type="primary"
-                                            @click="search" >查询
-                                    </el-button >
-                                </el-col >
-                            </el-row >
+                                            @click="search">查询
+                                    </el-button>
+                                </el-col>
+                            </el-row>
                             <el-row>
-                                <el-col :span="4" >
-                                    <el-form-item label="选择日期:" >
+                                <el-col :span="4">
+                                    <el-form-item label="选择日期:">
                                         <el-date-picker
                                                 v-model="filters.selectDate"
                                                 type="daterange"
@@ -85,122 +85,122 @@
                                                 range-separator="—"
                                                 start-placeholder="开始日期"
                                                 end-placeholder="结束日期"
-                                                :picker-options="pickerOptions" >
-                                        </el-date-picker >
-                                    </el-form-item >
-                                </el-col >
+                                                :picker-options="pickerOptions">
+                                        </el-date-picker>
+                                    </el-form-item>
+                                </el-col>
                             </el-row>
-                        </el-form >
+                        </el-form>
                         <el-table
                                 element-loading-text="获取数据中..."
                                 :data="tableData"
                                 border
                                 show-overflow-tooltip="true"
-                                style="width: 100%;" >
+                                style="width: 100%;">
                             <el-table-column
                                     align="center"
                                     width="60"
-                                    label="序号" >
-                                <template scope="scope" >
+                                    label="序号">
+                                <template scope="scope">
                                     {{scope.$index+startRow}}
-                                </template >
-                            </el-table-column >
+                                </template>
+                            </el-table-column>
                             <el-table-column
                                     align="center"
                                     prop="contractNum"
-                                    label="合同号" >
-                            </el-table-column >
+                                    label="合同号">
+                            </el-table-column>
                             <el-table-column
                                     align="center"
                                     prop="customerName"
-                                    label="客户" >
-                            </el-table-column >
+                                    label="客户">
+                            </el-table-column>
                             <el-table-column
                                     align="center"
                                     label="订单数" width="80">
-                                <template scope="scope" >
+                                <template scope="scope">
                                     <div v-on:click="onCourseDetail(scope.row)"
                                          style="font-weight: bold;"
-                                         class="btn btn-link" >
+                                         class="btn btn-link">
                                         {{scope.row.orderNum}}
-                                    </div >
-                                </template >
-                            </el-table-column >
+                                    </div>
+                                </template>
+                            </el-table-column>
                             <el-table-column
                                     align="center"
                                     prop="sellman"
-                                    label="销售人员" >
-                            </el-table-column >
+                                    label="销售人员">
+                            </el-table-column>
                             <el-table-column
                                     align="center"
                                     prop="status"
-                                    label="审核状态" >
-                                <template scope="scope" >
+                                    label="审核状态">
+                                <template scope="scope">
                                     <div>
                                         {{filterContractStatus(scope.row.status)}}
-                                    </div >
-                                </template >
-                            </el-table-column >
+                                    </div>
+                                </template>
+                            </el-table-column>
                             <el-table-column
                                     align="center"
                                     prop="currentStep"
-                                    label="审核阶段" >
-                            </el-table-column >
+                                    label="审核阶段">
+                            </el-table-column>
                             <el-table-column
                                     align="center"
                                     prop="createTime"
                                     width="160"
-                                    label="创建时间" >
-                                <template scope="scope" >
+                                    label="创建时间">
+                                <template scope="scope">
                                     <div>
                                         {{formatDate(scope.row.createTime)}}
-                                    </div >
-                                </template >
-                            </el-table-column >
+                                    </div>
+                                </template>
+                            </el-table-column>
                             <el-table-column
                                     align="center"
                                     width="160"
-                                    label="更新时间" >
-                                <template scope="scope" >
+                                    label="更新时间">
+                                <template scope="scope">
                                     <div>
                                         {{scope.row.updateTime != null ? formatDate(scope.row.updateTime) : ""}}
-                                    </div >
-                                </template >
-                            </el-table-column >
+                                    </div>
+                                </template>
+                            </el-table-column>
                             <el-table-column
                                     align="center"
-                                    label="操作" width="280" >
-                                <template scope="scope" >
+                                    label="操作" width="280">
+                                <template scope="scope">
                                     <el-button
-                                        v-if="userInfo.role.roleName !='销售员'"
-                                        size="small"
-                                        type="primary"
-                                        icon="el-icon-check"
-                                        @click="handleSign(scope.$index, scope.row)" >审核
+                                            v-if="userInfo.role.roleName !='销售员'"
+                                            size="small"
+                                            type="primary"
+                                            icon="el-icon-check"
+                                            @click="handleSign(scope.$index, scope.row)">审核
                                     </el-button>
                                     <el-button
                                             v-if="userInfo.role.roleName =='销售员' || userInfo.role.id == 1"
                                             size="small"
                                             type="primary"
                                             icon="el-icon-edit"
-                                            @click="handleEdit(scope.$index, scope.row)" >编辑
-                                    </el-button >
+                                            @click="handleEdit(scope.$index, scope.row)">编辑
+                                    </el-button>
                                     <!--<el-button-->
-                                            <!--size="small"-->
-                                            <!--type="danger"-->
-                                            <!--v-if="userInfo.account=='admin'"-->
-                                            <!--@click="handleDelete(scope.$index, scope.row)" >删除-->
+                                    <!--size="small"-->
+                                    <!--type="danger"-->
+                                    <!--v-if="userInfo.account=='admin'"-->
+                                    <!--@click="handleDelete(scope.$index, scope.row)" >删除-->
                                     <!--</el-button >-->
                                     <el-button
-                                        size="small"
-                                        type="danger"
-                                        icon="el-icon-download"
-                                        @click="handleDownload(scope.$index, scope.row)" >下载
-                                    </el-button >
-                                </template >
-                            </el-table-column >
-                        </el-table >
-                        <div class="block" style="text-align: center; margin-top: 20px" >
+                                            size="small"
+                                            type="danger"
+                                            icon="el-icon-download"
+                                            @click="handleDownload(scope.$index, scope.row)">下载
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div class="block" style="text-align: center; margin-top: 20px">
                             <el-pagination
                                     background
                                     @current-change="handleCurrentChange"
@@ -208,40 +208,42 @@
                                     :page-size="pageSize"
                                     layout="total, prev, pager, next, jumper"
                                     :total="totalNum">
-                            </el-pagination >
-                        </div >
-                    </el-col >
-                </el-row >
-            </el-col >
+                            </el-pagination>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-col>
         </div>
         <el-dialog :visible.sync="addContractVisible" fullscreen @close="dialogCloseCallback()">
-            <el-row  type="flex" class="row-bg" justify="center">
+            <el-row type="flex" class="row-bg" justify="center">
                 <el-col :span="21">
-                    <div style="text-align: center; font-weight: bold; font-size: 20px; font-weight:bold;padding-bottom: 20px">{{dialogTitle}} </div>
-                    <el-form class="panel-body" >
+                    <div style="text-align: center; font-weight: bold; font-size: 20px; font-weight:bold;padding-bottom: 20px">
+                        {{dialogTitle}}
+                    </div>
+                    <el-form class="panel-body">
                         <el-col :span="6">
-                            <el-form-item label="合同号：" :label-width="formLabelWidth" >
+                            <el-form-item label="合同号：" :label-width="formLabelWidth">
                                 <el-input v-model="contractForm.contractNum"
                                           :disabled="changeContractContentDisable(contractForm)"
                                           placeholder="合同号"
-                                ></el-input >
-                            </el-form-item >
+                                ></el-input>
+                            </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="客户：" :label-width="formLabelWidth" >
+                            <el-form-item label="客户：" :label-width="formLabelWidth">
                                 <el-input v-model="contractForm.customerName"
                                           :disabled="changeContractContentDisable(contractForm)"
                                           placeholder="客户"
-                                ></el-input >
-                            </el-form-item >
+                                ></el-input>
+                            </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="销售员：" :label-width="formLabelWidth" >
+                            <el-form-item label="销售员：" :label-width="formLabelWidth">
                                 <el-input v-model="contractForm.sellman"
                                           :disabled="changeContractContentDisable(contractForm)"
                                           placeholder="销售员"
-                                ></el-input >
-                            </el-form-item >
+                                ></el-input>
+                            </el-form-item>
                         </el-col>
                         <el-col :span="2" :offset="4"
                                 v-if="haveInitialMachineOrder() && mode == EDIT_MODE">
@@ -250,1150 +252,1175 @@
                                     type="danger"
                                     icon="el-icon-check"
                                     @click="startToSign">提交审核
-                            </el-button >
+                            </el-button>
                         </el-col>
                     </el-form>
-                    <el-collapse v-model="collapseActiveNames" @change="handleCollapseChange" style="margin-left: 25px;margin-right: 25px">
+                    <el-collapse v-model="collapseActiveNames" @change="handleCollapseChange"
+                                 style="margin-left: 25px;margin-right: 25px">
                         <el-collapse-item :title="collapseTitle" name="1">
 
-                                <el-tabs v-model="editableTabsValue"  type="border-card" style="padding-right: 3px" :editable="mode == EDIT_MODE || mode == ADD_MODE" @edit="handleEditTab">
-                                    <el-tab-pane
-                                            style="margin-left: 20px;margin-right: 20px"
-                                            v-for="(item, index) in requisitionForms"
-                                            :key="item.name"
-                                            :label="item.title"
-                                            :name="item.name">
-                                        <el-form :model="item">
-                                            <div>
-                                                <el-card
-                                                        v-if="item.machineOrder.originalOrderId != null && item.orderChangeRecord != null && (mode == CHANGE_MODE ||item.orderChangeRecord.changeReason != '')">
-                                                    <el-col :span="4">
-                                                        <el-form-item label="原单号：" :label-width="formLabelWidth"  >
+                            <el-tabs v-model="editableTabsValue" type="border-card" style="padding-right: 3px"
+                                     :editable="mode == EDIT_MODE || mode == ADD_MODE" @edit="handleEditTab">
+                                <el-tab-pane
+                                        style="margin-left: 20px;margin-right: 20px"
+                                        v-for="(item, index) in requisitionForms"
+                                        :key="item.name"
+                                        :label="item.title"
+                                        :name="item.name">
+                                    <el-form :model="item">
+                                        <div>
+                                            <el-card
+                                                    v-if="item.machineOrder.originalOrderId != null && item.orderChangeRecord != null && (mode == CHANGE_MODE ||item.orderChangeRecord.changeReason != '')">
+                                                <el-col :span="4">
+                                                    <el-form-item label="原单号：" :label-width="formLabelWidth">
                                                             <span style="text-align: left; font-weight: bold;font-size: 16px; color: #409EFF">
                                                                 {{filterOrderNum(item.machineOrder.originalOrderId)}}
                                                             </span>
-                                                        </el-form-item >
-                                                    </el-col>
-                                                    <el-col>
-                                                        <el-form-item label="改单原因：" :label-width="formLabelWidth"
-                                                                      style="padding-bottom: 12px"
-                                                                      prop="orderChangeRecord.changeReason"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                      :rules="[
+                                                    </el-form-item>
+                                                </el-col>
+                                                <el-col>
+                                                    <el-form-item label="改单原因：" :label-width="formLabelWidth"
+                                                                  style="padding-bottom: 12px"
+                                                                  prop="orderChangeRecord.changeReason"
+                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :rules="[
                                                                               { required: true, message: '改单原因不能为空'},
                                                                       ]">
-                                                            <el-input v-model="item.orderChangeRecord.changeReason"
-                                                                      type="textarea"
-                                                                      auto-complete="off"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                      :autosize="{ minRows: 3, maxRows: 3}"
-                                                                      placeholder="改单原因"></el-input>
-                                                        </el-form-item >
-                                                    </el-col>
-                                                </el-card>
-                                                <el-card
-                                                        v-if="item.machineOrder.originalOrderId != null && item.orderSplitRecord != null && (mode == SPLIT_MODE ||item.orderSplitRecord.splitReason != '')">
-                                                    <el-col :span="4">
-                                                        <el-form-item label="原单号：" :label-width="formLabelWidth"  >
+                                                        <el-input v-model="item.orderChangeRecord.changeReason"
+                                                                  type="textarea"
+                                                                  auto-complete="off"
+                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :autosize="{ minRows: 3, maxRows: 3}"
+                                                                  placeholder="改单原因"></el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-card>
+                                            <el-card
+                                                    v-if="item.machineOrder.originalOrderId != null && item.orderSplitRecord != null && (mode == SPLIT_MODE ||item.orderSplitRecord.splitReason != '')">
+                                                <el-col :span="4">
+                                                    <el-form-item label="原单号：" :label-width="formLabelWidth">
                                                             <span style="text-align: left; font-weight: bold;font-size: 16px; color: #409EFF">
                                                                 {{filterOrderNum(item.machineOrder.originalOrderId)}}
                                                             </span>
-                                                        </el-form-item >
-                                                    </el-col>
-                                                    <el-col>
-                                                        <el-form-item label="拆单原因：" :label-width="formLabelWidth"
-                                                                      style="padding-bottom: 12px"
-                                                                      prop="orderSplitRecord.splitReason"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                      :rules="[
+                                                    </el-form-item>
+                                                </el-col>
+                                                <el-col>
+                                                    <el-form-item label="拆单原因：" :label-width="formLabelWidth"
+                                                                  style="padding-bottom: 12px"
+                                                                  prop="orderSplitRecord.splitReason"
+                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :rules="[
                                                                               { required: true, message: '拆单原因不能为空'},
                                                                       ]">
-                                                            <el-input v-model="item.orderSplitRecord.splitReason"
+                                                        <el-input v-model="item.orderSplitRecord.splitReason"
+                                                                  type="textarea"
+                                                                  auto-complete="off"
+                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :autosize="{ minRows: 3, maxRows: 3}"
+                                                                  placeholder="拆单原因"></el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-card>
+                                            <el-row>
+                                                <el-col :span="6"
+                                                        style="font-size: 20px; margin-bottom: 10px;margin-top: 10px">
+                                                    <el-form-item label="订单号：" :label-width="formLabelWidth">
+                                                        <el-input v-model="item.machineOrder.orderNum"
+                                                                  placeholder="订单号"
+                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                        ></el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                                <el-col :span="6" style="margin-bottom: 10px;margin-top: 10px">
+                                                    <el-form-item label="填表日期：" :label-width="formLabelWidth">
+                                                        <el-input v-model="item.machineOrder.createTime" disabled
+                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  placeholder="日期"
+                                                        ></el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                                <el-col :span="1" :offset="9">
+                                                    <el-button type="danger" size="small" style="margin-top: 15px"
+                                                               v-if="canSplitOrChangeOrder(item.machineOrder.status)"
+                                                               :disabled="item.machineOrder.machineNum <= 1||editContract.status==1"
+                                                               @click="handleSplitOrder(item)">拆单
+                                                    </el-button>
+                                                </el-col>
+                                                <el-col :span="1" :offset="1">
+                                                    <el-button type="danger" size="small" style="margin-top: 15px"
+                                                               v-if="canSplitOrChangeOrder(item.machineOrder.status)"
+                                                               :disabled="editContract.status==1"
+                                                               @click="handleChangeOrder(item)">改单
+                                                    </el-button>
+                                                </el-col>
+                                            </el-row>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style="text-align: left">
+                                                    <h3 class="panel-title">客户机型信息</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <el-col :span="6">
+                                                        <el-form-item label="客户：" :label-width="formLabelWidth"
+                                                                      clearable>
+                                                            <el-input v-model="contractForm.customerName"
+                                                                      placeholder="客户" disabled
+                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                            ></el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="国家：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'country', false)"
+                                                                      clearable>
+                                                            <el-select v-model="item.machineOrder.country"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in countryList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+
+                                                    <el-col :span="6">
+                                                        <el-form-item label="商标：" :label-width="formLabelWidth"
+                                                                      clearable
+                                                                      :class="classWithDifferentValue(item, 'brand', false)">
+                                                            <el-input v-model="item.machineOrder.brand"
+                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      placeholder="商标"></el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="机型：" :label-width="formLabelWidth"
+                                                                      clearable
+                                                                      :class="classWithDifferentValue(item, 'machineType', false)">
+                                                            <el-select
+                                                                    style="width: 100%"
+                                                                    v-model="item.machineOrder.machineType"
+                                                                    clearable
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in allMachineType"
+                                                                        :key="item.id"
+                                                                        :label="item.name"
+                                                                        :value="item.id">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="针数：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'needleNum', false)">
+                                                            <el-input-number style="float: left;"
+                                                                             v-model="item.machineOrder.needleNum"
+                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             :step="1"
+                                                                             controls-position="right"
+                                                                             :min="1"
+                                                                             :max="100">
+
+                                                            </el-input-number>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="头数：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'headNum',false)">
+                                                            <el-input-number style="float: left"
+                                                                             v-model="item.machineOrder.headNum"
+                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             :step="1"
+                                                                             controls-position="right"
+                                                                             :min="1"
+                                                                             :max="100">
+                                                            </el-input-number>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="头距：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'headDistance', false)">
+                                                            <el-input-number style="float: left"
+                                                                             v-model="item.machineOrder.headDistance"
+                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             :step="1"
+                                                                             controls-position="right"
+                                                                             :min="1"
+                                                                             :max="100">
+                                                            </el-input-number>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="X行程：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'xDistance', false)">
+                                                            <el-input v-model="item.machineOrder.xDistance"
+                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      placeholder="X行程"></el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="Y行程：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'yDistance', false)">
+                                                            <el-input v-model="item.machineOrder.yDistance"
+                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      placeholder="Y行程"></el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style="text-align: left">
+                                                    <h3 class="panel-title">特种绣选项</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <el-col :span="6">
+                                                        <el-form-item label="色数：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'specialTowelColor', true)">
+                                                            <el-select
+                                                                    style="width: 100%"
+                                                                    v-model="item.orderDetail.specialTowelColor"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    clearable
+                                                                    placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in specialTowelColorList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="D轴上：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'specialTowelDaxle', true)">
+                                                            <el-select
+                                                                    style="width: 100%"
+                                                                    v-model="item.orderDetail.specialTowelDaxle"
+                                                                    clearable
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in specialTowelDaxleList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="H轴下：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'specialTowelHaxle', true)">
+                                                            <el-select
+                                                                    style="width: 100%"
+                                                                    v-model="item.orderDetail.specialTowelHaxle"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    clearable
+                                                                    placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in specialTowelHaxleList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="主电机：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'specialTowelMotor', true)">
+                                                            <el-select
+                                                                    style="width: 100%"
+                                                                    v-model="item.orderDetail.specialTowelMotor"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    clearable
+                                                                    placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in specialTowelMotorList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="盘带头：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'specialTapingHead', true)">
+                                                            <el-select
+                                                                    style="width: 100%"
+                                                                    v-model="item.orderDetail.specialTapingHead"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    clearable
+                                                                    placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in specialTapingHeadList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="毛巾机针：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'specialTowelNeedle', true)">
+                                                            <el-select
+                                                                    style="width: 100%"
+                                                                    v-model="item.orderDetail.specialTowelNeedle"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    clearable
+                                                                    placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in specialTowelNeedleList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style="text-align: left">
+                                                    <h3 class="panel-title">电气</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <el-col :span="6">
+                                                        <el-form-item label="电脑：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'electricPc', true)">
+                                                            <el-select v-model="item.orderDetail.electricPc"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in pcModeList"
+                                                                        :key="item.text"
+                                                                        :value="item.text"
+                                                                        :label="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="主电机：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'electricMotor', true)">
+                                                            <el-select v-model="item.orderDetail.electricMotor"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in electricMotorList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="XY电机：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'electricMotorXy', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.electricMotorXy"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in xyMotorList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="剪线方式：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'electricTrim', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.electricTrim"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in trimList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="电源：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'electricPower', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.electricPower"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in electricPowerList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="按钮开关：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'electricSwitch', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.electricSwitch"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in electricSwitchList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="加油系统：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'electricOil', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.electricOil"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in electricOilList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style="text-align: left">
+                                                    <h3 class="panel-title">上轴下轴主传动</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <el-col :span="6">
+                                                        <el-form-item label="夹线器：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleSplit', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.axleSplit"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in axleSplitList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="面板：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axlePanel', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.axlePanel"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in axlePanelList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="机针：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleNeedle', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.axleNeedle"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in axleNeedleList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="机头导轨：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleRail', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.axleRail"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in axleRailList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="底检方式：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleDownCheck', true)">
+                                                            <el-select v-model="item.orderDetail.axleDownCheck"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in axleDownCheckList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="旋梭：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleHook', true)">
+                                                            <el-select v-model="item.orderDetail.axleHook"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in axleHookList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="跳跃方式：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleJump', true)">
+                                                            <el-select v-model="item.orderDetail.axleJump"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in axleJumpList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="面线夹持：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleUpperThread', true)">
+                                                            <el-select v-model="item.orderDetail.axleUpperThread"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in axleUpperThreadList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="12">
+                                                        <el-form-item label="附加装置：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleAddition', true)">
+                                                            <el-input v-model="item.orderDetail.axleAddition"
                                                                       type="textarea"
-                                                                      auto-complete="off"
                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                      :autosize="{ minRows: 3, maxRows: 3}"
-                                                                      placeholder="拆单原因"></el-input>
-                                                        </el-form-item >
+                                                                      :autosize="{ minRows: 2, maxRows: 2}">
+                                                            </el-input>
+                                                        </el-form-item>
                                                     </el-col>
-                                                </el-card>
-                                                <el-row>
-                                                    <el-col :span="6" style="font-size: 20px; margin-bottom: 10px;margin-top: 10px">
-                                                        <el-form-item label="订单号：" :label-width="formLabelWidth"  >
-                                                            <el-input v-model="item.machineOrder.orderNum"
-                                                                      placeholder="订单号"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                            ></el-input >
-                                                        </el-form-item >
-                                                    </el-col >
-                                                    <el-col :span="6" style="margin-bottom: 10px;margin-top: 10px">
-                                                        <el-form-item label="填表日期：" :label-width="formLabelWidth">
-                                                            <el-input v-model="item.machineOrder.createTime" disabled
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                      placeholder="日期"
-                                                            ></el-input >
-                                                        </el-form-item >
-                                                    </el-col >
-                                                    <el-col :span="1" :offset="9">
-                                                        <el-button type="danger" size="small" style="margin-top: 15px"
-                                                                   v-if="canSplitOrChangeOrder(item.machineOrder.status)"
-                                                                   :disabled="item.machineOrder.machineNum <= 1"
-                                                                    @click="handleSplitOrder(item)">拆单</el-button>
+                                                    <el-col :span="6">
+                                                        <div style="font-family:Segoe UI;color:gray;text-align: left;margin-top: 30px">
+                                                            (仅销售和研发可编辑)
+                                                        </div>
                                                     </el-col>
-                                                    <el-col :span="1" :offset="1">
-                                                        <el-button type="danger" size="small" style="margin-top: 15px"
-                                                                   v-if="canSplitOrChangeOrder(item.machineOrder.status)"
-                                                                   @click="handleChangeOrder(item)">改单</el-button>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style="text-align: left">
+                                                    <h3 class="panel-title">机架台板</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <el-col :span="6">
+                                                        <el-form-item label="机架颜色：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'frameworkColor', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.frameworkColor"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in frameworkColorList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
                                                     </el-col>
-                                                </el-row>
-                                                <div class="panel panel-primary">
-                                                    <div  class="panel-heading" style="text-align: left">
-                                                        <h3 class="panel-title" >客户机型信息</h3 >
-                                                    </div >
-                                                    <div class="panel-body" >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="客户：" :label-width="formLabelWidth" clearable>
-                                                                <el-input v-model="contractForm.customerName"
-                                                                          placeholder="客户" disabled
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                ></el-input >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="国家：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'country', false)" clearable>
-                                                                <el-select v-model="item.machineOrder.country"
+                                                    <el-col :span="6">
+                                                        <el-form-item label="台板：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'frameworkPlaten', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.frameworkPlaten"
                                                                            clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
+                                                                           placeholder="请选择">
                                                                     <el-option
-                                                                            v-for="item in countryList"
+                                                                            v-for="item in frameworkPlatenList"
                                                                             :key="item.text"
                                                                             :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-
-                                                        <el-col :span="6">
-                                                            <el-form-item label="商标：" :label-width="formLabelWidth" clearable
-                                                                          :class="classWithDifferentValue(item, 'brand', false)">
-                                                                <el-input v-model="item.machineOrder.brand"
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                          placeholder="商标"></el-input >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="机型：" :label-width="formLabelWidth" clearable
-                                                                          :class="classWithDifferentValue(item, 'machineType', false)">
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="台板颜色：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'frameworkPlatenColor', true)">
+                                                            <template scope="scope">
                                                                 <el-select
-                                                                        style="width: 100%"
-                                                                        v-model="item.machineOrder.machineType"
+                                                                        v-model="item.orderDetail.frameworkPlatenColor"
                                                                         clearable
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        placeholder="请选择" >
+                                                                        placeholder="请选择">
                                                                     <el-option
-                                                                            v-for="item in allMachineType"
-                                                                            :key="item.id"
-                                                                            :label="item.name"
-                                                                            :value="item.id" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="针数：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'needleNum', false)">
-                                                                <el-input-number style="float: left;"
-                                                                                 v-model="item.machineOrder.needleNum"
-                                                                                 :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                                 :step="1"
-                                                                                 controls-position="right"
-                                                                                 :min="1"
-                                                                                 :max="100" >
-
-                                                                </el-input-number >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="头数：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'headNum',false)">
-                                                                <el-input-number style="float: left"
-                                                                                 v-model="item.machineOrder.headNum"
-                                                                                 :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                                 :step="1"
-                                                                                 controls-position="right"
-                                                                                 :min="1"
-                                                                                 :max="100" >
-                                                                </el-input-number >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="头距：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'headDistance', false)">
-                                                                <el-input-number style="float: left"
-                                                                                 v-model="item.machineOrder.headDistance"
-                                                                                 :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                                 :step="1"
-                                                                                 controls-position="right"
-                                                                                 :min="1"
-                                                                                 :max="100" >
-                                                                </el-input-number >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="X行程：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'xDistance', false)">
-                                                                <el-input v-model="item.machineOrder.xDistance"
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                          placeholder="X行程"></el-input >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="Y行程：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'yDistance', false)">
-                                                                <el-input v-model="item.machineOrder.yDistance"
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                          placeholder="Y行程"></el-input >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                    </div >
-                                                </div >
-                                                <div class="panel panel-primary" >
-                                                    <div class="panel-heading" style="text-align: left" >
-                                                        <h3 class="panel-title" >特种绣选项</h3 >
-                                                    </div >
-                                                    <div class="panel-body" >
-                                                        <el-col :span="6" >
-                                                            <el-form-item label="色数：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'specialTowelColor', true)">
-                                                                <el-select
-                                                                        style="width: 100%"
-                                                                        v-model="item.orderDetail.specialTowelColor"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        clearable
-                                                                        placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in specialTowelColorList"
+                                                                            v-for="item in frameworkPlatenColorList"
                                                                             :key="item.text"
                                                                             :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="D轴上：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'specialTowelDaxle', true)">
-                                                                <el-select
-                                                                        style="width: 100%"
-                                                                        v-model="item.orderDetail.specialTowelDaxle"
-                                                                        clearable
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in specialTowelDaxleList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="H轴下：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'specialTowelHaxle', true)">
-                                                                <el-select
-                                                                        style="width: 100%"
-                                                                        v-model="item.orderDetail.specialTowelHaxle"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        clearable
-                                                                        placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in specialTowelHaxleList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6" >
-                                                            <el-form-item label="主电机：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'specialTowelMotor', true)">
-                                                                <el-select
-                                                                        style="width: 100%"
-                                                                        v-model="item.orderDetail.specialTowelMotor"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        clearable
-                                                                        placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in specialTowelMotorList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6" >
-                                                            <el-form-item label="盘带头：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'specialTapingHead', true)">
-                                                                <el-select
-                                                                        style="width: 100%"
-                                                                        v-model="item.orderDetail.specialTapingHead"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        clearable
-                                                                        placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in specialTapingHeadList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6" >
-                                                            <el-form-item label="毛巾机针：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'specialTowelNeedle', true)">
-                                                                <el-select
-                                                                        style="width: 100%"
-                                                                        v-model="item.orderDetail.specialTowelNeedle"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        clearable
-                                                                        placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in specialTowelNeedleList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-
-                                                    </div >
-                                                </div >
-                                                <div class="panel panel-primary" >
-                                                    <div class="panel-heading" style="text-align: left" >
-                                                        <h3 class="panel-title" >电气</h3 >
-                                                    </div >
-                                                    <div class="panel-body" >
-                                                        <el-col :span="6" >
-                                                            <el-form-item label="电脑：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'electricPc', true)">
-                                                                <el-select v-model="item.orderDetail.electricPc"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="吊环：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'frameworkRing', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.frameworkRing"
                                                                            clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
+                                                                           placeholder="请选择">
                                                                     <el-option
-                                                                            v-for="item in pcModeList"
-                                                                            :key="item.text"
-                                                                            :value="item.text"
-                                                                            :label="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="主电机：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'electricMotor', true)">
-                                                                <el-select v-model="item.orderDetail.electricMotor"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in electricMotorList"
+                                                                            v-for="item in frameworkRingList"
                                                                             :key="item.text"
                                                                             :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="XY电机：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'electricMotorXy', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.electricMotorXy"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in xyMotorList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="剪线方式：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'electricTrim', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.electricTrim"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in trimList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6" >
-                                                            <el-form-item label="电源：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'electricPower', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.electricPower"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in electricPowerList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="按钮开关：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'electricSwitch', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.electricSwitch"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in electricSwitchList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="加油系统：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'electricOil', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.electricOil"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in electricOilList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                    </div >
-                                                </div >
-                                                <div class="panel panel-primary" >
-                                                    <div class="panel-heading" style="text-align: left" >
-                                                        <h3 class="panel-title" >上轴下轴主传动</h3 >
-                                                    </div >
-                                                    <div class="panel-body" >
-                                                        <el-col :span="6" >
-                                                            <el-form-item label="夹线器：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axleSplit', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.axleSplit"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in axleSplitList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="面板：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axlePanel', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.axlePanel"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in axlePanelList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="机针：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axleNeedle', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.axleNeedle"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in axleNeedleList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="机头导轨：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axleRail', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.axleRail"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in axleRailList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="底检方式：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axleDownCheck', true)">
-                                                                <el-select v-model="item.orderDetail.axleDownCheck"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="电脑托架：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'frameworkBracket', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.frameworkBracket"
                                                                            clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
+                                                                           placeholder="请选择">
                                                                     <el-option
-                                                                            v-for="item in axleDownCheckList"
+                                                                            v-for="item in frameworkBracketList"
                                                                             :key="item.text"
                                                                             :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="旋梭：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axleHook', true)">
-                                                                <el-select v-model="item.orderDetail.axleHook"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="急停装置：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'frameworkStop', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.frameworkStop"
                                                                            clearable
                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
+                                                                           placeholder="请选择">
                                                                     <el-option
-                                                                            v-for="item in axleHookList"
+                                                                            v-for="item in frameworkStopList"
                                                                             :key="item.text"
                                                                             :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="跳跃方式：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axleJump', true)">
-                                                                <el-select v-model="item.orderDetail.axleJump"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in axleJumpList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="面线夹持：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axleUpperThread', true)">
-                                                                <el-select v-model="item.orderDetail.axleUpperThread"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in axleUpperThreadList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="12" >
-                                                            <el-form-item label="附加装置：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'axleAddition', true)">
-                                                                <el-input v-model="item.orderDetail.axleAddition"
-                                                                          type="textarea"
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                          :autosize="{ minRows: 2, maxRows: 2}">
-                                                                </el-input >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6" >
-                                                            <div style="font-family:Segoe UI;color:gray;text-align: left;margin-top: 30px" >
-                                                                (仅销售和研发可编辑)
-                                                            </div >
-                                                        </el-col >
-                                                    </div >
-                                                </div >
-                                                <div class="panel panel-primary" >
-                                                    <div class="panel-heading" style="text-align: left" >
-                                                        <h3 class="panel-title" >机架台板</h3 >
-                                                    </div >
-                                                    <div class="panel-body" >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="机架颜色：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'frameworkColor', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.frameworkColor"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in frameworkColorList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="台板：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'frameworkPlaten', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.frameworkPlaten"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in frameworkPlatenList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="台板颜色：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'frameworkPlatenColor', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.frameworkPlatenColor"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in frameworkPlatenColorList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="吊环：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'frameworkRing', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.frameworkRing"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in frameworkRingList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="电脑托架：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'frameworkBracket', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.frameworkBracket"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in frameworkBracketList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="急停装置：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'frameworkStop', true)">
-                                                                <template scope="scope" >
-                                                                    <el-select v-model="item.orderDetail.frameworkStop"
-                                                                               clearable
-                                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                               placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in frameworkStopList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </template >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="日光灯：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'frameworkLight', true)">
-                                                                <el-select v-model="item.orderDetail.frameworkLight"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in frameworkLightList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                    </div >
-                                                </div >
-                                                <div class="panel panel-primary" >
-                                                    <div class="panel-heading" style="text-align: left" >
-                                                        <h3 class="panel-title" >驱动框架绷架</h3 >
-                                                    </div >
-                                                    <div class="panel-body" >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="驱动类型：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'driverType', true)">
-                                                                <el-select v-model="item.orderDetail.driverType" style="width: 100%;"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in driverTypeList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="驱动方式：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'driverMethod', true)">
-                                                                <el-select v-model="item.orderDetail.driverMethod"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in driverMethodList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="绷孔架：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'driverReelHole', true)">
-                                                                <el-select v-model="item.orderDetail.driverReelHole"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in driverReelHoleList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="绷架：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'driverReel', true)">
-                                                                <el-select v-model="item.orderDetail.driverReel"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in driverReelList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="横档数量：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'driverHorizonNum', true)">
-                                                                <el-input-number style="float: left"
-                                                                                 v-model="item.orderDetail.driverHorizonNum"
-                                                                                 :step="1"
-                                                                                 :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                                 controls-position="right"
-                                                                                 :min="1"
-                                                                                 :max="100" >
-                                                                </el-input-number >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="直档数量：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'driverVerticalNum', true)">
-                                                                <el-input-number style="float: left"
-                                                                                 v-model="item.orderDetail.driverVerticalNum"
-                                                                                 :step="1"
-                                                                                 :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                                 controls-position="right"
-                                                                                 :min="1"
-                                                                                 :max="100" >
-                                                                </el-input-number >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                    </div >
-                                                </div >
-                                                <div class="panel panel-primary" >
-                                                    <div class="panel-heading" style="text-align: left" >
-                                                        <h3 class="panel-title" >其他信息</h3 >
-                                                    </div >
-                                                    <div class="panel-body" >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="包装方式：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'packageMethod', false)">
-                                                                <el-select v-model="item.machineOrder.packageMethod"
-                                                                           clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择" >
-                                                                    <el-option
-                                                                            v-for="item in packageModeList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="交货日期：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'contractShipDate', false)">
-                                                                <el-date-picker
-                                                                        style="width: 100%"
-                                                                        v-model="item.machineOrder.contractShipDate"
-                                                                        type="date"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        placeholder="合同交货日期">
-                                                                </el-date-picker >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="计划日期：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'planShipDate', false)">
-                                                                <el-date-picker
-                                                                        style="width: 100%"
-                                                                        v-model="item.machineOrder.planShipDate"
-                                                                        type="date"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        placeholder="合同计划日期">
-                                                                </el-date-picker >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6" >
-                                                            <el-form-item label="订机数量：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'machineNum', false)"
-                                                                          prop="machineOrder.machineNum"
-                                                                          :rules="[
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="日光灯：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'frameworkLight', true)">
+                                                            <el-select v-model="item.orderDetail.frameworkLight"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in frameworkLightList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style="text-align: left">
+                                                    <h3 class="panel-title">驱动框架绷架</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <el-col :span="6">
+                                                        <el-form-item label="驱动类型：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'driverType', true)">
+                                                            <el-select v-model="item.orderDetail.driverType"
+                                                                       style="width: 100%;"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in driverTypeList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="驱动方式：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'driverMethod', true)">
+                                                            <el-select v-model="item.orderDetail.driverMethod"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in driverMethodList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="绷孔架：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'driverReelHole', true)">
+                                                            <el-select v-model="item.orderDetail.driverReelHole"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in driverReelHoleList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="绷架：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'driverReel', true)">
+                                                            <el-select v-model="item.orderDetail.driverReel"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in driverReelList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="横档数量：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'driverHorizonNum', true)">
+                                                            <el-input-number style="float: left"
+                                                                             v-model="item.orderDetail.driverHorizonNum"
+                                                                             :step="1"
+                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             controls-position="right"
+                                                                             :min="1"
+                                                                             :max="100">
+                                                            </el-input-number>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="直档数量：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'driverVerticalNum', true)">
+                                                            <el-input-number style="float: left"
+                                                                             v-model="item.orderDetail.driverVerticalNum"
+                                                                             :step="1"
+                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             controls-position="right"
+                                                                             :min="1"
+                                                                             :max="100">
+                                                            </el-input-number>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style="text-align: left">
+                                                    <h3 class="panel-title">其他信息</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <el-col :span="6">
+                                                        <el-form-item label="包装方式：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'packageMethod', false)">
+                                                            <el-select v-model="item.machineOrder.packageMethod"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in packageModeList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="交货日期：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'contractShipDate', false)">
+                                                            <el-date-picker
+                                                                    style="width: 100%"
+                                                                    v-model="item.machineOrder.contractShipDate"
+                                                                    type="date"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    placeholder="合同交货日期">
+                                                            </el-date-picker>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="计划日期：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'planShipDate', false)">
+                                                            <el-date-picker
+                                                                    style="width: 100%"
+                                                                    v-model="item.machineOrder.planShipDate"
+                                                                    type="date"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    placeholder="合同计划日期">
+                                                            </el-date-picker>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="订机数量：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'machineNum', false)"
+                                                                      prop="machineOrder.machineNum"
+                                                                      :rules="[
                                                                               { required: true, message: '订机数不能为空'},
                                                                               { type: 'number', message: '订机数必须是数字'}
                                                                             ]">
-                                                                <el-input style="float: left;"
-                                                                          v-model.number="item.machineOrder.machineNum"
-                                                                          auto-complete="off"
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder) || isFromSplit(item.machineOrder)"
-                                                                          @blur="machineNumChanged(item)"
-                                                                          controls-position="right">
+                                                            <el-input style="float: left;"
+                                                                      v-model.number="item.machineOrder.machineNum"
+                                                                      auto-complete="off"
+                                                                      :disabled="changeOrderContentDisable(item.machineOrder) || isFromSplit(item.machineOrder)"
+                                                                      @blur="machineNumChanged(item)"
+                                                                      controls-position="right">
 
-                                                                </el-input>
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="销售人员：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'sellman', false)">
-                                                                <el-input v-model="contractForm.sellman"
-                                                                          placeholder="销售人员"
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                          auto-complete="off" >
-                                                                </el-input >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="6">
-                                                            <el-form-item label="保修方式：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'sellman', false)">
-                                                                <el-select v-model="item.machineOrder.maintainType"
-                                                                          placeholder=""
-                                                                          clearable
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)">
+                                                            </el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="销售人员：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'sellman', false)">
+                                                            <el-input v-model="contractForm.sellman"
+                                                                      placeholder="销售人员"
+                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      auto-complete="off">
+                                                            </el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="保修方式：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'sellman', false)">
+                                                            <el-select v-model="item.machineOrder.maintainType"
+                                                                       placeholder=""
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)">
+                                                                <el-option
+                                                                        v-for="item in maintainTypeList"
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="22">
+                                                        <el-form-item label="备注信息：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'machineOrder', false)">
+                                                            <el-input
+                                                                    type="textarea"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :autosize="{ minRows: 4, maxRows: 4}"
+                                                                    placeholder="备注信息"
+                                                                    v-model="item.machineOrder.mark">
+                                                            </el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style="text-align: left">
+                                                    <h3 class="panel-title">价格信息</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <table border="1" width="100%">
+                                                        <tr>
+                                                            <td rowspan="2" width="20%">
+                                                                装置
+                                                            </td>
+                                                            <td width="100px">
+                                                                冠军金片
+                                                            </td>
+                                                            <td>
+                                                                <el-select
+                                                                        style="margin: 10px;margin: 10px;width: 90%"
+                                                                        v-model="item.machineOrder.champion"
+                                                                        clearable
+                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                        placeholder="请选择">
                                                                     <el-option
-                                                                            v-for="item in maintainTypeList"
+                                                                            v-for="item in championGoldList"
                                                                             :key="item.text"
                                                                             :label="item.text"
-                                                                            :value="item.text" >
-                                                                    </el-option >
-                                                                </el-select >
-                                                            </el-form-item >
-                                                        </el-col >
-                                                        <el-col :span="22">
-                                                            <el-form-item label="备注信息：" :label-width="formLabelWidth"
-                                                                          :class="classWithDifferentValue(item, 'machineOrder', false)">
-                                                                <el-input
-                                                                        type="textarea"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </td>
+                                                            <td>
+                                                                <el-input-number
+                                                                        style="float: left;margin: 10px;width: 90%"
+                                                                        v-model="item.machineOrder.championPrice"
+                                                                        :step="1"
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        :autosize="{ minRows: 4, maxRows: 4}"
-                                                                        placeholder="备注信息"
-                                                                        v-model="item.machineOrder.mark" >
-                                                                </el-input >
-                                                            </el-form-item >
-                                                        </el-col>
-                                                    </div>
-                                                </div >
-                                                <div class="panel panel-primary" >
-                                                    <div class="panel-heading" style="text-align: left" >
-                                                        <h3 class="panel-title" >价格信息</h3 >
-                                                    </div >
-                                                    <div class="panel-body" >
-                                                        <table border="1" width="100%" >
-                                                            <tr >
-                                                                <td rowspan="2" width="20%" >
-                                                                    装置
-                                                                </td >
-                                                                <td width="100px" >
-                                                                    冠军金片
-                                                                </td >
-                                                                <td >
-                                                                    <el-select
-                                                                            style="margin: 10px;margin: 10px;width: 90%"
-                                                                            v-model="item.machineOrder.champion"
-                                                                            clearable
-                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                            placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in championGoldList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </td >
-                                                                <td >
-                                                                    <el-input-number
-                                                                            style="float: left;margin: 10px;width: 90%"
-                                                                            v-model="item.machineOrder.championPrice"
-                                                                            :step="1"
-                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                            controls-position="right"
-                                                                            :min="1"
-                                                                            :max="100" >
-                                                                    </el-input-number >
-                                                                </td >
-                                                                <td >
-                                                                    <div >
-                                                                        元
-                                                                    </div >
-                                                                </td >
-                                                            </tr >
-                                                            <tr >
-                                                                <td >
-                                                                    佳字绳绣
-                                                                </td >
-                                                                <td >
-                                                                    <el-select
-                                                                            style="margin: 10px;margin: 10px;width: 90%"
-                                                                            v-model="item.machineOrder.jiazixiu"
-                                                                            clearable
-                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                            placeholder="请选择" >
-                                                                        <el-option
-                                                                                v-for="item in jiaZiXiuPricelList"
-                                                                                :key="item.text"
-                                                                                :label="item.text"
-                                                                                :value="item.text" >
-                                                                        </el-option >
-                                                                    </el-select >
-                                                                </td >
-                                                                <td >
-                                                                    <el-input-number
-                                                                            style="float: left;margin: 10px;width: 90%"
-                                                                            v-model="item.machineOrder.jiaziPrice"
-                                                                            :step="1"
-                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                            controls-position="right"
-                                                                            :min="1">
-                                                                    </el-input-number >
-                                                                </td >
-                                                                <td >
-                                                                    <div >
-                                                                        元
-                                                                    </div >
-                                                                </td >
-                                                            </tr >
-                                                            <tr >
-                                                                <td colspan="3" >
-                                                                    机器价格
-                                                                </td >
-                                                                <td >
-                                                                    <el-input-number
-                                                                            style="float: left;margin: 10px;width: 90%"
-                                                                            v-model="item.machineOrder.machinePrice"
-                                                                            :step="1"
-                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                            controls-position="right"
-                                                                            :min="1">
-                                                                    </el-input-number >
-                                                                </td >
-                                                                <td >
+                                                                        controls-position="right"
+                                                                        :min="1"
+                                                                        :max="100">
+                                                                </el-input-number>
+                                                            </td>
+                                                            <td>
+                                                                <div>
                                                                     元
-                                                                </td >
-                                                            </tr >
-                                                            <tr >
-                                                                <td colspan="3" >
-                                                                    订单总价
-                                                                </td >
-                                                                <td >
-                                                                    <el-input-number
-                                                                            style="float: left;margin: 10px;width: 90%"
-                                                                            v-model="item.machineOrder.orderPrice"
-                                                                            :step="1"
-                                                                            :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                            :format="00"
-                                                                            controls-position="right"
-                                                                            :min="1">
-                                                                    </el-input-number >
-                                                                </td >
-                                                                <td >
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                佳字绳绣
+                                                            </td>
+                                                            <td>
+                                                                <el-select
+                                                                        style="margin: 10px;margin: 10px;width: 90%"
+                                                                        v-model="item.machineOrder.jiazixiu"
+                                                                        clearable
+                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                        placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in jiaZiXiuPricelList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </td>
+                                                            <td>
+                                                                <el-input-number
+                                                                        style="float: left;margin: 10px;width: 90%"
+                                                                        v-model="item.machineOrder.jiaziPrice"
+                                                                        :step="1"
+                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                        controls-position="right"
+                                                                        :min="1">
+                                                                </el-input-number>
+                                                            </td>
+                                                            <td>
+                                                                <div>
                                                                     元
-                                                                </td >
-                                                            </tr >
-                                                        </table >
-                                                    </div >
-                                                </div >
-                                                <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 10px">需求评审单</div>
-                                                <el-col :span="24">
-                                                    <el-table
-                                                            border
-                                                            :row-class-name="tableRowClassName"
-                                                            :data="item.orderSign != null ? item.orderSign.signContent : []"
-                                                            style="margin-bottom: 30px">
-                                                        <el-table-column
-                                                                align="center"
-                                                                label="签核步骤"
-                                                                width="80">
-                                                            <template scope="scope">
-                                                                <el-button  style="font-size: 14px; font-weight: bold" type="primary" round size="mini">{{scope.row.number}}</el-button>
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column
-                                                                align="center"
-                                                                width="150"
-                                                                label="签核角色">
-                                                            <template slot-scope="scope">
-                                                                <span style="font-size: 14px; font-weight: bold">{{scope.row.roleId | filterRole}}</span>
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column
-                                                                align="center"
-                                                                width="150"
-                                                                label="签核人">
-                                                            <template slot-scope="scope">
-                                                                <el-input
-                                                                        :disabled="signDisable(scope.row.roleId)"
-                                                                        v-model="scope.row.user"
-                                                                        auto-complete="off" >
-                                                                </el-input >
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column
-                                                                align="center"
-                                                                width="180"
-                                                                label="日期">
-                                                            <template slot-scope="scope">
-                                                    <span> {{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}
-                                                    </span >
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column
-                                                                align="center"
-                                                                label="意见">
-                                                            <template slot-scope="scope">
-                                                                <el-input
-                                                                        :disabled="signDisable(scope.row.roleId)"
-                                                                        type="textarea"
-                                                                        v-model="scope.row.comment"
-                                                                        auto-complete="off" >
-                                                                </el-input >
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column
-                                                                align="center"
-                                                                label="操作"
-                                                                width="200">
-                                                            <template scope="scope">
-                                                                <el-button type="primary" @click="onSubmitOrderSign(scope.row, item.orderSign)" icon="el-icon-check" size="small" :disabled="signDisable(scope.row.roleId)">提交</el-button >
-                                                                <el-button type="danger" @click="handleRejectOrderSign(scope.row, item.orderSign)" icon="el-icon-close" size="small" :disabled="signDisable(scope.row.roleId)">驳回</el-button >
-                                                            </template>
-                                                        </el-table-column>
-                                                    </el-table>
-                                                </el-col>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                机器价格
+                                                            </td>
+                                                            <td>
+                                                                <el-input-number
+                                                                        style="float: left;margin: 10px;width: 90%"
+                                                                        v-model="item.machineOrder.machinePrice"
+                                                                        :step="1"
+                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                        controls-position="right"
+                                                                        :min="1">
+                                                                </el-input-number>
+                                                            </td>
+                                                            <td>
+                                                                元
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                订单总价
+                                                            </td>
+                                                            <td>
+                                                                <el-input-number
+                                                                        style="float: left;margin: 10px;width: 90%"
+                                                                        v-model="item.machineOrder.orderPrice"
+                                                                        :step="1"
+                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                        :format="00"
+                                                                        controls-position="right"
+                                                                        :min="1">
+                                                                </el-input-number>
+                                                            </td>
+                                                            <td>
+                                                                元
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
                                             </div>
-                                        </el-form >
+                                            <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 10px">
+                                                需求评审单
+                                            </div>
+                                            <el-col :span="24">
+                                                <el-table
+                                                        border
+                                                        :row-class-name="tableRowClassName"
+                                                        :data="item.orderSign != null ? item.orderSign.signContent : []"
+                                                        style="margin-bottom: 30px">
+                                                    <el-table-column
+                                                            align="center"
+                                                            label="签核步骤"
+                                                            width="80">
+                                                        <template scope="scope">
+                                                            <el-button style="font-size: 14px; font-weight: bold"
+                                                                       type="primary" round size="mini">
+                                                                {{scope.row.number}}
+                                                            </el-button>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                            align="center"
+                                                            width="150"
+                                                            label="签核角色">
+                                                        <template slot-scope="scope">
+                                                            <span style="font-size: 14px; font-weight: bold">{{scope.row.roleId | filterRole}}</span>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                            align="center"
+                                                            width="150"
+                                                            label="签核人">
+                                                        <template slot-scope="scope">
+                                                            <el-input
+                                                                    :disabled="signDisable(scope.row.roleId)"
+                                                                    v-model="scope.row.user"
+                                                                    auto-complete="off">
+                                                            </el-input>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                            align="center"
+                                                            width="180"
+                                                            label="日期">
+                                                        <template slot-scope="scope">
+                                                    <span> {{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}
+                                                    </span>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                            align="center"
+                                                            label="意见">
+                                                        <template slot-scope="scope">
+                                                            <el-input
+                                                                    :disabled="signDisable(scope.row.roleId)"
+                                                                    type="textarea"
+                                                                    v-model="scope.row.comment"
+                                                                    auto-complete="off">
+                                                            </el-input>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                            align="center"
+                                                            label="操作"
+                                                            width="200">
+                                                        <template scope="scope">
+                                                            <el-button type="primary"
+                                                                       @click="onSubmitOrderSign(scope.row, item.orderSign)"
+                                                                       icon="el-icon-check" size="small"
+                                                                       :disabled="signDisable(scope.row.roleId)">同意
+                                                            </el-button>
+                                                            <el-button type="danger"
+                                                                       @click="handleRejectOrderSign(scope.row, item.orderSign)"
+                                                                       icon="el-icon-close" size="small"
+                                                                       :disabled="signDisable(scope.row.roleId)">驳回
+                                                            </el-button>
+                                                        </template>
+                                                    </el-table-column>
+                                                </el-table>
+                                            </el-col>
+                                        </div>
+                                    </el-form>
 
 
-                                    </el-tab-pane>
-                                </el-tabs>
+                                </el-tab-pane>
+                            </el-tabs>
                             <!--<el-alert v-if="isError" style="margin-top: 10px;padding: 5px;background-color: #ff9999"-->
-                                      <!--:title="errorMsg"-->
-                                      <!--type="error"-->
-                                      <!--:closable="false"-->
-                                      <!--show-icon >-->
+                            <!--:title="errorMsg"-->
+                            <!--type="error"-->
+                            <!--:closable="false"-->
+                            <!--show-icon >-->
                             <!--</el-alert >-->
                         </el-collapse-item>
                     </el-collapse>
@@ -1411,7 +1438,7 @@
                                     align="center"
                                     label="铭牌">
                                 <template scope="scope">
-                                    <span >{{scope.row.machineOrder.brand}}</span>
+                                    <span>{{scope.row.machineOrder.brand}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -1426,7 +1453,7 @@
                                     prop="machineNum"
                                     label="数量">
                                 <template slot-scope="scope">
-                                    <span> {{scope.row.machineOrder.machineNum}}</span >
+                                    <span> {{scope.row.machineOrder.machineNum}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -1434,7 +1461,7 @@
                                     prop="machinePrice"
                                     label="单价">
                                 <template slot-scope="scope">
-                                    <span> {{scope.row.machineOrder.machinePrice}}</span >
+                                    <span> {{scope.row.machineOrder.machinePrice}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -1442,43 +1469,43 @@
                                     prop="orderTotalPrice"
                                     label="总价">
                                 <template slot-scope="scope">
-                                    <span style="font-size: larger; font-weight: bold;color: #409EFF">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span >
+                                    <span style="font-size: larger; font-weight: bold;color: #409EFF">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-form  style="margin-top: 10px">
-                            <el-row >
+                        <el-form style="margin-top: 10px">
+                            <el-row>
                                 <el-col :span="6">
-                                    <el-form-item label="付款方式：" :label-width="formLabelWidth" >
+                                    <el-form-item label="付款方式：" :label-width="formLabelWidth">
                                         <el-input
                                                 placeholder="付款方式"
                                                 :disabled="changeContractContentDisable(contractForm)"
-                                                v-model="contractForm.payMethod" >
-                                        </el-input >
-                                    </el-form-item >
+                                                v-model="contractForm.payMethod">
+                                        </el-input>
+                                    </el-form-item>
                                 </el-col>
                                 <el-col :span="4" :offset="1">
-                                    <el-form-item label="合同交货日期：" :label-width="longFormLabelWidth" >
+                                    <el-form-item label="合同交货日期：" :label-width="longFormLabelWidth">
                                         <el-date-picker
                                                 type="date"
                                                 placeholder="合同交货日期"
                                                 :disabled="changeContractContentDisable(contractForm)"
-                                                v-model="contractForm.contractShipDate" >
-                                        </el-date-picker >
-                                    </el-form-item >
+                                                v-model="contractForm.contractShipDate">
+                                        </el-date-picker>
+                                    </el-form-item>
                                 </el-col>
                             </el-row>
-                            <el-row >
+                            <el-row>
                                 <el-col :span="24">
-                                    <el-form-item label="备注信息：" :label-width="formLabelWidth" >
+                                    <el-form-item label="备注信息：" :label-width="formLabelWidth">
                                         <el-input
                                                 type="textarea"
                                                 :autosize="{ minRows: 4, maxRows: 4}"
                                                 :disabled="changeContractContentDisable(contractForm)"
                                                 placeholder="备注信息"
-                                                v-model="contractForm.mark" >
-                                        </el-input >
-                                    </el-form-item >
+                                                v-model="contractForm.mark">
+                                        </el-input>
+                                    </el-form-item>
                                 </el-col>
                             </el-row>
                         </el-form>
@@ -1492,7 +1519,9 @@
                                     :label="item.title"
                                     :name="item.name">
                                 <div style="text-align: left;margin-bottom: 10px">
-                                    <el-button style="text-align: right" type="success" round size="small" icon="el-icon-view" @click="viewContractSignHistory" >历史</el-button>
+                                    <el-button style="text-align: right" type="success" round size="small"
+                                               icon="el-icon-view" @click="viewContractSignHistory">历史
+                                    </el-button>
                                 </div>
                                 <el-col :span="24">
                                     <el-table
@@ -1504,7 +1533,9 @@
                                                 label="签核步骤"
                                                 width="80">
                                             <template scope="scope">
-                                                <el-button  style="font-size: 14px; font-weight: bold" type="primary" round size="mini">{{scope.row.number}}</el-button>
+                                                <el-button style="font-size: 14px; font-weight: bold" type="primary"
+                                                           round size="mini">{{scope.row.number}}
+                                                </el-button>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -1523,8 +1554,8 @@
                                                 <el-input
                                                         :disabled="signDisable(scope.row.roleId)"
                                                         v-model="scope.row.user"
-                                                        auto-complete="off" >
-                                                </el-input >
+                                                        auto-complete="off">
+                                                </el-input>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -1532,8 +1563,8 @@
                                                 align="center"
                                                 label="日期">
                                             <template slot-scope="scope">
-                                                <span > {{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}
-                                                </span >
+                                                <span> {{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}
+                                                </span>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -1544,8 +1575,8 @@
                                                         :disabled="signDisable(scope.row.roleId)"
                                                         type="textarea"
                                                         v-model="scope.row.comment"
-                                                        auto-complete="off" >
-                                                </el-input >
+                                                        auto-complete="off">
+                                                </el-input>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -1553,8 +1584,15 @@
                                                 align="center"
                                                 width="200">
                                             <template scope="scope">
-                                                <el-button type="primary" @click="onSubmitContractSign(scope.row, item)" icon="el-icon-check" size="small" :disabled="signDisable(scope.row.roleId)">提交</el-button >
-                                                <el-button type="danger" @click="handleRejectContractSign(scope.row, item)" icon="el-icon-close" size="small" :disabled="signDisable(scope.row.roleId)">驳回</el-button >
+                                                <el-button type="primary" @click="onSubmitContractSign(scope.row, item)"
+                                                           icon="el-icon-check" size="small"
+                                                           :disabled="signDisable(scope.row.roleId)">同意
+                                                </el-button>
+                                                <el-button type="danger"
+                                                           @click="handleRejectContractSign(scope.row, item)"
+                                                           icon="el-icon-close" size="small"
+                                                           :disabled="signDisable(scope.row.roleId)">驳回
+                                                </el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>
@@ -1564,40 +1602,45 @@
                     </el-card>
                 </el-col>
             </el-row>
-            <div slot="footer" class="dialog-footer" style="margin-bottom: 20px; margin-right:8%"  v-if="mode == EDIT_MODE || mode == CHANGE_MODE || mode == ADD_MODE || mode == SPLIT_MODE">
-                <el-button @click="addContractVisible = false" icon="el-icon-back" >取 消</el-button >
-                <el-button v-if="mode == EDIT_MODE && haveInitialMachineOrder() || contractIsRejected()" type="primary" @click="onEdit" icon="el-icon-check" >保 存</el-button >
-                <el-button v-if="mode == CHANGE_MODE" type="primary" @click="onSaveChange" icon="el-icon-check" >保存改单</el-button >
-                <el-button v-if="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check" >保存拆单</el-button >
-                <el-button v-if="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check" >提 交</el-button >
-            </div >
+            <div slot="footer" class="dialog-footer" style="margin-bottom: 20px; margin-right:8%"
+                 v-if="mode == EDIT_MODE || mode == CHANGE_MODE || mode == ADD_MODE || mode == SPLIT_MODE">
+                <el-button @click="addContractVisible = false" icon="el-icon-back">取 消</el-button>
+                <el-button v-if="mode == EDIT_MODE && haveInitialMachineOrder() || contractIsRejected()" type="primary"
+                           @click="onEdit" icon="el-icon-check">保 存
+                </el-button>
+                <el-button v-if="mode == CHANGE_MODE" type="primary" @click="onSaveChange" icon="el-icon-check">保存改单
+                </el-button>
+                <el-button v-if="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check">保存拆单
+                </el-button>
+                <el-button v-if="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">提 交</el-button>
+            </div>
             <el-dialog title="提示" :visible.sync="rejectSignResultVisible" width="30%" append-to-body>
-                <span style="font-size: 15px">确认驳回审核？</span >
-                <span slot="footer" class="dialog-footer" >
-                    <el-button @click="rejectSignResultVisible = false" icon="el-icon-back" >取 消</el-button >
-                    <el-button type="primary" @click="onRejectOrderSign" icon="el-icon-check" >确 定</el-button >
-                </span >
-            </el-dialog >
+                <span style="font-size: 15px">确认驳回审核？</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="rejectSignResultVisible = false" icon="el-icon-back">取 消</el-button>
+                    <el-button type="primary" @click="onRejectOrderSign" icon="el-icon-check">确 定</el-button>
+                </span>
+            </el-dialog>
 
             <el-dialog title="提示" :visible.sync="rejectContractSignResultVisible" width="30%" append-to-body>
-                <span style="font-size: 15px">确认驳回审核？</span >
-                <span slot="footer" class="dialog-footer" >
-                    <el-button @click="rejectContractSignResultVisible = false" icon="el-icon-back" >取 消</el-button >
-                    <el-button type="primary" @click="onRejectContractSign" icon="el-icon-check" >确 定</el-button >
-                </span >
-            </el-dialog >
+                <span style="font-size: 15px">确认驳回审核？</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="rejectContractSignResultVisible = false" icon="el-icon-back">取 消</el-button>
+                    <el-button type="primary" @click="onRejectContractSign" icon="el-icon-check">确 定</el-button>
+                </span>
+            </el-dialog>
             <el-dialog title="提示" :visible.sync="changeOrderVisible" width="30%" append-to-body>
-                <span >确认更改订单<b style="color: #F56C6C">{{requisitionChangingItem != "" ? requisitionChangingItem.machineOrder.orderNum : ""}}</b>？</span >
-                <span slot="footer" class="dialog-footer" >
-                <el-button @click="changeOrderVisible = false" icon="el-icon-back" >取 消</el-button >
-                <el-button type="primary" @click="onConfirmChange" icon="el-icon-check" >确 定</el-button >
-            </span >
-            </el-dialog >
+                <span>确认更改订单<b style="color: #F56C6C">{{requisitionChangingItem != "" ? requisitionChangingItem.machineOrder.orderNum : ""}}</b>？</span>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="changeOrderVisible = false" icon="el-icon-back">取 消</el-button>
+                <el-button type="primary" @click="onConfirmChange" icon="el-icon-check">确 定</el-button>
+            </span>
+            </el-dialog>
             <el-dialog title="提示" :visible.sync="splitOrderVisible" width="50%" append-to-body>
-                <span >拆分需求单<b style="color: #F56C6C">{{requisitionSplitItem != "" ? requisitionSplitItem.machineOrder.orderNum : ""}}</b></span >
+                <span>拆分需求单<b style="color: #F56C6C">{{requisitionSplitItem != "" ? requisitionSplitItem.machineOrder.orderNum : ""}}</b></span>
                 <span>，拆分出机器数:</span>
                 <template>
-                    <el-input-number v-model="splitNum"  :min="1" size="small" style="margin-left: 10px"
+                    <el-input-number v-model="splitNum" :min="1" size="small" style="margin-left: 10px"
                                      :max=" requisitionSplitItem != '' ? requisitionSplitItem.machineOrder.machineNum -1: 1"
                                      label="拆分机器数">
                     </el-input-number>
@@ -1637,20 +1680,22 @@
                     </el-table>
                     <span style="color: #F56C6C;margin-top: 10px;font-size: 12px">注意：在不清楚如何选择拆分机器时，与生产部确认后再行选择；机器都未计划可以自由选择，但是如果机器已计划或者生产中，请务必与生产部确认！</span>
                 </template>
-                <span slot="footer" class="dialog-footer" >
-                <el-button @click="splitOrderVisible = false" icon="el-icon-back"  size="small">取 消</el-button >
-                <el-button type="primary" @click="onConfirmSplit" icon="el-icon-check" :disabled="splitNum != splitMachinesSelected.length && machinesOfOrder.length != 0" size="small">确 定</el-button >
-            </span >
-            </el-dialog >
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="splitOrderVisible = false" icon="el-icon-back" size="small">取 消</el-button>
+                <el-button type="primary" @click="onConfirmSplit" icon="el-icon-check"
+                           :disabled="splitNum != splitMachinesSelected.length && machinesOfOrder.length != 0"
+                           size="small">确 定</el-button>
+            </span>
+            </el-dialog>
         </el-dialog>
 
         <el-dialog title="提示" :visible.sync="deleteConfirmVisible" append-to-body>
-            <span >确认要删除账号为[ <b style="color: #F56C6C">{{selectedItem.account}}</b > ]的用户吗？</span >
-            <span slot="footer" class="dialog-footer" >
-                <el-button @click="deleteConfirmVisible = false" icon="el-icon-back" >取 消</el-button >
-                <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check" >确 定</el-button >
-            </span >
-        </el-dialog >
+            <span>确认要删除账号为[ <b style="color: #F56C6C">{{selectedItem.account}}</b> ]的用户吗？</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
+                <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
+            </span>
+        </el-dialog>
         <el-dialog title="合同签核记录" :visible.sync="viewContractSignHistoryVisible" append-to-body width="65%">
             <div v-for="signItem in contractSignHistory">
                 <el-table
@@ -1662,7 +1707,9 @@
                             label="签核步骤"
                             width="80">
                         <template scope="scope">
-                            <el-button  style="font-size: 14px; font-weight: bold" type="primary" round size="mini">{{scope.row.number}}</el-button>
+                            <el-button style="font-size: 14px; font-weight: bold" type="primary" round size="mini">
+                                {{scope.row.number}}
+                            </el-button>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -1681,8 +1728,8 @@
                             <el-input
                                     :disabled="signDisable(scope.row.roleId)"
                                     v-model="scope.row.user"
-                                    auto-complete="off" >
-                            </el-input >
+                                    auto-complete="off">
+                            </el-input>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -1690,8 +1737,8 @@
                             width="200"
                             label="日期">
                         <template slot-scope="scope">
-                                    <span > {{scope.row.date != null && scope.row.date != "" ? scope.row.date : "未提交" }}
-                                    </span >
+                                    <span> {{scope.row.date != null && scope.row.date != "" ? scope.row.date : "未提交" }}
+                                    </span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -1702,125 +1749,125 @@
                                     :disabled="signDisable(scope.row.roleId)"
                                     type="textarea"
                                     v-model="scope.row.comment"
-                                    auto-complete="off" >
-                            </el-input >
+                                    auto-complete="off">
+                            </el-input>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
-        </el-dialog >
+        </el-dialog>
 
-    </div >
-</template >
+    </div>
+</template>
 
-<script >
+<script>
     import Vue from 'vue'
     import {Loading} from 'element-ui';
     var _this;
 
     export default {
-	    name: "contract_sign",
-	    components: {},
-	    data () {
-		    _this = this;
-		    return {
-			    editUrl: HOST + "machine/order/update",
-			    deleteUrl: HOST + "machine/order/delete",
-			    isError: false,
-			    errorMsg: '',
-			    totalRecords: 0,
-			    selectedItem: {},
-			    deleteConfirmVisible: false,
-			    queryUserRoleUrl: HOST + "role/list",
-			    queryMachineTypeURL: HOST + "machine/type/list",
-                SIGN_MODE : 1,
-                ADD_MODE : 2,
-                EDIT_MODE : 3,
-                CHANGE_MODE : 4,
-                SPLIT_MODE : 5,
-			    tableData: [],
+        name: "contract_sign",
+        components: {},
+        data () {
+            _this = this;
+            return {
+                editUrl: HOST + "machine/order/update",
+                deleteUrl: HOST + "machine/order/delete",
+                isError: false,
+                errorMsg: '',
+                totalRecords: 0,
+                selectedItem: {},
+                deleteConfirmVisible: false,
+                queryUserRoleUrl: HOST + "role/list",
+                queryMachineTypeURL: HOST + "machine/type/list",
+                SIGN_MODE: 1,
+                ADD_MODE: 2,
+                EDIT_MODE: 3,
+                CHANGE_MODE: 4,
+                SPLIT_MODE: 5,
+                tableData: [],
                 //分页
                 totalNum: 1,
                 pageSize: EveryPageNum,//每一页的num
-                currentPage:1,
+                currentPage: 1,
                 startRow: 1,
 
-			    packageModeList: PackageModeList,
-			    maintainTypeList: MaintainTypeList,
-			    orderStatusList: OrderStatusList,
-			    countryList: LanguageList,
-			    allMachineType: [],
-			    pcModeList: PCModeList,
-			    electricMotorList: ElectricMotorList,
-			    xyMotorList: XYMotorList,
-			    trimList: TrimList,
-			    electricPowerList: ElectricPowerList,
-			    electricSwitchList: ElectricSwitchList,
-			    electricOilList: ElectricOilList,
-			    axleSplitList: AxleSplitList,
-			    axlePanelList: AxlePanelList,
-			    axleNeedleList: AxleNeedleList,
-			    axleRailList: AxleRailList,
-			    axleDownCheckList: AxleDownCheckList,
-			    axleHookList: AxleHookList,
-			    axleJumpList: AxleJumpList,
-			    axleUpperThreadList: AxleUpperThreadList,
-			    frameworkColorList: FrameworkColorList,
-			    frameworkPlatenList: FrameworkPlatenList,
-			    frameworkPlatenColorList: FrameworkPlatenColorList,
-			    frameworkRingList: FrameworkRingList,
-			    frameworkBracketList: FrameworkBracketList,
-			    frameworkStopList: FrameworkStopList,
-			    frameworkLightList: FrameworkLightList,
-			    driverTypeList: DriverTypeList,
-			    driverMethodList: DriverMethodList,
-			    driverReelHoleList: DriverReelHoleList,
-			    driverReelList: DriverReelList,
-			    jiaZiXiuPricelList: JiaZiXiuPricelList,
-			    championGoldList: ChampionGoldList,
-			    specialTowelColorList: SpecialTowelColorList,
-			    specialTapingHeadList: SpecialTapingHeadList,
-			    specialTowelDaxleList: SpecialTowelDaxleList,
-			    specialTowelHaxleList: SpecialTowelHaxleList,
-			    specialTowelMotorList: SpecialTowelMotorList,
-			    specialTowelNeedleList: SpecialTowelNeedleList,
+                packageModeList: PackageModeList,
+                maintainTypeList: MaintainTypeList,
+                orderStatusList: OrderStatusList,
+                countryList: LanguageList,
+                allMachineType: [],
+                pcModeList: PCModeList,
+                electricMotorList: ElectricMotorList,
+                xyMotorList: XYMotorList,
+                trimList: TrimList,
+                electricPowerList: ElectricPowerList,
+                electricSwitchList: ElectricSwitchList,
+                electricOilList: ElectricOilList,
+                axleSplitList: AxleSplitList,
+                axlePanelList: AxlePanelList,
+                axleNeedleList: AxleNeedleList,
+                axleRailList: AxleRailList,
+                axleDownCheckList: AxleDownCheckList,
+                axleHookList: AxleHookList,
+                axleJumpList: AxleJumpList,
+                axleUpperThreadList: AxleUpperThreadList,
+                frameworkColorList: FrameworkColorList,
+                frameworkPlatenList: FrameworkPlatenList,
+                frameworkPlatenColorList: FrameworkPlatenColorList,
+                frameworkRingList: FrameworkRingList,
+                frameworkBracketList: FrameworkBracketList,
+                frameworkStopList: FrameworkStopList,
+                frameworkLightList: FrameworkLightList,
+                driverTypeList: DriverTypeList,
+                driverMethodList: DriverMethodList,
+                driverReelHoleList: DriverReelHoleList,
+                driverReelList: DriverReelList,
+                jiaZiXiuPricelList: JiaZiXiuPricelList,
+                championGoldList: ChampionGoldList,
+                specialTowelColorList: SpecialTowelColorList,
+                specialTapingHeadList: SpecialTapingHeadList,
+                specialTowelDaxleList: SpecialTowelDaxleList,
+                specialTowelHaxleList: SpecialTowelHaxleList,
+                specialTowelMotorList: SpecialTowelMotorList,
+                specialTowelNeedleList: SpecialTowelNeedleList,
 
-			    //增加对话框
+                //增加对话框
                 addContractVisible: false,
-                collapseActiveNames:['1'],
-                collapseTitle:"隐藏需求单",
+                collapseActiveNames: ['1'],
+                collapseTitle: "隐藏需求单",
                 doCollapse: false,
-                signProcesses:[],
-                normalSignProcess:{},
-                userInfo:"",
+                signProcesses: [],
+                normalSignProcess: {},
+                userInfo: "",
 
-                viewContractSignHistoryVisible:false,
-                contractSignHistory:[],
+                viewContractSignHistoryVisible: false,
+                contractSignHistory: [],
 
                 //正常合同签核内容
-                normalContractSignArray:[],
+                normalContractSignArray: [],
                 //正常合同签核需求单内容
-                normalOrderSignArray:[],
+                normalOrderSignArray: [],
 
                 //改单合同签核内容
-                changeContractSignArray:[],
+                changeContractSignArray: [],
                 //改单合同签核需求单内容
-                changeOrderSignArray:[],
+                changeOrderSignArray: [],
 
                 //拆单合同签核内容
-                splitContractSignArray:[],
+                splitContractSignArray: [],
                 //拆单合同签核需求单内容
-                splitOrderSignArray:[],
+                splitOrderSignArray: [],
 
                 //用于保存合同内容
-                contractForm:{
-                    contractNum : "",
+                contractForm: {
+                    contractNum: "",
                     customerName: "",
                     sellman: "",
-                    mark:"",
-                    status:CONTRACT_INITIAL,
-                    payMethod:"",
-                    contractShipDate:""
+                    mark: "",
+                    status: CONTRACT_INITIAL,
+                    payMethod: "",
+                    contractShipDate: ""
                 },
 
                 //多个需求单,一下是新创建合同时候的初始值，在编辑或者签核时需要从server端加载
@@ -1829,18 +1876,16 @@
                     title: '需求单1',
                     name: '1',
                     //保存需求单数据
-                    machineOrder:{
-                        brand:"SINSIM电脑绣花机",
+                    machineOrder: {
+                        brand: "SINSIM电脑绣花机",
                         createTime: new Date().format("yyyy-MM-dd"),
-                        orderTotalPrice:0,
-                        status:ORDER_INITIAL,
-                        createUserId:JSON.parse(sessionStorage.getItem("user")).id
+                        orderTotalPrice: 0,
+                        status: ORDER_INITIAL,
+                        createUserId: JSON.parse(sessionStorage.getItem("user")).id
                     },
-                    orderDetail:{
-
-                    },
+                    orderDetail: {},
                     //每个需求单中的签核记录
-                    orderSign:{}
+                    orderSign: {}
                 }],
                 tabIndex: 1,
 
@@ -1849,76 +1894,76 @@
                 contractSignForms: [{
                     title: '合同签核记录',
                     name: '1',
-                    contractSignData:[]
+                    contractSignData: []
                 }],
                 contractTabIndex: 1,
-                splitNum:1,
-                machinesOfOrder:[],
-                splitMachinesSelected:[],
-                emptyTableText:"被拆需求单未签核完毕，暂无机器记录！",
+                splitNum: 1,
+                machinesOfOrder: [],
+                splitMachinesSelected: [],
+                emptyTableText: "被拆需求单未签核完毕，暂无机器记录！",
 
-			    formLabelWidth: '100px',
-			    longFormLabelWidth: '120px',
+                formLabelWidth: '100px',
+                longFormLabelWidth: '120px',
 
                 mode: this.SIGN_MODE,
 //			    isEdit: false,
 //                isSign: false,
 //                isChanging: false,
-                dialogTitle:"合同",
+                dialogTitle: "合同",
                 editContract: "",
                 editContractSign: "",
 
                 submitSignResultVisible: false,
                 rejectSignResultVisible: false,
                 rejectContractSignResultVisible: false,
-                signResultObj:"",
-			    filters: {
+                signResultObj: "",
+                filters: {
                     contractNum: "",
                     roleName: "",
-				    status: "",
-				    sellman: "",
-				    selectDate: "",
-			    },
+                    status: "",
+                    sellman: "",
+                    selectDate: "",
+                },
 
 
                 //改单相关
                 changeOrderVisible: false,
-                requisitionChangingItem:"",
+                requisitionChangingItem: "",
 
                 //拆单相关
                 splitOrderVisible: false,
-                requisitionSplitItem:"",
+                requisitionSplitItem: "",
                 splitNum: 1,
 
-			    allRoles: [],
+                allRoles: [],
 
-			    pickerOptions: {
-				    shortcuts: [{
-					    text: '最近一周',
-					    onClick(picker) {
-						    const end = new Date();
-						    const start = new Date();
-						    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-						    picker.$emit('pick', [start, end]);
-					    }
-				    }, {
-					    text: '最近一个月',
-					    onClick(picker) {
-						    const end = new Date();
-						    const start = new Date();
-						    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-						    picker.$emit('pick', [start, end]);
-					    }
-				    }, {
-					    text: '最近三个月',
-					    onClick(picker) {
-						    const end = new Date();
-						    const start = new Date();
-						    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-						    picker.$emit('pick', [start, end]);
-					    }
-				    }]
-			    },
+                pickerOptions: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
                 pickerOptions2: {
                     disabledDate(time) {
                         return time.getTime() < Date.now();
@@ -1930,15 +1975,15 @@
                         }
                     }]
                 },
-		    }
+            }
 
-	    },
-	    methods: {
+        },
+        methods: {
 
             filterMachineStatus(status) {
                 let name = "";
-                for(let i=0; i< MachineStatusList.length; i++) {
-                    if(MachineStatusList[i].value == status) {
+                for (let i = 0; i < MachineStatusList.length; i++) {
+                    if (MachineStatusList[i].value == status) {
                         name = MachineStatusList[i].name;
                         break;
                     }
@@ -1947,26 +1992,26 @@
             },
 
             handleMachineSelectionChange(val){
-                if(val.length > this.splitNum) {
+                if (val.length > this.splitNum) {
                     showMessage(_this, "选择机器数量大于拆分数！", 0);
-                }else {
+                } else {
                     this.splitMachinesSelected = val;
                 }
             },
 
             canSplitOrChangeOrder(status) {
-                if(this.mode != this.SIGN_MODE && this.mode != this.CHANGE_MODE && this.mode != this.SPLIT_MODE
+                if (this.mode != this.SIGN_MODE && this.mode != this.CHANGE_MODE && this.mode != this.SPLIT_MODE
                         && (status == ORDER_CHECKING || status == ORDER_CHECKING_FINISHED || status == ORDER_SPLITED)) {
                     return true;
-                }else {
+                } else {
                     return false;
                 }
             },
 
             calculateOrderTotalPrice(item) {
-                if(item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
+                if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
                     item.orderTotalPrice = 0;
-                }else {
+                } else {
                     item.orderTotalPrice = item.machinePrice * item.machineNum;
                 }
                 return item.orderTotalPrice;
@@ -1999,10 +2044,10 @@
 
             handleCollapseChange() {
                 _this.doCollapse = !_this.doCollapse;
-                if(_this.doCollapse) {
-                    _this.collapseTitle =  "展开需求单";
-                }else {
-                    _this.collapseTitle =  "隐藏需求单";
+                if (_this.doCollapse) {
+                    _this.collapseTitle = "展开需求单";
+                } else {
+                    _this.collapseTitle = "隐藏需求单";
                 }
             },
 
@@ -2012,23 +2057,23 @@
                     url: HOST + "contract/sign/list",
                     type: 'POST',
                     dataType: 'json',
-                    data: {contractId:_this.editContract.id},
+                    data: {contractId: _this.editContract.id},
                     success: function (data) {
                         if (data.code == 200) {
-                             _this.contractSignHistory = data.data.list;
-                            for (let i=0; i< _this.contractSignHistory.length; i++) {
+                            _this.contractSignHistory = data.data.list;
+                            for (let i = 0; i < _this.contractSignHistory.length; i++) {
                                 _this.contractSignHistory[i].signContent = JSON.parse(_this.contractSignHistory[i].signContent);
                             }
-                            if(_this.contractSignHistory.length > 0) {
+                            if (_this.contractSignHistory.length > 0) {
                                 _this.viewContractSignHistoryVisible = true;
-                            }else {
+                            } else {
                                 showMessage(_this, '暂无历史记录！', 1);
                             }
                         } else {
                             showMessage(_this, data.message, 0);
                         }
                     },
-                    error: function(data) {
+                    error: function (data) {
                         showMessage(_this, "服务器访问失败！", 0);
                     }
                 });
@@ -2036,8 +2081,8 @@
 
             haveInitialMachineOrder() {
                 let result = false;
-                for(let i=0; i< this.requisitionForms.length; i++) {
-                    if(this.requisitionForms[i].machineOrder.status == ORDER_INITIAL
+                for (let i = 0; i < this.requisitionForms.length; i++) {
+                    if (this.requisitionForms[i].machineOrder.status == ORDER_INITIAL
                             || this.requisitionForms[i].machineOrder.status == ORDER_REJECTED) {
                         result = true;
                         break;
@@ -2060,19 +2105,19 @@
                     tabs.forEach((tab) => {
                         if (tab.name === targetName) {
                             let signContent = tab.orderSign.signContent;
-                            for(let i = 0; i< signContent.length; i++) {
-                                if(signContent[i].result == 1 || signContent[i].result == 2) {
+                            for (let i = 0; i < signContent.length; i++) {
+                                if (signContent[i].result == 1 || signContent[i].result == 2) {
                                     hasSigned = true;
                                     break;
                                 }
                             }
                         }
                     });
-                    if(hasSigned) {
+                    if (hasSigned) {
                         showMessage(_this, "已有签核记录，不能删除！", 0);
-                    }else if(this.requisitionForms.length == 1) {
+                    } else if (this.requisitionForms.length == 1) {
                         showMessage(_this, "不能删除最后一个需求单！", 0);
-                    }else {
+                    } else {
                         this.removeTab(targetName)
                     }
                 }
@@ -2083,13 +2128,13 @@
                 var newItem = {
                     title: '需求单' + newTabName,
                     name: newTabName,
-                    machineOrder: copyObjectByJSON(this.requisitionForms[this.tabIndex -2].machineOrder),
-                    orderDetail: copyObjectByJSON(this.requisitionForms[this.tabIndex -2].orderDetail),
-                    orderSign: copyObjectByJSON(this.requisitionForms[this.tabIndex -2].orderSign) != null ? copyObjectByJSON(this.requisitionForms[this.tabIndex -2].orderSign) : {}
+                    machineOrder: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].machineOrder),
+                    orderDetail: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderDetail),
+                    orderSign: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign) != null ? copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign) : {}
                 };
                 //设置时间
                 newItem.machineOrder.createTime = new Date().format("yyyy-MM-dd");
-				//清空订单号
+                //清空订单号
                 newItem.machineOrder.orderNum = "";
                 newItem.machineOrder.originalOrderId = "";
                 //清空之前的需求单中id(数据库对应)
@@ -2129,7 +2174,7 @@
                     url: HOST + "contract/startSign",
                     type: 'POST',
                     dataType: 'json',
-                    data: {contractId:_this.editContract.id},
+                    data: {contractId: _this.editContract.id},
                     success: function (data) {
                         if (data.code == 200) {
                             _this.addContractVisible = false;
@@ -2139,7 +2184,7 @@
                             showMessage(_this, data.message, 0);
                         }
                     },
-                    error: function(data) {
+                    error: function (data) {
                         showMessage(_this, "服务器访问失败！", 0);
                     }
                 })
@@ -2147,13 +2192,13 @@
             },
 
             formatDate(timeStamp) {
-				return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
-			},
+                return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
+            },
 
             filterContractStatus(value) {
                 let result = "";
-                for(let i=0; i< _this.orderStatusList.length;i++) {
-                    if(_this.orderStatusList[i].value == value) {
+                for (let i = 0; i < _this.orderStatusList.length; i++) {
+                    if (_this.orderStatusList[i].value == value) {
                         result = _this.orderStatusList[i].name;
                         break;
                     }
@@ -2162,11 +2207,11 @@
                 return result;
             },
 
-		    onCourseDetail(item)
-		    {
-			    _this.selectedItem = item;
+            onCourseDetail(item)
+            {
+                _this.selectedItem = item;
 
-		    },
+            },
 
 //		    onChange: function () {
 //			    if (_this.addContractVisible) {
@@ -2179,13 +2224,13 @@
 //		    },
             //TODO:由于控件的原因，直接点击加减按钮时，会出现数值不匹配的情况，点击输入框没问题，所以需要在提交后再一次检查
             machineNumChanged(item) {
-                if(item.machineOrder.originalOrderId != null){
-                    if(item.machineOrder.machineNum> this.requisitionChangingItem.machineOrder.machineNum) {
+                if (item.machineOrder.originalOrderId != null) {
+                    if (item.machineOrder.machineNum > this.requisitionChangingItem.machineOrder.machineNum) {
                         //机器数增加，审核流程要变
                         item.orderSign.signContent = _this.normalOrderSignArray;
                         //原合同签核改成改单的，之前的contract sign记录需要在后台设置成拆单状态
                         this.contractSignForms[0].contractSignData = _this.normalContractSignArray;
-                    }else {
+                    } else {
                         //机器数不变或者减少，变成改单签核流程
                         item.orderSign.signContent = _this.changeOrderSignArray;
                         //原合同签核改成改单的，之前的contract sign记录需要在后台设置成改单状态
@@ -2194,16 +2239,16 @@
                 }
             },
 
-		    handleCurrentChange(val) {
-			    this.currentPage = val;
-			    this.selectContracts();
-		    },
-
-		    search() {
+            handleCurrentChange(val) {
+                this.currentPage = val;
                 this.selectContracts();
-		    },
+            },
 
-		    selectContracts(){
+            search() {
+                this.selectContracts();
+            },
+
+            selectContracts(){
                 var condition = {
                     id: _this.filters.id,
                     contractNum: _this.filters.contractNum,
@@ -2212,44 +2257,44 @@
                     roleName: _this.filters.roleName,
                     query_start_time: '',
                     query_finish_time: '',
-                    page:_this.currentPage,
-                    size:_this.pageSize
+                    page: _this.currentPage,
+                    size: _this.pageSize
                 };
                 if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
                     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
                     condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
                 }
-			    $.ajax({
-				    url: HOST + "contract/selectContracts",
-				    type: 'POST',
-				    dataType: 'json',
-				    data: condition,
-				    success: function (data) {
-					    if (data.code == 200) {
-						    _this.tableData = data.data.list;
+                $.ajax({
+                    url: HOST + "contract/selectContracts",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: condition,
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.tableData = data.data.list;
                             _this.totalNum = data.data.total;
                             _this.startRow = data.data.startRow;
-					    }
-				    }
-			    })
-		    },
+                        }
+                    }
+                })
+            },
 
             handleSplitOrder(requisitionItem) {
-		        this.requisitionSplitItem = requisitionItem;
+                this.requisitionSplitItem = requisitionItem;
 
-		        if(requisitionItem.machineOrder.orderNum == "" || requisitionItem.machineOrder.orderNum == null) {
-		            showMessage(this, "拆单订单编号为空！", 1);
-                }else {
+                if (requisitionItem.machineOrder.orderNum == "" || requisitionItem.machineOrder.orderNum == null) {
+                    showMessage(this, "拆单订单编号为空！", 1);
+                } else {
                     $.ajax({
                         url: HOST + "machine/selectMachines",
                         type: 'POST',
                         dataType: 'json',
-                        data: {order_id : requisitionItem.machineOrder.id},
+                        data: {order_id: requisitionItem.machineOrder.id},
                         success: function (data) {
                             if (data.code == 200) {
                                 _this.splitOrderVisible = true;
                                 _this.machinesOfOrder = data.data.list;
-                            }else {
+                            } else {
                                 showMessage(_this, data.message, 0);
                                 _this.emptyTableText = "获取需求单机器时失败！";
                             }
@@ -2264,9 +2309,9 @@
 
             isFromSplit(machineOrder) {
                 let result = false;
-                if(machineOrder != null && machineOrder.originalOrderId != null) {
-                    for(let i=0; i<this.requisitionForms.length; i++ ) {
-                        if(this.requisitionForms[i].machineOrder.id == machineOrder.originalOrderId
+                if (machineOrder != null && machineOrder.originalOrderId != null) {
+                    for (let i = 0; i < this.requisitionForms.length; i++) {
+                        if (this.requisitionForms[i].machineOrder.id == machineOrder.originalOrderId
                                 && this.requisitionForms[i].machineOrder.status == ORDER_SPLITED) {
                             result = true;
                             break;
@@ -2278,7 +2323,7 @@
 
             onConfirmSplit() {
                 this.mode = _this.SPLIT_MODE;
-                this.tabIndex =  this.requisitionForms.length;
+                this.tabIndex = this.requisitionForms.length;
                 let newTabName = ++this.tabIndex + '';
                 var newItem = {
                     title: '需求单' + newTabName,
@@ -2286,10 +2331,10 @@
                     machineOrder: copyObjectByJSON(this.requisitionSplitItem.machineOrder),
                     orderDetail: copyObjectByJSON(this.requisitionSplitItem.orderDetail),
                     orderSign: copyObjectByJSON(this.requisitionSplitItem.orderSign) != null ? copyObjectByJSON(this.requisitionSplitItem.orderSign) : {},
-                    orderSplitRecord:{
-                        splitReason:"",
-                        orderId:this.requisitionSplitItem.machineOrder.id,
-                        userId:this.userInfo.id,
+                    orderSplitRecord: {
+                        splitReason: "",
+                        orderId: this.requisitionSplitItem.machineOrder.id,
+                        userId: this.userInfo.id,
                     }
                 };
                 //设置时间
@@ -2310,7 +2355,7 @@
                 //原需求单状态需要设置成拆单状态,“4”为拆单状态
                 this.requisitionSplitItem.machineOrder.status = ORDER_SPLITED;
                 this.requisitionSplitItem.machineOrder.machineNum = this.requisitionSplitItem.machineOrder.machineNum - this.splitNum;
-                if(this.requisitionSplitItem.title.indexOf("拆单") == -1){
+                if (this.requisitionSplitItem.title.indexOf("拆单") == -1) {
                     this.requisitionSplitItem.title = this.requisitionSplitItem.title + "（待拆单）"
                 }
 
@@ -2322,13 +2367,13 @@
 
 
             handleChangeOrder(requisitionItem) {
-		        this.requisitionChangingItem = requisitionItem;
+                this.requisitionChangingItem = requisitionItem;
                 this.changeOrderVisible = true;
             },
 
             onConfirmChange() {
                 this.mode = _this.CHANGE_MODE;
-                this.tabIndex =  this.requisitionForms.length;
+                this.tabIndex = this.requisitionForms.length;
                 let newTabName = ++this.tabIndex + '';
                 var newItem = {
                     title: '需求单' + newTabName,
@@ -2336,10 +2381,10 @@
                     machineOrder: copyObjectByJSON(this.requisitionChangingItem.machineOrder),
                     orderDetail: copyObjectByJSON(this.requisitionChangingItem.orderDetail),
                     orderSign: copyObjectByJSON(this.requisitionChangingItem.orderSign) != null ? copyObjectByJSON(this.requisitionChangingItem.orderSign) : {},
-                    orderChangeRecord:{
-                        changeReason:"",
-                        orderId:this.requisitionChangingItem.machineOrder.id,
-                        userId:this.userInfo.id,
+                    orderChangeRecord: {
+                        changeReason: "",
+                        orderId: this.requisitionChangingItem.machineOrder.id,
+                        userId: this.userInfo.id,
                     }
                 };
                 //设置时间
@@ -2357,7 +2402,7 @@
 
                 //原需求单状态需要设置成改单状态,“3”为改单状态
                 this.requisitionChangingItem.machineOrder.status = ORDER_CHANGED;
-                if(this.requisitionChangingItem.title.indexOf("改单") == -1){
+                if (this.requisitionChangingItem.title.indexOf("改单") == -1) {
                     this.requisitionChangingItem.title = this.requisitionChangingItem.title + "（待改单）"
                 }
 
@@ -2368,16 +2413,16 @@
                 this.changeOrderVisible = false;
             },
 
-		    handleAdd() {
-			    this.mode = this.ADD_MODE;
-			    this.isError = false;
-			    this.errorMsg = '';
+            handleAdd() {
+                this.mode = this.ADD_MODE;
+                this.isError = false;
+                this.errorMsg = '';
                 this.dialogTitle = "新增合同";
-			    this.addContractVisible = true;
+                this.addContractVisible = true;
                 this.editContract = "";
                 _this.requisitionForms[0].orderSign.signContent = _this.normalOrderSignArray;
                 _this.contractSignForms[0].contractSignData = _this.normalContractSignArray;
-		    },
+            },
 
             handleSign(index, item) {
                 this.isError = false;
@@ -2391,34 +2436,34 @@
                 this.addContractVisible = true;
             },
 
-		    handleEdit(index, item) {
-			    this.isError = false;
-			    this.errorMsg = '';
+            handleEdit(index, item) {
+                this.isError = false;
+                this.errorMsg = '';
                 this.dialogTitle = "编辑合同";
                 _this.fetchContractData(item.id);
                 _this.fetchContractSignData(item.id);
                 _this.fetchMachineOrdersData(item.id);
-			    this.mode = this.EDIT_MODE;
-			    this.editContract = item;
-			    this.addContractVisible = true;
-		    },
+                this.mode = this.EDIT_MODE;
+                this.editContract = item;
+                this.addContractVisible = true;
+            },
 
-		    handleDelete(index, item) {
-			    this.selectedItem = copyObject(item);
-			    if (this.selectedItem) {
-				    _this.deleteConfirmVisible = true;
-			    }
-		    },
+            handleDelete(index, item) {
+                this.selectedItem = copyObject(item);
+                if (this.selectedItem) {
+                    _this.deleteConfirmVisible = true;
+                }
+            },
             handleDownload(index, item) {
                 $.ajax({
                     url: HOST + "contract/buildContractExcel",
                     type: 'POST',
                     dataType: 'json',
-                    data: {contractId : item.id},
+                    data: {contractId: item.id},
                     success: function (data) {
                         if (data.code == 200) {
                             window.location.href = data.data;
-                        }else {
+                        } else {
                             showMessage(_this, data.message, 0);
                         }
                     },
@@ -2426,30 +2471,30 @@
                         showMessage(_this, '服务器访问出错', 0);
                     }
                 })
-		    },
+            },
 
-		    onConfirmDelete: function () {
-			    _this.deleteConfirmVisible = false;
-			    $.ajax({
-				    url: _this.deleteUrl,
-				    type: 'POST',
-				    dataType: 'json',
-				    data: _this.selectedItem,
-				    success: function (data) {
-					    if (data.status > 0) {
-						    var index = _this.tableData.indexOf(_this.selectedItem);
-						    _this.tableData.splice(index, 1);
+            onConfirmDelete: function () {
+                _this.deleteConfirmVisible = false;
+                $.ajax({
+                    url: _this.deleteUrl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: _this.selectedItem,
+                    success: function (data) {
+                        if (data.status > 0) {
+                            var index = _this.tableData.indexOf(_this.selectedItem);
+                            _this.tableData.splice(index, 1);
 
-						    showMessage(_this, '删除成功', 1);
-					    } else {
-						    showMessage(_this, '删除失败', 0);
-					    }
-				    },
-				    error: function (info) {
-					    showMessage(_this, '服务器访问出错', 0);
-				    }
-			    })
-		    },
+                            showMessage(_this, '删除成功', 1);
+                        } else {
+                            showMessage(_this, '删除失败', 0);
+                        }
+                    },
+                    error: function (info) {
+                        showMessage(_this, '服务器访问出错', 0);
+                    }
+                })
+            },
 
             validContractInfo(formObj, isEdit) {
                 var iserror = false;
@@ -2468,180 +2513,180 @@
                     this.errorMsg = '销售人员不能为空';
                 }
 
-			    if (!iserror && formObj.contractShipDate == "") {
-				    iserror = true;
-				    this.errorMsg = '合同交货时间不能为空';
-			    }
-			    return iserror;
+                if (!iserror && formObj.contractShipDate == "") {
+                    iserror = true;
+                    this.errorMsg = '合同交货时间不能为空';
+                }
+                return iserror;
             },
 
-		    validateOrderInfo(formObj, isEdit) {
-			    var iserror = false;
-			    if (!iserror && isStringEmpty(formObj.machineOrder.orderNum)) {
-				    iserror = true;
-				    this.errorMsg = '订单号不能为空';
-			    }
-			    if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
-				    iserror = true;
-				    this.errorMsg = '请选择包装方式';
-			    }
+            validateOrderInfo(formObj, isEdit) {
+                var iserror = false;
+                if (!iserror && isStringEmpty(formObj.machineOrder.orderNum)) {
+                    iserror = true;
+                    this.errorMsg = '订单号不能为空';
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
+                    iserror = true;
+                    this.errorMsg = '请选择包装方式';
+                }
 
-			    if (!iserror && isStringEmpty(formObj.machineOrder.country)) {
-				    iserror = true;
-				    this.errorMsg = '请选择国家';
-			    }
-			    if (!iserror && isStringEmpty(formObj.machineOrder.brand)) {
-				    iserror = true;
-				    this.errorMsg = '请选择商标';
-			    }
-			    if (!iserror && isStringEmpty(formObj.machineOrder.machineType)) {
-				    iserror = true;
-				    this.errorMsg = '请选择机型';
-			    }
+                if (!iserror && isStringEmpty(formObj.machineOrder.country)) {
+                    iserror = true;
+                    this.errorMsg = '请选择国家';
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.brand)) {
+                    iserror = true;
+                    this.errorMsg = '请选择商标';
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.machineType)) {
+                    iserror = true;
+                    this.errorMsg = '请选择机型';
+                }
 
-			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelDaxle)) {
-				    iserror = true;
-				    this.errorMsg = 'D轴上不能为空';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelMotor)) {
-				    iserror = true;
-				    this.errorMsg = '主电机不能为空';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelMotor)) {
-				    iserror = true;
-				    this.errorMsg = '主电机不能为空';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTapingHead)) {
-				    iserror = true;
-				    this.errorMsg = '盘带头不能为空';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelNeedle)) {
-				    iserror = true;
-				    this.errorMsg = '毛巾机针不能为空';
-			    }
+                if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelDaxle)) {
+                    iserror = true;
+                    this.errorMsg = 'D轴上不能为空';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelMotor)) {
+                    iserror = true;
+                    this.errorMsg = '主电机不能为空';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelMotor)) {
+                    iserror = true;
+                    this.errorMsg = '主电机不能为空';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.specialTapingHead)) {
+                    iserror = true;
+                    this.errorMsg = '盘带头不能为空';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelNeedle)) {
+                    iserror = true;
+                    this.errorMsg = '毛巾机针不能为空';
+                }
 
-			    if (!iserror && isStringEmpty(formObj.orderDetail.electricPc)) {
-				    iserror = true;
-				    this.errorMsg = '请选择电脑';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.electricMotor)) {
-				    iserror = true;
-				    this.errorMsg = '请选择主电机';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.electricMotorXy)) {
-				    iserror = true;
-				    this.errorMsg = '请选择XY电机';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.electricTrim)) {
-				    iserror = true;
-				    this.errorMsg = '请选择剪线方式';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.electricPower)) {
-				    iserror = true;
-				    this.errorMsg = '请选择电源';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.electricSwitch)) {
-				    iserror = true;
-				    this.errorMsg = '请选择按钮开关';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.electricOil)) {
-				    iserror = true;
-				    this.errorMsg = '请选择加油系统';
-			    }
+                if (!iserror && isStringEmpty(formObj.orderDetail.electricPc)) {
+                    iserror = true;
+                    this.errorMsg = '请选择电脑';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.electricMotor)) {
+                    iserror = true;
+                    this.errorMsg = '请选择主电机';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.electricMotorXy)) {
+                    iserror = true;
+                    this.errorMsg = '请选择XY电机';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.electricTrim)) {
+                    iserror = true;
+                    this.errorMsg = '请选择剪线方式';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.electricPower)) {
+                    iserror = true;
+                    this.errorMsg = '请选择电源';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.electricSwitch)) {
+                    iserror = true;
+                    this.errorMsg = '请选择按钮开关';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.electricOil)) {
+                    iserror = true;
+                    this.errorMsg = '请选择加油系统';
+                }
 
-			    if (!iserror && isStringEmpty(formObj.orderDetail.axleSplit)) {
-				    iserror = true;
-				    this.errorMsg = '请选择夹线器';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.axlePanel)) {
-				    iserror = true;
-				    this.errorMsg = '请选择面板';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.axleNeedle)) {
-				    iserror = true;
-				    this.errorMsg = '请选择机针';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.axleRail)) {
-				    iserror = true;
-				    this.errorMsg = '请选择机头导轨';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.axleDownCheck)) {
-				    iserror = true;
-				    this.errorMsg = '请选择底检方式';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.axleHook)) {
-				    iserror = true;
-				    this.errorMsg = '请选择旋梭';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.axleJump)) {
-				    iserror = true;
-				    this.errorMsg = '请选择跳跃方式';
-			    }
-			    if (!iserror && isStringEmpty(formObj.axleUpperThread)) {
-				    iserror = true;
-				    this.errorMsg = '请选择面线夹持';
-			    }
+                if (!iserror && isStringEmpty(formObj.orderDetail.axleSplit)) {
+                    iserror = true;
+                    this.errorMsg = '请选择夹线器';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.axlePanel)) {
+                    iserror = true;
+                    this.errorMsg = '请选择面板';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.axleNeedle)) {
+                    iserror = true;
+                    this.errorMsg = '请选择机针';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.axleRail)) {
+                    iserror = true;
+                    this.errorMsg = '请选择机头导轨';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.axleDownCheck)) {
+                    iserror = true;
+                    this.errorMsg = '请选择底检方式';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.axleHook)) {
+                    iserror = true;
+                    this.errorMsg = '请选择旋梭';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.axleJump)) {
+                    iserror = true;
+                    this.errorMsg = '请选择跳跃方式';
+                }
+                if (!iserror && isStringEmpty(formObj.axleUpperThread)) {
+                    iserror = true;
+                    this.errorMsg = '请选择面线夹持';
+                }
 
-			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkColor)) {
-				    iserror = true;
-				    this.errorMsg = '请选择机架颜色';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPlaten)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 台板';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPlatenColor)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 台板颜色';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkRing)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 吊环';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkBracket)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 电脑托架';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkStop)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 急停装置';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkLight)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 日光灯';
-			    }
+                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkColor)) {
+                    iserror = true;
+                    this.errorMsg = '请选择机架颜色';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPlaten)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 台板';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPlatenColor)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 台板颜色';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkRing)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 吊环';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkBracket)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 电脑托架';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkStop)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 急停装置';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkLight)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 日光灯';
+                }
 
-			    if (!iserror && isStringEmpty(formObj.orderDetail.driverType)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 驱动类型';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.driverMethod)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 驱动方式';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.driverReelHole)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 绷孔架';
-			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.driverReel)) {
-				    iserror = true;
-				    this.errorMsg = '请选择 绷架';
-			    }
+                if (!iserror && isStringEmpty(formObj.orderDetail.driverType)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 驱动类型';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.driverMethod)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 驱动方式';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.driverReelHole)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 绷孔架';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.driverReel)) {
+                    iserror = true;
+                    this.errorMsg = '请选择 绷架';
+                }
 
-			    return iserror;
-		    },
+                return iserror;
+            },
 
             dialogCloseCallback() {
                 //reset after dialog closed
                 //用于保存合同内容
                 this.contractForm = {
-                    contractNum : "",
+                    contractNum: "",
                     customerName: "",
                     sellman: "",
-                    mark:"",
-                    status:CONTRACT_INITIAL,
-                    payMethod:"",
-                    contractShipDate:""
+                    mark: "",
+                    status: CONTRACT_INITIAL,
+                    payMethod: "",
+                    contractShipDate: ""
                 };
 
                 this.requisitionForms.splice(1);
@@ -2649,25 +2694,23 @@
                     title: '需求单1',
                     name: '1',
                     //保存需求单数据
-                    machineOrder:{
-                        brand:"SINSIM电脑绣花机",
+                    machineOrder: {
+                        brand: "SINSIM电脑绣花机",
                         createTime: new Date().format("yyyy-MM-dd"),
-                        orderTotalPrice:0,
-                        machineNum:1,
-                        status:ORDER_INITIAL,
-                        createUserId:JSON.parse(sessionStorage.getItem("user")).id
+                        orderTotalPrice: 0,
+                        machineNum: 1,
+                        status: ORDER_INITIAL,
+                        createUserId: JSON.parse(sessionStorage.getItem("user")).id
                     },
-                    orderDetail:{
-
-                    },
+                    orderDetail: {},
                     //每个需求单中的签核记录
-                    orderSign:{}
+                    orderSign: {}
                 });
 
-                this.tabIndex= 1;
+                this.tabIndex = 1;
             },
 
-		    onAdd() {
+            onAdd() {
                 //先校验合同的内容,再校需求单的内容
                 _this.isError = this.validContractInfo(_this.contractForm, false);
 //                if(!_this.isError) {
@@ -2680,12 +2723,12 @@
 //                }
                 //Just for test
                 //sessionStorage.setItem("requisitionForms", JSON.stringify(_this.requisitionForms));
-                if(_this.isError) {
+                if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
                     //由于signContent在DB中是以String方式存储的，防止Server端解析失败，需要在前端转成String形式，而不是array
                     let obj = copyObjectByJSON(_this.requisitionForms);
-                    for(let i=0; i< obj.length; i++) {
+                    for (let i = 0; i < obj.length; i++) {
                         obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
                         //增加销售员信息，因为之前是绑定信息是在合同contractForm里面 --No.3
                         obj[i].machineOrder.sellman = this.contractForm.sellman;
@@ -2694,13 +2737,18 @@
                         url: HOST + "contract/add",
                         type: 'POST',
                         dataType: 'json',
-                        data: {contract: JSON.stringify(_this.contractForm), contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData), requisitionForms:JSON.stringify(obj)},
+                        data: {
+                            contract: JSON.stringify(_this.contractForm),
+                            contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
+                            requisitionForms: JSON.stringify(obj)
+                        },
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
                                 _this.addContractVisible = false;
                                 _this.editContract = "";
                                 showMessage(_this, '添加成功', 1);
+                                _this.selectContracts();
                             } else {
                                 _this.errorMsg = res.message;
                                 showMessage(_this, _this.errorMsg, 0);
@@ -2712,9 +2760,9 @@
                         }
                     })
                 }
-		    },
+            },
 
-		    onEdit() {
+            onEdit() {
                 _this.isError = this.validContractInfo(_this.contractForm, false);
 //                if(!_this.isError) {
 //                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
@@ -2724,13 +2772,13 @@
 //                        }
 //                    }
 //                }
-                if(_this.isError) {
+                if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
                     //由于signContent在DB中是以String方式存储的，防止Server端解析失败，需要在前端转成String形式，而不是array
                     let obj = copyObjectByJSON(_this.requisitionForms);
-                    for(let i=0; i< obj.length; i++) {
-                        if(obj[i].orderSign != null) {
+                    for (let i = 0; i < obj.length; i++) {
+                        if (obj[i].orderSign != null) {
                             obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
                         }
                     }
@@ -2738,7 +2786,11 @@
                         url: HOST + "contract/update",
                         type: 'POST',
                         dataType: 'json',
-                        data: {contract: JSON.stringify(_this.contractForm), contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData), requisitionForms:JSON.stringify(obj)},
+                        data: {
+                            contract: JSON.stringify(_this.contractForm),
+                            contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
+                            requisitionForms: JSON.stringify(obj)
+                        },
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
@@ -2757,15 +2809,15 @@
                         }
                     })
                 }
-		    },
+            },
 
             onSaveChange() {
                 _this.isError = this.validContractInfo(_this.contractForm, false);
-                if(!_this.isError) {
-                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
-                        if(this.requisitionForms[i].machineOrder.originalOrderId != 0
+                if (!_this.isError) {
+                    for (let i = 0; i < _this.requisitionForms.length && !_this.isError; i++) {
+                        if (this.requisitionForms[i].machineOrder.originalOrderId != 0
                                 && this.requisitionForms[i].machineOrder.status == ORDER_INITIAL) {
-                            if(this.requisitionForms[i].orderChangeRecord.changeReason == null || this.requisitionForms[i].orderChangeRecord.changeReason == '') {
+                            if (this.requisitionForms[i].orderChangeRecord.changeReason == null || this.requisitionForms[i].orderChangeRecord.changeReason == '') {
                                 _this.isError = true;
                                 _this.errorMsg = "改单原因不能为空！";
                             }
@@ -2781,13 +2833,13 @@
 //                        }
 //                    }
 //                }
-                if(_this.isError) {
+                if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
                     //由于signContent在DB中是以String方式存储的，防止Server端解析失败，需要在前端转成String形式，而不是array
                     let obj = copyObjectByJSON(_this.requisitionForms);
-                    for(let i=0; i< obj.length; i++) {
-                        if(obj[i].orderSign != null) {
+                    for (let i = 0; i < obj.length; i++) {
+                        if (obj[i].orderSign != null) {
                             obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
                         }
                     }
@@ -2795,7 +2847,11 @@
                         url: HOST + "contract/changeOrder",
                         type: 'POST',
                         dataType: 'json',
-                        data: {contract: JSON.stringify(_this.contractForm), contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData), requisitionForms:JSON.stringify(obj)},
+                        data: {
+                            contract: JSON.stringify(_this.contractForm),
+                            contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
+                            requisitionForms: JSON.stringify(obj)
+                        },
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
@@ -2818,11 +2874,11 @@
 
             onSaveSplit() {
                 _this.isError = this.validContractInfo(_this.contractForm, false);
-                if(!_this.isError) {
-                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
-                        if(this.requisitionForms[i].machineOrder.originalOrderId != 0
+                if (!_this.isError) {
+                    for (let i = 0; i < _this.requisitionForms.length && !_this.isError; i++) {
+                        if (this.requisitionForms[i].machineOrder.originalOrderId != 0
                                 && this.requisitionForms[i].machineOrder.status == ORDER_INITIAL) {
-                            if(this.requisitionForms[i].orderSplitRecord.splitReason == null || this.requisitionForms[i].orderSplitRecord.splitReason == '') {
+                            if (this.requisitionForms[i].orderSplitRecord.splitReason == null || this.requisitionForms[i].orderSplitRecord.splitReason == '') {
                                 _this.isError = true;
                                 _this.errorMsg = "拆单原因不能为空！";
                             }
@@ -2838,13 +2894,13 @@
 //                        }
 //                    }
 //                }
-                if(_this.isError) {
+                if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
                     //由于signContent在DB中是以String方式存储的，防止Server端解析失败，需要在前端转成String形式，而不是array
                     let obj = copyObjectByJSON(_this.requisitionForms);
-                    for(let i=0; i< obj.length; i++) {
-                        if(obj[i].orderSign != null) {
+                    for (let i = 0; i < obj.length; i++) {
+                        if (obj[i].orderSign != null) {
                             obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
                         }
                     }
@@ -2852,8 +2908,12 @@
                         url: HOST + "contract/splitOrder",
                         type: 'POST',
                         dataType: 'json',
-                        data: {contract: JSON.stringify(_this.contractForm), contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
-                                requisitionForms:JSON.stringify(obj), splitMachines: JSON.stringify(_this.splitMachinesSelected)},
+                        data: {
+                            contract: JSON.stringify(_this.contractForm),
+                            contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
+                            requisitionForms: JSON.stringify(obj),
+                            splitMachines: JSON.stringify(_this.splitMachinesSelected)
+                        },
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
@@ -2874,24 +2934,24 @@
             },
 
             onSubmitOrderSign(item, signObj) {
-                if(item.comment == null || item.comment == "") {
+                if (item.comment == null || item.comment == "") {
                     showMessage(_this, "审核意见不能为空！", 0);
-                }else if(item.user == null || item.user == "") {
+                } else if (item.user == null || item.user == "") {
                     showMessage(_this, "审核人不能为空！", 0);
-                }else {
+                } else {
                     item.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     item.result = SIGN_APPROVE;
                     $.ajax({
                         url: HOST + "order/sign/update",
                         type: 'POST',
                         dataType: 'json',
-                        data: {contractId: _this.editContract.id,orderSign:JSON.stringify(signObj)},
+                        data: {contractId: _this.editContract.id, orderSign: JSON.stringify(signObj)},
                         success: function (res) {
                             if (res.code == 200) {
                                 showMessage(_this, '提交审核成功', 1);
                                 _this.addContractVisible = false;
                                 _this.selectContracts();
-                            }else {
+                            } else {
                                 showMessage(_this, res.message, 0);
                             }
                         }
@@ -2899,11 +2959,11 @@
                 }
             },
             handleRejectOrderSign(item, signObj) {
-                if(item.comment == null || item.comment == "") {
+                if (item.comment == null || item.comment == "") {
                     showMessage(_this, "审核意见不能为空！", 0);
-                }else if(item.user == null || item.user == "") {
+                } else if (item.user == null || item.user == "") {
                     showMessage(_this, "审核人不能为空！", 0);
-                }else {
+                } else {
                     this.rejectSignResultVisible = true;
                     item.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     item.result = SIGN_REJECT;
@@ -2915,13 +2975,13 @@
                     url: HOST + "order/sign/update",
                     type: 'POST',
                     dataType: 'json',
-                    data: {contractId: _this.editContract.id,orderSign:JSON.stringify(_this.signResultObj)},
+                    data: {contractId: _this.editContract.id, orderSign: JSON.stringify(_this.signResultObj)},
                     success: function (res) {
                         if (res.code == 200) {
                             showMessage(_this, '驳回成功', 1);
                             _this.addContractVisible = false;
                             _this.selectContracts();
-                        }else {
+                        } else {
                             showMessage(_this, res.message, 0);
                         }
                     }
@@ -2929,26 +2989,26 @@
                 this.rejectSignResultVisible = false;
             },
             onSubmitContractSign(rowItem, signObj) {
-		        if(rowItem.user == "") {
+                if (rowItem.user == "") {
                     showMessage(_this, "审核人不能为空！", 0);
-                }else if(rowItem.comment == "") {
+                } else if (rowItem.comment == "") {
                     showMessage(_this, "审核意见不能为空！", 0);
-                }else {
-                    rowItem.date =  new Date().format("yyyy-MM-dd hh:mm:ss");
+                } else {
+                    rowItem.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     rowItem.result = SIGN_APPROVE;
-                    _this.editContractSign.signContent =  JSON.stringify(signObj.contractSignData);
+                    _this.editContractSign.signContent = JSON.stringify(signObj.contractSignData);
                     //准备好数据，提交服务器
                     $.ajax({
                         url: HOST + "contract/sign/update",
                         type: 'POST',
                         dataType: 'json',
-                        data: {contractSign:JSON.stringify(_this.editContractSign)},
+                        data: {contractSign: JSON.stringify(_this.editContractSign)},
                         success: function (res) {
                             if (res.code == 200) {
                                 showMessage(_this, "提交审核成功", 1);
                                 _this.addContractVisible = false;
                                 _this.selectContracts();
-                            }else {
+                            } else {
                                 showMessage(_this, res.message, 0);
                             }
                         }
@@ -2956,19 +3016,19 @@
                 }
             },
             onRejectContractSign() {
-                _this.editContractSign.signContent =  JSON.stringify(this.signResultObj.contractSignData);
+                _this.editContractSign.signContent = JSON.stringify(this.signResultObj.contractSignData);
                 //准备好数据，提交服务器
                 $.ajax({
                     url: HOST + "contract/sign/update",
                     type: 'POST',
                     dataType: 'json',
-                    data: {contractSign:JSON.stringify(_this.editContractSign)},
+                    data: {contractSign: JSON.stringify(_this.editContractSign)},
                     success: function (res) {
                         if (res.code == 200) {
                             showMessage(_this, "驳回成功", 1);
                             _this.addContractVisible = false;
                             _this.selectContracts();
-                        }else {
+                        } else {
                             showMessage(_this, res.message, 0);
                         }
                     }
@@ -2976,11 +3036,11 @@
                 this.rejectContractSignResultVisible = false;
             },
             handleRejectContractSign(item, signObj) {
-                if(item.comment == null || item.comment == "") {
+                if (item.comment == null || item.comment == "") {
                     showMessage(_this, "审核意见不能为空！", 0);
-                }else if(item.user == null || item.user == "") {
+                } else if (item.user == null || item.user == "") {
                     showMessage(_this, "审核人不能为空！", 0);
-                }else {
+                } else {
                     this.rejectContractSignResultVisible = true;
                     item.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     item.result = SIGN_REJECT;
@@ -2991,7 +3051,7 @@
             signDisable(roleId) {
                 //超级管理员可以操作，或者当前合同属于“签核状态”、登陆的用户有权限签核并且合同currentStep处于属于该角色签核
                 return !((roleId == _this.userInfo.role.id && this.editContract.status == 1 && this.editContract.currentStep == _this.userInfo.role.roleName)
-                        || _this.userInfo.role.id == 1 );
+                || _this.userInfo.role.id == 1 );
             },
 
             changeOrderContentDisable(item) {
@@ -3010,11 +3070,11 @@
                     url: HOST + "contract/detail",
                     type: 'POST',
                     dataType: 'json',
-                    data: {id:contractId},
+                    data: {id: contractId},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.contractForm = res.data;
-                        }else {
+                        } else {
                             showMessage(_this, res.message, 0);
                         }
                     }
@@ -3026,34 +3086,34 @@
                     url: HOST + "contract/sign/detailByContractId",
                     type: 'POST',
                     dataType: 'json',
-                    data: {contractId:contractId},
+                    data: {contractId: contractId},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.editContractSign = res.data;
                             _this.contractSignForms[0].contractSignData = JSON.parse(res.data.signContent);
-                        }else {
+                        } else {
                             showMessage(_this, res.message, 0);
                         }
                     }
                 })
             },
-          fetchMachineOrdersData(contractId) {
+            fetchMachineOrdersData(contractId) {
                 $.ajax({
                     url: HOST + "/machine/order/selectOrders",
                     type: 'POST',
                     dataType: 'json',
-                    data: {contract_id:contractId},
+                    data: {contract_id: contractId},
                     success: function (res) {
                         if (res.code == 200) {
                             let tempList = res.data.list;
                             _this.requisitionForms = [];
-                            for(let i=0; i< tempList.length; i++) {
-                                let newTabName = (i+1) + '';
+                            for (let i = 0; i < tempList.length; i++) {
+                                let newTabName = (i + 1) + '';
                                 let orderDetail = copyObjectByJSON(tempList[i].orderDetail);
                                 let orderSign = copyObjectByJSON(tempList[i].orderSign);
                                 let orderChangeRecord = copyObjectByJSON(tempList[i].orderChangeRecord);
                                 let orderSplitRecord = copyObjectByJSON(tempList[i].orderSplitRecord);
-                                if(orderSign !=null) {
+                                if (orderSign != null) {
                                     orderSign.signContent = orderSign.signContent != null ? JSON.parse(orderSign.signContent) : [];
                                 }
                                 let machineOrder = copyObjectByJSON(tempList[i]);
@@ -3067,69 +3127,69 @@
                                     name: newTabName,
                                     machineOrder: machineOrder,
                                     orderDetail: orderDetail,
-                                    orderSign:orderSign,
+                                    orderSign: orderSign,
                                     orderChangeRecord: orderChangeRecord,
-                                    orderSplitRecord:orderSplitRecord
+                                    orderSplitRecord: orderSplitRecord
                                 };
-                                if(machineOrder.status == ORDER_CHANGED) {
+                                if (machineOrder.status == ORDER_CHANGED) {
                                     newItem.title = newItem.title + "（已改单）"
-                                }else if(machineOrder.status == ORDER_SPLITED){
+                                } else if (machineOrder.status == ORDER_SPLITED) {
                                     newItem.title = newItem.title + "（已拆单）"
-                                }else if(machineOrder.status == ORDER_REJECTED) {
+                                } else if (machineOrder.status == ORDER_REJECTED) {
                                     newItem.title = newItem.title + "（已驳回）"
-                                }else if(machineOrder.status == ORDER_CANCELED){
+                                } else if (machineOrder.status == ORDER_CANCELED) {
                                     newItem.title = newItem.title + "（已取消）"
                                 }
 
                                 _this.requisitionForms.push(newItem);
                                 _this.editableTabsValue = newTabName;
-                                _this.tabIndex = i+1;
+                                _this.tabIndex = i + 1;
                             }
                         }
                     },
-                    error:function(data) {
+                    error: function (data) {
                         showMessage(_this, "服务器访问失败！", 0);
                     }
                 })
             },
 
-		    initAllRoles() {
-			    $.ajax({
-				    url: HOST + "role/list",
-				    type: 'POST',
-				    dataType: 'json',
-				    data: {},
-				    success: function (res) {
-					    if (res.code == 200) {
-						    _this.allRoles = res.data.list;
-					    }
-				    }
-			    })
-		    },
+            initAllRoles() {
+                $.ajax({
+                    url: HOST + "role/list",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.allRoles = res.data.list;
+                        }
+                    }
+                })
+            },
 
             //只有在填单员创建新的合同、改单或者拆单才会去获取签核流程，填单员（编辑）以及其他部门签核时不需要
             initSignProcesses() {
-			    $.ajax({
-				    url: HOST + "sign/process/list",
-				    type: 'POST',
-				    dataType: 'json',
-				    data: {},
-				    success: function (res) {
-					    if (res.code == 200) {
-						    _this.signProcesses = res.data.list;
-                            for(let i=0; i<_this.signProcesses.length; i++){
-                                if(_this.signProcesses[i].processName.indexOf("正常") != -1) {
+                $.ajax({
+                    url: HOST + "sign/process/list",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.signProcesses = res.data.list;
+                            for (let i = 0; i < _this.signProcesses.length; i++) {
+                                if (_this.signProcesses[i].processName.indexOf("正常") != -1) {
                                     _this.normalSignProcess = JSON.parse(_this.signProcesses[i].processContent);
-                                    for(let j=0; j< _this.normalSignProcess.length; j++) {
+                                    for (let j = 0; j < _this.normalSignProcess.length; j++) {
                                         //初始化需求单
-                                        if(_this.normalSignProcess[j].signType == "需求单签核") {
+                                        if (_this.normalSignProcess[j].signType == "需求单签核") {
                                             let item = _this.normalSignProcess[j];
                                             item.date = "";
                                             item.user = "";
                                             item.result = SIGN_INITIAL;
                                             item.comment = "";
                                             _this.normalOrderSignArray.push(item);
-                                        }else if(_this.normalSignProcess[j].signType == "合同签核") {
+                                        } else if (_this.normalSignProcess[j].signType == "合同签核") {
                                             let item = _this.normalSignProcess[j];
                                             item.date = "";
                                             item.user = "";
@@ -3138,18 +3198,18 @@
                                             _this.normalContractSignArray.push(item);
                                         }
                                     }
-                                }else if(_this.signProcesses[i].processName.indexOf("改单") != -1){
+                                } else if (_this.signProcesses[i].processName.indexOf("改单") != -1) {
                                     _this.changeSignProcess = JSON.parse(_this.signProcesses[i].processContent);
-                                    for(let j=0; j< _this.changeSignProcess.length; j++) {
+                                    for (let j = 0; j < _this.changeSignProcess.length; j++) {
                                         //初始化需求单
-                                        if(_this.changeSignProcess[j].signType == "需求单签核") {
+                                        if (_this.changeSignProcess[j].signType == "需求单签核") {
                                             let item = _this.changeSignProcess[j];
                                             item.date = "";
                                             item.user = "";
                                             item.result = SIGN_INITIAL;
                                             item.comment = "";
                                             _this.changeOrderSignArray.push(item);
-                                        }else if(_this.changeSignProcess[j].signType == "合同签核") {
+                                        } else if (_this.changeSignProcess[j].signType == "合同签核") {
                                             let item = _this.changeSignProcess[j];
                                             item.date = "";
                                             item.user = "";
@@ -3158,18 +3218,18 @@
                                             _this.changeContractSignArray.push(item);
                                         }
                                     }
-                                }else if(_this.signProcesses[i].processName.indexOf("拆单") != -1) {
+                                } else if (_this.signProcesses[i].processName.indexOf("拆单") != -1) {
                                     _this.splitSignProcess = JSON.parse(_this.signProcesses[i].processContent);
-                                    for(let j=0; j< _this.splitSignProcess.length; j++) {
+                                    for (let j = 0; j < _this.splitSignProcess.length; j++) {
                                         //初始化需求单
-                                        if(_this.splitSignProcess[j].signType == "需求单签核") {
+                                        if (_this.splitSignProcess[j].signType == "需求单签核") {
                                             let item = _this.splitSignProcess[j];
                                             item.date = "";
                                             item.user = "";
                                             item.result = SIGN_INITIAL;
                                             item.comment = "";
                                             _this.splitOrderSignArray.push(item);
-                                        }else if(_this.splitSignProcess[j].signType == "合同签核") {
+                                        } else if (_this.splitSignProcess[j].signType == "合同签核") {
                                             let item = _this.splitSignProcess[j];
                                             item.date = "";
                                             item.user = "";
@@ -3180,33 +3240,33 @@
                                     }
                                 }
                             }
-					    }else {
+                        } else {
                             showMessage(_this, res.message, 0);
                         }
-				    }
-			    })
-		    },
+                    }
+                })
+            },
 
-		    initMachineType() {
+            initMachineType() {
                 //TODO：更新机型时必须清除缓存，需要设置一个有失效时间的缓存
-			    _this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
-			    if (_this.allMachineType == null || _this.allMachineType.length == 0) {
-				    $.ajax({
-					    url: _this.queryMachineTypeURL,
-					    type: 'POST',
-					    dataType: 'json',
-					    data: {},
-					    success: function (res) {
-						    if (res.code == 200) {
-							    _this.allMachineType = res.data.list;
-							    sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
-						    }else {
+                _this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
+                if (_this.allMachineType == null || _this.allMachineType.length == 0) {
+                    $.ajax({
+                        url: _this.queryMachineTypeURL,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {},
+                        success: function (res) {
+                            if (res.code == 200) {
+                                _this.allMachineType = res.data.list;
+                                sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
+                            } else {
                                 showMessage(_this, res.message, 0);
                             }
-					    }
-				    })
-			    }
-		    },
+                        }
+                    })
+                }
+            },
 
             tableRowDisabledClassName({row, rowIndex}) {
                 if (row.machineOrder.status == ORDER_CANCELED || row.machineOrder.status == ORDER_CHANGED) {
@@ -3217,38 +3277,38 @@
 
             classWithDifferentValue(item, type, isDetail){
                 let comparedItem = "";
-                if(item.machineOrder.originalOrderId != 0) {
-                    for (let i=0; i< _this.requisitionForms.length; i++) {
-                        if(item.machineOrder.originalOrderId == _this.requisitionForms[i].machineOrder.id) {
-                            if(isDetail) {
+                if (item.machineOrder.originalOrderId != 0) {
+                    for (let i = 0; i < _this.requisitionForms.length; i++) {
+                        if (item.machineOrder.originalOrderId == _this.requisitionForms[i].machineOrder.id) {
+                            if (isDetail) {
                                 comparedItem = _this.requisitionForms[i].orderDetail;
-                            }else {
+                            } else {
                                 comparedItem = _this.requisitionForms[i].machineOrder;
                             }
                             break;
                         }
                     }
-                    if(comparedItem != '' && !isUndefined(comparedItem[type])) {
-                        if(isDetail) {
-                            if(item.orderDetail[type] != comparedItem[type]) {
+                    if (comparedItem != '' && !isUndefined(comparedItem[type])) {
+                        if (isDetail) {
+                            if (item.orderDetail[type] != comparedItem[type]) {
                                 return 'different-value';
-                            }else {
+                            } else {
                                 return "";
                             }
-                        }else {
-                            if(item.machineOrder[type] != comparedItem[type]) {
+                        } else {
+                            if (item.machineOrder[type] != comparedItem[type]) {
                                 return 'different-value';
-                            }else {
+                            } else {
                                 return "";
                             }
                         }
 
                     }
-                }else {
+                } else {
                     return '';
                 }
             },
-            tableRowClassName({row,rowIndex}) {
+            tableRowClassName({row, rowIndex}) {
                 if (row.result == SIGN_REJECT) {
                     return 'warning-row';
                 }
@@ -3256,23 +3316,21 @@
             },
             filterOrderNum(originalId) {
                 let result = "";
-                for(let i=0; i<_this.requisitionForms.length; i++) {
-                    if(_this.requisitionForms[i].machineOrder.id == originalId) {
+                for (let i = 0; i < _this.requisitionForms.length; i++) {
+                    if (_this.requisitionForms[i].machineOrder.id == originalId) {
                         result = _this.requisitionForms[i].machineOrder.orderNum;
                         break;
                     }
                 }
                 return result;
             }
-	    },
-	    computed: {
-
-		},
-	    filters: {
+        },
+        computed: {},
+        filters: {
             filterRole(id) {
                 let result = "";
-                for(let i=0; i<_this.allRoles.length; i++) {
-                    if(_this.allRoles[i].id == id) {
+                for (let i = 0; i < _this.allRoles.length; i++) {
+                    if (_this.allRoles[i].id == id) {
                         result = _this.allRoles[i].roleName;
                         break;
                     }
@@ -3282,8 +3340,8 @@
 
             filterMachineTypeName(id) {
                 let result = "";
-                for(let i=0; i<_this.allMachineType.length; i++) {
-                    if(_this.allMachineType[i].id == id) {
+                for (let i = 0; i < _this.allMachineType.length; i++) {
+                    if (_this.allMachineType[i].id == id) {
                         result = _this.allMachineType[i].name;
                         break;
                     }
@@ -3291,24 +3349,24 @@
                 return result;
             }
 
-	    },
-	    created: function () {
-		    _this.userInfo = JSON.parse(sessionStorage.getItem('user'));
-		    if (isNull(_this.userInfo)) {
-			    this.$router.push({path: '/login'});
-			    return;
-		    }
-		    _this.initAllRoles();
-		    _this.initMachineType();
-		    _this.selectContracts();
+        },
+        created: function () {
+            _this.userInfo = JSON.parse(sessionStorage.getItem('user'));
+            if (isNull(_this.userInfo)) {
+                this.$router.push({path: '/login'});
+                return;
+            }
+            _this.initAllRoles();
+            _this.initMachineType();
+            _this.selectContracts();
             _this.initSignProcesses();
-	    },
-	    mounted: function () {
-	    },
+        },
+        mounted: function () {
+        },
     }
 
-</script >
-<style >
+</script>
+<style>
 
     .el-table .warning-row {
         background: #DCDFE6;
@@ -3317,16 +3375,18 @@
     .el-table .success-row {
         background: #f0f9eb;
     }
+
     .different-value {
         /*border-width:5px;*/
         /*border-style:solid;*/
         background-color: #F56C6C;
     }
-    .tab-disabled-background{
-        position:relative;
+
+    .tab-disabled-background {
+        position: relative;
         height: 100%;
         line-height: 100%;
-        z-index:9999;
-        background:#FF99FF;
+        z-index: 9999;
+        background: #FF99FF;
     }
-</style >
+</style>
