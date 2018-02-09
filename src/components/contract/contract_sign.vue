@@ -1363,11 +1363,7 @@
                                                             width="150"
                                                             label="签核人">
                                                         <template slot-scope="scope">
-                                                            <el-input
-                                                                    :disabled="signDisable(scope.row.roleId)"
-                                                                    v-model="scope.row.user"
-                                                                    auto-complete="off">
-                                                            </el-input>
+                                                            <span>{{scope.row.user}}</span>
                                                         </template>
                                                     </el-table-column>
                                                     <el-table-column
@@ -1551,11 +1547,7 @@
                                                 align="center"
                                                 label="签核人">
                                             <template slot-scope="scope">
-                                                <el-input
-                                                        :disabled="signDisable(scope.row.roleId)"
-                                                        v-model="scope.row.user"
-                                                        auto-complete="off">
-                                                </el-input>
+                                                <span>{{scope.row.user}}</span>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -1920,7 +1912,8 @@
                 filters: {
                     contractNum: "",
                     roleName: "",
-                    status: "",
+                    //默认审核中
+                    status: 1,
                     sellman: "",
                     selectDate: "",
                 },
@@ -2936,9 +2929,8 @@
             onSubmitOrderSign(item, signObj) {
                 if (item.comment == null || item.comment == "") {
                     showMessage(_this, "审核意见不能为空！", 0);
-                } else if (item.user == null || item.user == "") {
-                    showMessage(_this, "审核人不能为空！", 0);
                 } else {
+                    item.user = _this.userInfo.name;
                     item.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     item.result = SIGN_APPROVE;
                     $.ajax({
@@ -2989,11 +2981,10 @@
                 this.rejectSignResultVisible = false;
             },
             onSubmitContractSign(rowItem, signObj) {
-                if (rowItem.user == "") {
-                    showMessage(_this, "审核人不能为空！", 0);
-                } else if (rowItem.comment == "") {
+                if (rowItem.comment == null || rowItem.comment == "") {
                     showMessage(_this, "审核意见不能为空！", 0);
                 } else {
+                    rowItem.user = _this.userInfo.name;
                     rowItem.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     rowItem.result = SIGN_APPROVE;
                     _this.editContractSign.signContent = JSON.stringify(signObj.contractSignData);
