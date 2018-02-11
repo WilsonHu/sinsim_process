@@ -136,7 +136,7 @@
                                     prop="status"
                                     label="审核状态">
                                 <template scope="scope">
-                                    <div>
+                                    <div :class="scope.row.status|filterOrderStatusStyle">
                                         {{filterContractStatus(scope.row.status)}}
                                     </div>
                                 </template>
@@ -1363,7 +1363,7 @@
                                                             width="150"
                                                             label="签核人">
                                                         <template slot-scope="scope">
-                                                            <span>{{scope.row.user}}</span>
+                                                            <span style="font-size: 14px; font-weight: bold">{{scope.row.user}}</span>
                                                         </template>
                                                     </el-table-column>
                                                     <el-table-column
@@ -1547,7 +1547,7 @@
                                                 align="center"
                                                 label="签核人">
                                             <template slot-scope="scope">
-                                                <span>{{scope.row.user}}</span>
+                                                <span style="font-size: 14px; font-weight: bold">{{scope.row.user}}</span>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -3338,7 +3338,20 @@
                     }
                 }
                 return result;
-            }
+            },
+            filterOrderStatusStyle(id)
+            {
+                var result = "divOrderStatusUnChecked"
+
+                if (id == 0 || id == 5 || id == 6) {
+                    result = "divOrderStatusUnChecked";
+                } else if (id == 2) {
+                    result = "divOrderStatusFinished";
+                } else if (id == 1 || id == 3 || id == 4) {
+                    result = "divOrderStatusChecking";
+                }
+                return result;
+            },
 
         },
         created: function () {
@@ -3379,5 +3392,16 @@
         line-height: 100%;
         z-index: 9999;
         background: #FF99FF;
+    }
+    .divOrderStatusFinished {
+        color: green;
+    }
+
+    .divOrderStatusChecking {
+        color: darkorange;
+    }
+
+    .divOrderStatusUnChecked {
+        color: red;
     }
 </style>
