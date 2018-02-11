@@ -42,6 +42,12 @@ const ConfigStatusList = [
     {value: 2, name: '已配置'},
 ];
 
+//机器装置
+const MachineEquipmentList = [
+    {name: '佳宇绳绣'},
+    {name: '佳宇金片'},
+];
+
 //需求单状态
 const OrderStatusList = [
     {value: 0, name: '未提交审核'},

@@ -1214,117 +1214,103 @@
                                                 <div class="panel-heading" style="text-align: left">
                                                     <h3 class="panel-title">价格信息</h3>
                                                 </div>
+                                                <el-row>
+                                                    <el-col :span="1" :offset="22">
+                                                        <el-button type="primary" size="small" class="el-icon-plus"
+                                                                   style="margin: 15px"
+                                                                   @click="addEquipment(item.machineOrder)">
+                                                            装置
+                                                        </el-button>
+                                                    </el-col>
+                                                    <el-table
+                                                            border
+                                                            :data="item.machineOrder.equipment">
+                                                        <el-table-column
+                                                                label="装置名称"
+                                                                align="center">
+                                                            <template slot-scope="scope">
+                                                                <el-select v-model="scope.row.name"
+                                                                           placeholder=""
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           style="width: 95%">
+                                                                    <el-option
+                                                                            v-for="item in machineEquipmentList"
+                                                                            :key="item.name"
+                                                                            :label="item.name"
+                                                                            :value="item.name">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                label="数量"
+                                                                width="200"
+                                                                align="center">
+                                                            <template slot-scope="scope">
+                                                                <el-input-number style="float: left"
+                                                                                 v-model="scope.row.number"
+                                                                                 :step="1"
+                                                                                 :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                                 controls-position="right"
+                                                                                 :min="1"
+                                                                                 :max="100">
+                                                                </el-input-number>
+                                                            </template>
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                label="单价"
+                                                                width="200"
+                                                                align="center">
+                                                            <template slot-scope="scope">
+                                                                <el-input v-model="scope.row.price"
+                                                                          placeholder="单价"
+                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                          auto-complete="off">
+                                                                </el-input>
+                                                            </template>
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                label="操作"
+                                                                width="200"
+                                                                align="center">
+                                                            <template slot-scope="scope">
+                                                                <el-button
+                                                                        size="mini"
+                                                                        type="danger"
+                                                                        icon="el-icon-delete"
+                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                        @click="handleDeleteEquipment(item.machineOrder.equipment, scope.$index)">
+                                                                    删除
+                                                                </el-button>
+                                                            </template>
+                                                        </el-table-column>
+                                                    </el-table>
+
+                                                </el-row>
                                                 <div class="panel-body">
                                                     <table border="1" width="100%">
                                                         <tr>
-                                                            <td rowspan="2" width="20%">
-                                                                装置
-                                                            </td>
-                                                            <td width="100px">
-                                                                冠军金片
-                                                            </td>
-                                                            <td>
-                                                                <el-select
-                                                                        style="margin: 10px;margin: 10px;width: 90%"
-                                                                        v-model="item.machineOrder.champion"
-                                                                        clearable
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in championGoldList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
+                                                            <td colspan="2" style="font-weight: bold; font-size: 14px">
+                                                                机器价格（不含装置）
                                                             </td>
                                                             <td>
                                                                 <el-input-number
-                                                                        style="float: left;margin: 10px;width: 90%"
-                                                                        v-model="item.machineOrder.championPrice"
-                                                                        :step="1"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        controls-position="right"
-                                                                        :min="1"
-                                                                        :max="100">
-                                                                </el-input-number>
-                                                            </td>
-                                                            <td>
-                                                                <div>
-                                                                    元
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                佳字绳绣
-                                                            </td>
-                                                            <td>
-                                                                <el-select
-                                                                        style="margin: 10px;margin: 10px;width: 90%"
-                                                                        v-model="item.machineOrder.jiazixiu"
-                                                                        clearable
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in jiaZiXiuPricelList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </td>
-                                                            <td>
-                                                                <el-input-number
-                                                                        style="float: left;margin: 10px;width: 90%"
-                                                                        v-model="item.machineOrder.jiaziPrice"
-                                                                        :step="1"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        controls-position="right"
-                                                                        :min="1">
-                                                                </el-input-number>
-                                                            </td>
-                                                            <td>
-                                                                <div>
-                                                                    元
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="3">
-                                                                机器价格
-                                                            </td>
-                                                            <td>
-                                                                <el-input-number
-                                                                        style="float: left;margin: 10px;width: 90%"
+                                                                        style="margin: 10px;width: 95%"
                                                                         v-model="item.machineOrder.machinePrice"
                                                                         :step="1"
                                                                         :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                         controls-position="right"
-                                                                        :min="1">
+                                                                        :min="0">
                                                                 </el-input-number>
-                                                            </td>
-                                                            <td>
-                                                                元
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="3">
-                                                                订单总价
+                                                            <td colspan="2" style="font-weight: bold; font-size: 14px">
+                                                                订单总价（含装置）
                                                             </td>
-                                                            <td>
-                                                                <el-input-number
-                                                                        style="float: left;margin: 10px;width: 90%"
-                                                                        v-model="item.machineOrder.orderPrice"
-                                                                        :step="1"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        :format="00"
-                                                                        controls-position="right"
-                                                                        :min="1">
-                                                                </el-input-number>
-                                                            </td>
-                                                            <td>
-                                                                元
+                                                            <td style="height: 56px">
+                                                                <span style="margin-left: -35px;font-size: 16px; font-weight: bold; color: #409EFF">{{calculateOrderPrice(item.machineOrder)}}</span>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -1432,7 +1418,7 @@
                                 :row-class-name="tableRowDisabledClassName">
                             <el-table-column
                                     align="center"
-                                    label="铭牌">
+                                    label="机器名称">
                                 <template scope="scope">
                                     <span>{{scope.row.machineOrder.brand}}</span>
                                 </template>
@@ -1458,6 +1444,14 @@
                                     label="单价">
                                 <template slot-scope="scope">
                                     <span> {{scope.row.machineOrder.machinePrice}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="machineEquipmentPrice"
+                                    label="装置价格">
+                                <template slot-scope="scope">
+                                    <span> {{caculateOrderEquipmentPrice(scope.row.machineOrder)}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -1784,6 +1778,7 @@
                 currentPage: 1,
                 startRow: 1,
 
+                machineEquipmentList: MachineEquipmentList,
                 packageModeList: PackageModeList,
                 maintainTypeList: MaintainTypeList,
                 orderStatusList: OrderStatusList,
@@ -2006,6 +2001,11 @@
                     item.orderTotalPrice = 0;
                 } else {
                     item.orderTotalPrice = item.machinePrice * item.machineNum;
+                    if (item.equipment != null && item.equipment != "") {
+                        for (let i = 0; i < item.equipment.length; i++) {
+                            item.orderTotalPrice = item.orderTotalPrice + item.equipment[i].number * item.equipment[i].price;
+                        }
+                    }
                 }
                 return item.orderTotalPrice;
             },
@@ -2023,7 +2023,7 @@
                     if (!values.every(value => isNaN(value))) {
                         sums[index] = values.reduce((prev, curr) => {
                             const value = Number(curr);
-                            if (!isNaN(value) && index == 4) {
+                            if (!isNaN(value) && index == 5) {
                                 return prev + curr;
                             } else {
                                 return "";
@@ -2488,6 +2488,33 @@
                     }
                 })
             },
+            addEquipment(machineOrder) {
+                let equipment = {name: "", number: 1, price: 0};
+                machineOrder.equipment.push(equipment);
+            },
+
+            handleDeleteEquipment(equipment, index) {
+                equipment.splice(index, 1);
+            },
+            calculateOrderPrice(machineOrder) {
+                let total = 0;
+                total = machineOrder.machineNum * machineOrder.machinePrice;
+                if (machineOrder.equipment != null && machineOrder.equipment != "") {
+                    for (let i = 0; i < machineOrder.equipment.length; i++) {
+                        total = total + machineOrder.equipment[i].number * machineOrder.equipment[i].price;
+                    }
+                }
+                return total;
+            },
+            caculateOrderEquipmentPrice(machineOrder) {
+                let total = 0;
+                if (machineOrder.equipment != null && machineOrder.equipment != "") {
+                    for (let i = 0; i < machineOrder.equipment.length; i++) {
+                        total = total + machineOrder.equipment[i].number * machineOrder.equipment[i].price;
+                    }
+                }
+                return total;
+            },
 
             validContractInfo(formObj, isEdit) {
                 var iserror = false;
@@ -2723,6 +2750,8 @@
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
                         obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                        //将machineOrder中的装置array对象转换成Json String
+                        obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
                         //增加销售员信息，因为之前是绑定信息是在合同contractForm里面 --No.3
                         obj[i].machineOrder.sellman = this.contractForm.sellman;
                     }
@@ -2773,6 +2802,8 @@
                     for (let i = 0; i < obj.length; i++) {
                         if (obj[i].orderSign != null) {
                             obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                            //将machineOrder中的装置array对象转换成Json String
+                            obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
                         }
                     }
                     $.ajax({
@@ -2834,6 +2865,8 @@
                     for (let i = 0; i < obj.length; i++) {
                         if (obj[i].orderSign != null) {
                             obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                            //将machineOrder中的装置array对象转换成Json String
+                            obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
                         }
                     }
                     $.ajax({
@@ -2895,6 +2928,8 @@
                     for (let i = 0; i < obj.length; i++) {
                         if (obj[i].orderSign != null) {
                             obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                            //将machineOrder中的装置array对象转换成Json String
+                            obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
                         }
                     }
                     $.ajax({
@@ -3109,6 +3144,8 @@
                                 }
                                 let machineOrder = copyObjectByJSON(tempList[i]);
                                 machineOrder.machineType = machineOrder.machineType.id;
+                                //由于装置中保存的是JSON字符串，需要转换成Object
+                                machineOrder.equipment = machineOrder.equipment != null && machineOrder.equipment != "" ? JSON.parse(machineOrder.equipment) : [];
                                 machineOrder.createTime = new Date(machineOrder.createTime).format("yyyy-MM-dd");
                                 machineOrder.orderDetail = null;
                                 machineOrder.orderSign = null;

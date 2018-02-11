@@ -151,16 +151,16 @@
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column
-                            align="center"
-                            prop="createTime"
-                            label="填表日期">
-                        <template slot-scope="scope">
-                            <span>
-                                {{(scope.row.createTime)|filterDateString}}
-                            </span>
-                        </template>
-                    </el-table-column>
+                    <!--<el-table-column-->
+                            <!--align="center"-->
+                            <!--prop="createTime"-->
+                            <!--label="填表日期">-->
+                        <!--<template slot-scope="scope">-->
+                            <!--<span>-->
+                                <!--{{(scope.row.createTime)|filterDateString}}-->
+                            <!--</span>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
                     <el-table-column
                             width="200px;"
                             align="center"
@@ -228,810 +228,837 @@
                 </el-col>
             </div>
         </el-dialog>
-        <el-dialog title="查看订单" :visible.sync="addDialogVisible" :fullscreen="true">
-            <el-form :model="form">
-                <div class="panel panel-primary">
-                    <div class="panel-heading" style="text-align: left">
-                        <h3 class="panel-title">订单信息</h3>
-                    </div>
-                    <div class="panel-body">
-                        <el-col :span="6">
-                            <el-form-item label="合同号：" :label-width="formLabelWidth">
-                                <el-input
-                                        disabled
-                                        v-model="form.contractNum"
-                                        placeholder="合同号"
-                                ></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="订单号：" :label-width="formLabelWidth">
-                                <el-input v-model="form.orderNum"
-                                          disabled
-                                ></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="交货日期：" :label-width="formLabelWidth">
-                                <el-date-picker
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.contractShipDate"
-                                        type="date"
-                                        placeholder="合同交货日期"
-                                >
-                                </el-date-picker>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="计划日期：" :label-width="formLabelWidth">
-                                <el-date-picker
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.planShipDate"
-                                        type="date"
-                                        placeholder="合同计划日期"
-                                >
-                                </el-date-picker>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="销售人员：" :label-width="formLabelWidth">
-                                <!--<el-select v-model="form.sellman"-->
-                                <!--clearable-->
-                                <!--placeholder="请选择" >-->
-                                <!--<el-option-->
-                                <!--v-for="item in allQualification"-->
-                                <!--:label="item.name"-->
-                                <!--:value="item.name" >-->
-                                <!--</el-option >-->
-                                <!--</el-select >-->
-                                <el-input
-                                        disabled
-                                        v-model="form.sellman"
-                                        placeholder="销售人员"
-                                        auto-complete="off">
-                                </el-input>
-
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="包装方式：" :label-width="formLabelWidth">
-                                <el-select
-                                        disabled
-                                        v-model="form.packageMethod"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in packageModeList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="订机数量：" :label-width="formLabelWidth">
-                                <el-input-number style="float: left;"
-                                                 disabled
-                                                 v-model="form.machineNum"
-                                                 :step="1"
-                                                 controls-position="right"
-                                                 :min="1"
-                                                 :max="1000">
-
-                                </el-input-number>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="16" :offset="0">
-                            <el-form-item label="备注信息：" :label-width="formLabelWidth">
-                                <el-input
-                                        disabled
-                                        type="textarea"
-                                        :autosize="{ minRows: 4, maxRows: 4}"
-                                        placeholder="备注信息"
-                                        v-model="form.mark">
-                                </el-input>
-                            </el-form-item>
-                        </el-col>
-                    </div>
-                </div>
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading" style="text-align: left">
-                        <h3 class="panel-title">客户机型信息</h3>
-                    </div>
-                    <div class="panel-body">
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="客户：" :label-width="formLabelWidth">
-                                <el-input
-
-                                        disabled
-                                        v-model="form.customer"
-                                        placeholder="客户"
-                                ></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="国家：" :label-width="formLabelWidth">
-                                <el-select
-                                        disabled
-                                        v-model="form.country"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in countryList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="商标：" :label-width="formLabelWidth">
-                                <el-input
-                                        disabled
-                                        v-model="form.brand"
-                                        placeholder="商标"
-                                ></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="机型：" :label-width="formLabelWidth">
-                                <el-select
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.machineType"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in allMachineType"
-                                            :label="item.name"
-                                            :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="针数：" :label-width="formLabelWidth">
-                                <el-input-number style="float: left;"
-                                                 disabled
-                                                 v-model="form.needleNum"
-                                                 :step="2"
-                                                 controls-position="right"
-                                                 :min="1"
-                                                 :max="100">
-
-                                </el-input-number>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="头数：" :label-width="formLabelWidth">
-                                <el-input-number style="float: left"
-                                                 disabled
-                                                 v-model="form.headNum"
-                                                 :step="1"
-                                                 controls-position="right"
-                                                 :min="1"
-                                                 :max="100">
-                                </el-input-number>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="头距：" :label-width="formLabelWidth">
-                                <el-input-number style="float: left"
-                                                 v-model="form.headDistance"
-                                                 disabled
-                                                 :step="1"
-                                                 controls-position="right"
-                                                 :min="1"
-                                                 :max="100">
-                                </el-input-number>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="X行程：" :label-width="formLabelWidth">
-                                <el-input
-                                        disabled
-                                        v-model="form.xDistance"
-                                        placeholder="X行程"
-                                ></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="Y行程：" :label-width="formLabelWidth">
-                                <el-input
-                                        disabled
-                                        v-model="form.yDistance"
-                                        placeholder="Y行程"
-                                ></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </div>
-                </div>
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading" style="text-align: left">
-                        <h3 class="panel-title">特种绣选项</h3>
-                    </div>
-                    <div class="panel-body">
-                        <el-col :span="6">
-                            <el-form-item label="色数：" :label-width="formLabelWidth">
-                                <el-select
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.orderDetail.specialTowelColor"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in specialTowelColorList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="D轴上：" :label-width="formLabelWidth">
-                                <el-select
-
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.orderDetail.specialTowelDaxle"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in specialTowelDaxleList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="H轴下：" :label-width="formLabelWidth">
-                                <el-select
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.orderDetail.specialTowelHaxle"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in specialTowelHaxleList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="主电机：" :label-width="formLabelWidth">
-                                <el-select
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.orderDetail.specialTowelMotor"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in specialTowelMotorList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="盘带头：" :label-width="formLabelWidth">
-                                <el-select
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.orderDetail.specialTapingHead"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in specialTapingHeadList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="毛巾机针：" :label-width="formLabelWidth">
-                                <el-select
-                                        disabled
-                                        style="width: 100%"
-                                        v-model="form.orderDetail.specialTowelNeedle"
-                                        clearable
-                                        placeholder="请选择">
-                                    <el-option
-                                            v-for="item in specialTowelNeedleList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-
-                    </div>
-                </div>
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading" style="text-align: left">
-                        <h3 class="panel-title">电气</h3>
-                    </div>
-                    <div class="panel-body">
-                        <el-col :span="6">
-                            <el-form-item label="电脑：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.electricPc"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in pcModeList"
-                                            v-bind:value="item.text"
-                                            v-bind:label="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="语言：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.PClanguage"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in countryList"
-                                            v-bind:value="item.text"
-                                            v-bind:label="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="主电机：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.electricMotor"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in electricMotorList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="XY电机：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.electricMotorXy"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in xyMotorList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="剪线方式：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.electricTrim"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in trimList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="电源：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.electricPower"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in electricPowerList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="按钮开关：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.electricSwitch"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in electricSwitchList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="加油系统：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.electricOil"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in electricOilList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                    </div>
-                </div>
-
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading" style="text-align: left">
-                        <h3 class="panel-title">上轴下轴主传动</h3>
-                    </div>
-                    <div class="panel-body">
-                        <el-col :span="6">
-                            <el-form-item label="夹线器：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.axleSplit"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in axleSplitList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="面板：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.axlePanel"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in axlePanelList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="机针：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.axleNeedle"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in axleNeedleList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="机头导轨：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.axleRail"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in axleRailList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="底检方式：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.axleDownCheck"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in axleDownCheckList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="旋梭：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.axleHook"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in axleHookList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="跳跃方式：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.axleJump"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in axleJumpList"
-                                            :label="item.text"
-                                            :value="item.text">
-
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="面线夹持：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.axleUpperThread"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in axleUpperThreadList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="附加装置：" :label-width="formLabelWidth">
-                                <el-input
-                                        disabled
-                                        v-model="form.orderDetail.axleAddition"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10">
-                            <div style="font-family:Segoe UI;color:gray;text-align: left;margin-top: 10px">
-                                (仅销售和研发可编辑)
+        <el-dialog title="查看订单" :visible.sync="addDialogVisible" fullscreen>
+            <el-row type="flex" class="row-bg" justify="center">
+                <el-col  :span="20" :offset="1">
+                    <el-form :model="form">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="text-align: left">
+                                <h3 class="panel-title">订单信息</h3>
                             </div>
-                        </el-col>
-                    </div>
-                </div>
+                            <div class="panel-body">
+                                <el-col :span="6">
+                                    <el-form-item label="合同号：" :label-width="formLabelWidth">
+                                        <el-input
+                                                disabled
+                                                v-model="form.contractNum"
+                                                placeholder="合同号"
+                                        ></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="订单号：" :label-width="formLabelWidth">
+                                        <el-input v-model="form.orderNum"
+                                                  disabled
+                                        ></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="交货日期：" :label-width="formLabelWidth">
+                                        <el-date-picker
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.contractShipDate"
+                                                type="date"
+                                                placeholder="合同交货日期"
+                                        >
+                                        </el-date-picker>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="计划日期：" :label-width="formLabelWidth">
+                                        <el-date-picker
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.planShipDate"
+                                                type="date"
+                                                placeholder="合同计划日期"
+                                        >
+                                        </el-date-picker>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="销售人员：" :label-width="formLabelWidth">
+                                        <!--<el-select v-model="form.sellman"-->
+                                        <!--clearable-->
+                                        <!--placeholder="请选择" >-->
+                                        <!--<el-option-->
+                                        <!--v-for="item in allQualification"-->
+                                        <!--:label="item.name"-->
+                                        <!--:value="item.name" >-->
+                                        <!--</el-option >-->
+                                        <!--</el-select >-->
+                                        <el-input
+                                                disabled
+                                                v-model="form.sellman"
+                                                placeholder="销售人员"
+                                                auto-complete="off">
+                                        </el-input>
 
-                <div class="panel panel-primary">
-                    <div class="panel-heading" style="text-align: left">
-                        <h3 class="panel-title">机架台板</h3>
-                    </div>
-                    <div class="panel-body">
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="机架颜色：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.frameworkColor"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in frameworkColorList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="台板：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.frameworkPlaten"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in frameworkPlatenList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="台板颜色：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.frameworkPlatenColor"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in frameworkPlatenColorList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="吊环：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.frameworkRing"
-                                               clearable
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="包装方式：" :label-width="formLabelWidth">
+                                        <el-select
+                                                disabled
+                                                v-model="form.packageMethod"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in packageModeList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="订机数量：" :label-width="formLabelWidth">
+                                        <el-input-number style="float: left;"
+                                                         disabled
+                                                         v-model="form.machineNum"
+                                                         :step="1"
+                                                         controls-position="right"
+                                                         :min="1"
+                                                         :max="1000">
 
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in frameworkRingList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="电脑托架：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.frameworkBracket"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in frameworkBracketList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="急停装置：" :label-width="formLabelWidth">
-                                <template scope="scope">
-                                    <el-select v-model="form.orderDetail.frameworkStop"
-                                               clearable
-                                               disabled
-                                               placeholder="请选择">
-                                        <el-option
-                                                v-for="item in frameworkStopList"
-                                                :label="item.text"
-                                                :value="item.text">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="日光灯：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.frameworkLight"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in frameworkLightList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                    </div>
-                </div>
+                                        </el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="16" :offset="0">
+                                    <el-form-item label="备注信息：" :label-width="formLabelWidth">
+                                        <el-input
+                                                disabled
+                                                type="textarea"
+                                                :autosize="{ minRows: 4, maxRows: 4}"
+                                                placeholder="备注信息"
+                                                v-model="form.mark">
+                                        </el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </div>
+                        </div>
 
-                <div class="panel panel-primary">
-                    <div class="panel-heading" style="text-align: left">
-                        <h3 class="panel-title">驱动框架绷架</h3>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="text-align: left">
+                                <h3 class="panel-title">客户机型信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="客户：" :label-width="formLabelWidth">
+                                        <el-input
+
+                                                disabled
+                                                v-model="form.customer"
+                                                placeholder="客户"
+                                        ></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="国家：" :label-width="formLabelWidth">
+                                        <el-select
+                                                disabled
+                                                v-model="form.country"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in countryList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="商标：" :label-width="formLabelWidth">
+                                        <el-input
+                                                disabled
+                                                v-model="form.brand"
+                                                placeholder="商标"
+                                        ></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="机型：" :label-width="formLabelWidth">
+                                        <el-select
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.machineType"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in allMachineType"
+                                                    :label="item.name"
+                                                    :value="item.id">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="针数：" :label-width="formLabelWidth">
+                                        <el-input-number style="float: left;"
+                                                         disabled
+                                                         v-model="form.needleNum"
+                                                         :step="2"
+                                                         controls-position="right"
+                                                         :min="1"
+                                                         :max="100">
+
+                                        </el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="头数：" :label-width="formLabelWidth">
+                                        <el-input-number style="float: left"
+                                                         disabled
+                                                         v-model="form.headNum"
+                                                         :step="1"
+                                                         controls-position="right"
+                                                         :min="1"
+                                                         :max="100">
+                                        </el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="头距：" :label-width="formLabelWidth">
+                                        <el-input-number style="float: left"
+                                                         v-model="form.headDistance"
+                                                         disabled
+                                                         :step="1"
+                                                         controls-position="right"
+                                                         :min="1"
+                                                         :max="100">
+                                        </el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="X行程：" :label-width="formLabelWidth">
+                                        <el-input
+                                                disabled
+                                                v-model="form.xDistance"
+                                                placeholder="X行程"
+                                        ></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="Y行程：" :label-width="formLabelWidth">
+                                        <el-input
+                                                disabled
+                                                v-model="form.yDistance"
+                                                placeholder="Y行程"
+                                        ></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="text-align: left">
+                                <h3 class="panel-title">特种绣选项</h3>
+                            </div>
+                            <div class="panel-body">
+                                <el-col :span="6">
+                                    <el-form-item label="色数：" :label-width="formLabelWidth">
+                                        <el-select
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.orderDetail.specialTowelColor"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in specialTowelColorList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="D轴上：" :label-width="formLabelWidth">
+                                        <el-select
+
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.orderDetail.specialTowelDaxle"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in specialTowelDaxleList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="H轴下：" :label-width="formLabelWidth">
+                                        <el-select
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.orderDetail.specialTowelHaxle"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in specialTowelHaxleList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="主电机：" :label-width="formLabelWidth">
+                                        <el-select
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.orderDetail.specialTowelMotor"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in specialTowelMotorList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="盘带头：" :label-width="formLabelWidth">
+                                        <el-select
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.orderDetail.specialTapingHead"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in specialTapingHeadList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="毛巾机针：" :label-width="formLabelWidth">
+                                        <el-select
+                                                disabled
+                                                style="width: 100%"
+                                                v-model="form.orderDetail.specialTowelNeedle"
+                                                clearable
+                                                placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in specialTowelNeedleList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="text-align: left">
+                                <h3 class="panel-title">电气</h3>
+                            </div>
+                            <div class="panel-body">
+                                <el-col :span="6">
+                                    <el-form-item label="电脑：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.electricPc"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in pcModeList"
+                                                    v-bind:value="item.text"
+                                                    v-bind:label="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="语言：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.PClanguage"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in countryList"
+                                                    v-bind:value="item.text"
+                                                    v-bind:label="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="主电机：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.electricMotor"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in electricMotorList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="XY电机：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.electricMotorXy"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in xyMotorList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="剪线方式：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.electricTrim"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in trimList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="电源：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.electricPower"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in electricPowerList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="按钮开关：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.electricSwitch"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in electricSwitchList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="加油系统：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.electricOil"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in electricOilList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="text-align: left">
+                                <h3 class="panel-title">上轴下轴主传动</h3>
+                            </div>
+                            <div class="panel-body">
+                                <el-col :span="6">
+                                    <el-form-item label="夹线器：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.axleSplit"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in axleSplitList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="面板：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.axlePanel"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in axlePanelList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="机针：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.axleNeedle"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in axleNeedleList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="机头导轨：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.axleRail"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in axleRailList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="底检方式：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.axleDownCheck"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in axleDownCheckList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="旋梭：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.axleHook"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in axleHookList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="跳跃方式：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.axleJump"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in axleJumpList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="面线夹持：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.axleUpperThread"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in axleUpperThreadList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-form-item label="附加装置：" :label-width="formLabelWidth">
+                                        <el-input
+                                                disabled
+                                                v-model="form.orderDetail.axleAddition"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="10">
+                                    <div style="font-family:Segoe UI;color:gray;text-align: left;margin-top: 10px">
+                                        (仅销售和研发可编辑)
+                                    </div>
+                                </el-col>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="text-align: left">
+                                <h3 class="panel-title">机架台板</h3>
+                            </div>
+                            <div class="panel-body">
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="机架颜色：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.frameworkColor"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in frameworkColorList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="台板：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.frameworkPlaten"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in frameworkPlatenList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="台板颜色：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.frameworkPlatenColor"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in frameworkPlatenColorList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="吊环：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.frameworkRing"
+                                                       clearable
+
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in frameworkRingList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="电脑托架：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.frameworkBracket"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in frameworkBracketList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="急停装置：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.frameworkStop"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in frameworkStopList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="日光灯：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.frameworkLight"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in frameworkLightList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="text-align: left">
+                                <h3 class="panel-title">驱动框架绷架</h3>
+                            </div>
+                            <div class="panel-body">
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="驱动类型：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.driverType" style="width: 100%;"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in driverTypeList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="驱动方式：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.driverMethod"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in friverMethodList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="绷孔架：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.driverReelHole"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in driverReelHoleList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="绷架：" :label-width="formLabelWidth">
+                                        <el-select v-model="form.orderDetail.driverReel"
+                                                   clearable
+                                                   disabled
+                                                   placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in driverReelList"
+                                                    :label="item.text"
+                                                    :value="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="横档数量：" :label-width="formLabelWidth">
+                                        <el-input-number style="float: left"
+                                                         v-model="form.orderDetail.driverHorizonNum"
+                                                         :step="1"
+                                                         disabled
+                                                         controls-position="right"
+                                                         :min="1"
+                                                         :max="100">
+                                        </el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="直档数量：" :label-width="formLabelWidth">
+                                        <el-input-number style="float: left"
+                                                         v-model="form.orderDetail.driverVerticalNum"
+                                                         :step="1"
+                                                         disabled
+                                                         controls-position="right"
+                                                         :min="1"
+                                                         :max="100">
+                                        </el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="text-align: left">
+                                <h3 class="panel-title">装置信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <el-table
+                                        border
+                                        :data="form.equipment">
+                                    <el-table-column
+                                            label="装置名称"
+                                            prop="name"
+                                            align="center">
+                                    </el-table-column>
+                                    <el-table-column
+                                            label="数量"
+                                            width="200"
+                                            prop="number"
+                                            align="center">
+                                    </el-table-column>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </div>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer" style="margin-bottom: 20px">
+                        <el-button @click="addDialogVisible = false" icon="el-icon-back">关闭</el-button>
                     </div>
-                    <div class="panel-body">
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="驱动类型：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.driverType" style="width: 100%;"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in driverTypeList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="驱动方式：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.driverMethod"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in friverMethodList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="绷孔架：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.driverReelHole"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in driverReelHoleList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="绷架：" :label-width="formLabelWidth">
-                                <el-select v-model="form.orderDetail.driverReel"
-                                           clearable
-                                           disabled
-                                           placeholder="请选择">
-                                    <el-option
-                                            v-for="item in driverReelList"
-                                            :label="item.text"
-                                            :value="item.text">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="横档数量：" :label-width="formLabelWidth">
-                                <el-input-number style="float: left"
-                                                 v-model="form.orderDetail.driverHorizonNum"
-                                                 :step="1"
-                                                 disabled
-                                                 controls-position="right"
-                                                 :min="1"
-                                                 :max="100">
-                                </el-input-number>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6" :offset="0">
-                            <el-form-item label="直档数量：" :label-width="formLabelWidth">
-                                <el-input-number style="float: left"
-                                                 v-model="form.orderDetail.driverVerticalNum"
-                                                 :step="1"
-                                                 disabled
-                                                 controls-position="right"
-                                                 :min="1"
-                                                 :max="100">
-                                </el-input-number>
-                            </el-form-item>
-                        </el-col>
-                    </div>
-                </div>
-            </el-form>
-            <div slot="footer" class="dialog-footer" style="margin-bottom: 20px">
-                <el-button @click="addDialogVisible = false" icon="el-icon-back">关闭</el-button>
-            </div>
+                </el-col>
+            </el-row>
         </el-dialog>
 
     </el-main>
@@ -1282,6 +1309,7 @@
             onDetail(item) {
                 _this.selectedItem = copyObject(item);
                 this.form = copyObject(item);
+                this.form.equipment = JSON.parse(this.form.equipment);
                 this.addDialogVisible = true;
             },
 
