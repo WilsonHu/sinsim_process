@@ -173,14 +173,24 @@ export default
                 meta: "系统管理",
                 redirect: '/home/system/user_manage',
                 children: [
-                    {path: '/home/system/user_manage', component: UserManage, name: 'user_manage', meta: '用户管理'},
+                    {
+                        path: '/home/system/user_manage',
+                        component: UserManage,
+                        name: 'user_manage',
+                        meta: '用户管理'
+                    },
                     {
                         path: '/home/system/install_group_manage',
                         component: InstallGroupManage,
                         name: 'install_group_manage',
                         meta: '安装组管理'
                     },
-                    {path: '/home/system/role_manage', component: RoleManage, name: 'role_manage', meta: '角色管理'},
+                    {
+                        path: '/home/system/role_manage',
+                        component: RoleManage,
+                        name: 'role_manage',
+                        meta: '角色管理'
+                    },
                     // {path: '/home/system/qualification_manage', component: QualificationManage, name: 'qualification_manage', meta: '资质管理'},
                     // {path: '/home/system/material_statistics', component: MaterialStatistics, name: 'material_statistics', meta: '材料统计'},
                     {

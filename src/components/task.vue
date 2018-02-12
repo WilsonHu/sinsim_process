@@ -1,12 +1,13 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <el-container>
-        <el-aside width="145px" >
+        <el-aside width="145px">
             <el-col>
-                <el-menu style="background-color: transparent" :default-active="$route.path" theme="dark" @select="handleSelect" >
+                <el-menu style="background-color: transparent" :default-active="$route.path" theme="dark"
+                         @select="handleSelect">
                     <div v-for="root in $router.options.routes" v-if="!root.hidden">
                         <div v-for="sub in root.children" v-if="!sub.hidden">
                             <el-menu-item v-for="item in sub.children" :index="item.path"
-                                          v-if="sub.path == '/home/task'"
+                                          v-if="sub.path == '/home/task' && showSubMenu(item.path)"
                                           style="text-align: center; font-size: 14px; font-weight: bold">
                                 {{item.meta}}
                             </el-menu-item>
@@ -30,44 +31,59 @@
         components: {},
         data () {
             _this = this;
-            return {}
+            return {
+                userinfo: {},
+                currentUserRoleScope: {}
+            }
         },
         methods: {
 
-		    handleSelect(key, keyPath) {
-			    _this.$router.push(key)
-		    },
-
-	    },
-	    computed: {},
-	    created: function () {
+            handleSelect(key, keyPath) {
+                _this.$router.push(key)
+            },
+            //是否显示子menu
+            showSubMenu(path) {
+                //path格式/home/contract/contract_sign
+                let pathList = path.split("/");
+                if (pathList != null && pathList.length == 4 && _this.currentUserRoleScope[pathList[2]] != null) {
+                    let relatedScopeList = _this.currentUserRoleScope[pathList[2]];
+                    for (let j = 0; j < relatedScopeList.length; j++) {
+                        if (relatedScopeList[j] == path) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            },
+            fetchUserRoleScope(roleId) {
+                $.ajax({
+                    url: HOST + "role/detail",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {"id": roleId},
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+                        } else {
+                            showMessage(_this, data.message, 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '服务器访问出错！', 0);
+                    }
+                })
+            }
+        },
+        computed: {},
+        created: function () {
 //		    var path = _this.$router.options.routes;
-		    _this.$router.push("/home/task/task_content_manage");
-//            if (window.location.hash != null) {
-//                let hit = false;
-//                for (let i = 0; i < _this.$router.options.routes.length; i++) {
-//                    if (!_this.$router.options.routes[i].hidden && _this.$router.options.routes[i].children.length > 0) {
-//                        for (let j = 0; j < _this.$router.options.routes[i].children.length; j++) {
-//                            if (_this.$router.options.routes[i].children[j].path == "/home/system") {
-//                                for (let k = 0; k < _this.$router.options.routes[i].children[j].children.length; k++) {
-//                                    if (window.location.hash.indexOf(_this.$router.options.routes[i].children[j].children[k].path) != -1) {
-//                                        hit = true;
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                if (!hit) {
-//                    //TODO:跳转至第一个有权限的URL
-//                    let firstPath = JSON.parse(getAuthArray(3))[0];
-////          alert(firstPath)
-//                    _this.$router.push(firstPath);
-//                }
-//            }
-	    },
-	    mounted: function () {
+            _this.$router.push("/home/task/task_content_manage");
+            this.userinfo = JSON.parse(sessionStorage.getItem('user'));
+            this.fetchUserRoleScope(this.userinfo.role.id);
+        },
+        mounted: function () {
 
         },
     }

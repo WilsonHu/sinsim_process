@@ -6,7 +6,7 @@
                     <div v-for="root in $router.options.routes" v-if="!root.hidden">
                         <div v-for="sub in root.children" v-if="!sub.hidden">
                             <el-menu-item v-for="item in sub.children" :index="item.path"
-                                          v-if="sub.path == '/home/machine'"
+                                          v-if="sub.path == '/home/machine' && showSubMenu(item.path)"
                                           style="text-align: center; font-size: 14px; font-weight: bold">
                                 {{item.meta}}
                             </el-menu-item>
@@ -29,18 +29,57 @@
         components: {},
         data () {
             _this = this;
-            return {}
+            return {
+                userinfo: {},
+                currentUserRoleScope: {}
+            }
         },
         methods: {
 
             handleSelect(key, keyPath) {
                 _this.$router.push(key)
             },
+            //是否显示子menu
+            showSubMenu(path) {
+                //path格式/home/contract/contract_sign
+                let pathList = path.split("/");
+                if (pathList != null && pathList.length == 4 && _this.currentUserRoleScope[pathList[2]] != null) {
+                    let relatedScopeList = _this.currentUserRoleScope[pathList[2]];
+                    for (let j = 0; j < relatedScopeList.length; j++) {
+                        if (relatedScopeList[j] == path) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            },
+            fetchUserRoleScope(roleId) {
+                $.ajax({
+                    url: HOST + "role/detail",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {"id": roleId},
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+                        } else {
+                            showMessage(_this, data.message, 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '服务器访问出错！', 0);
+                    }
+                })
+            }
 
         },
         computed: {},
         created: function () {
             _this.$router.push("/home/machine/machine_config_process");
+            this.userinfo = JSON.parse(sessionStorage.getItem('user'));
+            this.fetchUserRoleScope(this.userinfo.role.id);
         },
         mounted: function () {
         },
