@@ -1218,6 +1218,7 @@
                                                     <el-col :span="1" :offset="22">
                                                         <el-button type="primary" size="small" class="el-icon-plus"
                                                                    style="margin: 15px"
+                                                                   v-if="!changeOrderContentDisable(item.machineOrder)"
                                                                    @click="addEquipment(item.machineOrder)">
                                                             装置
                                                         </el-button>
@@ -1867,6 +1868,7 @@
                         brand: "SINSIM电脑绣花机",
                         createTime: new Date().format("yyyy-MM-dd"),
                         orderTotalPrice: 0,
+                        equipment:[],
                         status: ORDER_INITIAL,
                         createUserId: JSON.parse(sessionStorage.getItem("user")).id
                     },
@@ -2719,6 +2721,7 @@
                         createTime: new Date().format("yyyy-MM-dd"),
                         orderTotalPrice: 0,
                         machineNum: 1,
+                        equipment:[],
                         status: ORDER_INITIAL,
                         createUserId: JSON.parse(sessionStorage.getItem("user")).id
                     },
@@ -2988,10 +2991,9 @@
             handleRejectOrderSign(item, signObj) {
                 if (item.comment == null || item.comment == "") {
                     showMessage(_this, "审核意见不能为空！", 0);
-                } else if (item.user == null || item.user == "") {
-                    showMessage(_this, "审核人不能为空！", 0);
                 } else {
                     this.rejectSignResultVisible = true;
+                    tem.user = _this.userInfo.name;
                     item.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     item.result = SIGN_REJECT;
                     this.signResultObj = signObj;
@@ -3064,10 +3066,9 @@
             handleRejectContractSign(item, signObj) {
                 if (item.comment == null || item.comment == "") {
                     showMessage(_this, "审核意见不能为空！", 0);
-                } else if (item.user == null || item.user == "") {
-                    showMessage(_this, "审核人不能为空！", 0);
                 } else {
                     this.rejectContractSignResultVisible = true;
+                    item.user = _this.userInfo.name;
                     item.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     item.result = SIGN_REJECT;
                     this.signResultObj = signObj;
