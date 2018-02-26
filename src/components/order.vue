@@ -152,14 +152,14 @@
                         </template>
                     </el-table-column>
                     <!--<el-table-column-->
-                            <!--align="center"-->
-                            <!--prop="createTime"-->
-                            <!--label="填表日期">-->
-                        <!--<template slot-scope="scope">-->
-                            <!--<span>-->
-                                <!--{{(scope.row.createTime)|filterDateString}}-->
-                            <!--</span>-->
-                        <!--</template>-->
+                    <!--align="center"-->
+                    <!--prop="createTime"-->
+                    <!--label="填表日期">-->
+                    <!--<template slot-scope="scope">-->
+                    <!--<span>-->
+                    <!--{{(scope.row.createTime)|filterDateString}}-->
+                    <!--</span>-->
+                    <!--</template>-->
                     <!--</el-table-column>-->
                     <el-table-column
                             width="200px;"
@@ -195,31 +195,41 @@
             </el-col>
         </el-row>
         <el-dialog title="装车单上传" :visible.sync="uploadDialogVisible"
-                   size="60%">
+                   width="50%" right>
             <el-row>
-                <el-upload
-                        style=""
-                        class="upload-demo"
-                        ref="upload"
-                        action=""
-                        :multiple="false"
-                        :on-preview="handlePreview"
-                        :on-remove="handleRemove"
-                        :file-list="fileList"
-                        :auto-upload="false">
-                    <el-button slot="trigger" size="small"
-                               plain
-                               type="primary">选取文件
-                    </el-button>
-                    <el-button style="margin-left: 10px;" size="small"
-                               icon="el-icon-upload"
-                               type="success" round @click="submitUpload">上传到服务器
-                    </el-button>
-                    <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
-                </el-upload>
+                <el-col :span="24">
+
+                    <el-upload
+                            class="upload-demo"
+                            ref="upload"
+                            :action="uploadURL"
+                            :multiple="false"
+                            :on-change="handleFileChange"
+                            :before-upload="handleBefore"
+                            :on-preview="handlePreview"
+                            :on-remove="handleRemove"
+                            :on-success="handleSuccess"
+                            :file-list="fileLists"
+                            :auto-upload="false"
+                            :data="uploadData">
+                        <el-button slot="trigger" size="small"
+                                   plain
+                                   type="primary">选取文件
+                        </el-button>
+                        <el-button style="margin-left: 10px;" size="small"
+                                   icon="el-icon-upload"
+                                   type="success" @click="submitUpload">
+                            上传到服务器
+                        </el-button>
+                        <div slot="tip" class="el-upload__tip"
+                             style="font-size: 12px;color: gray">
+                            只能上传xls/xlsx文件
+                        </div>
+                    </el-upload>
+                </el-col>
             </el-row>
-            <div slot="footer" class="dialog-footer" style="margin-bottom: 20px">
-                <el-col :span="24" style="margin-bottom: 70px;">
+            <div slot="footer" class="dialog-footer" style="margin-bottom: 60px">
+                <el-col :span="24" style="margin-bottom: 30px;">
                     <el-button icon="el-icon-close"
                                size="normal"
                                type="danger"
@@ -228,9 +238,10 @@
                 </el-col>
             </div>
         </el-dialog>
+
         <el-dialog title="查看订单" :visible.sync="addDialogVisible" fullscreen>
             <el-row type="flex" class="row-bg" justify="center">
-                <el-col  :span="20" :offset="1">
+                <el-col :span="20" :offset="1">
                     <el-form :model="form">
                         <div class="panel panel-primary">
                             <div class="panel-heading" style="text-align: left">
@@ -1199,15 +1210,15 @@
                 allRoles: [],
                 loadingUI: false,
                 uploadDialogVisible: false,
-                fileList: [
-                    {
-                        name: 'food.jpeg',
-                        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                    },
-                    {
-                        name: 'food2.jpeg',
-                        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                    }],
+                fileLists: [
+//                    {
+//                        name: 'food.jpeg',
+//                        url: '',
+//                    },
+                ],
+                uploadURL: "",
+                uploadData: {},
+
                 pickerOptions: {
                     shortcuts: [{
                         text: '最近一周',
@@ -1287,23 +1298,79 @@
             onUpload(item)
             {
                 _this.selectedItem = copyObject(item);
+                _this.fileLists = [];
+                _this.uploadData.id = _this.selectedItem.id;
                 _this.uploadDialogVisible = true;
+            },
+            handleBefore(file)
+            {
+//                var xlsFile = file.name.split('.');
+//                if (xlsFile[1] === "xls" || xlsFile[1] === "xlsx") {
+//                    return file;
+//                }
+//                else {
+//                    showMessage(_this, "只能上传xls/xlsx文件，请重新上传！", 0)
+//                    return false;
+//                }
+            },
+
+            handleFileChange(file, fileList)
+            {
+                var errorMsg = "";
+                var xlsFile = file.name.split('.');
+                if (xlsFile == null || xlsFile.length < 2) {
+                    errorMsg = "上传的文件没有后缀名，不能上传！";
+                }
+                else if (xlsFile[1] !== "xls" && xlsFile[1] !== "xlsx") {
+                    errorMsg = "只能上传xls/xlsx文件，请重新上传！";
+                }
+                if (!isStringEmpty(errorMsg)) {
+                    var removeIndex = -1;
+                    for (var i = 0; i < fileList.length; i++) {
+                        if (fileList[i].name == file.name) {
+                            removeIndex = i;
+                            break;
+                        }
+                    }
+                    if (removeIndex > -1) {
+                        delete fileList[removeIndex];
+                    }
+                    fileList=[];
+                    showMessage(_this, errorMsg, 0)
+                }else {
+                    fileList=[];
+                    fileList.push(file);
+                }
+                _this.fileLists = fileList;
             },
 
             submitUpload() {
+                if (_this.fileLists == null || _this.fileLists.length == 0) {
+                    showMessage(_this, "上传文件不能为空！", 0)
+                    return;
+                }
                 this.$refs.upload.submit();
             },
             handleRemove(file, fileList) {
-                console.log(file, fileList);
+                _this.fileLists = fileList;
+                console.log("remove file" + file.name);
             },
             handlePreview(file) {
-                console.log(file);
+                console.log(handlePreview);
+            },
+            handleSuccess(res, file, fileList)
+            {
+                if (res.code === 200) {
+                    showMessage(_this, "上传成功！", 1)
+                }
+                else {
+                    showMessage(_this, "上传失败！", 0)
+                }
             },
 
             onDownload(item)
             {
                 _this.selectedItem = copyObject(item);
-
             },
 
             onDetail(item) {
@@ -1418,7 +1485,21 @@
     }
 
 </script>
-<style>
+<style scope>
+
+    /*很关键*/
+    input[type="file"] {
+        display: none;
+    }
+
+    .el-upload-list {
+        height: 100px;
+    }
+
+    .el-upload__tip {
+
+    }
+
     .breadcrumb-container {
         padding: 15px;
         background-color: #E5E9F2;

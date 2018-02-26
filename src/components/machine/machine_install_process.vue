@@ -293,7 +293,7 @@
                                     </el-col>
                                     <el-col :span="1">
                                         <div class="colorDiv"
-                                             style="background-color: yellow;"></div>
+                                             style="background-color: green;"></div>
                                     </el-col>
 
                                     <el-col :span="10">
@@ -427,19 +427,19 @@
                                                      style="color: #00A9C9;">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </div>
-                                                <div v-if="scope.row.status>=2&&scope.row.status<5"
-                                                     style="color: yellow">
+                                                <div v-if="scope.row.status>=2&&scope.row.status<6"
+                                                     style="color: green">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </div>
-                                                <div v-if="scope.row.status==5"
+                                                <div v-if="scope.row.status==6"
                                                      style="color: gray">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </div>
-                                                <div v-if="scope.row.status>5&&scope.row.status<8"
+                                                <div v-if="scope.row.status>6&&scope.row.status<9"
                                                      style="color: red">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </div>
-                                                <div v-if="scope.row.status==8"
+                                                <div v-if="scope.row.status==9"
                                                      style="color: orange">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </div>
@@ -449,13 +449,13 @@
                                                 align="center"
                                                 label="操作" width="120">
                                             <template scope="scope">
-                                                <el-button v-if="scope.row.status<2"
+                                                <el-button v-if="scope.row.status<=2"
                                                            size="small"
                                                            type="danger"
                                                            icon="el-icon-tickets"
                                                            @click="showSkip(scope.row)">跳过
                                                 </el-button>
-                                                <el-button v-if="scope.row.status==8"
+                                                <el-button v-if="scope.row.status==9"
                                                            size="small"
                                                            type="primary"
                                                            icon="el-icon-tickets"
@@ -857,7 +857,7 @@
             {
                 var taskRecord = {
                     id: _this.selectedTaskItem.id,
-                    status: TaskStatusList[8].value,
+                    status: TaskStatusList[9].value,
                 };
                 _this.onUpdateData(taskRecord);
                 _this.confirmSkipDialog = false;
@@ -1170,7 +1170,7 @@
                         // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Rectangle",
-                                        {fill: "yellow", stroke: null},
+                                        {fill: "green", stroke: null},
                                         new go.Binding("figure", "figure")),
                                 $(go.TextBlock,
                                         {
