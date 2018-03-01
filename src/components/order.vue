@@ -195,39 +195,43 @@
             </el-col>
         </el-row>
         <el-dialog title="装车单上传" :visible.sync="uploadDialogVisible"
-                   width="50%" right>
-            <el-row>
-                <el-col :span="24">
-
-                    <el-upload
-                            class="upload-demo"
-                            ref="upload"
-                            :action="uploadURL"
-                            :multiple="false"
-                            :on-change="handleFileChange"
-                            :before-upload="handleBefore"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
-                            :on-success="handleSuccess"
-                            :file-list="fileLists"
-                            :auto-upload="false"
-                            :data="uploadData">
-                        <el-button slot="trigger" size="small"
-                                   plain
-                                   type="primary">选取文件
-                        </el-button>
-                        <el-button style="margin-left: 10px;" size="small"
-                                   icon="el-icon-upload"
-                                   type="success" @click="submitUpload">
-                            上传到服务器
-                        </el-button>
-                        <div slot="tip" class="el-upload__tip"
-                             style="font-size: 12px;color: gray">
-                            只能上传xls/xlsx文件
-                        </div>
-                    </el-upload>
-                </el-col>
-            </el-row>
+                   width="50%" right @close="fileLists=[]">
+            <el-form id="uploadForm">
+                <el-row>
+                    <el-form-item>
+                        <el-col :span="24">
+                            <el-upload
+                                    class="upload-demo"
+                                    ref="upload"
+                                    :action="uploadURL"
+                                    :multiple="false"
+                                    :on-change="handleFileChange"
+                                    :before-upload="handleBefore"
+                                    :on-preview="handlePreview"
+                                    :on-remove="handleRemove"
+                                    :file-list="fileLists"
+                                    :auto-upload="false"
+                                    :limit="1"
+                                    :data="uploadData">
+                                <el-button slot="trigger" size="small"
+                                           plain
+                                           type="primary">选取文件
+                                </el-button>
+                                <el-button style="margin-left: 10px;" size="small"
+                                           icon="el-icon-upload"
+                                           :disabled="fileLists.length==0"
+                                           type="success" @click="submitUpload">
+                                    上传到服务器
+                                </el-button>
+                                <div slot="tip" class="el-upload__tip"
+                                     style="font-size: 12px;color: gray">
+                                    只能上传xls/xlsx文件
+                                </div>
+                            </el-upload>
+                        </el-col>
+                    </el-form-item>
+                </el-row>
+            </el-form>
             <div slot="footer" class="dialog-footer" style="margin-bottom: 60px">
                 <el-col :span="24" style="margin-bottom: 30px;">
                     <el-button icon="el-icon-close"
@@ -1216,7 +1220,7 @@
 //                        url: '',
 //                    },
                 ],
-                uploadURL: "",
+                uploadURL: HOST + "order/loading/list/upload/",
                 uploadData: {},
 
                 pickerOptions: {
@@ -1299,7 +1303,9 @@
             {
                 _this.selectedItem = copyObject(item);
                 _this.fileLists = [];
-                _this.uploadData.id = _this.selectedItem.id;
+                _this.uploadData.orderId = _this.selectedItem.id;
+                _this.uploadData.orderNum = _this.selectedItem.orderNum;
+                _this.uploadData.type = 2;
                 _this.uploadDialogVisible = true;
             },
             handleBefore(file)
@@ -1335,10 +1341,10 @@
                     if (removeIndex > -1) {
                         delete fileList[removeIndex];
                     }
-                    fileList=[];
+                    fileList = [];
                     showMessage(_this, errorMsg, 0)
-                }else {
-                    fileList=[];
+                } else {
+                    fileList = [];
                     fileList.push(file);
                 }
                 _this.fileLists = fileList;
@@ -1349,7 +1355,50 @@
                     showMessage(_this, "上传文件不能为空！", 0)
                     return;
                 }
-                this.$refs.upload.submit();
+                _this.uploadData.createTime = new Date();
+                var formData = new FormData($("#uploadForm")[0]);
+                formData.append("uploadData", JSON.stringify(_this.uploadData));
+                formData.append("orderNum", _this.uploadData.orderNum);
+                $.ajax({
+                    url: _this.uploadURL,// 需要链接到服务器地址
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        if (res.code === 200) {
+                            if (_this.selectedItem.orderLoadingList != null && parseInt(_this.selectedItem.orderLoadingList.id) != 0) {
+                                showMessage(_this, "装车单更新成功！", 1);
+                            }
+                            else {
+                                //更新数据
+                                _this.tableData.forEach(item=> {
+                                    if (item.id == _this.selectedItem.id) {
+                                        if (item.orderLoadingList != null) {
+                                            item.orderLoadingList.id = res.data;
+                                        }
+                                        else {
+                                            item.orderLoadingList = {
+                                                id: res.data
+                                            };
+                                        }
+                                        return;
+                                    }
+                                });
+                                showMessage(_this, "装车单上传成功！", 1);
+                            }
+                            _this.uploadDialogVisible = false;
+                        }
+                        else {
+                            showMessage(_this, '上传失败！', 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '上传失败！', 0);
+                    }
+                });
             },
             handleRemove(file, fileList) {
                 _this.fileLists = fileList;
@@ -1358,19 +1407,36 @@
             handlePreview(file) {
                 console.log(handlePreview);
             },
-            handleSuccess(res, file, fileList)
-            {
-                if (res.code === 200) {
-                    showMessage(_this, "上传成功！", 1)
-                }
-                else {
-                    showMessage(_this, "上传失败！", 0)
-                }
-            },
 
             onDownload(item)
             {
                 _this.selectedItem = copyObject(item);
+                $.ajax({
+                    url: HOST + "order/loading/list/selectOrderLoadingFileNameByOrderId",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        order_id: _this.selectedItem.id,
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            if (res.data.length > 0) {
+                                var downLoadURL = DOWNLOADPATH + res.data[res.data.length - 1];
+                                _this.downloadFile(downLoadURL);
+                            }
+                        }
+                    }
+                })
+            },
+
+            downloadFile(url)
+            {
+                var form = $("<form>");
+                form.attr("style", "display:none");
+                form.attr("method", "get");
+                form.attr("action", url);
+                $("body").append(form);
+                form.submit();
             },
 
             onDetail(item) {
