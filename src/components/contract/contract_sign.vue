@@ -370,12 +370,13 @@
                                                     </el-col>
                                                     <el-col :span="6">
                                                         <el-form-item label="国家：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'country', false)"
                                                                       clearable>
-                                                            <el-select v-model="item.machineOrder.country"
-                                                                       clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
+                                                            <el-select
+                                                                    style="width: 100%"
+                                                                    v-model="item.machineOrder.country"
+                                                                    clearable
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in countryList"
                                                                         :key="item.text"
@@ -602,6 +603,22 @@
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in pcModeList"
+                                                                        :key="item.text"
+                                                                        :value="item.text"
+                                                                        :label="item.text">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
+                                                        <el-form-item label="语言：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'electricLanguage', true)">
+                                                            <el-select v-model="item.orderDetail.electricLanguage"
+                                                                       clearable
+                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       placeholder="请选择">
+                                                                <el-option
+                                                                        v-for="item in pcLanguageList"
                                                                         :key="item.text"
                                                                         :value="item.text"
                                                                         :label="item.text">
@@ -1786,9 +1803,10 @@
                 packageModeList: PackageModeList,
                 maintainTypeList: MaintainTypeList,
                 orderStatusList: OrderStatusList,
-                countryList: LanguageList,
+                countryList: CountryList,
                 allMachineType: [],
                 pcModeList: PCModeList,
+                pcLanguageList: LanguageList,
                 electricMotorList: ElectricMotorList,
                 xyMotorList: XYMotorList,
                 trimList: TrimList,
@@ -2613,6 +2631,10 @@
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricPc)) {
                     iserror = true;
                     this.errorMsg = '请选择电脑';
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.electricLanguage)) {
+                    iserror = true;
+                    this.errorMsg = '请选择电脑语言';
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricMotor)) {
                     iserror = true;
