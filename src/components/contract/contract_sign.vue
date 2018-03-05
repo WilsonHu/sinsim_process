@@ -271,7 +271,7 @@
                                         <div>
                                             <el-card
                                                     v-if="item.machineOrder.originalOrderId != null && item.orderChangeRecord != null && (mode == CHANGE_MODE ||item.orderChangeRecord.changeReason != '')">
-                                                <el-col :span="4">
+                                                <el-col :span="6">
                                                     <el-form-item label="原单号：" :label-width="formLabelWidth">
                                                             <span style="text-align: left; font-weight: bold;font-size: 16px; color: #409EFF">
                                                                 {{filterOrderNum(item.machineOrder.originalOrderId)}}
@@ -297,7 +297,7 @@
                                             </el-card>
                                             <el-card
                                                     v-if="item.machineOrder.originalOrderId != null && item.orderSplitRecord != null && (mode == SPLIT_MODE ||item.orderSplitRecord.splitReason != '')">
-                                                <el-col :span="4">
+                                                <el-col :span="6">
                                                     <el-form-item label="原单号：" :label-width="formLabelWidth">
                                                             <span style="text-align: left; font-weight: bold;font-size: 16px; color: #409EFF">
                                                                 {{filterOrderNum(item.machineOrder.originalOrderId)}}
@@ -1212,7 +1212,7 @@
                                             </div>
                                             <div class="panel panel-primary">
                                                 <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">价格信息</h3>
+                                                    <h3 class="panel-title">装置信息</h3>
                                                 </div>
                                                 <el-row>
                                                     <el-col :span="1" :offset="22">
@@ -1262,7 +1262,8 @@
                                                         <el-table-column
                                                                 label="单价"
                                                                 width="200"
-                                                                align="center">
+                                                                align="center"
+                                                                v-if="isFinanceVisible()">
                                                             <template slot-scope="scope">
                                                                 <el-input v-model="scope.row.price"
                                                                           placeholder="单价"
@@ -1289,7 +1290,7 @@
                                                     </el-table>
 
                                                 </el-row>
-                                                <div class="panel-body">
+                                                <div class="panel-body" v-if="isFinanceVisible()">
                                                     <table border="1" width="100%">
                                                         <tr>
                                                             <td colspan="2" style="font-weight: bold; font-size: 14px">
@@ -1412,8 +1413,7 @@
                             合同评审单
                         </div>
                         <el-table
-                                show-summary
-                                :summary-method="getSummaries"
+                                v-if="isFinanceVisible()"
                                 border
                                 :data="requisitionForms"
                                 :row-class-name="tableRowDisabledClassName">
@@ -1457,13 +1457,16 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="orderTotalPrice"
                                     label="总价">
                                 <template slot-scope="scope">
                                     <span style="font-size: larger; font-weight: bold;color: #409EFF">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
                                 </template>
                             </el-table-column>
                         </el-table>
+                        <el-row style="margin-top: 10px">
+                            <el-col :span="2" :offset="18" style="font-size: 16px;font-weight: bold">总价：</el-col>
+                            <el-col :span="2" :offset="1" style="font-size: 18px;font-weight: bold; color: #409EFF">{{calculateTotalPrice()}}</el-col>
+                        </el-row>
                         <el-form style="margin-top: 10px">
                             <el-row>
                                 <el-col :span="6">
@@ -1867,7 +1870,6 @@
                     machineOrder: {
                         brand: "SINSIM电脑绣花机",
                         createTime: new Date().format("yyyy-MM-dd"),
-                        orderTotalPrice: 0,
                         equipment:[],
                         status: ORDER_INITIAL,
                         createUserId: JSON.parse(sessionStorage.getItem("user")).id
@@ -1970,6 +1972,18 @@
         },
         methods: {
 
+            isFinanceVisible() {
+                if(this.userInfo != ""
+                        && (this.userInfo.role.roleName.indexOf("销售") != -1
+                        || this.userInfo.role.roleName.indexOf("财务") != -1)
+                        || this.userInfo.role.roleName.indexOf("总经理") != -1
+                        || this.userInfo.role.id == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+
             filterMachineStatus(status) {
                 let name = "";
                 for (let i = 0; i < MachineStatusList.length; i++) {
@@ -1999,43 +2013,52 @@
             },
 
             calculateOrderTotalPrice(item) {
+                let orderTotalPrice = 0;
                 if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
-                    item.orderTotalPrice = 0;
+                    orderTotalPrice = 0;
                 } else {
-                    item.orderTotalPrice = item.machinePrice * item.machineNum;
+                    orderTotalPrice = parseInt(item.machinePrice) * parseInt(item.machineNum);
                     if (item.equipment != null && item.equipment != "") {
                         for (let i = 0; i < item.equipment.length; i++) {
-                            item.orderTotalPrice = item.orderTotalPrice + item.equipment[i].number * item.equipment[i].price;
+                            orderTotalPrice = orderTotalPrice + parseInt(item.equipment[i].number) * parseInt(item.equipment[i].price);
                         }
                     }
                 }
-                return item.orderTotalPrice;
+                return orderTotalPrice != null && orderTotalPrice != ""  ? orderTotalPrice : 0;
             },
 
-            getSummaries(param) {
-                let columns = param.columns;
-                let data = param.data;
-                const sums = [];
-                columns.forEach((column, index) => {
-                    if (index === 0) {
-                        sums[index] = '总价';
-                        return;
-                    }
-                    const values = data.map(item => Number(item.machineOrder[column.property]));
-                    if (!values.every(value => isNaN(value))) {
-                        sums[index] = values.reduce((prev, curr) => {
-                            const value = Number(curr);
-                            if (!isNaN(value) && index == 5) {
-                                return prev + curr;
-                            } else {
-                                return "";
-                            }
-                        }, 0);
-                    }
-                });
-
-                return sums;
+            calculateTotalPrice() {
+                let total = 0;
+                for (let i=0; i< this.requisitionForms.length; i++) {
+                    total = total + this.calculateOrderTotalPrice(this.requisitionForms[i].machineOrder);
+                }
+                return total;
             },
+
+//            getSummaries(param) {
+//                let columns = param.columns;
+//                let data = param.data;
+//                const sums = [];
+//                columns.forEach((column, index) => {
+//                    if (index === 0) {
+//                        sums[index] = '总价';
+//                        return;
+//                    }
+//                    const values = data.map(item => Number(item.machineOrder[column.property]));
+//                    if (!values.every(value => isNaN(value))) {
+//                        sums[index] = values.reduce((prev, curr) => {
+//                            const value = Number(curr);
+//                            if (!isNaN(value) && index == 5) {
+//                                return prev + curr;
+//                            } else {
+//                                return "";
+//                            }
+//                        }, 0);
+//                    }
+//                });
+//
+//                return sums;
+//            },
 
             handleCollapseChange() {
                 _this.doCollapse = !_this.doCollapse;
@@ -2500,10 +2523,10 @@
             },
             calculateOrderPrice(machineOrder) {
                 let total = 0;
-                total = machineOrder.machineNum * machineOrder.machinePrice;
+                total = parseInt(machineOrder.machineNum) * parseInt(machineOrder.machinePrice);
                 if (machineOrder.equipment != null && machineOrder.equipment != "") {
                     for (let i = 0; i < machineOrder.equipment.length; i++) {
-                        total = total + machineOrder.equipment[i].number * machineOrder.equipment[i].price;
+                        total = total + parseInt(machineOrder.equipment[i].number) * parseInt(machineOrder.equipment[i].price);
                     }
                 }
                 return total;
@@ -2512,7 +2535,7 @@
                 let total = 0;
                 if (machineOrder.equipment != null && machineOrder.equipment != "") {
                     for (let i = 0; i < machineOrder.equipment.length; i++) {
-                        total = total + machineOrder.equipment[i].number * machineOrder.equipment[i].price;
+                        total = total + parseInt(machineOrder.equipment[i].number) * parseInt(machineOrder.equipment[i].price);
                     }
                 }
                 return total;
