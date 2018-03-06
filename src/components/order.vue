@@ -79,6 +79,7 @@
                         element-loading-text="获取数据中..."
                         :data="tableData"
                         border
+                        highlight-current-row
                         empty-text="暂无数据..."
                         show-overflow-tooltip="true"
                         style="width: 100%; ">
@@ -1339,7 +1340,7 @@
                         }
                     }
                     if (removeIndex > -1) {
-                        delete fileList[removeIndex];
+                        fileList.splice(removeIndex, 1);
                     }
                     fileList = [];
                     showMessage(_this, errorMsg, 0)
@@ -1442,7 +1443,13 @@
             onDetail(item) {
                 _this.selectedItem = copyObject(item);
                 this.form = copyObject(item);
-                this.form.equipment = JSON.parse(this.form.equipment);
+                try {
+                    if (this.form.equipment != null && this.form.equipment.length > 0) {
+                        this.form.equipment = JSON.parse(this.form.equipment);
+                    }
+                } catch (ex) {
+                    console.log(ex);
+                }
                 this.addDialogVisible = true;
             },
 

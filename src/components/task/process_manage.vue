@@ -238,8 +238,8 @@
                                     "task_status": "0",
                                     "begin_time": "",
                                     "end_time": "",
-                                    "group_id": res.data.list[i].groupId,
-                                    "group_name": _this.filterGroup(res.data.list[i].groupId),
+                                    "leader": '',
+                                    "work_list": '',
                                 };
                                 jsonArray.push(str);
                             }
@@ -364,6 +364,7 @@
                 _this.addDialogVisible = true;
             },
             onSubmitAsEdit(){
+
                 $.ajax({
                     url: _this.editProcessUrl,
                     type: 'POST',
@@ -758,8 +759,8 @@
             "linkFromPortIdProperty": "fromPort",
             "linkToPortIdProperty": "toPort",
             "nodeDataArray": [
-                {"category": "Start", "text": "Start", "key": -1, "loc": "207.15625000000003 39.99999999999999"},
-                {"category": "End", "text": "End", "key": -4, "loc": "208.5960057626528 216.26768871290687"}
+                {"category": "Start", "text": "Start", "key": -1, "loc": "208 40"},
+                {"category": "End", "text": "End", "key": -4, "loc": "208 216"}
             ],
             "linkDataArray": []
         });

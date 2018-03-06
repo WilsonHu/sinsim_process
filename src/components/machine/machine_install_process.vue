@@ -67,6 +67,8 @@
                     :data="tableData"
                     border
                     empty-text="暂无数据..."
+                    ref="singleTable"
+                    highlight-current-row
                     show-overflow-tooltip="true"
                     style="width: 100%; ">
                 <el-table-column
@@ -792,8 +794,8 @@
                                     "task_status": "0",
                                     "begin_time": "",
                                     "end_time": "",
-                                    "group_id": res.data.list[i].groupId,
-                                    //"group_name": _this.filterGroup(res.data.list[i].groupId),
+                                    "leader": res.data.list[i].leader,
+                                    "work_list": res.data.list[i].work_list,
                                 };
                                 taskContentArray.push(str);
                             }

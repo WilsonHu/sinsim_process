@@ -66,6 +66,7 @@
                     element-loading-text="获取数据中..."
                     :data="tableData"
                     border
+                    highlight-current-row
                     empty-text="暂无数据..."
                     show-overflow-tooltip="true"
                     style="width: 100%; ">
@@ -428,7 +429,14 @@
                 var trObjList = new Array();
 
                 taskList.nodeDataArray.forEach(item=> {
-                    if (isUndefined(item.category) || item.category == null) {
+//                    var tempLoc = item.loc.split(" ");
+//                    if (tempLoc.length > 1) {
+//                        tempLoc.forEach(itemLoc=> {
+//                            itemLoc = Math.round(itemLoc * 100) / 100;
+//                        })
+//                        item.loc = tempLoc.join(" ");
+//                    }
+                    if (isUndefined(item.category) || item.category == null) {//排除start,end
                         trObjList.push({
                             taskName: item.text,
                             nodeKey: item.key,
@@ -468,7 +476,7 @@
                             _this.addDialogVisible = false;
                             showMessage(_this, "保存成功! 请到安装进度页面或计划管理页面查看", 1)
                         } else {
-                            showMessage(_this, "保存失败!", 0)
+                            showMessage(_this, "保存失败!" + res.message, 0)
                         }
                     }
                 })
@@ -523,8 +531,8 @@
                                     "task_status": "0",
                                     "begin_time": "",
                                     "end_time": "",
-                                    "group_id": res.data.list[i].groupId,
-                                    "group_name": _this.filterGroup(res.data.list[i].groupId),
+                                    "leader": res.data.list[i].leader,
+                                    "work_list": res.data.list[i].work_list,
                                 };
                                 taskContentArray.push(str);
                             }
@@ -691,13 +699,13 @@
                                         "category": "Start",
                                         "text": "开始",
                                         "key": -1,
-                                        "loc": "207 39.99999999999999"
+                                        "loc": "208 40"
                                     },
                                     {
                                         "category": "End",
                                         "text": "结束",
                                         "key": -4,
-                                        "loc": "207 216.26768871290687"
+                                        "loc": "208 216"
                                     }
                                 ],
                                 "linkDataArray": []

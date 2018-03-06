@@ -93,6 +93,7 @@
                         element-loading-text="获取数据中..."
                         :data="tableDataPlaned"
                         border
+                        highlight-current-row
                         empty-text="暂无数据..."
                         show-overflow-tooltip="true"
                         style="width: 100%; ">
@@ -302,6 +303,7 @@
                         element-loading-text="获取数据中..."
                         :data="tableData"
                         border
+                        highlight-current-row
                         empty-text="暂无数据..."
                         show-overflow-tooltip="true"
                         style="width: 100%; ">
