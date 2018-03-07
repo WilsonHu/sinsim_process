@@ -203,7 +203,7 @@
         <el-dialog title="机器基本信息配置" :visible.sync="machineDialog" width="50%">
             <el-form :model="machineForm" label-position="right" label-width="150px">
                 <el-row>
-                    <el-col :span="10">
+                    <el-col :span="11">
                         <el-form-item label="订单号：">
                             <el-input type="text"
                                       disabled
@@ -214,7 +214,7 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="11" :offset="1">
+                    <el-col :span="11" :offset="0">
                         <el-form-item label="机型：">
                             <el-input type="text"
                                       disabled
@@ -224,7 +224,7 @@
                             ></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="10">
+                    <el-col :span="11">
                         <el-form-item label="机器编号：">
                             <el-input type="text"
                                       v-model="machineForm.nameplate"
@@ -233,7 +233,7 @@
                                       clearable></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="11" :offset="1">
+                    <el-col :span="11" :offset="0">
                         <el-form-item label="位置：">
                             <el-input type="text"
                                       v-model="machineForm.location"
@@ -367,7 +367,6 @@
     var _this;
     var myDiagram;
     var myPalette;
-    var subParts = new go.List();
     export default {
         name: "machine_config_process",
         components: {},

@@ -517,7 +517,6 @@
     import {Loading} from 'element-ui';
     var _this;
     var myDiagram;
-    var subParts = new go.List();
     export default {
         name: "machine_config_process",
         components: {},
