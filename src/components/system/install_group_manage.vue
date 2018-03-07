@@ -64,7 +64,7 @@
                     </el-form-item>
                 </el-col>
             </el-form>
-            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;background-color: #ff9999"
+            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                       :title="errorMsg"
                       type="error"
                       show-icon >
@@ -83,7 +83,7 @@
                     </el-form-item>
                 </el-col>
             </el-form>
-            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;background-color: #ff9999"
+            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                       :title="errorMsg"
                       type="error"
                       show-icon >

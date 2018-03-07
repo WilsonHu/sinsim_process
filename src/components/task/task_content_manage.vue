@@ -106,7 +106,7 @@
                     </el-col>
                 </el-row>
             </el-form>
-            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;background-color: #ff9999"
+            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                       :title="errorMsg"
                       type="error"
                       :closable="false"

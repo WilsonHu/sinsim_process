@@ -79,20 +79,7 @@
                         {{scope.$index+startRow}}
                     </template>
                 </el-table-column>
-                <el-table-column label="订单号"
-                                 align="center"
-                                 prop="orderNum">
-                    <template scope="scope">
-                        <div>
-                            {{scope.row.orderNum}}
-                        </div>
-                    </template>
-                </el-table-column>
-                <!--<el-table-column-->
-                <!--align="center"-->
-                <!--prop="contractNum"-->
-                <!--label="合同号">-->
-                <!--</el-table-column>-->
+
                 <el-table-column
                         align="center"
                         prop="machineStrId"
@@ -105,11 +92,6 @@
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        prop="location"
-                        label="位置">
-                </el-table-column>
-                <el-table-column
-                        align="center"
                         prop="machineType"
                         label="机型">
                     <template scope="scope">
@@ -118,7 +100,20 @@
                         </div>
                     </template>
                 </el-table-column>
-
+                <el-table-column label="订单号"
+                                 align="center"
+                                 prop="orderNum">
+                    <template scope="scope">
+                        <div>
+                            {{scope.row.orderNum}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="location"
+                        label="位置">
+                </el-table-column>
                 <el-table-column
                         align="center"
                         label="已完成/总工序">

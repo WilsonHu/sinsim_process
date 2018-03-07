@@ -78,6 +78,41 @@
                         {{scope.$index+startRow}}
                     </template>
                 </el-table-column>
+
+                <el-table-column
+                        align="center"
+                        prop="machineStrId"
+                        label="系统编号">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="nameplate"
+                        label="机器编号">
+                    <template scope="scope">
+                        <div @click="onShowMachineInfo(scope.row)"
+                             style="font-weight: bold;"
+                             class="btn btn-link">
+                            <span
+                                    style="color: red"
+                                    v-if="scope.row.nameplate==''||scope.row.nameplate==null">
+                                点击设置
+                            </span>
+                            <span v-else>
+                               {{scope.row.nameplate}}
+                            </span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="machineType"
+                        label="机型">
+                    <template scope="scope">
+                        <div>
+                            {{scope.row.machineType|filterMachineType}}
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column label="订单号"
                                  align="center"
                                  prop="orderNum">
@@ -94,30 +129,9 @@
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        prop="machineStrId"
-                        label="系统编号">
-                </el-table-column>
-                <el-table-column
-                        align="center"
-                        prop="nameplate"
-                        label="机器编号">
-                </el-table-column>
-                <el-table-column
-                        align="center"
                         prop="location"
                         label="位置">
                 </el-table-column>
-                <el-table-column
-                        align="center"
-                        prop="machineType"
-                        label="机型">
-                    <template scope="scope">
-                        <div>
-                            {{scope.row.machineType|filterMachineType}}
-                        </div>
-                    </template>
-                </el-table-column>
-
                 <el-table-column
                         align="center"
                         label="配置状态">
@@ -186,6 +200,75 @@
             </div>
         </el-col>
 
+        <el-dialog title="机器基本信息配置" :visible.sync="machineDialog" width="50%">
+            <el-form :model="machineForm" label-position="right" label-width="150px">
+                <el-row>
+                    <el-col :span="10">
+                        <el-form-item label="订单号：">
+                            <el-input type="text"
+                                      disabled
+                                      v-model="machineForm.orderNum"
+                                      placeholder="订单号"
+                                      style="width:100%"
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="机型：">
+                            <el-input type="text"
+                                      disabled
+                                      v-model="machineForm.machineTypeName"
+                                      placeholder="机型"
+                                      style="width:100%"
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-form-item label="机器编号：">
+                            <el-input type="text"
+                                      v-model="machineForm.nameplate"
+                                      placeholder="机器编号(铭牌号)"
+                                      style="width:100%"
+                                      clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="位置：">
+                            <el-input type="text"
+                                      v-model="machineForm.location"
+                                      placeholder="机器位置信息"
+                                      style="width:100%"
+                                      clearable></el-input>
+                            <!--<el-select-->
+                            <!--clearable-->
+                            <!--v-model="machineForm.location"-->
+                            <!--placeholder="请选择">-->
+                            <!--<el-option-->
+                            <!--v-for="item in groupList"-->
+                            <!--:label="item.groupName"-->
+                            <!--:value="item.id">-->
+                            <!--</el-option>-->
+                            <!--</el-select>-->
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+            </el-form>
+            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
+                      :title="errorMsg"
+                      type="error"
+                      :closable="false"
+                      show-icon>
+            </el-alert>
+            <div slot="footer" class="dialog-footer" style="margin-bottom: 70px;margin-top: 30px">
+                <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
+                    <el-button type="primary" @click="onSubmitMachine" icon="el-icon-check">确 定</el-button>
+                    <el-button type="danger" @click="machineDialog = false" icon="el-icon-close">取 消</el-button>
+                </el-col>
+            </div>
+        </el-dialog>
+
         <el-dialog title="机器配置流程" :visible.sync="addDialogVisible"
                    fullscreen
                    @open="onopened">
@@ -200,6 +283,16 @@
                                                   disabled
                                                   v-model="addForm.machineStrId"
                                                   style="width:100%"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="24">
+                                    <el-form-item label="机器编号(铭牌号)：">
+                                        <el-input type="text"
+                                                  disabled
+                                                  v-model="addForm.nameplate"
+                                                  placeholder="无"
+                                                  style="width:100%"
+                                                  ></el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="24" :offset="0">
@@ -339,11 +432,76 @@
 
                 loading: false,
                 allProcessTemplate: [],
-                allProcessList: []
+                allProcessList: [],
+
+                machineForm: {},
+                machineDialog: false,
             }
 
         },
         methods: {
+            onShowMachineInfo(item)
+            {
+                _this.selectedItem = item;
+                _this.machineForm.id = item.id;
+                _this.machineForm.orderNum = item.orderNum;
+                _this.machineForm.machineTypeName = _this.filterMachineType(item.machineType);
+                _this.machineForm.nameplate = item.nameplate;
+                _this.machineForm.location = item.location;
+
+                _this.errorMsg = "";
+                _this.isError = false;
+                _this.machineDialog = true;
+            },
+            onSubmitMachine()
+            {
+                if (isStringEmpty(_this.machineForm.nameplate)) {
+                    _this.errorMsg = "机器编号不能为空!";
+                    _this.isError = true;
+                    return;
+                }
+                if (isStringEmpty(_this.machineForm.location)) {
+                    _this.errorMsg = "机器位置信息不能为空!";
+                    _this.isError = true;
+                    return;
+                }
+                if (_this.selectedItem.nameplate == _this.machineForm.nameplate
+                        && _this.selectedItem.location == _this.machineForm.location) {
+                    _this.errorMsg = "数据没有更改，不需要提交!";
+                    _this.isError = true;
+                    return;
+                }
+                var jsonData = JSON.stringify({
+                    id: _this.machineForm.id,
+                    nameplate: _this.machineForm.nameplate,
+                    location: _this.machineForm.location,
+                });
+                $.ajax({
+                    url: HOST + "/machine/update",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        machine: jsonData
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            showMessage(_this, "机器信息更新成功!", 1)
+                            for (var i = 0; i < _this.tableData.length; i++) {
+                                if (_this.tableData[i].id === _this.machineForm.id) {
+                                    _this.tableData[i].nameplate = _this.machineForm.nameplate;
+                                    _this.tableData[i].location = _this.machineForm.location;
+                                    break;
+                                }
+                            }
+                            _this.machineDialog = false;
+
+                        } else {
+                            showMessage(_this, "机器信息更新失败!", 0)
+                        }
+                    },
+                })
+            },
+
             handleCurrentChange(val) {
                 this.currentPage = val;
                 _this.search();
@@ -452,6 +610,7 @@
                     linkData: taskList.linkDataArray,
                     nodeData: taskList.nodeDataArray
                 };
+
                 if (_this.addForm.processRecordId != ""
                         && _this.addForm.processRecordId != 0) {
                     prObj.id = parseInt(_this.addForm.processRecordId);
