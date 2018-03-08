@@ -93,10 +93,12 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
+                            sortable
                             prop="contractNum"
                             label="合同号">
                     </el-table-column>
                     <el-table-column label="订单号"
+                                     sortable
                                      prop="orderNum"
                                      align="center">
                         <template scope="scope">
@@ -115,6 +117,7 @@
                     <el-table-column
                             align="center"
                             prop="status"
+                            sortable
                             label="审核状态">
                         <template scope="scope">
                             <div :class="scope.row.status|filterOrderStatusStyle">
@@ -125,16 +128,19 @@
                     <el-table-column
                             align="center"
                             prop="customer"
+                            sortable
                             label="客户">
                     </el-table-column>
                     <el-table-column
                             align="center"
                             prop="sellman"
+                            sortable
                             label="销售人员">
                     </el-table-column>
                     <el-table-column
                             align="center"
                             prop="contractShipDate"
+                            sortable
                             label="合同交货日期">
                         <template slot-scope="scope">
                             <span>
@@ -145,6 +151,7 @@
                     <el-table-column
                             align="center"
                             prop="planShipDate"
+                            sortable
                             label="计划交货日期">
                         <template slot-scope="scope">
                             <span>
