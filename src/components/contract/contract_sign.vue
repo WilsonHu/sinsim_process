@@ -2,17 +2,17 @@
     <div>
         <div>
             <el-row>
-                <el-col :span="3">
-                    <el-row type="flex" justify="center">
-                        <el-col :span="19">
-                            <div style="font-size: 20px;font-weight: bold; margin-top: 12px">签核中：</div>
-                        </el-col>
-                        <el-col :span="5">
-                            <div style="font-size: 36px; font-weight: bold;">12</div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="2" :offset="19">
+                <!--<el-col :span="3">-->
+                    <!--<el-row type="flex" justify="center">-->
+                        <!--<el-col :span="19">-->
+                            <!--<div style="font-size: 20px;font-weight: bold; margin-top: 12px">签核中：</div>-->
+                        <!--</el-col>-->
+                        <!--<el-col :span="5">-->
+                            <!--<div style="font-size: 36px; font-weight: bold;">12</div>-->
+                        <!--</el-col>-->
+                    <!--</el-row>-->
+                <!--</el-col>-->
+                <el-col :span="2" :offset="22">
                     <el-button
                             icon="el-icon-plus"
                             size="normal"
@@ -2495,7 +2495,7 @@
                     url: HOST + "contract/buildContractExcel",
                     type: 'POST',
                     dataType: 'json',
-                    data: {contractId: item.id},
+                    data: {contractId: item.id, account: _this.userInfo.account},
                     success: function (data) {
                         if (data.code == 200) {
                             window.location.href = data.data;

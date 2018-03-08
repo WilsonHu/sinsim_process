@@ -200,7 +200,7 @@
             </div>
         </el-col>
 
-        <el-dialog title="机器基本信息配置" :visible.sync="machineDialog" width="50%">
+        <el-dialog title="机器基本信息配置" :visible.sync="machineDialog" width="50%" @open="basicDialogOpen">
             <el-form :model="machineForm" label-position="right" label-width="150px">
                 <el-row>
                     <el-col :span="11">
@@ -220,6 +220,16 @@
                                       disabled
                                       v-model="machineForm.machineTypeName"
                                       placeholder="机型"
+                                      style="width:100%"
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="11" :offset="0">
+                        <el-form-item label="系统编号：">
+                            <el-input type="text"
+                                      disabled
+                                      v-model="machineForm.machineStrId"
+                                      placeholder="系统编号"
                                       style="width:100%"
                             ></el-input>
                         </el-form-item>
@@ -255,6 +265,9 @@
 
                 </el-row>
             </el-form>
+            <el-row>
+                <div id="qrcode"></div>
+            </el-row>
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                       :title="errorMsg"
                       type="error"
@@ -446,6 +459,7 @@
                 _this.machineForm.orderNum = item.orderNum;
                 _this.machineForm.machineTypeName = _this.filterMachineType(item.machineType);
                 _this.machineForm.nameplate = item.nameplate;
+                _this.machineForm.machineStrId = item.machineStrId;
                 _this.machineForm.location = item.location;
 
                 _this.errorMsg = "";
@@ -745,6 +759,14 @@
                         }
                     },
                 })
+            },
+            basicDialogOpen() {
+                window.setTimeout(()=> {
+                    // 设置参数方式
+                    var str = toUtf8(_this.machineForm.machineStrId);
+                    $('#qrcode').html("");
+                    $('#qrcode').qrcode(str);
+                }, 200);
             },
             onopened()
             {
@@ -1245,6 +1267,26 @@
         node.ports.each(function (port) {
             port.stroke = (show ? "white" : null);
         });
+    }
+
+    function toUtf8(str) {
+        var out, i, len, c;
+        out = "";
+        len = str.length;
+        for(i = 0; i < len; i++) {
+            c = str.charCodeAt(i);
+            if ((c >= 0x0001) && (c <= 0x007F)) {
+                out += str.charAt(i);
+            } else if (c > 0x07FF) {
+                out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+                out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
+                out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+            } else {
+                out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
+                out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+            }
+        }
+        return out;
     }
 
 </script>
