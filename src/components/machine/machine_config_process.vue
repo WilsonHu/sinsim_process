@@ -700,11 +700,11 @@
                             for (var i = res.data.list.length - 1; i >= 0; i--) {
                                 var str = {
                                     "text": res.data.list[i].taskName,
-                                    "task_status": "0",
-                                    "begin_time": "",
-                                    "end_time": "",
+                                    "taskStatus": "0",
+                                    "beginTime": "",
+                                    "endTime": "",
                                     "leader": res.data.list[i].leader,
-                                    "work_list": res.data.list[i].work_list,
+                                    "workList": res.data.list[i].workList,
                                 };
                                 taskContentArray.push(str);
                             }

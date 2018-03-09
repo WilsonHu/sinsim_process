@@ -406,11 +406,11 @@
                                                 align="center"
                                                 label="组员">
                                             <template scope="scope">
-                                                <div v-if="scope.row.workerList==null||scope.row.workerList.length==0 ">
+                                                <div v-if="scope.row.workList==null||scope.row.workList.length==0 ">
                                                     无
                                                 </div>
                                                 <el-tag v-else
-                                                        v-for="item in scope.row.workerList">
+                                                        v-for="item in scope.row.workList">
                                                     {{item}}
                                                 </el-tag>
                                             </template>
@@ -635,7 +635,7 @@
                                 if (nodeDataArray != null && nodeDataArray.length > 0) {
                                     itemObj.totalTaskCount = nodeDataArray.length - 2;//去掉开始，结束.
                                     nodeDataArray.forEach(item=> {
-                                        if (parseInt(item.task_status) == 6) {//完成
+                                        if (parseInt(item.taskStatus) == 6) {//完成
                                             itemObj.finishedCount++;
                                         }
                                     });
@@ -698,21 +698,21 @@
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
                         taskList.nodeDataArray.forEach(item=> {
                             if (item.category != "Start" && item.category != "End") {
-                                if (parseInt(item.task_status) > 2 && parseInt(item.task_status) < 6)//进行中
+                                if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
                                     _this.addForm.currentTaskName = item.text;
                                 }
-                                else if (parseInt(item.task_status) == 6) {//完成
+                                else if (parseInt(item.taskStatus) == 6) {//完成
                                     item.category = ProcessCatergory.Finished;
                                     _this.addForm.finishedCount++;
                                 }
-                                else if (parseInt(item.task_status) > 6 && parseInt(item.task_status) < 9)//异常
+                                else if (parseInt(item.taskStatus) > 6 && parseInt(item.taskStatus) < 9)//异常
                                 {
                                     item.category = ProcessCatergory.Abnormal;
                                     _this.addForm.abnormalCount++;
                                 }
-                                else if (parseInt(item.task_status) == 9)//已跳过
+                                else if (parseInt(item.taskStatus) == 9)//已跳过
                                 {
                                     item.category = ProcessCatergory.Skip;
                                     _this.addForm.skipCount++;
@@ -785,11 +785,11 @@
                             for (var i = res.data.list.length - 1; i >= 0; i--) {
                                 var str = {
                                     "text": res.data.list[i].taskName,
-                                    "task_status": "0",
-                                    "begin_time": "",
-                                    "end_time": "",
+                                    "taskStatus": "0",
+                                    "beginTime": "",
+                                    "endTime": "",
                                     "leader": res.data.list[i].leader,
-                                    "work_list": res.data.list[i].work_list,
+                                    "workList": res.data.list[i].workList,
                                 };
                                 taskContentArray.push(str);
                             }
@@ -893,7 +893,7 @@
                     if (nodeData != null) {
                         nodeData.forEach(item=> {
                             if (item.key == _this.selectedTaskItem.nodeKey) {
-                                item.task_status = tRecord.status;
+                                item.taskStatus = tRecord.status;
                             }
                         });
                     }

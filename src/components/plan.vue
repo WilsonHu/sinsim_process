@@ -746,17 +746,17 @@
                             taskList.linkDataArray = JSON.parse(data.data.list[0].linkData);
                             taskList.nodeDataArray = JSON.parse(data.data.list[0].nodeData);
                             taskList.nodeDataArray.forEach(item=> {
-                                if (parseInt(item.task_status) > 2 && parseInt(item.task_status) < 6)//进行中
+                                if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
-                                } else if (parseInt(item.task_status) == 6) {//完成
+                                } else if (parseInt(item.taskStatus) == 6) {//完成
                                     item.category = ProcessCatergory.Finished;
                                 }
-                                else if (parseInt(item.task_status) > 6 && parseInt(item.task_status) < 9)//异常
+                                else if (parseInt(item.taskStatus) > 6 && parseInt(item.taskStatus) < 9)//异常
                                 {
                                     item.category = ProcessCatergory.Abnormal
                                 }
-                                else if (parseInt(item.task_status) == 9)//已跳过
+                                else if (parseInt(item.taskStatus) == 9)//已跳过
                                 {
                                     item.category = ProcessCatergory.Skip;
                                 }

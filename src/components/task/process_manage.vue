@@ -245,11 +245,11 @@
                             for (var i = res.data.list.length - 1; i >= 0; i--) {
                                 var str = {
                                     "text": res.data.list[i].taskName,
-                                    "task_status": "0",
-                                    "begin_time": "",
-                                    "end_time": "",
-                                    "leader": '',
-                                    "work_list": '',
+                                    "taskStatus": "0",
+                                    "beginTime": "",
+                                    "endTime": "",
+                                    "leader": "",
+                                    "workList": "",
                                 };
                                 jsonArray.push(str);
                             }
@@ -266,7 +266,7 @@
                     url: HOST + "process/list",
                     type: 'POST',
                     dataType: 'json',
-                    data: {page : _this.currentPage, size : _this.pageSize},
+                    data: {page: _this.currentPage, size: _this.pageSize},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.tableData = res.data.list;
