@@ -473,11 +473,11 @@
                     _this.isError = true;
                     return;
                 }
-                if (isStringEmpty(_this.machineForm.location)) {
-                    _this.errorMsg = "机器位置信息不能为空!";
-                    _this.isError = true;
-                    return;
-                }
+                // if (isStringEmpty(_this.machineForm.location)) {
+                //     _this.errorMsg = "机器位置信息不能为空!";
+                //     _this.isError = true;
+                //     return;
+                // }
                 if (_this.selectedItem.nameplate == _this.machineForm.nameplate
                         && _this.selectedItem.location == _this.machineForm.location) {
                     _this.errorMsg = "数据没有更改，不需要提交!";

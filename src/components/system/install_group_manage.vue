@@ -118,7 +118,7 @@
                 isError: false,
                 errorMsg: '',
                 //分页
-                totalPage: 1,
+                totalPage: 0,
                 pageSize: EveryPageNum,//每一页的num
                 currentPage:1,
                 startRow: 1,
@@ -167,7 +167,7 @@
 
             handleCurrentChange(val) {
                 this.currentPage = val;
-                _this.fetchDevices();
+                _this.fetchInstallGroups();
             },
             handleAdd() {
                 this.addDialogVisible = true;

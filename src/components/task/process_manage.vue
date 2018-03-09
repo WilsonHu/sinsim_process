@@ -22,7 +22,7 @@
                 <!--width="55">-->
                 <!--</el-table-column>-->
                 <el-table-column label="序号" width="70" align="center">
-                    <template scope="scope">{{ scope.$index+1}}</template>
+                    <template scope="scope">{{ scope.$index+startRow}}</template>
                 </el-table-column>
                 <el-table-column label="流程名称" align="center">
                     <template scope="scope">{{ scope.row.name }}</template>
@@ -73,6 +73,7 @@
             <br>
             <div class="block" align="center">
                 <el-pagination
+                        background
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-size="pageSize"
@@ -168,10 +169,12 @@
                 groupList: [],
                 tableData: [],
                 multipleSelection: [],
+
                 pageSize: EveryPageNum,//每一页的num
                 currentPage: 1,
                 startRow: 1,
                 totalNum: 0,
+
                 modifyDialogVisible: false,
                 isEdit: false,
                 addDialogVisible: false,
@@ -223,6 +226,13 @@
                 }
                 this.multipleSelection = val;
             },
+
+
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.getProcessData();
+            },
+
             getTaskContentName(){
                 $.ajax({
                     url: _this.taskContentNameUrl,
@@ -256,7 +266,7 @@
                     url: HOST + "process/list",
                     type: 'POST',
                     dataType: 'json',
-                    data: {},
+                    data: {page : _this.currentPage, size : _this.pageSize},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.tableData = res.data.list;
@@ -422,12 +432,6 @@
             },
             onClose(){
                 _this.addDialogVisible = false;
-            },
-
-            handleCurrentChange(val) {
-                this.currentPage = val;
-                this.startRow = (this.currentPage - 1) * this.form.length;
-                this.getProcessData();
             },
 
             // Show the diagram's model in JSON format that the user may edit

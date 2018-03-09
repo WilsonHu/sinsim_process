@@ -33,6 +33,11 @@
                         {{ scope.row.groupId|filterGroup }}
                     </template>
                 </el-table-column>
+                <el-table-column label="质检员" align="center">
+                    <template scope="scope">
+                        {{ scope.row.qualityUserId | filterQuality}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="编辑" width="100" align="center">
                     <template scope="scope" style="text-align: center">
                         <el-button
@@ -78,10 +83,10 @@
     </span>
         </el-dialog>
 
-        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="50%">
+        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="45%">
             <el-form :model="addForm" label-position="right" label-width="120px">
                 <el-row>
-                    <el-col :span="10">
+                    <el-col :span="8">
                         <el-form-item label="工作名称：">
                             <el-input type="text"
                                       v-model="addForm.taskName"
@@ -90,7 +95,7 @@
                                       clearable></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="11" :offset="1">
+                    <el-col :span="8">
                         <el-form-item label="工作小组：">
                             <el-select
                                     clearable
@@ -99,6 +104,20 @@
                                 <el-option
                                         v-for="item in groupList"
                                         :label="item.groupName"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="质检员：">
+                            <el-select
+                                    clearable
+                                    v-model="addForm.qualityUserId"
+                                    placeholder="请选择">
+                                <el-option
+                                        v-for="item in qualityUsers"
+                                        :label="item.name"
                                         :value="item.id">
                                 </el-option>
                             </el-select>
@@ -161,6 +180,7 @@
                 errorMsg: '',
                 isError: false,
                 dialogTitle: '',
+                qualityUsers:[]
             }
 
         },
@@ -175,12 +195,11 @@
             },
             getStatisticsData() {
                 _this.listLoading = true;
-
                 $.ajax({
                     url: _this.queryDataUrl,
                     type: 'POST',
                     dataType: 'json',
-                    data: {},
+                    data: {page : _this.currentPage, size : _this.pageSize},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.tableData = res.data.list;
@@ -192,6 +211,23 @@
                     error: function (res) {
                         _this.listLoading = false;
                         showMessage(_this, "服务器访问失败!", 0);
+                    }
+                })
+            },
+
+            getAllQualityUsers() {
+                $.ajax({
+                    url: HOST + "user/selectAllQuality",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.qualityUsers = res.data.list;
+                        }
+                    },
+                    error: function (res) {
+                        showMessage(_this, "获取质检员信息失败!", 0);
                     }
                 })
             },
@@ -239,6 +275,7 @@
                             "id": _this.addForm.id,
                             "taskName": _this.addForm.taskName,
                             "groupId": _this.addForm.groupId,
+                            "qualityUserId": _this.addForm.qualityUserId,
                             "guidance": _this.addForm.guidance,
                         },
                         success: function (res) {
@@ -290,6 +327,7 @@
                             "id": 0,
                             "taskName": _this.addForm.taskName,
                             "groupId": _this.addForm.groupId,
+                            "qualityUserId": _this.addForm.qualityUserId,
                             "guidance": "",
                         },
                         success: function (res) {
@@ -309,7 +347,6 @@
 
             handleCurrentChange(val) {
                 this.currentPage = val;
-                this.startRow = (this.currentPage - 1) * this.form.length;
                 this.getStatisticsData();
             },
 
@@ -345,12 +382,24 @@
                 }
                 return result;
             },
+
+            filterQuality(id) {
+                let result = "";
+                for (let i = 0; i < _this.qualityUsers.length; i++) {
+                    if (_this.qualityUsers[i].id == id) {
+                        result = _this.qualityUsers[i].name;
+                        break;
+                    }
+                }
+                return result;
+            }
         },
 
         computed: {},
         created: function () {
             _this.getGroupData();
             _this.getStatisticsData();
+            _this.getAllQualityUsers();
         },
         mounted: function () {
 
