@@ -64,7 +64,7 @@
         <el-dialog title="添加设备" :visible.sync="addDialogVisible" width="40%">
             <el-form :model="form">
                 <el-col :span="24">
-                    <el-form-item label="设备名称：" :label-width="formLabelWidth" style="width: 35%">
+                    <el-form-item label="设备名称：" :label-width="formLabelWidth" style="width: 60%">
                         <el-input  v-model="form.name"></el-input>
                     </el-form-item>
                 </el-col>
@@ -88,7 +88,7 @@
         <el-dialog title="编辑角色" :visible.sync="modifyDialogVisible" width="40%">
             <el-form :model="modifyForm">
                 <el-col :span="24">
-                    <el-form-item label="设备名称：" :label-width="formLabelWidth" style="width: 35%">
+                    <el-form-item label="设备名称：" :label-width="formLabelWidth" style="width: 60%">
                         <el-input  v-model="modifyForm.name"></el-input>
                     </el-form-item>
                 </el-col>

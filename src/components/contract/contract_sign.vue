@@ -2216,6 +2216,7 @@
                             _this.addContractVisible = false;
                             _this.editContract = "";
                             showMessage(_this, '发起签核成功', 1);
+                            _this.selectContracts();
                         } else {
                             showMessage(_this, data.message, 0);
                         }

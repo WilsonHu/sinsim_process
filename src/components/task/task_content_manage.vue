@@ -83,7 +83,7 @@
     </span>
         </el-dialog>
 
-        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="45%">
+        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="60%">
             <el-form :model="addForm" label-position="right" label-width="120px">
                 <el-row>
                     <el-col :span="8">

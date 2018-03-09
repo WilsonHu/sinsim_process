@@ -151,15 +151,21 @@
                             label="安装">
                         <el-table-column
                                 align="center"
-                                prop="installBeginTime"
                                 label="开始时间">
-
+                            <template scope="scope">
+                                <div>
+                                    {{scope.row.installBeginTime | filterDateTimeString}}
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column
                                 align="center"
-                                prop="installEndTime"
                                 label="结束时间">
-
+                            <template scope="scope">
+                                <div>
+                                    {{scope.row.installEndTime | filterDateTimeString}}
+                                </div>
+                            </template>
                         </el-table-column>
                     </el-table-column>
                     <el-table-column
@@ -167,14 +173,21 @@
                             label="质检">
                         <el-table-column
                                 align="center"
-                                prop="qualityBeginTime"
                                 label="开始时间">
-
+			    <template scope="scope">
+                                <div>
+                                    {{scope.row.qualityBeginTime | filterDateTimeString}}
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column
                                 align="center"
-                                prop="qualityEndTime"
                                 label="结束时间">
+			    <template scope="scope">
+                                <div>
+                                    {{scope.row.qualityEndTime | filterDateTimeString}}
+                                </div>
+                            </template>
 
                         </el-table-column>
                     </el-table-column>
@@ -627,9 +640,9 @@
                     {
                         name: "日计划", value: 1
                     },
-                    {
-                        name: "弹性计划", value: 2
-                    }
+//                    {
+//                        name: "弹性计划", value: 2
+//                    }
                 ],
                 pickerOptions1: {
                     disabledDate(time) {
@@ -952,6 +965,15 @@
                 } else {
                     var resDate = new Date(strDate);
                     return resDate.format("yyyy-MM-dd");
+                }
+            },
+
+            filterDateTimeString(strDate){
+                if (strDate == null) {
+                    return ""
+                } else {
+                    var resDate = new Date(strDate);
+                    return resDate.format("yyyy-MM-dd hh:mm");
                 }
             },
 
