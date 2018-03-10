@@ -5,7 +5,7 @@ var HOST_URL = HOST + "shcrhservice/";
 
 var SERVER_ROOT = HOST_URL + "index.php/";
 var HOME = SERVER_ROOT + "Home/";
-var DOWNLOADPATH = HOST + "download/";
+var DOWNLOADPATH = HOST + "oll/";
 var Import_URL = HOST_URL + "Import/";
 var Image_URL = HOST_URL + "Image/";
 var SOCKECT_ADDR = "ws://127.0.0.1:9998";//CRHService IP address(Windows service)
