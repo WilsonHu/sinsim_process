@@ -276,6 +276,19 @@
                                         ></el-input>
                                     </el-form-item>
                                 </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="订机数量：" :label-width="formLabelWidth">
+                                        <el-input-number style="float: left;"
+                                                         disabled
+                                                         v-model="form.machineNum"
+                                                         :step="1"
+                                                         controls-position="right"
+                                                         :min="1"
+                                                         :max="1000">
+
+                                        </el-input-number>
+                                    </el-form-item>
+                                </el-col>
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="交货日期：" :label-width="formLabelWidth">
                                         <el-date-picker
@@ -302,15 +315,6 @@
                                 </el-col>
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="销售人员：" :label-width="formLabelWidth">
-                                        <!--<el-select v-model="form.sellman"-->
-                                        <!--clearable-->
-                                        <!--placeholder="请选择" >-->
-                                        <!--<el-option-->
-                                        <!--v-for="item in allQualification"-->
-                                        <!--:label="item.name"-->
-                                        <!--:value="item.name" >-->
-                                        <!--</el-option >-->
-                                        <!--</el-select >-->
                                         <el-input
                                                 disabled
                                                 v-model="form.sellman"
@@ -335,25 +339,25 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6">
-                                    <el-form-item label="订机数量：" :label-width="formLabelWidth">
-                                        <el-input-number style="float: left;"
-                                                         disabled
-                                                         v-model="form.machineNum"
-                                                         :step="1"
-                                                         controls-position="right"
-                                                         :min="1"
-                                                         :max="1000">
-
-                                        </el-input-number>
+                                <el-col :span="24">
+                                    <el-form-item label="包装备注：" :label-width="formLabelWidth"
+                                                  >
+                                        <el-input
+                                                type="textarea"
+                                                :autosize="{ minRows: 6, maxRows: 6}"
+                                                disabled
+                                                placeholder="包装备注"
+                                                v-model="form.packageMark">
+                                        </el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="16" :offset="0">
+
+                                <el-col :span="24" :offset="0">
                                     <el-form-item label="备注信息：" :label-width="formLabelWidth">
                                         <el-input
                                                 disabled
                                                 type="textarea"
-                                                :autosize="{ minRows: 4, maxRows: 4}"
+                                                :autosize="{ minRows: 10, maxRows: 10}"
                                                 placeholder="备注信息"
                                                 v-model="form.mark">
                                         </el-input>
@@ -760,6 +764,24 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="机针类型：" :label-width="formLabelWidth"
+                                                  >
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.axleNeedleType"
+                                                       clearable
+                                                       disabled
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in axleNeedleTypeList"
+                                                        :key="item.text"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="机头导轨：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.axleRail"
@@ -832,17 +854,15 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="12">
+                                <el-col :span="24">
                                     <el-form-item label="附加装置：" :label-width="formLabelWidth">
                                         <el-input
+                                                type="textarea"
                                                 disabled
-                                                v-model="form.orderDetail.axleAddition"></el-input>
+                                                v-model="form.orderDetail.axleAddition"
+                                                :autosize="{ minRows: 10, maxRows: 10}">
+                                        </el-input>
                                     </el-form-item>
-                                </el-col>
-                                <el-col :span="10">
-                                    <div style="font-family:Segoe UI;color:gray;text-align: left;margin-top: 10px">
-                                        (仅销售和研发可编辑)
-                                    </div>
                                 </el-col>
                             </div>
                         </div>
@@ -1000,7 +1020,7 @@
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6" :offset="0">
-                                    <el-form-item label="绷孔架：" :label-width="formLabelWidth">
+                                    <el-form-item label="绷架孔：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.driverReelHole"
                                                    clearable
                                                    disabled
@@ -1122,6 +1142,7 @@
                 axleSplitList: AxleSplitList,
                 axlePanelList: AxlePanelList,
                 axleNeedleList: AxleNeedleList,
+                axleNeedleTypeList: AxleNeedleTypeList,
                 axleRailList: AxleRailList,
                 axleDownCheckList: AxleDownCheckList,
                 axleHookList: AxleHookList,

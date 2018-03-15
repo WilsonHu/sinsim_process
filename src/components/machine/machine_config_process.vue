@@ -256,7 +256,7 @@
                         <el-form-item label="位置：">
                             <el-input type="text"
                                       v-model="machineForm.location"
-                                      placeholder="机器位置信息"
+                                      disabled
                                       style="width:100%"
                                       clearable></el-input>
                             <!--<el-select-->
@@ -522,7 +522,7 @@
                 var jsonData = JSON.stringify({
                     id: _this.machineForm.id,
                     nameplate: _this.machineForm.nameplate,
-                    location: _this.machineForm.location,
+                    // location: _this.machineForm.location,
                 });
                 $.ajax({
                     url: HOST + "/machine/update",

@@ -548,15 +548,18 @@ const AxleNeedleList =
         },
     ];
 
-//SUK
-const SUKList =
+//SUK,GROZ
+const AxleNeedleTypeList =
     [
         {
             value: 0,
             text: "SUK"
         },
+        {
+            value: 1,
+            text: "GROZ"
+        },
     ];
-
 
 //机头导轨
 const AxleRailList =

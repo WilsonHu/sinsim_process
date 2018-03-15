@@ -3,14 +3,14 @@
         <div>
             <el-row>
                 <!--<el-col :span="3">-->
-                    <!--<el-row type="flex" justify="center">-->
-                        <!--<el-col :span="19">-->
-                            <!--<div style="font-size: 20px;font-weight: bold; margin-top: 12px">签核中：</div>-->
-                        <!--</el-col>-->
-                        <!--<el-col :span="5">-->
-                            <!--<div style="font-size: 36px; font-weight: bold;">12</div>-->
-                        <!--</el-col>-->
-                    <!--</el-row>-->
+                <!--<el-row type="flex" justify="center">-->
+                <!--<el-col :span="19">-->
+                <!--<div style="font-size: 20px;font-weight: bold; margin-top: 12px">签核中：</div>-->
+                <!--</el-col>-->
+                <!--<el-col :span="5">-->
+                <!--<div style="font-size: 36px; font-weight: bold;">12</div>-->
+                <!--</el-col>-->
+                <!--</el-row>-->
                 <!--</el-col>-->
                 <el-col :span="2" :offset="22">
                     <el-button
@@ -451,7 +451,7 @@
                                                                              :step="1"
                                                                              controls-position="right"
                                                                              :min="1"
-                                                                             :max="100">
+                                                            >
                                                             </el-input-number>
                                                         </el-form-item>
                                                     </el-col>
@@ -794,6 +794,24 @@
                                                         </el-form-item>
                                                     </el-col>
                                                     <el-col :span="6">
+                                                        <el-form-item label="机针类型：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'axleNeedleType', true)">
+                                                            <template scope="scope">
+                                                                <el-select v-model="item.orderDetail.axleNeedleType"
+                                                                           clearable
+                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           placeholder="请选择">
+                                                                    <el-option
+                                                                            v-for="item in axleNeedleTypeList"
+                                                                            :key="item.text"
+                                                                            :label="item.text"
+                                                                            :value="item.text">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="6">
                                                         <el-form-item label="机头导轨：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'axleRail', true)">
                                                             <template scope="scope">
@@ -877,20 +895,16 @@
                                                             </el-select>
                                                         </el-form-item>
                                                     </el-col>
-                                                    <el-col :span="12">
+                                                    <el-col :span="24">
                                                         <el-form-item label="附加装置：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'axleAddition', true)">
                                                             <el-input v-model="item.orderDetail.axleAddition"
                                                                       type="textarea"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                      :autosize="{ minRows: 2, maxRows: 2}">
+                                                                      placeholder="附加装置，销售人员添加"
+                                                                      :disabled="changeOrderContentDisable(item.machineOrder)||userInfo.role.roleName.indexOf('销售') < 0"
+                                                                      :autosize="{ minRows: 10, maxRows: 10}">
                                                             </el-input>
                                                         </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <div style="font-family:Segoe UI;color:gray;text-align: left;margin-top: 30px">
-                                                            (仅销售和研发可编辑)
-                                                        </div>
                                                     </el-col>
                                                 </div>
                                             </div>
@@ -1065,7 +1079,7 @@
                                                         </el-form-item>
                                                     </el-col>
                                                     <el-col :span="6">
-                                                        <el-form-item label="绷孔架：" :label-width="formLabelWidth"
+                                                        <el-form-item label="绷架孔：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'driverReelHole', true)">
                                                             <el-select v-model="item.orderDetail.driverReelHole"
                                                                        clearable
@@ -1145,6 +1159,18 @@
                                                             </el-select>
                                                         </el-form-item>
                                                     </el-col>
+                                                    <el-col :span="24">
+                                                        <el-form-item label="包装备注：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'packageMark', false)">
+                                                            <el-input
+                                                                    type="textarea"
+                                                                    :autosize="{ minRows: 6, maxRows: 10}"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    placeholder="包装备注"
+                                                                    v-model="item.machineOrder.packageMark">
+                                                            </el-input>
+                                                        </el-form-item>
+                                                    </el-col>
                                                     <el-col :span="6">
                                                         <el-form-item label="交货日期：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'contractShipDate', false)">
@@ -1213,13 +1239,13 @@
                                                             </el-select>
                                                         </el-form-item>
                                                     </el-col>
-                                                    <el-col :span="22">
+                                                    <el-col :span="24">
                                                         <el-form-item label="备注信息：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'machineOrder', false)">
                                                             <el-input
                                                                     type="textarea"
                                                                     :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                    :autosize="{ minRows: 4, maxRows: 4}"
+                                                                    :autosize="{ minRows: 4, maxRows: 10}"
                                                                     placeholder="备注信息"
                                                                     v-model="item.machineOrder.mark">
                                                             </el-input>
@@ -1482,7 +1508,9 @@
                         </el-table>
                         <el-row style="margin-top: 10px">
                             <el-col :span="2" :offset="18" style="font-size: 16px;font-weight: bold">总价：</el-col>
-                            <el-col :span="2" :offset="1" style="font-size: 18px;font-weight: bold; color: #409EFF">{{calculateTotalPrice()}}</el-col>
+                            <el-col :span="2" :offset="1" style="font-size: 18px;font-weight: bold; color: #409EFF">
+                                {{calculateTotalPrice()}}
+                            </el-col>
                         </el-row>
                         <el-form style="margin-top: 10px">
                             <el-row>
@@ -1511,7 +1539,7 @@
                                     <el-form-item label="备注信息：" :label-width="formLabelWidth">
                                         <el-input
                                                 type="textarea"
-                                                :autosize="{ minRows: 4, maxRows: 4}"
+                                                :autosize="{ minRows: 6, maxRows: 10}"
                                                 :disabled="changeContractContentDisable(contractForm)"
                                                 placeholder="备注信息"
                                                 v-model="contractForm.mark">
@@ -1816,6 +1844,7 @@
                 axleSplitList: AxleSplitList,
                 axlePanelList: AxlePanelList,
                 axleNeedleList: AxleNeedleList,
+                axleNeedleTypeList: AxleNeedleTypeList,
                 axleRailList: AxleRailList,
                 axleDownCheckList: AxleDownCheckList,
                 axleHookList: AxleHookList,
@@ -1888,7 +1917,7 @@
                     machineOrder: {
                         brand: "SINSIM电脑绣花机",
                         createTime: new Date().format("yyyy-MM-dd"),
-                        equipment:[],
+                        equipment: [],
                         status: ORDER_INITIAL,
                         createUserId: JSON.parse(sessionStorage.getItem("user")).id
                     },
@@ -1991,7 +2020,7 @@
         methods: {
 
             isFinanceVisible() {
-                if(this.userInfo != ""
+                if (this.userInfo != ""
                         && (this.userInfo.role.roleName.indexOf("销售") != -1
                         || this.userInfo.role.roleName.indexOf("财务") != -1)
                         || this.userInfo.role.roleName.indexOf("总经理") != -1
@@ -2042,12 +2071,12 @@
                         }
                     }
                 }
-                return orderTotalPrice != null && orderTotalPrice != ""  ? orderTotalPrice : 0;
+                return orderTotalPrice != null && orderTotalPrice != "" ? orderTotalPrice : 0;
             },
 
             calculateTotalPrice() {
                 let total = 0;
-                for (let i=0; i< this.requisitionForms.length; i++) {
+                for (let i = 0; i < this.requisitionForms.length; i++) {
                     total = total + this.calculateOrderTotalPrice(this.requisitionForms[i].machineOrder);
                 }
                 return total;
@@ -2674,6 +2703,10 @@
                     iserror = true;
                     this.errorMsg = '请选择机针';
                 }
+                if (!iserror && isStringEmpty(formObj.orderDetail.axleNeedleType)) {
+                    iserror = true;
+                    this.errorMsg = '请选择机针类型';
+                }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleRail)) {
                     iserror = true;
                     this.errorMsg = '请选择机头导轨';
@@ -2734,7 +2767,7 @@
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.driverReelHole)) {
                     iserror = true;
-                    this.errorMsg = '请选择 绷孔架';
+                    this.errorMsg = '请选择 绷架孔';
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.driverReel)) {
                     iserror = true;
@@ -2767,7 +2800,7 @@
                         createTime: new Date().format("yyyy-MM-dd"),
                         orderTotalPrice: 0,
                         machineNum: 1,
-                        equipment:[],
+                        equipment: [],
                         status: ORDER_INITIAL,
                         createUserId: JSON.parse(sessionStorage.getItem("user")).id
                     },
@@ -2803,6 +2836,10 @@
                         obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
                         //增加销售员信息，因为之前是绑定信息是在合同contractForm里面 --No.3
                         obj[i].machineOrder.sellman = this.contractForm.sellman;
+                        if (parseInt(obj[i].machineOrder.machinePrice) <= 0) {
+                            showMessage(_this, "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！", 0);
+                            return;
+                        }
                     }
                     $.ajax({
                         url: HOST + "contract/add",
@@ -2853,6 +2890,10 @@
                             obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
                             //将machineOrder中的装置array对象转换成Json String
                             obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
+                            if (parseInt(obj[i].machineOrder.machinePrice) <= 0) {
+                                showMessage(_this, "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！", 0);
+                                return;
+                            }
                         }
                     }
                     $.ajax({
@@ -3477,6 +3518,7 @@
         z-index: 9999;
         background: #FF99FF;
     }
+
     .divOrderStatusFinished {
         color: green;
     }
