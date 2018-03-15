@@ -39,9 +39,9 @@
                 </el-row>
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="系统编号:">
-                            <el-input v-model="filters.machine_strid"
-                                      placeholder="系统编号"
+                        <el-form-item label="机器编号:">
+                            <el-input v-model="filters.nameplate"
+                                      placeholder="机器编号"
                                       auto-complete="off"></el-input>
                         </el-form-item>
                     </el-col>
@@ -80,11 +80,11 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column
+                <!-- <el-table-column
                         align="center"
                         prop="machineStrId"
                         label="系统编号">
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column
                         align="center"
                         prop="nameplate"
@@ -232,13 +232,14 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="10" :offset="1">
-                                        <el-form-item label="系统编号：">
+                                        <el-form-item label="机型：">
                                             <el-input type="text"
                                                       disabled
-                                                      v-model="addForm.machineStrId"
+                                                      v-model="addForm.machineTypeName"
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
+                                    
                                     <el-col :span="10">
                                         <el-form-item label="机器编号：">
                                             <el-input type="text"
@@ -247,14 +248,16 @@
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
+                                   
                                     <el-col :span="10" :offset="1">
-                                        <el-form-item label="机型：">
+                                        <el-form-item label="交货日期：">
                                             <el-input type="text"
                                                       disabled
-                                                      v-model="addForm.machineTypeName"
+                                                      v-model="addForm.shipTime"
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
+                                    
                                     <el-col :span="10">
                                         <el-form-item label="开始时间：">
                                             <el-input type="text"
@@ -538,6 +541,7 @@
                 statusList: MachineStatusList,
                 filters: {
                     machine_strid: '',
+                    nameplate:'',
                     contract_num: '',
                     order_status: '',
                     orderNum: '',
@@ -602,6 +606,7 @@
                 var condition = {
                     machine_strid: _this.filters.machine_strid.trim(),
                     orderNum: _this.filters.orderNum.trim(),
+                    nameplate: _this.filters.nameplate.trim(),
                     contractNum: _this.filters.contract_num.trim(),
                     query_start_time: '',
                     query_finish_time: '',
@@ -681,6 +686,9 @@
                 }
                 if (_this.addForm.processEndTime != null) {
                     _this.addForm.processEndTime = _this.filterDateString(_this.addForm.processEndTime)
+                }
+                if (_this.addForm.shipTime != null) {
+                    _this.addForm.shipTime = _this.filterDateString(_this.addForm.shipTime)
                 }
                 if (_this.addForm.processRecordId != '') {
                     /*

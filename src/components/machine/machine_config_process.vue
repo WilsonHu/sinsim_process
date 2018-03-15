@@ -39,9 +39,9 @@
                 </el-row>
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="系统编号:">
-                            <el-input v-model="filters.machine_strid"
-                                      placeholder="系统编号"
+                        <el-form-item label="机器编号:">
+                            <el-input v-model="filters.nameplate"
+                                      placeholder="机器编号"
                                       auto-complete="off"></el-input>
                         </el-form-item>
                     </el-col>
@@ -79,11 +79,11 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column
+                <!-- <el-table-column
                         align="center"
                         prop="machineStrId"
                         label="系统编号">
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column
                         align="center"
                         prop="nameplate"
@@ -200,10 +200,13 @@
             </div>
         </el-col>
 
-        <el-dialog title="机器基本信息配置" :visible.sync="machineDialog" width="50%" @open="basicDialogOpen">
+        <el-dialog title="机器基本信息配置" 
+        :visible.sync="machineDialog" width="50%" 
+        @close="basicDialogClose"
+        @open="basicDialogOpen">
             <el-form :model="machineForm" label-position="right" label-width="150px">
                 <el-row>
-                    <el-col :span="11">
+                    <el-col :span="10">
                         <el-form-item label="订单号：">
                             <el-input type="text"
                                       disabled
@@ -214,7 +217,7 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="11" :offset="0">
+                    <el-col :span="10" :offset="1">
                         <el-form-item label="机型：">
                             <el-input type="text"
                                       disabled
@@ -224,7 +227,7 @@
                             ></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="11" :offset="0">
+                    <!-- <el-col :span="11" :offset="0">
                         <el-form-item label="系统编号：">
                             <el-input type="text"
                                       disabled
@@ -233,17 +236,23 @@
                                       style="width:100%"
                             ></el-input>
                         </el-form-item>
-                    </el-col>
-                    <el-col :span="11">
+                    </el-col> -->
+                    <el-col :span="10">
                         <el-form-item label="机器编号：">
                             <el-input type="text"
+                                      autofocus
                                       v-model="machineForm.nameplate"
                                       placeholder="机器编号(铭牌号)"
                                       style="width:100%"
                                       clearable></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="11" :offset="0">
+                    <el-col :span="1">
+                        <el-tooltip class="item" effect="dark" content="点击生成二维码" placement="top">
+                            <el-button type="success" @click="onGeneralQRCode" style="margin-top:3px;" size="mini" icon="el-icon-check"></el-button>
+                        </el-tooltip>
+                    </el-col>
+                    <el-col :span="10" :offset="0">
                         <el-form-item label="位置：">
                             <el-input type="text"
                                       v-model="machineForm.location"
@@ -262,17 +271,16 @@
                             <!--</el-select>-->
                         </el-form-item>
                     </el-col>
-
                 </el-row>
             </el-form>
             <el-row>
                 <div id="qrcode"></div>
             </el-row>
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
-                      :title="errorMsg"
-                      type="error"
-                      :closable="false"
-                      show-icon>
+                                        :title="errorMsg"
+                                        type="error"
+                                        :closable="false"
+                                        show-icon>
             </el-alert>
             <div slot="footer" class="dialog-footer" style="margin-bottom: 70px;margin-top: 30px">
                 <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
@@ -290,14 +298,14 @@
                     <td style="width: 20%; padding-right: 10px">
                         <el-row>
                             <el-form :model="addForm">
-                                <el-col :span="24">
+                                <!-- <el-col :span="24">
                                     <el-form-item label="系统编号：">
                                         <el-input type="text"
                                                   disabled
                                                   v-model="addForm.machineStrId"
                                                   style="width:100%"></el-input>
                                     </el-form-item>
-                                </el-col>
+                                </el-col> -->
                                 <el-col :span="24">
                                     <el-form-item label="机器编号(铭牌号)：">
                                         <el-input type="text"
@@ -401,6 +409,7 @@
                 configStatusList: ConfigStatusList,
                 filters: {
                     machine_strid: '',
+                    nameplate:'',
                     contract_num: '',
                     order_status: '',
                     orderNum: '',
@@ -448,10 +457,36 @@
 
                 machineForm: {},
                 machineDialog: false,
+                isShowGeneral: false,
             }
 
         },
         methods: {
+            basicDialogClose()
+            {
+                _this.isError=false;
+                _this.errorMsg="";
+                $('#qrcode').html("");
+            },
+            onGeneralQRCode()
+            {
+                if(!isStringEmpty(_this.machineForm.nameplate))
+                {
+                    _this.isError=false;
+                    _this.errorMsg="";
+                    window.setTimeout(()=> {
+                        // 设置参数方式
+                        var str = toUtf8(_this.machineForm.nameplate);
+                        $('#qrcode').html("");
+                        $('#qrcode').qrcode(str);
+                    }, 200);
+                }
+                else{
+                    _this.isError=true;
+                    _this.errorMsg="请输入机器编号再生成二维码"
+                    $('#qrcode').html("");
+                }
+            },
             onShowMachineInfo(item)
             {
                 _this.selectedItem = item;
@@ -526,6 +561,7 @@
             {
                 var condition = {
                     machine_strid: _this.filters.machine_strid.trim(),
+                    nameplate:_this.filters.nameplate.trim(),
                     orderNum: _this.filters.orderNum.trim(),
                     contractNum: _this.filters.contract_num.trim(),
                     query_start_time: '',
@@ -761,12 +797,7 @@
                 })
             },
             basicDialogOpen() {
-                window.setTimeout(()=> {
-                    // 设置参数方式
-                    var str = toUtf8(_this.machineForm.machineStrId);
-                    $('#qrcode').html("");
-                    $('#qrcode').qrcode(str);
-                }, 200);
+               _this.onGeneralQRCode();
             },
             onopened()
             {

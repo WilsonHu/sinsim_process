@@ -13,9 +13,9 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="4">
-                            <el-form-item label="系统编号:">
-                                <el-input v-model="planedFilters.machineStrId"
-                                          placeholder="系统编号"
+                            <el-form-item label="机器编号:">
+                                <el-input v-model="planedFilters.nameplate"
+                                          placeholder="机器编号"
                                           auto-complete="off"
                                           clearable></el-input>
                             </el-form-item>
@@ -114,9 +114,9 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="系统编号">
+                            label="机器编号">
                         <template scope="scope">
-                            {{scope.row.machine.machineStrId}}
+                            {{scope.row.machine.nameplate}}
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -243,9 +243,9 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="4" :offset="1">
-                            <el-form-item label="系统编号:">
-                                <el-input v-model="filters.machineStrId"
-                                          placeholder="系统编号"
+                            <el-form-item label="机器编号:">
+                                <el-input v-model="filters.nameplate"
+                                          placeholder="机器编号"
                                           auto-complete="off"
                                           clearable></el-input>
                             </el-form-item>
@@ -332,15 +332,15 @@
                         <template scope="scope"
                                   prop="orderNum">
                             <div
-                                    style="font-weight: bold;">
+                                style="font-weight: bold;">
                                 {{scope.row.orderNum}}
                             </div>
                         </template>
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="machineStrId"
-                            label="系统编号">
+                            prop="nameplate"
+                            label="机器编号">
                     </el-table-column>
                     <el-table-column
                             align="center"
@@ -467,9 +467,9 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
-                        <el-form-item label="系统编号:">
-                            <el-input v-model="machineDoPlaning.machineStrId"
-                                      placeholder="系统编号"
+                        <el-form-item label="机器编号:">
+                            <el-input v-model="machineDoPlaning.nameplate"
+                                      placeholder=""
                                       auto-complete="off"
                                       disabled></el-input>
                         </el-form-item>
@@ -605,6 +605,7 @@
                 //已计划
                 planedFilters: {
                     orderNum: '',
+                    nameplate: '',
                     machineStrId: '',
                     taskName: "",
                     installStatus: '',
@@ -615,6 +616,7 @@
 
                 filters: {
                     orderNum: '',
+                    nameplate: '',
                     machineStrId: '',
                     status: '',
                     machineType: "",
@@ -837,6 +839,7 @@
                 var condition = {
                     orderNum: _this.filters.orderNum,
                     machineType: _this.filters.machineType,
+                    nameplate: _this.filters.nameplate,
                     machineStrId: _this.filters.machineStrId,
                     status: _this.filters.status,
                     dateType: _this.filters.dateType,
@@ -872,6 +875,7 @@
                 var condition = {
                     orderNum: _this.planedFilters.orderNum,
                     machineType: _this.planedFilters.machineType,
+                    nameplate: _this.planedFilters.nameplate,
                     machineStrId: _this.planedFilters.machineStrId,
                     installStatus: _this.planedFilters.installStatus,
                     taskName: _this.planedFilters.taskName,
