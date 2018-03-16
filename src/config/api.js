@@ -118,6 +118,8 @@ const MaintainTypeList =
         },
     ];
 
+const DefaultSelectedValue = "无";
+
 //色数
 const SpecialTowelColorList = [
     {

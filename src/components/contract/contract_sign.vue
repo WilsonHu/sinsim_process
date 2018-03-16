@@ -475,7 +475,19 @@
                                             </div>
                                             <div class="panel panel-primary">
                                                 <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">特种绣选项</h3>
+                                                    <el-row>
+                                                        <el-col :span="3">
+                                                            <h3 class="panel-title">特种绣选项</h3>
+                                                        </el-col>
+                                                        <el-col :span="1">
+                                                            <el-button
+                                                                    icon="el-icon-check"
+                                                                    size="small"
+                                                                    type="success"
+                                                                    @click="onSetDefault(item.name)">默认值
+                                                            </el-button>
+                                                        </el-col>
+                                                    </el-row>
                                                 </div>
                                                 <div class="panel-body">
                                                     <el-col :span="6">
@@ -2018,6 +2030,19 @@
 
         },
         methods: {
+            onSetDefault(name) {
+                for (var i = 0; i < _this.requisitionForms.length; i++) {
+                    if (name === _this.requisitionForms[i].name) {
+                        _this.requisitionForms[i].orderDetail.specialTowelColor = DefaultSelectedValue
+                        _this.requisitionForms[i].orderDetail.specialTowelDaxle = DefaultSelectedValue;
+                        _this.requisitionForms[i].orderDetail.specialTowelHaxle = DefaultSelectedValue;
+                        _this.requisitionForms[i].orderDetail.specialTowelMotor = DefaultSelectedValue;
+                        _this.requisitionForms[i].orderDetail.specialTapingHead = DefaultSelectedValue;
+                        _this.requisitionForms[i].orderDetail.specialTowelNeedle = DefaultSelectedValue;
+                        break;
+                    }
+                }
+            },
 
             isFinanceVisible() {
                 if (this.userInfo != ""
@@ -2486,6 +2511,8 @@
                 this.dialogTitle = "新增合同";
                 this.addContractVisible = true;
                 this.editContract = "";
+
+
                 _this.requisitionForms[0].orderSign.signContent = _this.normalOrderSignArray;
                 _this.contractSignForms[0].contractSignData = _this.normalContractSignArray;
             },
@@ -3397,9 +3424,9 @@
                     for (let i = 0; i < _this.requisitionForms.length; i++) {
                         if (item.machineOrder.originalOrderId == _this.requisitionForms[i].machineOrder.id) {
                             if (isDetail) {
-                                comparedItem = _this.requisitionForms[i].orderDetail;
+                                comparedItem = copyObjectByJSON(_this.requisitionForms[i].orderDetail);
                             } else {
-                                comparedItem = _this.requisitionForms[i].machineOrder;
+                                comparedItem = copyObjectByJSON(_this.requisitionForms[i].machineOrder);
                             }
                             break;
                         }
