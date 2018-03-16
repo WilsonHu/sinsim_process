@@ -1811,7 +1811,14 @@
     import Vue from 'vue'
     import {Loading} from 'element-ui';
     var _this;
-
+    const DefaultOrderDetail={
+        specialTowelColor:"",
+        specialTowelDaxle:"",
+        specialTowelHaxle:"",
+        specialTowelMotor:"",
+        specialTapingHead:"",
+        specialTowelNeedle:""
+    };
     export default {
         name: "contract_sign",
         components: {},
@@ -1933,10 +1940,11 @@
                         status: ORDER_INITIAL,
                         createUserId: JSON.parse(sessionStorage.getItem("user")).id
                     },
-                    orderDetail: {},
+                    orderDetail: DefaultOrderDetail,
                     //每个需求单中的签核记录
                     orderSign: {}
                 }],
+            
                 tabIndex: 1,
 
                 //多个合同签核记录，第一阶段只展示1个，即：当前有效的（进行中的）合同签核记录
