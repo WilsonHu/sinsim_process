@@ -17,6 +17,10 @@ var ScrollTimerInterval = 5000;
 var DisableScroll = 1;
 var COM_CMD_INTERVAL = 5000;
 
+const USER_ROLE = {
+    ROLE_SALEPERSON:9,
+}
+
 const PROGRESSTYPE = {
     NORMAL: "",
     EXCEPTION: "exception",

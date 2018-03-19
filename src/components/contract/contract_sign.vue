@@ -231,18 +231,32 @@
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="客户：" :label-width="formLabelWidth">
-                                <el-input v-model="contractForm.customerName"
+                                <!-- <el-input v-model="contractForm.customerName"
                                           :disabled="changeContractContentDisable(contractForm)"
                                           placeholder="客户"
-                                ></el-input>
+                                ></el-input> -->
+                                <el-autocomplete
+                                        :disabled="changeContractContentDisable(contractForm)"
+                                        v-model="contractForm.customerName"
+                                        :fetch-suggestions="queryCustomer"
+                                        placeholder="客户"
+                                >
+                                </el-autocomplete>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="销售员：" :label-width="formLabelWidth">
-                                <el-input v-model="contractForm.sellman"
+                                <!-- <el-input v-model="contractForm.sellman"
                                           :disabled="changeContractContentDisable(contractForm)"
                                           placeholder="销售员"
-                                ></el-input>
+                                ></el-input> -->
+                                <el-autocomplete
+                                        :disabled="changeContractContentDisable(contractForm)"
+                                        v-model="contractForm.sellman"
+                                        :fetch-suggestions="querySearchAsync"
+                                        placeholder="销售员"
+                                        @select="handleSelect">
+                                </el-autocomplete>
                             </el-form-item>
                         </el-col>
                         <el-col :span="2" :offset="4"
@@ -1808,27 +1822,27 @@
 </template>
 
 <script>
-    import Vue from 'vue'
-    import {Loading} from 'element-ui';
+    import Vue from "vue";
+    import {Loading} from "element-ui";
     var _this;
-    const DefaultOrderDetail={
-        specialTowelColor:"",
-        specialTowelDaxle:"",
-        specialTowelHaxle:"",
-        specialTowelMotor:"",
-        specialTapingHead:"",
-        specialTowelNeedle:""
+    const DefaultOrderDetail = {
+        specialTowelColor: "",
+        specialTowelDaxle: "",
+        specialTowelHaxle: "",
+        specialTowelMotor: "",
+        specialTapingHead: "",
+        specialTowelNeedle: ""
     };
     export default {
         name: "contract_sign",
         components: {},
-        data () {
+        data() {
             _this = this;
             return {
                 editUrl: HOST + "machine/order/update",
                 deleteUrl: HOST + "machine/order/delete",
                 isError: false,
-                errorMsg: '',
+                errorMsg: "",
                 totalRecords: 0,
                 selectedItem: {},
                 deleteConfirmVisible: false,
@@ -1842,7 +1856,7 @@
                 tableData: [],
                 //分页
                 totalNum: 1,
-                pageSize: EveryPageNum,//每一页的num
+                pageSize: EveryPageNum, //每一页的num
                 currentPage: 1,
                 startRow: 1,
 
@@ -1891,7 +1905,7 @@
 
                 //增加对话框
                 addContractVisible: false,
-                collapseActiveNames: ['1'],
+                collapseActiveNames: ["1"],
                 collapseTitle: "隐藏需求单",
                 doCollapse: false,
                 signProcesses: [],
@@ -1928,45 +1942,49 @@
                 },
 
                 //多个需求单,一下是新创建合同时候的初始值，在编辑或者签核时需要从server端加载
-                editableTabsValue: '1',
-                requisitionForms: [{
-                    title: '需求单1',
-                    name: '1',
-                    //保存需求单数据
-                    machineOrder: {
-                        brand: "SINSIM电脑绣花机",
-                        createTime: new Date().format("yyyy-MM-dd"),
-                        equipment: [],
-                        status: ORDER_INITIAL,
-                        createUserId: JSON.parse(sessionStorage.getItem("user")).id
-                    },
-                    orderDetail: DefaultOrderDetail,
-                    //每个需求单中的签核记录
-                    orderSign: {}
-                }],
-            
+                editableTabsValue: "1",
+                requisitionForms: [
+                    {
+                        title: "需求单1",
+                        name: "1",
+                        //保存需求单数据
+                        machineOrder: {
+                            brand: "SINSIM电脑绣花机",
+                            createTime: new Date().format("yyyy-MM-dd"),
+                            equipment: [],
+                            status: ORDER_INITIAL,
+                            createUserId: JSON.parse(sessionStorage.getItem("user")).id
+                        },
+                        orderDetail: DefaultOrderDetail,
+                        //每个需求单中的签核记录
+                        orderSign: {}
+                    }
+                ],
+
                 tabIndex: 1,
 
                 //多个合同签核记录，第一阶段只展示1个，即：当前有效的（进行中的）合同签核记录
-                editableContractTabsValue: '1',
-                contractSignForms: [{
-                    title: '合同签核记录',
-                    name: '1',
-                    contractSignData: []
-                }],
+                editableContractTabsValue: "1",
+                contractSignForms: [
+                    {
+                        title: "合同签核记录",
+                        name: "1",
+                        contractSignData: []
+                    }
+                ],
                 contractTabIndex: 1,
                 splitNum: 1,
                 machinesOfOrder: [],
                 splitMachinesSelected: [],
                 emptyTableText: "被拆需求单未签核完毕，暂无机器记录！",
 
-                formLabelWidth: '100px',
-                longFormLabelWidth: '120px',
+                formLabelWidth: "100px",
+                longFormLabelWidth: "120px",
 
                 mode: this.SIGN_MODE,
-//			    isEdit: false,
-//                isSign: false,
-//                isChanging: false,
+                //			    isEdit: false,
+                //                isSign: false,
+                //                isChanging: false,
                 dialogTitle: "合同",
                 editContract: "",
                 editContractSign: "",
@@ -1981,9 +1999,8 @@
                     //默认审核中
                     status: 1,
                     sellman: "",
-                    selectDate: "",
+                    selectDate: ""
                 },
-
 
                 //改单相关
                 changeOrderVisible: false,
@@ -1996,68 +2013,194 @@
 
                 allRoles: [],
 
+                salePersonList: [],
+                timeout: null,
+                customerList: [],
+                customerTimeout: null,
+
                 pickerOptions: {
-                    shortcuts: [{
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', [start, end]);
+                    shortcuts: [
+                        {
+                            text: "最近一周",
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                                picker.$emit("pick", [start, end]);
+                            }
+                        },
+                        {
+                            text: "最近一个月",
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                                picker.$emit("pick", [start, end]);
+                            }
+                        },
+                        {
+                            text: "最近三个月",
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                                picker.$emit("pick", [start, end]);
+                            }
                         }
-                    }, {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }, {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }]
+                    ]
                 },
                 pickerOptions2: {
                     disabledDate(time) {
                         return time.getTime() < Date.now();
                     },
-                    shortcuts: [{
-                        text: '今天',
-                        onClick(picker) {
-                            picker.$emit('pick', new Date());
+                    shortcuts: [
+                        {
+                            text: "今天",
+                            onClick(picker) {
+                                picker.$emit("pick", new Date());
+                            }
                         }
-                    }]
-                },
-            }
-
+                    ]
+                }
+            };
         },
         methods: {
+            requestCustomerList() {
+                $.ajax({
+                    url: HOST + "contract/selectAllCustomer/",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        name: '',
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.customerList = [];
+                            res.data.forEach(item => {
+                                _this.customerList.push({
+                                    value: item.customerName
+                                });
+                            });
+                        }
+                    }
+                });
+            },
+
+            queryCustomer(queryString, check) {
+                //缓存加载
+                var results = _this.customerList;
+                if (queryString) {
+                    results = _this.customerList.filter(
+                            this.createStateFilter(queryString)
+                    );
+                }
+                clearTimeout(_this.customerTimeout);
+                _this.customerTimeout = setTimeout(() => {
+                    check(results);
+                }, 800 * Math.random());
+
+                /*
+                 //实时加载
+                 */
+//                $.ajax({
+//                    url: HOST + "contract/selectAllCustomer/",
+//                    type: "POST",
+//                    dataType: "JSON",
+//                    data: {
+//                        name: queryString
+//                    },
+//                    success: function (res) {
+//                        if (res.code == 200) {
+//                            _this.customerList = [];
+//                            res.data.forEach(item => {
+//                                _this.customerList.push({
+//                                    value: item.customerName
+//                                });
+//                            });
+//                            check(_this.customerList);
+//                        }
+//                    }
+//                });
+            },
+
+            requestSalePersonList() {
+                $.ajax({
+                    url: HOST + "user/selectUsers",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        roleId: USER_ROLE.ROLE_SALEPERSON
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.salePersonList = [];
+                            res.data.list.forEach(item => {
+                                _this.salePersonList.push({
+                                    value: item.name
+                                });
+                            });
+                        }
+                    }
+                });
+            },
+
+            querySearchAsync(queryString, cb) {
+                var results = _this.salePersonList;
+                if (queryString) {
+                    results = _this.salePersonList.filter(
+                            this.createStateFilter(queryString)
+                    );
+                }
+                clearTimeout(_this.timeout);
+                _this.timeout = setTimeout(() => {
+                    cb(results);
+                }, 800 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return item => {
+                    return (
+                            item.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+                    );
+                };
+            },
+            handleSelect(item) {
+                console.log(item);
+            },
+
             onSetDefault(name) {
                 for (var i = 0; i < _this.requisitionForms.length; i++) {
                     if (name === _this.requisitionForms[i].name) {
-                        _this.requisitionForms[i].orderDetail.specialTowelColor = DefaultSelectedValue
-                        _this.requisitionForms[i].orderDetail.specialTowelDaxle = DefaultSelectedValue;
-                        _this.requisitionForms[i].orderDetail.specialTowelHaxle = DefaultSelectedValue;
-                        _this.requisitionForms[i].orderDetail.specialTowelMotor = DefaultSelectedValue;
-                        _this.requisitionForms[i].orderDetail.specialTapingHead = DefaultSelectedValue;
-                        _this.requisitionForms[i].orderDetail.specialTowelNeedle = DefaultSelectedValue;
+                        _this.requisitionForms[
+                                i
+                                ].orderDetail.specialTowelColor = DefaultSelectedValue;
+                        _this.requisitionForms[
+                                i
+                                ].orderDetail.specialTowelDaxle = DefaultSelectedValue;
+                        _this.requisitionForms[
+                                i
+                                ].orderDetail.specialTowelHaxle = DefaultSelectedValue;
+                        _this.requisitionForms[
+                                i
+                                ].orderDetail.specialTowelMotor = DefaultSelectedValue;
+                        _this.requisitionForms[
+                                i
+                                ].orderDetail.specialTapingHead = DefaultSelectedValue;
+                        _this.requisitionForms[
+                                i
+                                ].orderDetail.specialTowelNeedle = DefaultSelectedValue;
                         break;
                     }
                 }
             },
 
             isFinanceVisible() {
-                if (this.userInfo != ""
-                        && (this.userInfo.role.roleName.indexOf("销售") != -1
-                        || this.userInfo.role.roleName.indexOf("财务") != -1)
-                        || this.userInfo.role.roleName.indexOf("总经理") != -1
-                        || this.userInfo.role.id == 1) {
+                if (
+                        (this.userInfo != "" &&
+                        (this.userInfo.role.roleName.indexOf("销售") != -1 ||
+                        this.userInfo.role.roleName.indexOf("财务") != -1)) ||
+                        this.userInfo.role.roleName.indexOf("总经理") != -1 ||
+                        this.userInfo.role.id == 1
+                ) {
                     return true;
                 } else {
                     return false;
@@ -2075,7 +2218,7 @@
                 return name;
             },
 
-            handleMachineSelectionChange(val){
+            handleMachineSelectionChange(val) {
                 if (val.length > this.splitNum) {
                     showMessage(_this, "选择机器数量大于拆分数！", 0);
                 } else {
@@ -2084,8 +2227,14 @@
             },
 
             canSplitOrChangeOrder(status) {
-                if (this.mode != this.SIGN_MODE && this.mode != this.CHANGE_MODE && this.mode != this.SPLIT_MODE
-                        && (status == ORDER_CHECKING || status == ORDER_CHECKING_FINISHED || status == ORDER_SPLITED)) {
+                if (
+                        this.mode != this.SIGN_MODE &&
+                        this.mode != this.CHANGE_MODE &&
+                        this.mode != this.SPLIT_MODE &&
+                        (status == ORDER_CHECKING ||
+                        status == ORDER_CHECKING_FINISHED ||
+                        status == ORDER_SPLITED)
+                ) {
                     return true;
                 } else {
                     return false;
@@ -2097,48 +2246,56 @@
                 if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
                     orderTotalPrice = 0;
                 } else {
-                    orderTotalPrice = parseInt(item.machinePrice) * parseInt(item.machineNum);
+                    orderTotalPrice =
+                            parseInt(item.machinePrice) * parseInt(item.machineNum);
                     if (item.equipment != null && item.equipment != "") {
                         for (let i = 0; i < item.equipment.length; i++) {
-                            orderTotalPrice = orderTotalPrice + parseInt(item.equipment[i].number) * parseInt(item.equipment[i].price);
+                            orderTotalPrice =
+                                    orderTotalPrice +
+                                    parseInt(item.equipment[i].number) *
+                                    parseInt(item.equipment[i].price);
                         }
                     }
                 }
-                return orderTotalPrice != null && orderTotalPrice != "" ? orderTotalPrice : 0;
+                return orderTotalPrice != null && orderTotalPrice != ""
+                        ? orderTotalPrice
+                        : 0;
             },
 
             calculateTotalPrice() {
                 let total = 0;
                 for (let i = 0; i < this.requisitionForms.length; i++) {
-                    total = total + this.calculateOrderTotalPrice(this.requisitionForms[i].machineOrder);
+                    total =
+                            total +
+                            this.calculateOrderTotalPrice(this.requisitionForms[i].machineOrder);
                 }
                 return total;
             },
 
-//            getSummaries(param) {
-//                let columns = param.columns;
-//                let data = param.data;
-//                const sums = [];
-//                columns.forEach((column, index) => {
-//                    if (index === 0) {
-//                        sums[index] = '总价';
-//                        return;
-//                    }
-//                    const values = data.map(item => Number(item.machineOrder[column.property]));
-//                    if (!values.every(value => isNaN(value))) {
-//                        sums[index] = values.reduce((prev, curr) => {
-//                            const value = Number(curr);
-//                            if (!isNaN(value) && index == 5) {
-//                                return prev + curr;
-//                            } else {
-//                                return "";
-//                            }
-//                        }, 0);
-//                    }
-//                });
-//
-//                return sums;
-//            },
+            //            getSummaries(param) {
+            //                let columns = param.columns;
+            //                let data = param.data;
+            //                const sums = [];
+            //                columns.forEach((column, index) => {
+            //                    if (index === 0) {
+            //                        sums[index] = '总价';
+            //                        return;
+            //                    }
+            //                    const values = data.map(item => Number(item.machineOrder[column.property]));
+            //                    if (!values.every(value => isNaN(value))) {
+            //                        sums[index] = values.reduce((prev, curr) => {
+            //                            const value = Number(curr);
+            //                            if (!isNaN(value) && index == 5) {
+            //                                return prev + curr;
+            //                            } else {
+            //                                return "";
+            //                            }
+            //                        }, 0);
+            //                    }
+            //                });
+            //
+            //                return sums;
+            //            },
 
             handleCollapseChange() {
                 _this.doCollapse = !_this.doCollapse;
@@ -2150,22 +2307,24 @@
             },
 
             viewContractSignHistory() {
-                _this.contractSignHistory = [];//置空
+                _this.contractSignHistory = []; //置空
                 $.ajax({
                     url: HOST + "contract/sign/list",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {contractId: _this.editContract.id},
                     success: function (data) {
                         if (data.code == 200) {
                             _this.contractSignHistory = data.data.list;
                             for (let i = 0; i < _this.contractSignHistory.length; i++) {
-                                _this.contractSignHistory[i].signContent = JSON.parse(_this.contractSignHistory[i].signContent);
+                                _this.contractSignHistory[i].signContent = JSON.parse(
+                                        _this.contractSignHistory[i].signContent
+                                );
                             }
                             if (_this.contractSignHistory.length > 0) {
                                 _this.viewContractSignHistoryVisible = true;
                             } else {
-                                showMessage(_this, '暂无历史记录！', 1);
+                                showMessage(_this, "暂无历史记录！", 1);
                             }
                         } else {
                             showMessage(_this, data.message, 0);
@@ -2180,8 +2339,10 @@
             haveInitialMachineOrder() {
                 let result = false;
                 for (let i = 0; i < this.requisitionForms.length; i++) {
-                    if (this.requisitionForms[i].machineOrder.status == ORDER_INITIAL
-                            || this.requisitionForms[i].machineOrder.status == ORDER_REJECTED) {
+                    if (
+                            this.requisitionForms[i].machineOrder.status == ORDER_INITIAL ||
+                            this.requisitionForms[i].machineOrder.status == ORDER_REJECTED
+                    ) {
                         result = true;
                         break;
                     }
@@ -2194,13 +2355,13 @@
             },
 
             handleEditTab(targetName, action) {
-                if (action === 'add') {
-                    this.addTab(targetName)
+                if (action === "add") {
+                    this.addTab(targetName);
                 }
-                if (action === 'remove') {
+                if (action === "remove") {
                     let tabs = this.requisitionForms;
                     let hasSigned;
-                    tabs.forEach((tab) => {
+                    tabs.forEach(tab => {
                         if (tab.name === targetName) {
                             let signContent = tab.orderSign.signContent;
                             for (let i = 0; i < signContent.length; i++) {
@@ -2216,19 +2377,29 @@
                     } else if (this.requisitionForms.length == 1) {
                         showMessage(_this, "不能删除最后一个需求单！", 0);
                     } else {
-                        this.removeTab(targetName)
+                        this.removeTab(targetName);
                     }
                 }
             },
 
             addTab(targetName) {
-                let newTabName = ++this.tabIndex + '';
+                let newTabName = ++this.tabIndex + "";
                 var newItem = {
-                    title: '需求单' + newTabName,
+                    title: "需求单" + newTabName,
                     name: newTabName,
-                    machineOrder: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].machineOrder),
-                    orderDetail: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderDetail),
-                    orderSign: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign) != null ? copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign) : {}
+                    machineOrder: copyObjectByJSON(
+                            this.requisitionForms[this.tabIndex - 2].machineOrder
+                    ),
+                    orderDetail: copyObjectByJSON(
+                            this.requisitionForms[this.tabIndex - 2].orderDetail
+                    ),
+                    orderSign: copyObjectByJSON(
+                            this.requisitionForms[this.tabIndex - 2].orderSign
+                    ) != null
+                            ? copyObjectByJSON(
+                            this.requisitionForms[this.tabIndex - 2].orderSign
+                    )
+                            : {}
                 };
                 //设置时间
                 newItem.machineOrder.createTime = new Date().format("yyyy-MM-dd");
@@ -2244,7 +2415,8 @@
                 this.requisitionForms.push(newItem);
                 this.editableTabsValue = newTabName;
                 //TODO:合同的签核内容此时也需要更新
-                this.contractSignForms[0].contractSignData = _this.normalContractSignArray;
+                this.contractSignForms[0].contractSignData =
+                        _this.normalContractSignArray;
             },
 
             removeTab(targetName) {
@@ -2270,14 +2442,14 @@
                 //alert(this.editContract.id);
                 $.ajax({
                     url: HOST + "contract/startSign",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {contractId: _this.editContract.id},
                     success: function (data) {
                         if (data.code == 200) {
                             _this.addContractVisible = false;
                             _this.editContract = "";
-                            showMessage(_this, '发起签核成功', 1);
+                            showMessage(_this, "发起签核成功", 1);
                             _this.selectContracts();
                         } else {
                             showMessage(_this, data.message, 0);
@@ -2286,8 +2458,7 @@
                     error: function (data) {
                         showMessage(_this, "服务器访问失败！", 0);
                     }
-                })
-
+                });
             },
 
             formatDate(timeStamp) {
@@ -2306,34 +2477,37 @@
                 return result;
             },
 
-            onCourseDetail(item)
-            {
+            onCourseDetail(item) {
                 _this.selectedItem = item;
-
             },
 
-//		    onChange: function () {
-//			    if (_this.addContractVisible) {
-//				    _this.isError = _this.validateForm(_this.form, false);
-//			    }
-//			    else {
-//				    _this.isError = _this.validateForm(_this.form, true);
-//			    }
-//
-//		    },
+            //		    onChange: function () {
+            //			    if (_this.addContractVisible) {
+            //				    _this.isError = _this.validateForm(_this.form, false);
+            //			    }
+            //			    else {
+            //				    _this.isError = _this.validateForm(_this.form, true);
+            //			    }
+            //
+            //		    },
             //TODO:由于控件的原因，直接点击加减按钮时，会出现数值不匹配的情况，点击输入框没问题，所以需要在提交后再一次检查
             machineNumChanged(item) {
                 if (item.machineOrder.originalOrderId != null) {
-                    if (item.machineOrder.machineNum > this.requisitionChangingItem.machineOrder.machineNum) {
+                    if (
+                            item.machineOrder.machineNum >
+                            this.requisitionChangingItem.machineOrder.machineNum
+                    ) {
                         //机器数增加，审核流程要变
                         item.orderSign.signContent = _this.normalOrderSignArray;
                         //原合同签核改成改单的，之前的contract sign记录需要在后台设置成拆单状态
-                        this.contractSignForms[0].contractSignData = _this.normalContractSignArray;
+                        this.contractSignForms[0].contractSignData =
+                                _this.normalContractSignArray;
                     } else {
                         //机器数不变或者减少，变成改单签核流程
                         item.orderSign.signContent = _this.changeOrderSignArray;
                         //原合同签核改成改单的，之前的contract sign记录需要在后台设置成改单状态
-                        this.contractSignForms[0].contractSignData = _this.changeContractSignArray;
+                        this.contractSignForms[0].contractSignData =
+                                _this.changeContractSignArray;
                     }
                 }
             },
@@ -2347,26 +2521,33 @@
                 this.selectContracts();
             },
 
-            selectContracts(){
+            selectContracts() {
                 var condition = {
                     id: _this.filters.id,
                     contractNum: _this.filters.contractNum,
                     status: _this.filters.status,
                     sellman: _this.filters.sellman,
                     roleName: _this.filters.roleName,
-                    query_start_time: '',
-                    query_finish_time: '',
+                    query_start_time: "",
+                    query_finish_time: "",
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
-                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
-                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
-                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                if (
+                        _this.filters.selectDate != null &&
+                        _this.filters.selectDate.length > 0
+                ) {
+                    condition.query_start_time = _this.filters.selectDate[0].format(
+                            "yyyy-MM-dd"
+                    );
+                    condition.query_finish_time = _this.filters.selectDate[1].format(
+                            "yyyy-MM-dd"
+                    );
                 }
                 $.ajax({
                     url: HOST + "contract/selectContracts",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: condition,
                     success: function (data) {
                         if (data.code == 200) {
@@ -2375,19 +2556,22 @@
                             _this.startRow = data.data.startRow;
                         }
                     }
-                })
+                });
             },
 
             handleSplitOrder(requisitionItem) {
                 this.requisitionSplitItem = requisitionItem;
 
-                if (requisitionItem.machineOrder.orderNum == "" || requisitionItem.machineOrder.orderNum == null) {
+                if (
+                        requisitionItem.machineOrder.orderNum == "" ||
+                        requisitionItem.machineOrder.orderNum == null
+                ) {
                     showMessage(this, "拆单订单编号为空！", 1);
                 } else {
                     $.ajax({
                         url: HOST + "machine/selectMachines",
-                        type: 'POST',
-                        dataType: 'json',
+                        type: "POST",
+                        dataType: "json",
                         data: {order_id: requisitionItem.machineOrder.id},
                         success: function (data) {
                             if (data.code == 200) {
@@ -2402,7 +2586,7 @@
                             showMessage(_this, data.message, 0);
                             _this.emptyTableText = "服务器访问失败！";
                         }
-                    })
+                    });
                 }
             },
 
@@ -2410,8 +2594,11 @@
                 let result = false;
                 if (machineOrder != null && machineOrder.originalOrderId != null) {
                     for (let i = 0; i < this.requisitionForms.length; i++) {
-                        if (this.requisitionForms[i].machineOrder.id == machineOrder.originalOrderId
-                                && this.requisitionForms[i].machineOrder.status == ORDER_SPLITED) {
+                        if (
+                                this.requisitionForms[i].machineOrder.id ==
+                                machineOrder.originalOrderId &&
+                                this.requisitionForms[i].machineOrder.status == ORDER_SPLITED
+                        ) {
                             result = true;
                             break;
                         }
@@ -2423,17 +2610,19 @@
             onConfirmSplit() {
                 this.mode = _this.SPLIT_MODE;
                 this.tabIndex = this.requisitionForms.length;
-                let newTabName = ++this.tabIndex + '';
+                let newTabName = ++this.tabIndex + "";
                 var newItem = {
-                    title: '需求单' + newTabName,
+                    title: "需求单" + newTabName,
                     name: newTabName,
                     machineOrder: copyObjectByJSON(this.requisitionSplitItem.machineOrder),
                     orderDetail: copyObjectByJSON(this.requisitionSplitItem.orderDetail),
-                    orderSign: copyObjectByJSON(this.requisitionSplitItem.orderSign) != null ? copyObjectByJSON(this.requisitionSplitItem.orderSign) : {},
+                    orderSign: copyObjectByJSON(this.requisitionSplitItem.orderSign) != null
+                            ? copyObjectByJSON(this.requisitionSplitItem.orderSign)
+                            : {},
                     orderSplitRecord: {
                         splitReason: "",
                         orderId: this.requisitionSplitItem.machineOrder.id,
-                        userId: this.userInfo.id,
+                        userId: this.userInfo.id
                     }
                 };
                 //设置时间
@@ -2453,9 +2642,11 @@
 
                 //原需求单状态需要设置成拆单状态,“4”为拆单状态
                 this.requisitionSplitItem.machineOrder.status = ORDER_SPLITED;
-                this.requisitionSplitItem.machineOrder.machineNum = this.requisitionSplitItem.machineOrder.machineNum - this.splitNum;
+                this.requisitionSplitItem.machineOrder.machineNum =
+                        this.requisitionSplitItem.machineOrder.machineNum - this.splitNum;
                 if (this.requisitionSplitItem.title.indexOf("拆单") == -1) {
-                    this.requisitionSplitItem.title = this.requisitionSplitItem.title + "（待拆单）"
+                    this.requisitionSplitItem.title =
+                            this.requisitionSplitItem.title + "（待拆单）";
                 }
 
                 this.contractSignForms[0].contractSignData = this.splitContractSignArray;
@@ -2463,7 +2654,6 @@
                 this.editableTabsValue = newTabName;
                 this.splitOrderVisible = false;
             },
-
 
             handleChangeOrder(requisitionItem) {
                 this.requisitionChangingItem = requisitionItem;
@@ -2473,17 +2663,21 @@
             onConfirmChange() {
                 this.mode = _this.CHANGE_MODE;
                 this.tabIndex = this.requisitionForms.length;
-                let newTabName = ++this.tabIndex + '';
+                let newTabName = ++this.tabIndex + "";
                 var newItem = {
-                    title: '需求单' + newTabName,
+                    title: "需求单" + newTabName,
                     name: newTabName,
-                    machineOrder: copyObjectByJSON(this.requisitionChangingItem.machineOrder),
+                    machineOrder: copyObjectByJSON(
+                            this.requisitionChangingItem.machineOrder
+                    ),
                     orderDetail: copyObjectByJSON(this.requisitionChangingItem.orderDetail),
-                    orderSign: copyObjectByJSON(this.requisitionChangingItem.orderSign) != null ? copyObjectByJSON(this.requisitionChangingItem.orderSign) : {},
+                    orderSign: copyObjectByJSON(this.requisitionChangingItem.orderSign) != null
+                            ? copyObjectByJSON(this.requisitionChangingItem.orderSign)
+                            : {},
                     orderChangeRecord: {
                         changeReason: "",
                         orderId: this.requisitionChangingItem.machineOrder.id,
-                        userId: this.userInfo.id,
+                        userId: this.userInfo.id
                     }
                 };
                 //设置时间
@@ -2502,10 +2696,12 @@
                 //原需求单状态需要设置成改单状态,“3”为改单状态
                 this.requisitionChangingItem.machineOrder.status = ORDER_CHANGED;
                 if (this.requisitionChangingItem.title.indexOf("改单") == -1) {
-                    this.requisitionChangingItem.title = this.requisitionChangingItem.title + "（待改单）"
+                    this.requisitionChangingItem.title =
+                            this.requisitionChangingItem.title + "（待改单）";
                 }
 
-                this.contractSignForms[0].contractSignData = _this.changeContractSignArray;
+                this.contractSignForms[0].contractSignData =
+                        _this.changeContractSignArray;
 
                 this.requisitionForms.push(newItem);
                 this.editableTabsValue = newTabName;
@@ -2515,19 +2711,20 @@
             handleAdd() {
                 this.mode = this.ADD_MODE;
                 this.isError = false;
-                this.errorMsg = '';
+                this.errorMsg = "";
                 this.dialogTitle = "新增合同";
                 this.addContractVisible = true;
                 this.editContract = "";
 
-
-                _this.requisitionForms[0].orderSign.signContent = _this.normalOrderSignArray;
-                _this.contractSignForms[0].contractSignData = _this.normalContractSignArray;
+                _this.requisitionForms[0].orderSign.signContent =
+                        _this.normalOrderSignArray;
+                _this.contractSignForms[0].contractSignData =
+                        _this.normalContractSignArray;
             },
 
             handleSign(index, item) {
                 this.isError = false;
-                this.errorMsg = '';
+                this.errorMsg = "";
                 this.dialogTitle = "签核合同";
                 _this.fetchContractData(item.id);
                 _this.fetchContractSignData(item.id);
@@ -2539,7 +2736,7 @@
 
             handleEdit(index, item) {
                 this.isError = false;
-                this.errorMsg = '';
+                this.errorMsg = "";
                 this.dialogTitle = "编辑合同";
                 _this.fetchContractData(item.id);
                 _this.fetchContractSignData(item.id);
@@ -2558,8 +2755,8 @@
             handleDownload(index, item) {
                 $.ajax({
                     url: HOST + "contract/buildContractExcel",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {contractId: item.id, account: _this.userInfo.account},
                     success: function (data) {
                         if (data.code == 200) {
@@ -2569,32 +2766,32 @@
                         }
                     },
                     error: function (info) {
-                        showMessage(_this, '服务器访问出错', 0);
+                        showMessage(_this, "服务器访问出错", 0);
                     }
-                })
+                });
             },
 
             onConfirmDelete: function () {
                 _this.deleteConfirmVisible = false;
                 $.ajax({
                     url: _this.deleteUrl,
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: _this.selectedItem,
                     success: function (data) {
                         if (data.status > 0) {
                             var index = _this.tableData.indexOf(_this.selectedItem);
                             _this.tableData.splice(index, 1);
 
-                            showMessage(_this, '删除成功', 1);
+                            showMessage(_this, "删除成功", 1);
                         } else {
-                            showMessage(_this, '删除失败', 0);
+                            showMessage(_this, "删除失败", 0);
                         }
                     },
                     error: function (info) {
-                        showMessage(_this, '服务器访问出错', 0);
+                        showMessage(_this, "服务器访问出错", 0);
                     }
-                })
+                });
             },
             addEquipment(machineOrder) {
                 let equipment = {name: "", number: 1, price: 0};
@@ -2606,10 +2803,14 @@
             },
             calculateOrderPrice(machineOrder) {
                 let total = 0;
-                total = parseInt(machineOrder.machineNum) * parseInt(machineOrder.machinePrice);
+                total =
+                        parseInt(machineOrder.machineNum) * parseInt(machineOrder.machinePrice);
                 if (machineOrder.equipment != null && machineOrder.equipment != "") {
                     for (let i = 0; i < machineOrder.equipment.length; i++) {
-                        total = total + parseInt(machineOrder.equipment[i].number) * parseInt(machineOrder.equipment[i].price);
+                        total =
+                                total +
+                                parseInt(machineOrder.equipment[i].number) *
+                                parseInt(machineOrder.equipment[i].price);
                     }
                 }
                 return total;
@@ -2618,7 +2819,10 @@
                 let total = 0;
                 if (machineOrder.equipment != null && machineOrder.equipment != "") {
                     for (let i = 0; i < machineOrder.equipment.length; i++) {
-                        total = total + parseInt(machineOrder.equipment[i].number) * parseInt(machineOrder.equipment[i].price);
+                        total =
+                                total +
+                                parseInt(machineOrder.equipment[i].number) *
+                                parseInt(machineOrder.equipment[i].price);
                     }
                 }
                 return total;
@@ -2628,22 +2832,22 @@
                 var iserror = false;
                 if (!iserror && isStringEmpty(formObj.contractNum)) {
                     iserror = true;
-                    this.errorMsg = '合同号不能为空';
+                    this.errorMsg = "合同号不能为空";
                 }
 
                 if (!iserror && isStringEmpty(formObj.customerName)) {
                     iserror = true;
-                    this.errorMsg = '客户不能为空';
+                    this.errorMsg = "客户不能为空";
                 }
 
                 if (!iserror && isStringEmpty(formObj.sellman)) {
                     iserror = true;
-                    this.errorMsg = '销售人员不能为空';
+                    this.errorMsg = "销售人员不能为空";
                 }
 
                 if (!iserror && formObj.contractShipDate == "") {
                     iserror = true;
-                    this.errorMsg = '合同交货时间不能为空';
+                    this.errorMsg = "合同交货时间不能为空";
                 }
                 return iserror;
             },
@@ -2652,161 +2856,161 @@
                 var iserror = false;
                 if (!iserror && isStringEmpty(formObj.machineOrder.orderNum)) {
                     iserror = true;
-                    this.errorMsg = '订单号不能为空';
+                    this.errorMsg = "订单号不能为空";
                 }
                 if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
                     iserror = true;
-                    this.errorMsg = '请选择包装方式';
+                    this.errorMsg = "请选择包装方式";
                 }
 
                 if (!iserror && isStringEmpty(formObj.machineOrder.country)) {
                     iserror = true;
-                    this.errorMsg = '请选择国家';
+                    this.errorMsg = "请选择国家";
                 }
                 if (!iserror && isStringEmpty(formObj.machineOrder.brand)) {
                     iserror = true;
-                    this.errorMsg = '请选择商标';
+                    this.errorMsg = "请选择商标";
                 }
                 if (!iserror && isStringEmpty(formObj.machineOrder.machineType)) {
                     iserror = true;
-                    this.errorMsg = '请选择机型';
+                    this.errorMsg = "请选择机型";
                 }
 
                 if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelDaxle)) {
                     iserror = true;
-                    this.errorMsg = 'D轴上不能为空';
+                    this.errorMsg = "D轴上不能为空";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelMotor)) {
                     iserror = true;
-                    this.errorMsg = '主电机不能为空';
+                    this.errorMsg = "主电机不能为空";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelMotor)) {
                     iserror = true;
-                    this.errorMsg = '主电机不能为空';
+                    this.errorMsg = "主电机不能为空";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.specialTapingHead)) {
                     iserror = true;
-                    this.errorMsg = '盘带头不能为空';
+                    this.errorMsg = "盘带头不能为空";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelNeedle)) {
                     iserror = true;
-                    this.errorMsg = '毛巾机针不能为空';
+                    this.errorMsg = "毛巾机针不能为空";
                 }
 
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricPc)) {
                     iserror = true;
-                    this.errorMsg = '请选择电脑';
+                    this.errorMsg = "请选择电脑";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricLanguage)) {
                     iserror = true;
-                    this.errorMsg = '请选择电脑语言';
+                    this.errorMsg = "请选择电脑语言";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricMotor)) {
                     iserror = true;
-                    this.errorMsg = '请选择主电机';
+                    this.errorMsg = "请选择主电机";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricMotorXy)) {
                     iserror = true;
-                    this.errorMsg = '请选择XY电机';
+                    this.errorMsg = "请选择XY电机";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricTrim)) {
                     iserror = true;
-                    this.errorMsg = '请选择剪线方式';
+                    this.errorMsg = "请选择剪线方式";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricPower)) {
                     iserror = true;
-                    this.errorMsg = '请选择电源';
+                    this.errorMsg = "请选择电源";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricSwitch)) {
                     iserror = true;
-                    this.errorMsg = '请选择按钮开关';
+                    this.errorMsg = "请选择按钮开关";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricOil)) {
                     iserror = true;
-                    this.errorMsg = '请选择加油系统';
+                    this.errorMsg = "请选择加油系统";
                 }
 
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleSplit)) {
                     iserror = true;
-                    this.errorMsg = '请选择夹线器';
+                    this.errorMsg = "请选择夹线器";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axlePanel)) {
                     iserror = true;
-                    this.errorMsg = '请选择面板';
+                    this.errorMsg = "请选择面板";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleNeedle)) {
                     iserror = true;
-                    this.errorMsg = '请选择机针';
+                    this.errorMsg = "请选择机针";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleNeedleType)) {
                     iserror = true;
-                    this.errorMsg = '请选择机针类型';
+                    this.errorMsg = "请选择机针类型";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleRail)) {
                     iserror = true;
-                    this.errorMsg = '请选择机头导轨';
+                    this.errorMsg = "请选择机头导轨";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleDownCheck)) {
                     iserror = true;
-                    this.errorMsg = '请选择底检方式';
+                    this.errorMsg = "请选择底检方式";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleHook)) {
                     iserror = true;
-                    this.errorMsg = '请选择旋梭';
+                    this.errorMsg = "请选择旋梭";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleJump)) {
                     iserror = true;
-                    this.errorMsg = '请选择跳跃方式';
+                    this.errorMsg = "请选择跳跃方式";
                 }
                 if (!iserror && isStringEmpty(formObj.axleUpperThread)) {
                     iserror = true;
-                    this.errorMsg = '请选择面线夹持';
+                    this.errorMsg = "请选择面线夹持";
                 }
 
                 if (!iserror && isStringEmpty(formObj.orderDetail.frameworkColor)) {
                     iserror = true;
-                    this.errorMsg = '请选择机架颜色';
+                    this.errorMsg = "请选择机架颜色";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPlaten)) {
                     iserror = true;
-                    this.errorMsg = '请选择 台板';
+                    this.errorMsg = "请选择 台板";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPlatenColor)) {
                     iserror = true;
-                    this.errorMsg = '请选择 台板颜色';
+                    this.errorMsg = "请选择 台板颜色";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.frameworkRing)) {
                     iserror = true;
-                    this.errorMsg = '请选择 吊环';
+                    this.errorMsg = "请选择 吊环";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.frameworkBracket)) {
                     iserror = true;
-                    this.errorMsg = '请选择 电脑托架';
+                    this.errorMsg = "请选择 电脑托架";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.frameworkStop)) {
                     iserror = true;
-                    this.errorMsg = '请选择 急停装置';
+                    this.errorMsg = "请选择 急停装置";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.frameworkLight)) {
                     iserror = true;
-                    this.errorMsg = '请选择 日光灯';
+                    this.errorMsg = "请选择 日光灯";
                 }
 
                 if (!iserror && isStringEmpty(formObj.orderDetail.driverType)) {
                     iserror = true;
-                    this.errorMsg = '请选择 驱动类型';
+                    this.errorMsg = "请选择 驱动类型";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.driverMethod)) {
                     iserror = true;
-                    this.errorMsg = '请选择 驱动方式';
+                    this.errorMsg = "请选择 驱动方式";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.driverReelHole)) {
                     iserror = true;
-                    this.errorMsg = '请选择 绷架孔';
+                    this.errorMsg = "请选择 绷架孔";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.driverReel)) {
                     iserror = true;
-                    this.errorMsg = '请选择 绷架';
+                    this.errorMsg = "请选择 绷架";
                 }
 
                 return iserror;
@@ -2827,8 +3031,8 @@
 
                 this.requisitionForms.splice(1);
                 Vue.set(_this.requisitionForms, 0, {
-                    title: '需求单1',
-                    name: '1',
+                    title: "需求单1",
+                    name: "1",
                     //保存需求单数据
                     machineOrder: {
                         brand: "SINSIM电脑绣花机",
@@ -2850,14 +3054,14 @@
             onAdd() {
                 //先校验合同的内容,再校需求单的内容
                 _this.isError = this.validContractInfo(_this.contractForm, false);
-//                if(!_this.isError) {
-//                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
-//                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
-//                        if(_this.isError ) {
-//                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
-//                        }
-//                    }
-//                }
+                //                if(!_this.isError) {
+                //                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
+                //                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
+                //                        if(_this.isError ) {
+                //                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
+                //                        }
+                //                    }
+                //                }
                 //Just for test
                 //sessionStorage.setItem("requisitionForms", JSON.stringify(_this.requisitionForms));
                 if (_this.isError) {
@@ -2866,23 +3070,33 @@
                     //由于signContent在DB中是以String方式存储的，防止Server端解析失败，需要在前端转成String形式，而不是array
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
-                        obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                        obj[i].orderSign.signContent = JSON.stringify(
+                                obj[i].orderSign.signContent
+                        );
                         //将machineOrder中的装置array对象转换成Json String
-                        obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
+                        obj[i].machineOrder.equipment = JSON.stringify(
+                                obj[i].machineOrder.equipment
+                        );
                         //增加销售员信息，因为之前是绑定信息是在合同contractForm里面 --No.3
                         obj[i].machineOrder.sellman = this.contractForm.sellman;
                         if (parseInt(obj[i].machineOrder.machinePrice) <= 0) {
-                            showMessage(_this, "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！", 0);
+                            showMessage(
+                                    _this,
+                                    "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！",
+                                    0
+                            );
                             return;
                         }
                     }
                     $.ajax({
                         url: HOST + "contract/add",
-                        type: 'POST',
-                        dataType: 'json',
+                        type: "POST",
+                        dataType: "json",
                         data: {
                             contract: JSON.stringify(_this.contractForm),
-                            contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
+                            contractSign: JSON.stringify(
+                                    _this.contractSignForms[0].contractSignData
+                            ),
                             requisitionForms: JSON.stringify(obj)
                         },
                         success: function (res) {
@@ -2890,7 +3104,7 @@
                             if (!_this.isError) {
                                 _this.addContractVisible = false;
                                 _this.editContract = "";
-                                showMessage(_this, '添加成功', 1);
+                                showMessage(_this, "添加成功", 1);
                                 _this.selectContracts();
                             } else {
                                 _this.errorMsg = res.message;
@@ -2898,23 +3112,23 @@
                             }
                         },
                         error: function (info) {
-                            _this.errorMsg = '服务器访问出错！';
+                            _this.errorMsg = "服务器访问出错！";
                             _this.isError = true;
                         }
-                    })
+                    });
                 }
             },
 
             onEdit() {
                 _this.isError = this.validContractInfo(_this.contractForm, false);
-//                if(!_this.isError) {
-//                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
-//                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
-//                        if(_this.isError ) {
-//                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
-//                        }
-//                    }
-//                }
+                //                if(!_this.isError) {
+                //                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
+                //                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
+                //                        if(_this.isError ) {
+                //                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
+                //                        }
+                //                    }
+                //                }
                 if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
@@ -2922,22 +3136,32 @@
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
                         if (obj[i].orderSign != null) {
-                            obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                            obj[i].orderSign.signContent = JSON.stringify(
+                                    obj[i].orderSign.signContent
+                            );
                             //将machineOrder中的装置array对象转换成Json String
-                            obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
+                            obj[i].machineOrder.equipment = JSON.stringify(
+                                    obj[i].machineOrder.equipment
+                            );
                             if (parseInt(obj[i].machineOrder.machinePrice) <= 0) {
-                                showMessage(_this, "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！", 0);
+                                showMessage(
+                                        _this,
+                                        "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！",
+                                        0
+                                );
                                 return;
                             }
                         }
                     }
                     $.ajax({
                         url: HOST + "contract/update",
-                        type: 'POST',
-                        dataType: 'json',
+                        type: "POST",
+                        dataType: "json",
                         data: {
                             contract: JSON.stringify(_this.contractForm),
-                            contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
+                            contractSign: JSON.stringify(
+                                    _this.contractSignForms[0].contractSignData
+                            ),
                             requisitionForms: JSON.stringify(obj)
                         },
                         success: function (res) {
@@ -2945,7 +3169,7 @@
                             if (!_this.isError) {
                                 _this.addContractVisible = false;
                                 _this.editContract = "";
-                                showMessage(_this, '保存成功', 1);
+                                showMessage(_this, "保存成功", 1);
                                 _this.selectContracts();
                             } else {
                                 _this.errorMsg = res.message;
@@ -2953,20 +3177,29 @@
                             }
                         },
                         error: function (info) {
-                            _this.errorMsg = '服务器访问出错！';
+                            _this.errorMsg = "服务器访问出错！";
                             _this.isError = true;
                         }
-                    })
+                    });
                 }
             },
 
             onSaveChange() {
                 _this.isError = this.validContractInfo(_this.contractForm, false);
                 if (!_this.isError) {
-                    for (let i = 0; i < _this.requisitionForms.length && !_this.isError; i++) {
-                        if (this.requisitionForms[i].machineOrder.originalOrderId != 0
-                                && this.requisitionForms[i].machineOrder.status == ORDER_INITIAL) {
-                            if (this.requisitionForms[i].orderChangeRecord.changeReason == null || this.requisitionForms[i].orderChangeRecord.changeReason == '') {
+                    for (
+                            let i = 0;
+                            i < _this.requisitionForms.length && !_this.isError;
+                            i++
+                    ) {
+                        if (
+                                this.requisitionForms[i].machineOrder.originalOrderId != 0 &&
+                                this.requisitionForms[i].machineOrder.status == ORDER_INITIAL
+                        ) {
+                            if (
+                                    this.requisitionForms[i].orderChangeRecord.changeReason == null ||
+                                    this.requisitionForms[i].orderChangeRecord.changeReason == ""
+                            ) {
                                 _this.isError = true;
                                 _this.errorMsg = "改单原因不能为空！";
                             }
@@ -2974,14 +3207,14 @@
                     }
                 }
 
-//                if(!_this.isError) {
-//                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
-//                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
-//                        if(_this.isError ) {
-//                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
-//                        }
-//                    }
-//                }
+                //                if(!_this.isError) {
+                //                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
+                //                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
+                //                        if(_this.isError ) {
+                //                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
+                //                        }
+                //                    }
+                //                }
                 if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
@@ -2989,18 +3222,24 @@
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
                         if (obj[i].orderSign != null) {
-                            obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                            obj[i].orderSign.signContent = JSON.stringify(
+                                    obj[i].orderSign.signContent
+                            );
                             //将machineOrder中的装置array对象转换成Json String
-                            obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
+                            obj[i].machineOrder.equipment = JSON.stringify(
+                                    obj[i].machineOrder.equipment
+                            );
                         }
                     }
                     $.ajax({
                         url: HOST + "contract/changeOrder",
-                        type: 'POST',
-                        dataType: 'json',
+                        type: "POST",
+                        dataType: "json",
                         data: {
                             contract: JSON.stringify(_this.contractForm),
-                            contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
+                            contractSign: JSON.stringify(
+                                    _this.contractSignForms[0].contractSignData
+                            ),
                             requisitionForms: JSON.stringify(obj)
                         },
                         success: function (res) {
@@ -3008,7 +3247,7 @@
                             if (!_this.isError) {
                                 _this.addContractVisible = false;
                                 _this.editContract = "";
-                                showMessage(_this, '保存成功', 1);
+                                showMessage(_this, "保存成功", 1);
                                 _this.selectContracts();
                             } else {
                                 _this.errorMsg = res.message;
@@ -3016,20 +3255,29 @@
                             }
                         },
                         error: function (info) {
-                            _this.errorMsg = '服务器访问出错！';
+                            _this.errorMsg = "服务器访问出错！";
                             _this.isError = true;
                         }
-                    })
+                    });
                 }
             },
 
             onSaveSplit() {
                 _this.isError = this.validContractInfo(_this.contractForm, false);
                 if (!_this.isError) {
-                    for (let i = 0; i < _this.requisitionForms.length && !_this.isError; i++) {
-                        if (this.requisitionForms[i].machineOrder.originalOrderId != 0
-                                && this.requisitionForms[i].machineOrder.status == ORDER_INITIAL) {
-                            if (this.requisitionForms[i].orderSplitRecord.splitReason == null || this.requisitionForms[i].orderSplitRecord.splitReason == '') {
+                    for (
+                            let i = 0;
+                            i < _this.requisitionForms.length && !_this.isError;
+                            i++
+                    ) {
+                        if (
+                                this.requisitionForms[i].machineOrder.originalOrderId != 0 &&
+                                this.requisitionForms[i].machineOrder.status == ORDER_INITIAL
+                        ) {
+                            if (
+                                    this.requisitionForms[i].orderSplitRecord.splitReason == null ||
+                                    this.requisitionForms[i].orderSplitRecord.splitReason == ""
+                            ) {
                                 _this.isError = true;
                                 _this.errorMsg = "拆单原因不能为空！";
                             }
@@ -3037,14 +3285,14 @@
                     }
                 }
 
-//                if(!_this.isError) {
-//                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
-//                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
-//                        if(_this.isError ) {
-//                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
-//                        }
-//                    }
-//                }
+                //                if(!_this.isError) {
+                //                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
+                //                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
+                //                        if(_this.isError ) {
+                //                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
+                //                        }
+                //                    }
+                //                }
                 if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
@@ -3052,18 +3300,24 @@
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
                         if (obj[i].orderSign != null) {
-                            obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
+                            obj[i].orderSign.signContent = JSON.stringify(
+                                    obj[i].orderSign.signContent
+                            );
                             //将machineOrder中的装置array对象转换成Json String
-                            obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
+                            obj[i].machineOrder.equipment = JSON.stringify(
+                                    obj[i].machineOrder.equipment
+                            );
                         }
                     }
                     $.ajax({
                         url: HOST + "contract/splitOrder",
-                        type: 'POST',
-                        dataType: 'json',
+                        type: "POST",
+                        dataType: "json",
                         data: {
                             contract: JSON.stringify(_this.contractForm),
-                            contractSign: JSON.stringify(_this.contractSignForms[0].contractSignData),
+                            contractSign: JSON.stringify(
+                                    _this.contractSignForms[0].contractSignData
+                            ),
                             requisitionForms: JSON.stringify(obj),
                             splitMachines: JSON.stringify(_this.splitMachinesSelected)
                         },
@@ -3072,7 +3326,7 @@
                             if (!_this.isError) {
                                 _this.addContractVisible = false;
                                 _this.editContract = "";
-                                showMessage(_this, '保存成功', 1);
+                                showMessage(_this, "保存成功", 1);
                                 _this.selectContracts();
                             } else {
                                 _this.errorMsg = res.message;
@@ -3082,7 +3336,7 @@
                         error: function (info) {
                             showMessage(_this, "服务器访问出错！", 0);
                         }
-                    })
+                    });
                 }
             },
 
@@ -3095,12 +3349,15 @@
                     item.result = SIGN_APPROVE;
                     $.ajax({
                         url: HOST + "order/sign/update",
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {contractId: _this.editContract.id, orderSign: JSON.stringify(signObj)},
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            contractId: _this.editContract.id,
+                            orderSign: JSON.stringify(signObj)
+                        },
                         success: function (res) {
                             if (res.code == 200) {
-                                showMessage(_this, '提交审核成功', 1);
+                                showMessage(_this, "提交审核成功", 1);
                                 _this.addContractVisible = false;
                                 _this.selectContracts();
                             } else {
@@ -3124,12 +3381,15 @@
             onRejectOrderSign() {
                 $.ajax({
                     url: HOST + "order/sign/update",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {contractId: _this.editContract.id, orderSign: JSON.stringify(_this.signResultObj)},
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        contractId: _this.editContract.id,
+                        orderSign: JSON.stringify(_this.signResultObj)
+                    },
                     success: function (res) {
                         if (res.code == 200) {
-                            showMessage(_this, '驳回成功', 1);
+                            showMessage(_this, "驳回成功", 1);
                             _this.addContractVisible = false;
                             _this.selectContracts();
                         } else {
@@ -3146,12 +3406,14 @@
                     rowItem.user = _this.userInfo.name;
                     rowItem.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     rowItem.result = SIGN_APPROVE;
-                    _this.editContractSign.signContent = JSON.stringify(signObj.contractSignData);
+                    _this.editContractSign.signContent = JSON.stringify(
+                            signObj.contractSignData
+                    );
                     //准备好数据，提交服务器
                     $.ajax({
                         url: HOST + "contract/sign/update",
-                        type: 'POST',
-                        dataType: 'json',
+                        type: "POST",
+                        dataType: "json",
                         data: {contractSign: JSON.stringify(_this.editContractSign)},
                         success: function (res) {
                             if (res.code == 200) {
@@ -3166,12 +3428,14 @@
                 }
             },
             onRejectContractSign() {
-                _this.editContractSign.signContent = JSON.stringify(this.signResultObj.contractSignData);
+                _this.editContractSign.signContent = JSON.stringify(
+                        this.signResultObj.contractSignData
+                );
                 //准备好数据，提交服务器
                 $.ajax({
                     url: HOST + "contract/sign/update",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {contractSign: JSON.stringify(_this.editContractSign)},
                     success: function (res) {
                         if (res.code == 200) {
@@ -3199,26 +3463,37 @@
 
             signDisable(roleId) {
                 //超级管理员可以操作，或者当前合同属于“签核状态”、登陆的用户有权限签核并且合同currentStep处于属于该角色签核
-                return !((roleId == _this.userInfo.role.id && this.editContract.status == 1 && this.editContract.currentStep == _this.userInfo.role.roleName)
-                || _this.userInfo.role.id == 1 );
+                return !(
+                        (roleId == _this.userInfo.role.id &&
+                        this.editContract.status == 1 &&
+                        this.editContract.currentStep == _this.userInfo.role.roleName) ||
+                        _this.userInfo.role.id == 1
+                );
             },
 
             changeOrderContentDisable(item) {
-                return item.status == ORDER_CHANGED || item.status == ORDER_CHECKING_FINISHED
-                        || item.status == ORDER_CANCELED || item.status == ORDER_SPLITED
-                        || (item.status == ORDER_CHECKING && (_this.contractForm.status == CONTRACT_CHECKING))
-                        || this.mode == this.SIGN_MODE;
+                return (
+                        item.status == ORDER_CHANGED ||
+                        item.status == ORDER_CHECKING_FINISHED ||
+                        item.status == ORDER_CANCELED ||
+                        item.status == ORDER_SPLITED ||
+                        (item.status == ORDER_CHECKING &&
+                        _this.contractForm.status == CONTRACT_CHECKING) ||
+                        this.mode == this.SIGN_MODE
+                );
             },
             changeContractContentDisable(item) {
-                return (item.status != CONTRACT_INITIAL && item.status != CONTRACT_REJECTED) || this.mode == this.SIGN_MODE;
+                return (
+                        (item.status != CONTRACT_INITIAL && item.status != CONTRACT_REJECTED) ||
+                        this.mode == this.SIGN_MODE
+                );
             },
-
 
             fetchContractData(contractId) {
                 $.ajax({
                     url: HOST + "contract/detail",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {id: contractId},
                     success: function (res) {
                         if (res.code == 200) {
@@ -3227,54 +3502,68 @@
                             showMessage(_this, res.message, 0);
                         }
                     }
-                })
+                });
             },
 
             fetchContractSignData(contractId) {
                 $.ajax({
                     url: HOST + "contract/sign/detailByContractId",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {contractId: contractId},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.editContractSign = res.data;
-                            _this.contractSignForms[0].contractSignData = JSON.parse(res.data.signContent);
+                            _this.contractSignForms[0].contractSignData = JSON.parse(
+                                    res.data.signContent
+                            );
                         } else {
                             showMessage(_this, res.message, 0);
                         }
                     }
-                })
+                });
             },
             fetchMachineOrdersData(contractId) {
                 $.ajax({
                     url: HOST + "/machine/order/selectOrders",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {contract_id: contractId},
                     success: function (res) {
                         if (res.code == 200) {
                             let tempList = res.data.list;
                             _this.requisitionForms = [];
                             for (let i = 0; i < tempList.length; i++) {
-                                let newTabName = (i + 1) + '';
+                                let newTabName = i + 1 + "";
                                 let orderDetail = copyObjectByJSON(tempList[i].orderDetail);
                                 let orderSign = copyObjectByJSON(tempList[i].orderSign);
-                                let orderChangeRecord = copyObjectByJSON(tempList[i].orderChangeRecord);
-                                let orderSplitRecord = copyObjectByJSON(tempList[i].orderSplitRecord);
+                                let orderChangeRecord = copyObjectByJSON(
+                                        tempList[i].orderChangeRecord
+                                );
+                                let orderSplitRecord = copyObjectByJSON(
+                                        tempList[i].orderSplitRecord
+                                );
                                 if (orderSign != null) {
-                                    orderSign.signContent = orderSign.signContent != null ? JSON.parse(orderSign.signContent) : [];
+                                    orderSign.signContent =
+                                            orderSign.signContent != null
+                                                    ? JSON.parse(orderSign.signContent)
+                                                    : [];
                                 }
                                 let machineOrder = copyObjectByJSON(tempList[i]);
                                 machineOrder.machineType = machineOrder.machineType.id;
                                 //由于装置中保存的是JSON字符串，需要转换成Object
-                                machineOrder.equipment = machineOrder.equipment != null && machineOrder.equipment != "" ? JSON.parse(machineOrder.equipment) : [];
-                                machineOrder.createTime = new Date(machineOrder.createTime).format("yyyy-MM-dd");
+                                machineOrder.equipment =
+                                        machineOrder.equipment != null && machineOrder.equipment != ""
+                                                ? JSON.parse(machineOrder.equipment)
+                                                : [];
+                                machineOrder.createTime = new Date(
+                                        machineOrder.createTime
+                                ).format("yyyy-MM-dd");
                                 machineOrder.orderDetail = null;
                                 machineOrder.orderSign = null;
 
                                 var newItem = {
-                                    title: '需求单' + newTabName,
+                                    title: "需求单" + newTabName,
                                     name: newTabName,
                                     machineOrder: machineOrder,
                                     orderDetail: orderDetail,
@@ -3283,13 +3572,13 @@
                                     orderSplitRecord: orderSplitRecord
                                 };
                                 if (machineOrder.status == ORDER_CHANGED) {
-                                    newItem.title = newItem.title + "（已改单）"
+                                    newItem.title = newItem.title + "（已改单）";
                                 } else if (machineOrder.status == ORDER_SPLITED) {
-                                    newItem.title = newItem.title + "（已拆单）"
+                                    newItem.title = newItem.title + "（已拆单）";
                                 } else if (machineOrder.status == ORDER_REJECTED) {
-                                    newItem.title = newItem.title + "（已驳回）"
+                                    newItem.title = newItem.title + "（已驳回）";
                                 } else if (machineOrder.status == ORDER_CANCELED) {
-                                    newItem.title = newItem.title + "（已取消）"
+                                    newItem.title = newItem.title + "（已取消）";
                                 }
 
                                 _this.requisitionForms.push(newItem);
@@ -3301,36 +3590,38 @@
                     error: function (data) {
                         showMessage(_this, "服务器访问失败！", 0);
                     }
-                })
+                });
             },
 
             initAllRoles() {
                 $.ajax({
                     url: HOST + "role/list",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.allRoles = res.data.list;
                         }
                     }
-                })
+                });
             },
 
             //只有在填单员创建新的合同、改单或者拆单才会去获取签核流程，填单员（编辑）以及其他部门签核时不需要
             initSignProcesses() {
                 $.ajax({
                     url: HOST + "sign/process/list",
-                    type: 'POST',
-                    dataType: 'json',
+                    type: "POST",
+                    dataType: "json",
                     data: {},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.signProcesses = res.data.list;
                             for (let i = 0; i < _this.signProcesses.length; i++) {
                                 if (_this.signProcesses[i].processName.indexOf("正常") != -1) {
-                                    _this.normalSignProcess = JSON.parse(_this.signProcesses[i].processContent);
+                                    _this.normalSignProcess = JSON.parse(
+                                            _this.signProcesses[i].processContent
+                                    );
                                     for (let j = 0; j < _this.normalSignProcess.length; j++) {
                                         //初始化需求单
                                         if (_this.normalSignProcess[j].signType == "需求单签核") {
@@ -3340,7 +3631,9 @@
                                             item.result = SIGN_INITIAL;
                                             item.comment = "";
                                             _this.normalOrderSignArray.push(item);
-                                        } else if (_this.normalSignProcess[j].signType == "合同签核") {
+                                        } else if (
+                                                _this.normalSignProcess[j].signType == "合同签核"
+                                        ) {
                                             let item = _this.normalSignProcess[j];
                                             item.date = "";
                                             item.user = "";
@@ -3349,8 +3642,12 @@
                                             _this.normalContractSignArray.push(item);
                                         }
                                     }
-                                } else if (_this.signProcesses[i].processName.indexOf("改单") != -1) {
-                                    _this.changeSignProcess = JSON.parse(_this.signProcesses[i].processContent);
+                                } else if (
+                                        _this.signProcesses[i].processName.indexOf("改单") != -1
+                                ) {
+                                    _this.changeSignProcess = JSON.parse(
+                                            _this.signProcesses[i].processContent
+                                    );
                                     for (let j = 0; j < _this.changeSignProcess.length; j++) {
                                         //初始化需求单
                                         if (_this.changeSignProcess[j].signType == "需求单签核") {
@@ -3360,7 +3657,9 @@
                                             item.result = SIGN_INITIAL;
                                             item.comment = "";
                                             _this.changeOrderSignArray.push(item);
-                                        } else if (_this.changeSignProcess[j].signType == "合同签核") {
+                                        } else if (
+                                                _this.changeSignProcess[j].signType == "合同签核"
+                                        ) {
                                             let item = _this.changeSignProcess[j];
                                             item.date = "";
                                             item.user = "";
@@ -3369,8 +3668,12 @@
                                             _this.changeContractSignArray.push(item);
                                         }
                                     }
-                                } else if (_this.signProcesses[i].processName.indexOf("拆单") != -1) {
-                                    _this.splitSignProcess = JSON.parse(_this.signProcesses[i].processContent);
+                                } else if (
+                                        _this.signProcesses[i].processName.indexOf("拆单") != -1
+                                ) {
+                                    _this.splitSignProcess = JSON.parse(
+                                            _this.signProcesses[i].processContent
+                                    );
                                     for (let j = 0; j < _this.splitSignProcess.length; j++) {
                                         //初始化需求单
                                         if (_this.splitSignProcess[j].signType == "需求单签核") {
@@ -3395,75 +3698,89 @@
                             showMessage(_this, res.message, 0);
                         }
                     }
-                })
+                });
             },
 
             initMachineType() {
                 //TODO：更新机型时必须清除缓存，需要设置一个有失效时间的缓存
-                _this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
+                _this.allMachineType = JSON.parse(
+                        sessionStorage.getItem("allMachineType")
+                );
                 if (_this.allMachineType == null || _this.allMachineType.length == 0) {
                     $.ajax({
                         url: _this.queryMachineTypeURL,
-                        type: 'POST',
-                        dataType: 'json',
+                        type: "POST",
+                        dataType: "json",
                         data: {},
                         success: function (res) {
                             if (res.code == 200) {
                                 _this.allMachineType = res.data.list;
-                                sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
+                                sessionStorage.setItem(
+                                        "allMachineType",
+                                        JSON.stringify(res.data.list)
+                                );
                             } else {
                                 showMessage(_this, res.message, 0);
                             }
                         }
-                    })
+                    });
                 }
             },
 
             tableRowDisabledClassName({row, rowIndex}) {
-                if (row.machineOrder.status == ORDER_CANCELED || row.machineOrder.status == ORDER_CHANGED) {
-                    return 'warning-row';
+                if (
+                        row.machineOrder.status == ORDER_CANCELED ||
+                        row.machineOrder.status == ORDER_CHANGED
+                ) {
+                    return "warning-row";
                 }
-                return '';
+                return "";
             },
 
-            classWithDifferentValue(item, type, isDetail){
+            classWithDifferentValue(item, type, isDetail) {
                 let comparedItem = "";
                 if (item.machineOrder.originalOrderId != 0) {
                     for (let i = 0; i < _this.requisitionForms.length; i++) {
-                        if (item.machineOrder.originalOrderId == _this.requisitionForms[i].machineOrder.id) {
+                        if (
+                                item.machineOrder.originalOrderId ==
+                                _this.requisitionForms[i].machineOrder.id
+                        ) {
                             if (isDetail) {
-                                comparedItem = copyObjectByJSON(_this.requisitionForms[i].orderDetail);
+                                comparedItem = copyObjectByJSON(
+                                        _this.requisitionForms[i].orderDetail
+                                );
                             } else {
-                                comparedItem = copyObjectByJSON(_this.requisitionForms[i].machineOrder);
+                                comparedItem = copyObjectByJSON(
+                                        _this.requisitionForms[i].machineOrder
+                                );
                             }
                             break;
                         }
                     }
-                    if (comparedItem != '' && !isUndefined(comparedItem[type])) {
+                    if (comparedItem != "" && !isUndefined(comparedItem[type])) {
                         if (isDetail) {
                             if (item.orderDetail[type] != comparedItem[type]) {
-                                return 'different-value';
+                                return "different-value";
                             } else {
                                 return "";
                             }
                         } else {
                             if (item.machineOrder[type] != comparedItem[type]) {
-                                return 'different-value';
+                                return "different-value";
                             } else {
                                 return "";
                             }
                         }
-
                     }
                 } else {
-                    return '';
+                    return "";
                 }
             },
             tableRowClassName({row, rowIndex}) {
                 if (row.result == SIGN_REJECT) {
-                    return 'warning-row';
+                    return "warning-row";
                 }
-                return '';
+                return "";
             },
             filterOrderNum(originalId) {
                 let result = "";
@@ -3499,9 +3816,8 @@
                 }
                 return result;
             },
-            filterOrderStatusStyle(id)
-            {
-                var result = "divOrderStatusUnChecked"
+            filterOrderStatusStyle(id) {
+                var result = "divOrderStatusUnChecked";
 
                 if (id == 0 || id == 5 || id == 6) {
                     result = "divOrderStatusUnChecked";
@@ -3511,29 +3827,28 @@
                     result = "divOrderStatusChecking";
                 }
                 return result;
-            },
-
+            }
         },
         created: function () {
-            _this.userInfo = JSON.parse(sessionStorage.getItem('user'));
+            _this.userInfo = JSON.parse(sessionStorage.getItem("user"));
             if (isNull(_this.userInfo)) {
-                this.$router.push({path: '/login'});
+                this.$router.push({path: "/login"});
                 return;
             }
+            _this.requestCustomerList();
+            _this.requestSalePersonList();
             _this.initAllRoles();
             _this.initMachineType();
             _this.selectContracts();
             _this.initSignProcesses();
         },
         mounted: function () {
-        },
-    }
-
+        }
+    };
 </script>
 <style>
-
     .el-table .warning-row {
-        background: #DCDFE6;
+        background: #dcdfe6;
     }
 
     .el-table .success-row {
@@ -3543,7 +3858,7 @@
     .different-value {
         /*border-width:5px;*/
         /*border-style:solid;*/
-        background-color: #F56C6C;
+        background-color: #f56c6c;
     }
 
     .tab-disabled-background {
@@ -3551,7 +3866,7 @@
         height: 100%;
         line-height: 100%;
         z-index: 9999;
-        background: #FF99FF;
+        background: #ff99ff;
     }
 
     .divOrderStatusFinished {
@@ -3564,5 +3879,9 @@
 
     .divOrderStatusUnChecked {
         color: red;
+    }
+
+    .my-autocomplete {
+        width: 100%;
     }
 </style>
