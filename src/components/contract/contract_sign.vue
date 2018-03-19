@@ -353,7 +353,18 @@
                                                         ></el-input>
                                                     </el-form-item>
                                                 </el-col>
-                                                <el-col :span="1" :offset="9">
+                                                <el-col :span="1" :offset="2 ">
+                                                    <el-button type="success" size="small" style="margin-top: 15px"
+                                                               @click="handleCopyOrder(item)">复制
+                                                    </el-button>
+                                                </el-col>
+                                                <el-col :span="1" :offset="1">
+                                                    <el-button type="danger" size="small" style="margin-top: 15px"
+                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                               @click="handlePasteOrder(item)">粘贴
+                                                    </el-button>
+                                                </el-col>
+                                                <el-col :span="1" :offset="4">
                                                     <el-button type="danger" size="small" style="margin-top: 15px"
                                                                v-if="canSplitOrChangeOrder(item.machineOrder.status)"
                                                                :disabled="item.machineOrder.machineNum <= 1||editContract.status==1"
@@ -1675,6 +1686,14 @@
                 </el-button>
                 <el-button v-if="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">提 交</el-button>
             </div>
+            <el-dialog title="提示" :visible.sync="confirmPasteDialog" width="30%" append-to-body>
+                <span style="font-size: 15px">确定要粘贴到<b style="color: #F56C6C">{{currentSelectOrder.title}}</b>吗？</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="confirmPasteDialog = false" icon="el-icon-back">取 消</el-button>
+                    <el-button type="primary" @click="onConfirmPasteOrder" icon="el-icon-check">确 定</el-button>
+                </span>
+            </el-dialog>
+
             <el-dialog title="提示" :visible.sync="rejectSignResultVisible" width="30%" append-to-body>
                 <span style="font-size: 15px">确认驳回审核？</span>
                 <span slot="footer" class="dialog-footer">
@@ -2017,7 +2036,19 @@
                 timeout: null,
                 customerList: [],
                 customerTimeout: null,
+                currentCopyItem: {
+                    machineOrder: {
+                        brand: "SINSIM电脑绣花机",
+                        createTime: new Date().format("yyyy-MM-dd"),
+                        equipment: [],
+                        status: ORDER_INITIAL,
+                        createUserId: JSON.parse(sessionStorage.getItem("user")).id
+                    },
+                    orderDetail: DefaultOrderDetail,
+                },
 
+                currentSelectOrder: {},
+                confirmPasteDialog: false,
                 pickerOptions: {
                     shortcuts: [
                         {
@@ -2159,7 +2190,7 @@
             createStateFilter(queryString) {
                 return item => {
                     return (
-                            item.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+                            item.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
                     );
                 };
             },
@@ -2558,6 +2589,48 @@
                     }
                 });
             },
+            handleCopyOrder(copyItem)
+            {
+                _this.currentCopyItem.machineOrder = copyObjectByJSON(copyItem.machineOrder);
+                _this.currentCopyItem.orderDetail = copyObjectByJSON(copyItem.orderDetail);
+                sessionStorage.setItem("copy_order_object", JSON.stringify(_this.currentCopyItem));
+                showMessage(_this, copyItem.title + "拷贝成功！", 1);
+            },
+
+            handlePasteOrder(targetItem){
+
+                var item = sessionStorage.getItem("copy_order_object");
+                if (item) {
+                    _this.currentCopyItem = JSON.parse(item);
+                    _this.currentSelectOrder = targetItem;
+                    _this.confirmPasteDialog = true;
+                }
+                else {
+                    showMessage(_this, "没有可以粘贴的需求单！请先复制!", 0);
+                }
+            },
+
+            onConfirmPasteOrder()
+            {
+                _this.currentSelectOrder.orderDetail = copyObjectByJSON(_this.currentCopyItem.orderDetail);
+                _this.currentSelectOrder.machineOrder.country = _this.currentCopyItem.machineOrder.country;
+                _this.currentSelectOrder.machineOrder.brand = _this.currentCopyItem.machineOrder.brand;
+                _this.currentSelectOrder.machineOrder.machineType = _this.currentCopyItem.machineOrder.machineType;
+                _this.currentSelectOrder.machineOrder.needleNum = _this.currentCopyItem.machineOrder.needleNum;
+                _this.currentSelectOrder.machineOrder.headNum = _this.currentCopyItem.machineOrder.headNum;
+                _this.currentSelectOrder.machineOrder.headDistance = _this.currentCopyItem.machineOrder.headDistance;
+                _this.currentSelectOrder.machineOrder.xDistance = _this.currentCopyItem.machineOrder.xDistance;
+                _this.currentSelectOrder.machineOrder.yDistance = _this.currentCopyItem.machineOrder.yDistance;
+                _this.currentSelectOrder.machineOrder.packageMethod = _this.currentCopyItem.machineOrder.packageMethod;
+                _this.currentSelectOrder.machineOrder.packageMark = _this.currentCopyItem.machineOrder.packageMark;
+                _this.currentSelectOrder.machineOrder.maintainType = _this.currentCopyItem.machineOrder.maintainType;
+                _this.currentSelectOrder.machineOrder.mark = _this.currentCopyItem.machineOrder.mark;
+                _this.currentSelectOrder.machineOrder.equipment = _this.currentCopyItem.machineOrder.equipment;
+                _this.currentSelectOrder.machineOrder.machinePrice = _this.currentCopyItem.machineOrder.machinePrice;
+                _this.confirmPasteDialog = false;
+                showMessage(_this, _this.currentSelectOrder.title + "粘贴成功！", 1);
+            },
+
 
             handleSplitOrder(requisitionItem) {
                 this.requisitionSplitItem = requisitionItem;
