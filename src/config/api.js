@@ -40,6 +40,12 @@ const DefaultTaskList = {
     "linkToPortIdProperty": "toPort",
 }
 
+//有效、无效
+const ValidList = [
+    {value: 1, name: '有效'},
+    {value: 0, name: '无效'},
+];
+
 //机器流程配置状态
 const ConfigStatusList = [
     {value: 1, name: '未配置'},

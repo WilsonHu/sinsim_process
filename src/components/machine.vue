@@ -25,7 +25,7 @@
     import Vue from 'vue'
     var _this;
     export default {
-        name: "contract",
+        name: "machine",
         components: {},
         data () {
             _this = this;
