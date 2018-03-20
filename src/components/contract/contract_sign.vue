@@ -1220,18 +1220,7 @@
                                                             </el-date-picker>
                                                         </el-form-item>
                                                     </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="计划日期：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'planShipDate', false)">
-                                                            <el-date-picker
-                                                                    style="width: 100%"
-                                                                    v-model="item.machineOrder.planShipDate"
-                                                                    type="date"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                    placeholder="合同计划日期">
-                                                            </el-date-picker>
-                                                        </el-form-item>
-                                                    </el-col>
+
                                                     <el-col :span="6">
                                                         <el-form-item label="订机数量：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'machineNum', false)"
@@ -1276,6 +1265,30 @@
                                                             </el-select>
                                                         </el-form-item>
                                                     </el-col>
+
+                                                    <el-col :span="6">
+                                                        <el-form-item label="计划日期：" :label-width="formLabelWidth"
+                                                                      :class="classWithDifferentValue(item, 'planShipDate', false)">
+                                                            <el-date-picker
+                                                                    style="width: 100%"
+                                                                    v-model="item.machineOrder.planShipDate"
+                                                                    type="date"
+                                                                    placeholder="合同计划日期">
+                                                            </el-date-picker>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="2" :offset="0">
+                                                        <el-button
+                                                                icon="el-icon-check"
+                                                                size="small"
+                                                                style="margin-left: 5px;"
+                                                                type="success"
+                                                                v-show="isShowConfirmPlanDate"
+                                                                @click="handleConfirmPlanDate(item.machineOrder)">
+                                                            确认
+                                                        </el-button>
+                                                    </el-col>
+
                                                     <el-col :span="24">
                                                         <el-form-item label="备注信息：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'machineOrder', false)">
@@ -1968,6 +1981,8 @@
                         name: "1",
                         //保存需求单数据
                         machineOrder: {
+                            machineType: '',
+                            country: CountryList[0].text,
                             brand: "SINSIM电脑绣花机",
                             createTime: new Date().format("yyyy-MM-dd"),
                             equipment: [],
@@ -2031,6 +2046,7 @@
                 splitNum: 1,
 
                 allRoles: [],
+                isShowConfirmPlanDate: false,
 
                 salePersonList: [],
                 timeout: null,
@@ -2096,6 +2112,29 @@
             };
         },
         methods: {
+
+            handleConfirmPlanDate(item)
+            {
+                $.ajax({
+                    url: HOST + "machine/order/update/",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        machineOrder: JSON.stringify({
+                            id: item.id,
+                            planShipDate: item.planShipDate,
+                        }),
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            showMessage(_this, "合同计划日期确认成功！", 1);
+                        } else {
+                            showMessage(_this, res.message, 0);
+                        }
+                    }
+                });
+            },
+
             requestCustomerList() {
                 $.ajax({
                     url: HOST + "contract/selectAllCustomer/",
@@ -2155,12 +2194,20 @@
             },
 
             requestSalePersonList() {
+                var roleId = 0;
+                for (var i = 0; i < _this.allRoles.length; i++) {
+                    if (_this.allRoles[i].roleName.indexOf("销售员") > -1) {
+                        roleId = _this.allRoles[i].id;
+                        break;
+                    }
+                }
+
                 $.ajax({
                     url: HOST + "user/selectUsers",
                     type: "POST",
                     dataType: "JSON",
                     data: {
-                        roleId: USER_ROLE.ROLE_SALEPERSON
+                        roleId: roleId,//USER_ROLE.ROLE_SALEPERSON
                     },
                     success: function (res) {
                         if (res.code == 200) {
@@ -2613,9 +2660,11 @@
             onConfirmPasteOrder()
             {
                 _this.currentSelectOrder.orderDetail = copyObjectByJSON(_this.currentCopyItem.orderDetail);
-                _this.currentSelectOrder.machineOrder.country = _this.currentCopyItem.machineOrder.country;
+
+//                _this.currentSelectOrder.machineOrder.country = _this.currentCopyItem.machineOrder.country;
+//                _this.currentSelectOrder.machineOrder.machineType = _this.currentCopyItem.machineOrder.machineType;
                 _this.currentSelectOrder.machineOrder.brand = _this.currentCopyItem.machineOrder.brand;
-                _this.currentSelectOrder.machineOrder.machineType = _this.currentCopyItem.machineOrder.machineType;
+
                 _this.currentSelectOrder.machineOrder.needleNum = _this.currentCopyItem.machineOrder.needleNum;
                 _this.currentSelectOrder.machineOrder.headNum = _this.currentCopyItem.machineOrder.headNum;
                 _this.currentSelectOrder.machineOrder.headDistance = _this.currentCopyItem.machineOrder.headDistance;
@@ -2799,11 +2848,12 @@
                 this.isError = false;
                 this.errorMsg = "";
                 this.dialogTitle = "签核合同";
+
+                this.mode = this.SIGN_MODE;
+                this.editContract = item;
                 _this.fetchContractData(item.id);
                 _this.fetchContractSignData(item.id);
                 _this.fetchMachineOrdersData(item.id);
-                this.mode = this.SIGN_MODE;
-                this.editContract = item;
                 this.addContractVisible = true;
             },
 
@@ -2811,11 +2861,12 @@
                 this.isError = false;
                 this.errorMsg = "";
                 this.dialogTitle = "编辑合同";
+
+                this.mode = this.EDIT_MODE;
+                this.editContract = item;
                 _this.fetchContractData(item.id);
                 _this.fetchContractSignData(item.id);
                 _this.fetchMachineOrdersData(item.id);
-                this.mode = this.EDIT_MODE;
-                this.editContract = item;
                 this.addContractVisible = true;
             },
 
@@ -3555,6 +3606,7 @@
                         this.mode == this.SIGN_MODE
                 );
             },
+
             changeContractContentDisable(item) {
                 return (
                         (item.status != CONTRACT_INITIAL && item.status != CONTRACT_REJECTED) ||
@@ -3653,7 +3705,7 @@
                                 } else if (machineOrder.status == ORDER_CANCELED) {
                                     newItem.title = newItem.title + "（已取消）";
                                 }
-
+                                _this.isShowConfirmPlanDate = _this.checkPlanDateIsShow(machineOrder);
                                 _this.requisitionForms.push(newItem);
                                 _this.editableTabsValue = newTabName;
                                 _this.tabIndex = i + 1;
@@ -3666,6 +3718,17 @@
                 });
             },
 
+            checkPlanDateIsShow(item)
+            {
+                return (item.status == ORDER_CHECKING_FINISHED ||
+                        item.status == CONTRACT_CHECKING_FINISHED ||
+                        item.status == ORDER_CHECKING ||
+                        _this.contractForm.status == CONTRACT_CHECKING ||
+                        this.mode == this.SIGN_MODE ) &&
+                        _this.userInfo.role.roleName.indexOf("PMC") > -1;
+
+            },
+
             initAllRoles() {
                 $.ajax({
                     url: HOST + "role/list",
@@ -3675,6 +3738,7 @@
                     success: function (res) {
                         if (res.code == 200) {
                             _this.allRoles = res.data.list;
+                            _this.requestSalePersonList();
                         }
                     }
                 });
@@ -3909,7 +3973,6 @@
                 return;
             }
             _this.requestCustomerList();
-            _this.requestSalePersonList();
             _this.initAllRoles();
             _this.initMachineType();
             _this.selectContracts();
