@@ -5,61 +5,71 @@
 
             <div align="right" style="margin-bottom: 20px">
                 <el-button
-                        icon="el-icon-plus"
+                        icon="el-icon-upload2"
                         size="normal"
                         type="primary"
-                        @click="addDialogShow">安装项
+                        @click="addDialogShow">导出
                 </el-button>
             </div>
             <el-table
-
                     :data="tableData"
                     border
                     style="width: 100%;"
                     @selection-change="handleSelectionChange" v-loading="listLoading">
-                <!--<el-table-column-->
-                <!--type="selection"-->
-                <!--align="center"-->
-                <!--width="55">-->
-                <!--</el-table-column>-->
                 <el-table-column label="序号" width="70" align="center">
                     <template scope="scope">{{ scope.$index+startRow}}</template>
                 </el-table-column>
-                <el-table-column label="工作名称" align="center">
-                    <template scope="scope">{{ scope.row.taskName }}</template>
+                <el-table-column label="异常类型" align="center">
+                    <template scope="scope">{{ scope.row.abnormalType }}</template>
                 </el-table-column>
-                <el-table-column label="工作小组" align="center">
+                <el-table-column label="工序" align="center">
                     <template scope="scope">
-                        {{ scope.row.groupId|filterGroup }}
+                        {{ scope.row.taskRecordId|filterGroup }}
                     </template>
                 </el-table-column>
-                <el-table-column label="质检员" align="center">
+                <el-table-column label="提交者" align="center">
                     <template scope="scope">
-                        {{ scope.row.qualityUserId | filterQuality}}
+                        {{ scope.row.submitUser | filterQuality}}
                     </template>
                 </el-table-column>
-                <el-table-column label="编辑" width="100" align="center">
+                <el-table-column label="解决者" align="center">
+                    <template scope="scope">
+                        {{ scope.row.solutionUser | filterQuality}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="createTime"
+                        width="160"
+                        label="创建时间">
+                    <template scope="scope">
+                        <div>
+                            {{formatDate(scope.row.createTime)}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="createTime"
+                        width="160"
+                        label="解决时间">
+                    <template scope="scope">
+                        <div>
+                            {{formatDate(scope.row.createTime)}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column width="100" align="center">
                     <template scope="scope" style="text-align: center">
                         <el-button
                                 size="small"
                                 type="primary"
                                 icon="el-icon-edit"
                                 :disabled="cantEdit"
-                                @click="editWithItem(scope.$index, scope.row)">编辑
+                                @click="editWithItem(scope.$index, scope.row)">查看
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="删除" width="100" align="center">
-                    <template scope="scope" style="text-align: center">
-                        <el-button
-                                size="small"
-                                icon="el-icon-delete"
-                                type="danger"
-                                @click="deleteWithItem(scope.row)">删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-
             </el-table>
             <br>
             <div class="block" align="center">
@@ -74,16 +84,7 @@
             </div>
             <br>
         </el-col>
-        <el-dialog title="提示" :visible.sync="deleteConfirmVisible"
-                   append-to-body>
-            <span>确认要删除选定的工作内容信息吗？</span>
-            <span slot="footer" class="dialog-footer">
-      <el-button @click="deleteConfirmVisible = false" icon="el-icon-close">取 消</el-button>
-      <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
-    </span>
-        </el-dialog>
-
-        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="60%">
+        <el-dialog title="查看详情" :visible.sync="addDialogVisible" width="60%">
             <el-form :model="addForm" label-position="right" label-width="120px">
                 <el-row>
                     <el-col :span="8">
@@ -144,7 +145,7 @@
 <script>
     import Vue from 'vue'
     import {Notification} from 'element-ui'
-    var _this
+    var _this;
     export default {
         name: "task_content_manage",
         components: {},
