@@ -331,5 +331,8 @@
         color: #333;
         text-align: center;
     }
+    .el-table__body{
+        table-layout:auto !important;
+    }
 
 </style>
