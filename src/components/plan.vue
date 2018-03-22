@@ -360,7 +360,7 @@
                                 scope="scope"
                                 label="待安装">
                             <template scope="scope">
-                                <el-tag type="danger" style="font-weight: bold">{{scope.row.planedTaskNum}}</el-tag>
+                                <el-tag type="danger" style="font-weight: bold">{{scope.row.installWaitingTaskNum}}</el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -706,7 +706,7 @@
             },
             getAllPlanedTaskNum(task) {
                 if (task != null) {
-                    var num = task.planedTaskNum + task.installingTaskNum + task.installedTaskNum
+                    var num = task.planedTaskNum + task.installWaitingTaskNum + task.installingTaskNum + task.installedTaskNum
                             + task.qualityDoingTaskNum + task.qualityDoneTaskNum + task.installAbnormalTaskNum + task.qualityAbnormalTaskNum;
                     if (num >= 0) {
                         return num;
