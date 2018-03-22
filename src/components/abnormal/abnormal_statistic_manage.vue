@@ -405,6 +405,9 @@
             editWithItem(index, data){
                 _this.isError = false;
                 _this.addForm = copyObject(data);
+                if(_this.addForm.solutionUser == 0) {
+                    _this.addForm.solutionUser = null;
+                }
                 _this.errorMsg = '';
                 _this.addDialogVisible = true;
 

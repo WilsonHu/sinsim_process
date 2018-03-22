@@ -243,7 +243,7 @@
                         dataType: 'json',
                         data: {
                             "id": _this.addForm.id,
-                            "taskName": _this.addForm.abnormalName,
+                            "abnormalName": _this.addForm.abnormalName,
                             "valid": _this.addForm.valid,
                         },
                         success: function (res) {
