@@ -509,6 +509,7 @@
                                                                     icon="el-icon-check"
                                                                     size="small"
                                                                     type="success"
+                                                                    :disabled="item.machineOrder.status != 0"
                                                                     @click="onSetDefault(item.name)">默认值
                                                             </el-button>
                                                         </el-col>
