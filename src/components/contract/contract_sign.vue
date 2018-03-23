@@ -274,7 +274,7 @@
                         <el-collapse-item :title="collapseTitle" name="1">
 
                             <el-tabs v-model="editableTabsValue" type="border-card" style="padding-right: 3px"
-                                     :editable="mode == EDIT_MODE || mode == ADD_MODE" @edit="handleEditTab">
+                                     :editable="(mode == EDIT_MODE && (editContractSign.currentStep != '签核完成')) || mode == ADD_MODE" @edit="handleEditTab">
                                 <el-tab-pane
                                         style="margin-left: 20px;margin-right: 20px"
                                         v-for="(item, index) in requisitionForms"
