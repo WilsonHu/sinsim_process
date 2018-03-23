@@ -284,7 +284,7 @@
                                     <el-form :model="item">
                                         <div>
                                             <el-card
-                                                    v-if="item.machineOrder.originalOrderId != null && item.orderChangeRecord != null && (mode == CHANGE_MODE ||item.orderChangeRecord.changeReason != '')">
+                                                    v-if="(item.machineOrder.originalOrderId != null && item.machineOrder.originalOrderId != 0) && item.orderChangeRecord != null && (mode == CHANGE_MODE ||item.orderChangeRecord.changeReason != '')">
                                                 <el-col :span="6">
                                                     <el-form-item label="原单号：" :label-width="formLabelWidth">
                                                             <span style="text-align: left; font-weight: bold;font-size: 16px; color: #409EFF">
@@ -341,7 +341,7 @@
                                                     <el-form-item label="订单号：" :label-width="formLabelWidth">
                                                         <el-input v-model="item.machineOrder.orderNum"
                                                                   placeholder="订单号"
-                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :disabled="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && item.machineOrder.status == ORDER_CHANGED)"
                                                         ></el-input>
                                                     </el-form-item>
                                                 </el-col>
@@ -2805,8 +2805,8 @@
                 };
                 //设置时间
                 newItem.machineOrder.createTime = new Date().format("yyyy-MM-dd");
-                //清空订单号
-                newItem.machineOrder.orderNum = "";
+                //沿用老的需求单号，因为实际管理中是以需求单号来沟通，所以保证之前的需求单号有效
+                //newItem.machineOrder.orderNum = "";
                 //清空之前的需求单中id(数据库对应)
                 newItem.machineOrder.id = null;
                 //为了清除前面订单签核的内容,先设置改单的签核流程，后面还需要监控机器数是否改变
@@ -2818,6 +2818,8 @@
 
                 //原需求单状态需要设置成改单状态,“3”为改单状态
                 this.requisitionChangingItem.machineOrder.status = ORDER_CHANGED;
+                //更改被改需求单的单号（xxx-改-20180323）
+                this.requisitionChangingItem.machineOrder.orderNum = this.requisitionChangingItem.machineOrder.orderNum + "(改-" + new Date().format("yyyyMMdd") + ")";
                 if (this.requisitionChangingItem.title.indexOf("改单") == -1) {
                     this.requisitionChangingItem.title =
                             this.requisitionChangingItem.title + "（待改单）";
@@ -3985,7 +3987,7 @@
 </script>
 <style>
     .el-table .warning-row {
-        background: #dcdfe6;
+        background: #909399;
     }
 
     .el-table .success-row {
