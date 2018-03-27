@@ -268,9 +268,6 @@
             return {
                 userInfo: {},
                 queryDataUrl: HOST + "/abnormal/record/selectAbnormalRecordDetailList",
-                deleteUrl: HOST + "task/delete",
-                addUrl: HOST + "task/add",
-                editTaskContentUrl: HOST + "task/update",
                 userListUrl: HOST + "/user/selectUsers",
                 listLoading: false,
                 tableData: [],
@@ -353,7 +350,11 @@
                 this.bigImgUrl = src;
             },
             formatDate(timeStamp) {
-                return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
+                if(timeStamp == null || timeStamp == "") {
+                    return "";
+                }else {
+                    return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
+                }
             },
             exportData() {
                 var condition = {
