@@ -199,7 +199,14 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
+                <el-row style="margin-left: 70px;">
+                    <el-col :span="7" v-for="(item, index) in abnormalImgList" :key="item" :offset="1">
+                        <el-card style="margin-top: 10px">
+                            <img style="width: 100%; height: 100%" :src="item" @click="showBigImg(item)">
+                        </el-card>
+                    </el-col>
+                </el-row>
+                <el-row style="margin-top: 10px">
                     <el-col :span="8">
                         <el-form-item label="解决者：">
                             <el-select type="text"
@@ -240,6 +247,11 @@
                     <el-button type="danger" @click="addDialogVisible = false" icon="el-icon-close">取 消</el-button>
                 </el-col>
             </div>
+            <el-dialog :visible.sync="showBigImgVisible" width="50%" append-to-body>
+                <el-card style="margin: 2px">
+                    <img style="width: 100%; height: 100%" :src="bigImgUrl">
+                </el-card>
+            </el-dialog>
         </el-dialog>
     </div>
 </template>
@@ -286,7 +298,7 @@
                     abnormalType: "",
                     taskName: "",
                     finishStatus: "",
-                    selectDate: [new Date(), new Date()]
+                    selectDate: []
                 },
                 statusList: [
                     {text: "解决", value: 1},
@@ -324,10 +336,22 @@
                         }
                     }]
                 },
+                abnormalImgList:[
+                        "src/assets/img/system_configuration.png",
+                        "src/assets/img/system_configuration.png",
+                        "src/assets/img/system_configuration.png",
+                        "src/assets/img/system_configuration.png"
+                ],
+                showBigImgVisible: false,
+                bigImgUrl:""
             }
 
         },
         methods: {
+            showBigImg(src) {
+                this.showBigImgVisible = true;
+                this.bigImgUrl = src;
+            },
             formatDate(timeStamp) {
                 return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
             },
