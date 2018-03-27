@@ -148,6 +148,40 @@
                 </el-table-column>
                 <el-table-column
                         align="center"
+                        label="安装状态">
+                    <template scope="scope">
+                        <div v-if="scope.row.status==0"
+                             style="color: #686868">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==1"
+                             style="color: #8b6c0e">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==2"
+                             style="color: #13678b">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==3"
+                             style="color: #198b57">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==4"
+                             style="color: darkred">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==5"
+                             style="color: indianred">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==6"
+                             style="color: red">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
                         prop="createTime"
                         label="创建时间">
                     <template slot-scope="scope">
@@ -178,11 +212,13 @@
                 <el-table-column
                         label="操作" width="100" align="center">
                     <template scope="scope" style="text-align: center">
+                        <!--非完成状态下，都可以更改具体的作业流程。
+                        在改变工序时，已经做过的工序不可更改，但可以添加，这部分逻辑在图形界面去判断-->
                         <el-button
                                 size="small"
                                 type="primary"
                                 icon="el-icon-setting"
-                                :disabled="!scope.row.canConfig"
+                                :disabled="scope.row.status == 4"
                                 @click="editWithItem(scope.$index, scope.row)">配置
                         </el-button>
                     </template>
@@ -200,10 +236,10 @@
             </div>
         </el-col>
 
-        <el-dialog title="机器基本信息配置" 
-        :visible.sync="machineDialog" width="50%" 
-        @close="basicDialogClose"
-        @open="basicDialogOpen">
+        <el-dialog title="机器基本信息配置"
+                   :visible.sync="machineDialog" width="50%"
+                   @close="basicDialogClose"
+                   @open="basicDialogOpen">
             <el-form :model="machineForm" label-position="right" label-width="150px">
                 <el-row>
                     <el-col :span="10">
@@ -249,7 +285,8 @@
                     </el-col>
                     <el-col :span="1">
                         <el-tooltip class="item" effect="dark" content="点击生成二维码" placement="top">
-                            <el-button type="success" @click="onGeneralQRCode" style="margin-top:3px;" size="mini" icon="el-icon-check"></el-button>
+                            <el-button type="success" @click="onGeneralQRCode" style="margin-top:3px;" size="mini"
+                                       icon="el-icon-check"></el-button>
                         </el-tooltip>
                     </el-col>
                     <el-col :span="10" :offset="0">
@@ -277,10 +314,10 @@
                 <div id="qrcode"></div>
             </el-row>
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
-                                        :title="errorMsg"
-                                        type="error"
-                                        :closable="false"
-                                        show-icon>
+                      :title="errorMsg"
+                      type="error"
+                      :closable="false"
+                      show-icon>
             </el-alert>
             <div slot="footer" class="dialog-footer" style="margin-bottom: 70px;margin-top: 30px">
                 <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
@@ -313,7 +350,7 @@
                                                   v-model="addForm.nameplate"
                                                   placeholder="无"
                                                   style="width:100%"
-                                                  ></el-input>
+                                        ></el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="24" :offset="0">
@@ -407,9 +444,10 @@
                 startRow: 0,
                 totalRecords: 0,
                 configStatusList: ConfigStatusList,
+                machineStatusList: MachineStatusList,
                 filters: {
                     machine_strid: '',
-                    nameplate:'',
+                    nameplate: '',
                     contract_num: '',
                     order_status: '',
                     orderNum: '',
@@ -464,16 +502,15 @@
         methods: {
             basicDialogClose()
             {
-                _this.isError=false;
-                _this.errorMsg="";
+                _this.isError = false;
+                _this.errorMsg = "";
                 $('#qrcode').html("");
             },
             onGeneralQRCode()
             {
-                if(!isStringEmpty(_this.machineForm.nameplate))
-                {
-                    _this.isError=false;
-                    _this.errorMsg="";
+                if (!isStringEmpty(_this.machineForm.nameplate)) {
+                    _this.isError = false;
+                    _this.errorMsg = "";
                     window.setTimeout(()=> {
                         // 设置参数方式
                         var str = toUtf8(_this.machineForm.nameplate);
@@ -481,9 +518,9 @@
                         $('#qrcode').qrcode(str);
                     }, 200);
                 }
-                else{
-                    _this.isError=true;
-                    _this.errorMsg="请输入机器编号再生成二维码"
+                else {
+                    _this.isError = true;
+                    _this.errorMsg = "请输入机器编号再生成二维码"
                     $('#qrcode').html("");
                 }
             },
@@ -561,7 +598,7 @@
             {
                 var condition = {
                     machine_strid: _this.filters.machine_strid.trim(),
-                    nameplate:_this.filters.nameplate.trim(),
+                    nameplate: _this.filters.nameplate.trim(),
                     orderNum: _this.filters.orderNum.trim(),
                     contractNum: _this.filters.contract_num.trim(),
                     query_start_time: '',
@@ -585,9 +622,6 @@
                             _this.totalRecords = res.data.total;
                             _this.tableData = res.data.list;
                             _this.startRow = res.data.startRow;
-                            _this.tableData.forEach(item=> {
-                                item.canConfig = item.status <= 2;
-                            });
                         }
                         _this.loadingUI = false;
                     }
@@ -636,20 +670,15 @@
                 var trObjList = new Array();
 
                 taskList.nodeDataArray.forEach(item=> {
-//                    var tempLoc = item.loc.split(" ");
-//                    if (tempLoc.length > 1) {
-//                        tempLoc.forEach(itemLoc=> {
-//                            itemLoc = Math.round(itemLoc * 100) / 100;
-//                        })
-//                        item.loc = tempLoc.join(" ");
-//                    }
                     if (isUndefined(item.category) || item.category == null) {//排除start,end
-                        trObjList.push({
-                            taskName: item.text,
-                            nodeKey: item.key,
-                            status: 0,
-                            processRecordId: _this.addForm.processRecordId
-                        });
+                        if (isUndefined(item.taskStatus) || item.taskStatus == 0) {
+                            trObjList.push({
+                                taskName: item.text,
+                                nodeKey: item.key,
+                                status: 0,
+                                processRecordId: _this.addForm.processRecordId
+                            });
+                        }
                     }
                 });
 
@@ -797,7 +826,7 @@
                 })
             },
             basicDialogOpen() {
-               _this.onGeneralQRCode();
+                _this.onGeneralQRCode();
             },
             onopened()
             {
@@ -899,52 +928,83 @@
             renderDiagramDataToUI()
             {
                 window.setTimeout(()=> {
-                    try {
-                        if (_this.addForm.taskList == '') {
-                            myDiagram.model = go.Model.fromJson({
-                                "class": "go.GraphLinksModel",
-                                "linkFromPortIdProperty": "fromPort",
-                                "linkToPortIdProperty": "toPort",
-                                "nodeDataArray": [
-                                    {
-                                        "category": "Start",
-                                        "text": "开始",
-                                        "key": -1,
-                                        "loc": "208 40"
-                                    },
-                                    {
-                                        "category": "End",
-                                        "text": "结束",
-                                        "key": -4,
-                                        "loc": "208 216"
+                            try {
+                                if (_this.addForm.taskList == '') {
+                                    myDiagram.model = go.Model.fromJson({
+                                        "class": "go.GraphLinksModel",
+                                        "linkFromPortIdProperty": "fromPort",
+                                        "linkToPortIdProperty": "toPort",
+                                        "nodeDataArray": [
+                                            {
+                                                "category": "Start",
+                                                "text": "开始",
+                                                "key": -1,
+                                                "loc": "208 40"
+                                            },
+                                            {
+                                                "category": "End",
+                                                "text": "结束",
+                                                "key": -4,
+                                                "loc": "208 216"
+                                            }
+                                        ],
+                                        "linkDataArray": []
+                                    });
+                                } else {//edit
+                                    var taskList = JSON.parse(_this.addForm.taskList);
+                                    if (taskList.nodeDataArray.length > 0) {
+                                        for (var i = 0; i < taskList.nodeDataArray.length; i++) {
+                                            var item = taskList.nodeDataArray[i];
+                                            if (item.category != "Start" && item.category != "End") {//排除start,end
+                                                //已经排了计划，再生产中的，将不能删除，但可以接着增加流程
+                                                if (item.taskStatus > 0 || item.task_status > 0) {
+                                                    item.category = ProcessCatergory.Working;
+                                                    item.deletable = false;
+                                                    item.movable = false;
+                                                }
+                                            }
+                                        }
                                     }
-                                ],
-                                "linkDataArray": []
-                            });
-                        } else {//edit
-                            myDiagram.model = go.Model.fromJson(_this.addForm.taskList);
-                        }
-                    } catch (ex) {
-                        console.log(ex.toString());
-                    } finally {
-                        _this.loadingInstance.close();
-                    }
-                }, 200);
+                                    myDiagram.model = go.Model.fromJson(JSON.stringify(taskList));
+                                }
+                            } catch (ex) {
+                                console.log(ex.toString());
+                            } finally {
+                                _this.loadingInstance.close();
+                            }
+                        },
+                        200
+                )
+                ;
             },
 
         },
 
-        computed: {},
+        computed: {}
+        ,
         filters: {
             filterDateString(strDate)
             {
                 var resDate = new Date(strDate);
                 return resDate.format("yyyy-MM-dd");
-            },
+            }
+            ,
+
+            filterStatus(id)
+            {
+                var result = _this.machineStatusList[0].name;
+                for (var i = 0; i < _this.machineStatusList.length; i++) {
+                    if (id == _this.machineStatusList[i].value) {
+                        result = _this.machineStatusList[i].name;
+                        break;
+                    }
+                }
+                return result;
+            }
+            ,
 
             filterConfigStatus(id)
             {
-
                 var result = _this.configStatusList[0].name;
                 for (var i = 0; i < _this.configStatusList.length; i++) {
                     if (id == _this.configStatusList[i].value) {
@@ -953,7 +1013,8 @@
                     }
                 }
                 return result;
-            },
+            }
+            ,
             filterMachineType(id)
             {
                 var result = '';
@@ -964,9 +1025,11 @@
                     }
                 }
                 return result;
-            },
+            }
+            ,
 
-        },
+        }
+        ,
         created: function () {
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
             if (isNull(this.userinfo)) {
@@ -979,11 +1042,13 @@
             _this.getTaskContentName();
             _this.getAllProcessTemplate();
 
-        },
+        }
+        ,
         mounted: function () {
             _this.filters.configStatus = 1;
             _this.search();
-        },
+        }
+        ,
     }
 
     var taskContentArray = [];
@@ -1039,12 +1104,12 @@
             }
         });
         //PartResized
-        myDiagram.addDiagramListener("PartResized", function (e) {
-            console.log("PartResized")
+        myDiagram.addDiagramListener("PartCreated", function (e) {
+            console.log("addDiagramListener")
         });
 
-        // helper definitions for node templates
 
+        // helper definitions for node templates
         function nodeStyle() {
             return [
                 // The Node.location comes from the "loc" property of the node data,
@@ -1055,6 +1120,7 @@
                 {
                     // the Node.location is at the center of each node
                     locationSpot: go.Spot.Top,
+//                    deletable: false,
                     //isShadowed: true,
                     //shadowColor: "#888",
                     // handle mouse enter/leave events to show/hide the ports
@@ -1063,8 +1129,13 @@
                     },
                     mouseLeave: function (e, obj) {
                         showPorts(obj.part, false);
-                    }
-                }
+                    },
+
+                },
+                new go.Binding("deletable", "deletable"),
+                new go.Binding("movable", "movable"),
+//                new go.Binding("canDelete", "canDelete"),
+//                new go.Binding("canMove", "canMove"),
             ];
         }
 
@@ -1096,8 +1167,11 @@
                         // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Rectangle",
-                                        {fill: "#00A9C9", stroke: null},
+                                        {
+                                            fill: "#00A9C9", stroke: null,
+                                        },
                                         new go.Binding("figure", "figure")),
+
                                 $(go.TextBlock,
                                         {
                                             font: "bold 11pt Helvetica, Arial, sans-serif",
@@ -1108,29 +1182,31 @@
                                             wrap: go.TextBlock.WrapFit,
                                             editable: false,
                                             textAlign: 'center',
-                                            isMultiline: true
+                                            isMultiline: true,
                                         },
-                                        new go.Binding("text").makeTwoWay())
+                                        new go.Binding("text").makeTwoWay(),
+                                ),
                         ),
+
                         // four named ports, one on each side:
                         makePort("T", go.Spot.Top, false, true),
                         makePort("L", go.Spot.Left, true, true),
                         makePort("R", go.Spot.Right, true, true),
                         makePort("B", go.Spot.Bottom, true, false)
                 ));
-        myDiagram.nodeTemplateMap.add("Working",  // the default category
+
+        myDiagram.nodeTemplateMap.add("Working",  //category
                 $(go.Node, "Spot", nodeStyle(),
                         // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Rectangle",
-                                        {fill: "yellow", stroke: null},
+                                        {fill: "Gray", stroke: null},
                                         new go.Binding("figure", "figure")),
                                 $(go.TextBlock,
                                         {
-                                            font: "bold 11pt Helvetica, Arial, sans-serif",
+                                            font: "bold 11pt Arial",
                                             stroke: "black",
                                             margin: 8,
-//                                            maxSize: new go.Size(160, NaN),
                                             maxSize: new go.Size(160, 160),
                                             wrap: go.TextBlock.WrapFit,
                                             editable: false,
@@ -1145,6 +1221,7 @@
                         makePort("R", go.Spot.Right, true, true),
                         makePort("B", go.Spot.Bottom, true, false)
                 ));
+
 
         myDiagram.nodeTemplateMap.add("Start",
                 $(go.Node, "Spot", nodeStyle(),
@@ -1187,25 +1264,6 @@
                         makePort("L", go.Spot.Left, false, true),
                         makePort("R", go.Spot.Right, false, true)
                 ));
-
-        myDiagram.nodeTemplateMap.add("Comment",
-                $(go.Node, "Auto", nodeStyle(),
-                        $(go.Shape, "File",
-                                {fill: "#EFFAB4", stroke: null}),
-                        $(go.TextBlock,
-                                {
-                                    margin: 5,
-                                    maxSize: new go.Size(200, NaN),
-                                    wrap: go.TextBlock.WrapFit,
-                                    textAlign: "center",
-                                    editable: true,
-                                    font: "bold 12pt Helvetica, Arial, sans-serif",
-                                    stroke: '#454545'
-                                },
-                                new go.Binding("text").makeTwoWay())
-                        // no ports, because no links are allowed to connect with a comment
-                ));
-
 
         // replace the default Link template in the linkTemplateMap
         myDiagram.linkTemplate =
@@ -1304,17 +1362,17 @@
         var out, i, len, c;
         out = "";
         len = str.length;
-        for(i = 0; i < len; i++) {
+        for (i = 0; i < len; i++) {
             c = str.charCodeAt(i);
             if ((c >= 0x0001) && (c <= 0x007F)) {
                 out += str.charAt(i);
             } else if (c > 0x07FF) {
                 out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
-                out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
-                out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+                out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+                out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
             } else {
-                out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
-                out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+                out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+                out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
             }
         }
         return out;

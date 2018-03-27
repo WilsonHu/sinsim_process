@@ -449,7 +449,8 @@
                                                 align="center"
                                                 label="操作" width="120">
                                             <template scope="scope">
-                                                <el-button v-if="scope.row.status<=2"
+                                                <!--非完成状态下，都可以跳过，方便流程在任何情况下都可以改变-->
+                                                <el-button v-if="scope.row.status!=6&&scope.row.status!=9"
                                                            size="small"
                                                            type="danger"
                                                            icon="el-icon-tickets"
