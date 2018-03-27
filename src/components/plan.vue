@@ -684,7 +684,41 @@
         },
         methods: {
             exportData() {
-                showMessage(_this, "暂无实现！", 0);
+                var condition = {
+                    orderNum: _this.planedFilters.orderNum,
+                    machineType: _this.planedFilters.machineType,
+                    nameplate: _this.planedFilters.nameplate,
+                    machineStrId: _this.planedFilters.machineStrId,
+                    installStatus: _this.planedFilters.installStatus,
+                    taskName: _this.planedFilters.taskName,
+                    query_start_time: '',
+                    query_finish_time: '',
+                    page: this.currentPagePlaned,
+                    size: this.pageSize
+                };
+                if (_this.planedFilters.selectDate != null && _this.planedFilters.selectDate.length > 0) {
+                    condition.query_start_time = _this.planedFilters.selectDate[0].format("yyyy-MM-dd");
+                    condition.query_finish_time = _this.planedFilters.selectDate[1].format("yyyy-MM-dd");
+                }
+                $.ajax({
+                    url: HOST + "task/record/export",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: condition,
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.tableDataPlaned = data.data.list;
+                            _this.totalNumPlaned = data.data.total;
+                            _this.startRowPlaned = data.data.startRow;
+                        } else {
+                            showMessage(_this, "导出计划失败！", 0);
+                        }
+                        _this.loadingUI = false;
+                    },
+                    error: function (data) {
+                        showMessage(_this, data.message, 0);
+                    }
+                })
             },
             generateTasks() {
                 const data = [];
