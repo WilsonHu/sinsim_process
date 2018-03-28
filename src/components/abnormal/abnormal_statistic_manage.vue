@@ -1,9 +1,16 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div>
-        <el-row>
-            <el-col :span="20">
-                <el-form :model="filters" label-position="right" label-width="60px">
-                    <el-col :span="4">
+        <el-form :model="filters" label-position="right" label-width="80px">
+            <el-row>
+                <el-col :span="20">
+                    <el-col :span="5">
+                        <el-form-item label="机器编号:">
+                           <el-input v-model="filters.nameplate" clearable>
+
+                           </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="5">
                         <el-form-item label="异常:">
                             <el-select v-model="filters.abnormalType" clearable>
                                 <el-option
@@ -14,7 +21,7 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="5">
                         <el-form-item label="工序:">
                             <el-select v-model="filters.taskName" clearable>
                                 <el-option
@@ -25,7 +32,7 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="5">
                         <el-form-item label="状态:"
                                       clearable>
                             <el-select v-model="filters.finishStatus" clearable>
@@ -37,40 +44,42 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="创建时间:" label-width="100px">
-                            <el-date-picker
-                                    v-model="filters.selectDate"
-                                    type="daterange"
-                                    align="left"
-                                    unlink-panels
-                                    clearable
-                                    range-separator="—"
-                                    start-placeholder="开始日期（计划）"
-                                    end-placeholder="结束日期（计划）"
-                                    :picker-options="pickerOptions">
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                </el-form>
-            </el-col>
-            <el-col :span="2">
-                <el-button
-                        icon="el-icon-search"
-                        size="normal"
-                        type="primary"
-                        @click="getStatisticsData">搜索
-                </el-button>
-            </el-col>
-            <el-col :span="2">
-                <el-button
-                        icon="el-icon-upload2"
-                        size="normal"
-                        type="danger"
-                        @click="exportData">导出
-                </el-button>
-            </el-col>
-        </el-row>
+                </el-col>
+                <el-col :span="2">
+                    <el-button
+                            icon="el-icon-search"
+                            size="normal"
+                            type="primary"
+                            @click="getStatisticsData">搜索
+                    </el-button>
+                </el-col>
+                <el-col :span="2">
+                    <el-button
+                            icon="el-icon-upload2"
+                            size="normal"
+                            type="danger"
+                            @click="exportData">导出
+                    </el-button>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="4">
+                    <el-form-item label="创建时间:" label-width="80px">
+                        <el-date-picker
+                                v-model="filters.selectDate"
+                                type="daterange"
+                                align="left"
+                                unlink-panels
+                                clearable
+                                range-separator="—"
+                                start-placeholder="开始日期（计划）"
+                                end-placeholder="结束日期（计划）"
+                                :picker-options="pickerOptions">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
         <el-col class="well well-lg" style="background-color: white;">
             <el-table
                     :data="tableData"
@@ -80,12 +89,21 @@
                 <el-table-column label="序号" width="70" align="center">
                     <template scope="scope">{{ scope.$index+startRow}}</template>
                 </el-table-column>
+                <el-table-column label="机器编号" align="center">
+                    <template scope="scope">{{ scope.row.machine.nameplate}}</template>
+                </el-table-column>
                 <el-table-column label="异常类型" align="center">
-                    <template scope="scope">{{ scope.row.abnormalType | filterAbnormal }}</template>
+                    <template scope="scope" >
+                        <span style="color: #F56C6C">
+                            {{ scope.row.abnormalType | filterAbnormal }}
+                        </span>
+                    </template>
                 </el-table-column>
                 <el-table-column label="工序" align="center">
                     <template scope="scope">
-                        {{ scope.row.taskRecord.taskName }}
+                        <span style="color: #409EFF">
+                            {{ scope.row.taskRecord.taskName }}
+                        </span>
                     </template>
                 </el-table-column>
                 <el-table-column label="提交者" align="center">
@@ -145,9 +163,18 @@
             <br>
         </el-col>
         <el-dialog title="查看/解决异常" :visible.sync="addDialogVisible" width="60%">
-            <el-form :model="addForm" label-position="right" label-width="120px">
+            <el-form :model="addForm" label-position="right" label-width="100px">
                 <el-row>
-                    <el-col :span="8">
+                    <el-col :span="6">
+                        <el-form-item label="机器编号：">
+                            <el-input type="text"
+                                      v-model="addForm.machine.nameplate"
+                                      style="width:100%"
+                                      disabled>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
                         <el-form-item label="异常类型：">
                             <el-select type="text"
                                        v-model="addForm.abnormalType"
@@ -162,7 +189,7 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="6">
                         <el-form-item label="工序：">
                             <el-input type="text"
                                       v-model="addForm.taskRecord.taskName"
@@ -171,7 +198,7 @@
                             </el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="6">
                         <el-form-item label="提交者：">
                             <el-select type="text"
                                        v-model="addForm.submitUser"
@@ -199,7 +226,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row style="margin-left: 70px;">
+                <el-row style="margin-left: 20px;">
                     <el-col :span="7" v-for="(item, index) in abnormalImgList" :key="item" :offset="1">
                         <el-card style="margin-top: 10px">
                             <img style="width: 100%; height: 100%" :src="item" @click="showBigImg(item)">
@@ -283,6 +310,9 @@
                     submitUser: "",
                     taskRecord: {
                         taskName: ""
+                    },
+                    machine: {
+                        nameplate:""
                     }
                 },
                 dialogLoading: true,
@@ -292,6 +322,7 @@
                 abnormalList: {},
                 taskList: {},
                 filters: {
+                    nameplate:"",
                     abnormalType: "",
                     taskName: "",
                     finishStatus: "",
@@ -358,6 +389,7 @@
             },
             exportData() {
                 var condition = {
+                    nameplate: _this.filters.nameplate,
                     abnormalType:_this.filters.abnormalType,
                     taskName:_this.filters.taskName,
                     finishStatus: _this.filters.finishStatus,
@@ -379,7 +411,7 @@
                     data: condition,
                     success: function (res) {
                         if (res.code == 200) {
-                            showMessage(_this, res.data, 1);
+                            showMessage(_this, "导出成功！", 1);
                         }
                         _this.listLoading = false;
                     },
@@ -394,6 +426,7 @@
             getStatisticsData() {
                 _this.listLoading = true;
                 var condition = {
+                    nameplate: _this.filters.nameplate,
                     abnormalType:_this.filters.abnormalType,
                     taskName:_this.filters.taskName,
                     finishStatus: _this.filters.finishStatus,
