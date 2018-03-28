@@ -1,11 +1,11 @@
-<template xmlns:v-bind="http://www.w3.org/1999/xhtml" >
+<template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <el-container>
-        <el-header  style="background: whitesmoke; height: 100px">
-            <el-row style="margin-top: 20px">
+        <el-header style="background: whitesmoke; height: 80px">
+            <el-row style="margin-top: 10px">
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
                         <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">安装中机器数：</div>
+                            <div style="font-size: 20px;font-weight: bold">安装中：</div>
                         </el-col>
                         <el-col :span="5">
                             <div style="font-size: 56px; font-weight: bold;">{{installingMachineNum}}</div>
@@ -15,17 +15,17 @@
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
                         <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">拆单中机器数：</div>
+                            <div style="font-size: 20px;font-weight: bold">拆单中：</div>
                         </el-col>
                         <el-col :span="5">
-                            <div style="font-size: 56px; font-weight: bold;">{{changeMachineNum}}</div>
+                            <div style="font-size: 56px; font-weight: bold; color: #FA5555">{{changeMachineNum}}</div>
                         </el-col>
                     </el-row>
                 </el-col>
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
                         <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">改单中机器数：</div>
+                            <div style="font-size: 20px;font-weight: bold">改单中：</div>
                         </el-col>
                         <el-col :span="5">
                             <div style="font-size: 56px; font-weight: bold; color: #FA5555">{{splitMachineNum}}</div>
@@ -34,8 +34,8 @@
                 </el-col>
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
-                        <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">异常工序数：</div>
+                        <el-col :span="11">
+                            <div style="font-size: 20px;font-weight: bold">异常工序：</div>
                         </el-col>
                         <el-col :span="5">
                             <div style="font-size: 56px; font-weight: bold; color: #FA5555">{{abnormalTaskNum}}</div>
@@ -45,19 +45,19 @@
             </el-row>
         </el-header>
         <el-main>
-            <el-row type="flex" class="row-bg" justify="center" style="margin-top: 50px">
+            <el-row type="flex" class="row-bg" justify="center" style="margin-top: 25px">
                 <el-col>
-                    <div id="installing" style="width:100%; height:500px; "></div>
+                    <div id="installing" style="width:100%; height:450px; "></div>
                 </el-col>
                 <el-col>
-                    <div id="abnormal" style="width:100%;height: 500px;"></div>
+                    <div id="abnormal" style="width:100%;height: 450px;"></div>
                 </el-col>
             </el-row>
-            <el-row style="margin-top: 50px">
+            <el-row style="margin-top: 25px">
                 <el-col :span="2" :offset="5">
                     <span style="font-size: 20px;font-weight: bold">改单记录</span>
                 </el-col>
-                <el-col :span="2" :offset="10" >
+                <el-col :span="2" :offset="10">
                     <span style="font-size: 20px;font-weight: bold">拆单记录</span>
                 </el-col>
             </el-row>
@@ -81,7 +81,7 @@
                         <el-table-column
                                 align="center"
                                 prop="createTime"
-                                width="200"
+                                width="160"
                                 label="改单时间">
                             <template scope="scope">
                                 <div>
@@ -121,7 +121,7 @@
                         <el-table-column
                                 align="center"
                                 prop="createTime"
-                                width="200"
+                                width="160"
                                 label="拆单时间">
                             <template scope="scope">
                                 <div>
@@ -147,9 +147,9 @@
     </el-container>
 
 
-</template >
+</template>
 
-<script >
+<script>
     var _this;
     import echarts from 'echarts';
 
@@ -173,42 +173,42 @@
                 abnormalTaskNum: 0,
                 changeMachineNum: 0,
                 splitMachineNum: 0,
-                installData:[115, 200, 136, 100, 300, 205, 115, 200, 136, 100, 300, 205],
-                abnormalData:[
+                installData: [115, 200, 136, 100, 300, 205, 115, 200, 136, 100, 300, 205],
+                abnormalData: [
                     {
-                        name:'缺料',
-                        type:'bar',
+                        name: '缺料',
+                        type: 'bar',
                         stack: '异常',
-                        data:[15, 20, 12, 10, 3, 5, 15, 20, 16, 1, 3, 8],
+                        data: [15, 20, 12, 10, 3, 5, 15, 20, 16, 1, 3, 8],
 //                        itemStyle:{
 //                            normal:{color:'#FA5555'}
 //                        },
                     },
                     {
-                        name:'安装错误',
-                        type:'bar',
+                        name: '安装错误',
+                        type: 'bar',
                         stack: '异常',
-                        data:[5, 2, 3, 10, 1, 0, 1, 6, 7, 1, 3, 8]
+                        data: [5, 2, 3, 10, 1, 0, 1, 6, 7, 1, 3, 8]
                     },
                     {
-                        name:'检验不合格',
-                        type:'bar',
+                        name: '检验不合格',
+                        type: 'bar',
                         stack: '异常',
 //                        itemStyle:{
 //                            normal:{color:'yellow'}
 //                        },
-                        data:[1, 2, 0, 3, 8, 5, 5, 10, 6, 1, 3, 4]
+                        data: [1, 2, 0, 3, 8, 5, 5, 10, 6, 1, 3, 4]
                     }
                 ],
-                changeOrderHistory:[],
-                splitOrderHistory:[]
+                changeOrderHistory: [],
+                splitOrderHistory: []
             }
         },
         methods: {
             formatDate(timeStamp) {
-                if(timeStamp == null || timeStamp == "") {
+                if (timeStamp == null || timeStamp == "") {
                     return "";
-                }else {
+                } else {
                     return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
                 }
             },
@@ -264,16 +264,36 @@
                     }
                 })
             },
-
+            getStatistic() {
+                $.ajax({
+                    url: HOST + "/dashboard/getStatistic",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            if (res.data != null) {
+                                _this.installingMachineNum = res.data.installingMachineNum;
+                                _this.changeMachineNum = res.data.changeMachineNum;
+                                _this.splitMachineNum = splitMachineNum;
+                                _this.abnormalTaskNum = abnormalTaskNum;
+                            }
+                        } else {
+                            showMessage(_this, res.data.message, 0)
+                        }
+                    },
+                    error: function (res) {
+                        showMessage(_this, "服务器访问出错！", 0)
+                    }
+                })
+            }
         },
         computed: {},
-        filters: {
-
-        },
+        filters: {},
         created: function () {
             this.getChangeOrderHistory();
             this.getSplitOrderHistory();
-
+            this.getStatistic();
         },
         mounted: function () {
             // 基于准备好的dom，初始化echarts实例
@@ -288,10 +308,10 @@
                 },
                 tooltip: {},
                 legend: {
-                    data:['工序数']
+                    data: ['工序数']
                 },
                 xAxis: {
-                    data: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]
+                    data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
                 },
                 yAxis: {},
                 series: [{
@@ -306,22 +326,22 @@
                 title: {
                     text: '异常次数/月'
                 },
-                tooltip : {
+                tooltip: {
                     trigger: 'axis',
-                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                     }
                 },
                 legend: {
-                    data:['缺料', '安装错误', '检验不合格']
+                    data: ['缺料', '安装错误', '检验不合格']
                 },
                 xAxis: {
-                    data: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]
+                    data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
                 },
                 yAxis: {
-                    type : 'value'
+                    type: 'value'
                 },
-                series:_this.abnormalData
+                series: _this.abnormalData
             };
 
             // 使用刚指定的配置项和数据显示图表。
@@ -332,8 +352,8 @@
         }
     }
 
-</script >
+</script>
 
-<style lang="scss" scoped >
+<style lang="scss" scoped>
 
-</style >
+</style>
