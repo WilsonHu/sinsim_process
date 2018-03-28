@@ -175,6 +175,10 @@
                             {{scope.row.status|filterStatus}}
                         </div>
                         <div v-if="scope.row.status==6"
+                             style="color: darkred">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==7"
                              style="color: red">
                             {{scope.row.status|filterStatus}}
                         </div>
@@ -214,13 +218,16 @@
                     <template scope="scope" style="text-align: center">
                         <!--非完成状态下，都可以更改具体的作业流程。
                         在改变工序时，已经做过的工序不可更改，但可以添加，这部分逻辑在图形界面去判断-->
-                        <el-button
-                                size="small"
-                                type="primary"
-                                icon="el-icon-setting"
-                                :disabled="scope.row.status == 4"
-                                @click="editWithItem(scope.$index, scope.row)">配置
-                        </el-button>
+                        <el-tooltip placement="right">
+                            <div slot="content">配置</div>
+                            <el-button
+                                    size="mini"
+                                    type="success"
+                                    icon="el-icon-setting"
+                                    :disabled="scope.row.status == 4"
+                                    @click="editWithItem(scope.$index, scope.row)">
+                            </el-button>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
@@ -653,6 +660,7 @@
                 }
             },
 
+            //配置或修改工序流程
             onSubmit()
             {
                 if (_this.addForm.processId == "") {
@@ -670,7 +678,7 @@
                 var trObjList = new Array();
 
                 taskList.nodeDataArray.forEach(item=> {
-                    if (isUndefined(item.category) || item.category == null) {//排除start,end
+                    if (item.category != "Start" && item.category != "End") {//排除start,end
                         if (isUndefined(item.taskStatus) || item.taskStatus == 0) {
                             trObjList.push({
                                 taskName: item.text,
@@ -679,6 +687,9 @@
                                 processRecordId: _this.addForm.processRecordId
                             });
                         }
+                        delete item["category"];
+                        delete item["deletable"];
+                        delete item["movable"];
                     }
                 });
 
@@ -704,7 +715,7 @@
                         processRecord: JSON.stringify(prObj),
                         machine: JSON.stringify({
                             id: _this.addForm.id,
-                            status: MachineStatusList[1].value,//已配置
+                            status: _this.addForm.status,
                         }),
                     },
                     success: function (res) {
@@ -952,16 +963,14 @@
                                     });
                                 } else {//edit
                                     var taskList = JSON.parse(_this.addForm.taskList);
-                                    if (taskList.nodeDataArray.length > 0) {
-                                        for (var i = 0; i < taskList.nodeDataArray.length; i++) {
-                                            var item = taskList.nodeDataArray[i];
-                                            if (item.category != "Start" && item.category != "End") {//排除start,end
-                                                //已经排了计划，再生产中的，将不能删除，但可以接着增加流程
-                                                if (item.taskStatus > 0 || item.task_status > 0) {
-                                                    item.category = ProcessCatergory.Working;
-                                                    item.deletable = false;
-                                                    item.movable = false;
-                                                }
+                                    for (var i = 0; i < taskList.nodeDataArray.length; i++) {
+                                        var item = taskList.nodeDataArray[i];
+                                        if (item.category != "Start" && item.category != "End") {//排除start,end
+                                            //已经排了计划，再生产中的，将不能删除，但可以接着增加流程
+                                            if (item.taskStatus > 0) {
+                                                item.category = ProcessCatergory.Working;
+                                                item.deletable = false;
+                                                item.movable = false;
                                             }
                                         }
                                     }

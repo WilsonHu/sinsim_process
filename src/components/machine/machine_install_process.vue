@@ -153,6 +153,10 @@
                             {{scope.row.status|filterStatus}}
                         </div>
                         <div v-if="scope.row.status==6"
+                             style="color: darkred">
+                            {{scope.row.status|filterStatus}}
+                        </div>
+                        <div v-if="scope.row.status==7"
                              style="color: red">
                             {{scope.row.status|filterStatus}}
                         </div>
@@ -184,14 +188,36 @@
                 </el-table-column>
 
                 <el-table-column
-                        label="操作" width="100" align="center">
+                        label="操作" align="center">
                     <template scope="scope" style="text-align: center">
-                        <el-button
-                                size="small"
-                                type="primary"
-                                icon="el-icon-view"
-                                @click="editWithItem(scope.row)">查看
-                        </el-button>
+                        <el-tooltip placement="left" content="查看机器">
+                            <el-button
+                                    size="mini"
+                                    type="primary"
+                                    icon="el-icon-view"
+                                    @click="editWithItem(scope.row)">
+                            </el-button>
+                        </el-tooltip>
+                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4" placement="right">
+                            <div slot="content">取消机器</div>
+                            <el-button
+
+                                    size="mini"
+                                    type="danger"
+                                    icon="el-icon-close"
+                                    @click="cancelMachine(scope.row)">
+                            </el-button>
+                        </el-tooltip>
+                        <el-tooltip v-show="scope.row.status==7 && userinfo.role.roleName.indexOf('超级管理员')>-1"
+                                    placement="right">
+                            <div slot="content">恢复安装</div>
+                            <el-button
+                                    size="mini"
+                                    type="success"
+                                    icon="el-icon-check"
+                                    @click="recoverMachine(scope.row)">
+                            </el-button>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
@@ -205,6 +231,25 @@
                         :total="totalRecords">
                 </el-pagination>
             </div>
+            <el-dialog title="确认取消机器" :visible.sync="confirmCancelDialog" width="30%"
+                       :modal="false">
+                <span>确定要取消机器编号为 [<b style="color: red;font-size: 18px">{{selectedItem.nameplate}}</b>] 吗？</span>
+                <span slot="footer" class="dialog-footer">
+                                    <el-button @click="confirmCancelDialog = false" icon="el-icon-close">取 消</el-button>
+                                    <el-button type="primary" @click="onConfirmCancel"
+                                               icon="el-icon-check">确 定</el-button>
+                                </span>
+            </el-dialog>
+            <el-dialog title="确认恢复机器" :visible.sync="confirmRecoverMachineDialog" width="30%"
+                       :modal="false">
+                <span>确定要恢复机器编号为 [<b style="color: red;font-size: 18px">{{selectedItem.nameplate}}</b>] 吗？</span>
+                <span slot="footer" class="dialog-footer">
+                                    <el-button @click="confirmRecoverMachineDialog = false"
+                                               icon="el-icon-close">取 消</el-button>
+                                    <el-button type="primary" @click="onConfirmRecoverMachine"
+                                               icon="el-icon-check">确 定</el-button>
+                                </span>
+            </el-dialog>
         </el-col>
 
         <el-dialog title="机器安装进度" :visible.sync="addDialogVisible"
@@ -239,7 +284,7 @@
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
-                                    
+
                                     <el-col :span="10">
                                         <el-form-item label="机器编号：">
                                             <el-input type="text"
@@ -248,7 +293,7 @@
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
-                                   
+
                                     <el-col :span="10" :offset="1">
                                         <el-form-item label="交货日期：">
                                             <el-input type="text"
@@ -257,7 +302,7 @@
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
-                                    
+
                                     <el-col :span="10">
                                         <el-form-item label="开始时间：">
                                             <el-input type="text"
@@ -453,12 +498,14 @@
                                                 <el-button v-if="scope.row.status!=6&&scope.row.status!=9"
                                                            size="small"
                                                            type="danger"
+                                                           :disabled="addForm.status==7"
                                                            icon="el-icon-tickets"
                                                            @click="showSkip(scope.row)">跳过
                                                 </el-button>
                                                 <el-button v-if="scope.row.status==9"
                                                            size="small"
                                                            type="primary"
+                                                           :disabled="addForm.status==7"
                                                            icon="el-icon-tickets"
                                                            @click="showRecover(scope.row)">恢复
                                                 </el-button>
@@ -470,16 +517,16 @@
                                 </el-col>
                             </el-row>
                             <!--<el-row>-->
-                                <!--<el-col :span="2" :offset="22">-->
-                                    <!--<el-button-->
-                                            <!--style="margin-top: 40px;"-->
-                                            <!--icon="el-icon-close"-->
-                                            <!--size="normal"-->
-                                            <!--type="danger"-->
-                                            <!--@click="addDialogVisible = false">-->
-                                        <!--关闭-->
-                                    <!--</el-button>-->
-                                <!--</el-col>-->
+                            <!--<el-col :span="2" :offset="22">-->
+                            <!--<el-button-->
+                            <!--style="margin-top: 40px;"-->
+                            <!--icon="el-icon-close"-->
+                            <!--size="normal"-->
+                            <!--type="danger"-->
+                            <!--@click="addDialogVisible = false">-->
+                            <!--关闭-->
+                            <!--</el-button>-->
+                            <!--</el-col>-->
                             <!--</el-row>-->
                             <el-dialog title="跳过工序" :visible.sync="confirmSkipDialog" width="30%"
                                        :modal="false">
@@ -504,12 +551,13 @@
                     </td>
                 </tr>
             </table>
-            <div slot="footer" class="dialog-footer" >
+            <div slot="footer" class="dialog-footer">
                 <el-col :span="24" style="margin-bottom: 30px;">
-                    <el-button   icon="el-icon-close"
-                                 size="normal"
-                                 type="danger"
-                                 @click="addDialogVisible = false">关 闭</el-button>
+                    <el-button icon="el-icon-close"
+                               size="normal"
+                               type="danger"
+                               @click="addDialogVisible = false">关 闭
+                    </el-button>
                 </el-col>
             </div>
         </el-dialog>
@@ -542,7 +590,7 @@
                 statusList: MachineStatusList,
                 filters: {
                     machine_strid: '',
-                    nameplate:'',
+                    nameplate: '',
                     contract_num: '',
                     order_status: '',
                     orderNum: '',
@@ -591,6 +639,8 @@
                 confirmSkipDialog: false,
                 confirmRecoverDialog: false,
                 selectedTaskItem: {},
+                confirmCancelDialog: false,
+                confirmRecoverMachineDialog: false,
             }
 
         },
@@ -673,6 +723,86 @@
 //                            });
                         }
 
+                    }
+                })
+            },
+            cancelMachine(data)
+            {
+                _this.selectedItem = copyObject(data);
+                _this.confirmCancelDialog = true;
+            },
+            onConfirmCancel()
+            {
+                $.ajax({
+                    url: HOST + "machine/update",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        machine: JSON.stringify({
+                            id: _this.selectedItem.id,
+                            status: MachineStatusList[7].value,
+                        })
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            for (var i = 0; i < _this.tableData.length; i++) {
+                                if (_this.selectedItem.id == _this.tableData[i].id) {
+                                    _this.tableData[i].status = MachineStatusList[7].value;
+                                    break;
+                                }
+                            }
+                            showMessage(_this, "取消机器成功！", 1);
+                        }
+                        else {
+                            showMessage(_this, "取消机器失败！", 0);
+                        }
+                        _this.confirmCancelDialog = false;
+                    }
+                })
+            },
+            recoverMachine(data)
+            {
+                _this.selectedItem = copyObject(data);
+                _this.confirmRecoverMachineDialog = true;
+            },
+
+            onConfirmRecoverMachine()
+            {
+                var machineStatus = MachineStatusList[1].value;//已配置
+                var taskList = JSON.parse(_this.selectedItem.nodeData);
+                for (var i = 0; i < taskList.length; i++) {
+                    if (parseInt(taskList[i].taskStatus) != TaskStatusList[6].value
+                            && parseInt(taskList[i].taskStatus) > TaskStatusList[1].value)//安装中
+
+                    {
+                        machineStatus = MachineStatusList[3].value//生产中
+                        break;
+                    }
+                }
+                $.ajax({
+                    url: HOST + "machine/update",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        machine: JSON.stringify({
+                            id: _this.selectedItem.id,
+                            status: machineStatus,
+                        })
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            for (var i = 0; i < _this.tableData.length; i++) {
+                                if (_this.selectedItem.id == _this.tableData[i].id) {
+                                    _this.tableData[i].status = machineStatus;
+                                    break;
+                                }
+                            }
+                            showMessage(_this, "恢复机器成功！", 1);
+                        }
+                        else {
+                            showMessage(_this, "恢复机器失败！", 0);
+                        }
+                        _this.confirmRecoverMachineDialog = false;
                     }
                 })
             },
