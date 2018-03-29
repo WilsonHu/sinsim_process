@@ -71,7 +71,13 @@
                             <template scope="scope">{{ scope.$index+changeStartRow}}</template>
                         </el-table-column>
                         <el-table-column label="需求单编号" width="200" align="center">
-                            <template scope="scope">{{ scope.row.orderId }}</template>
+                            <template scope="scope">
+                                <div @click="onDetailOrder(scope.row.orderNum)"
+                                     style="font-weight: bold;"
+                                     class="btn btn-link">
+                                    {{scope.row.orderNum}}
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column label="改单原因" align="center">
                             <template scope="scope">
@@ -111,7 +117,13 @@
                             <template scope="scope">{{ scope.$index+splitStartRow}}</template>
                         </el-table-column>
                         <el-table-column label="需求单编号" width="200" align="center">
-                            <template scope="scope">{{ scope.row.orderId}}</template>
+                            <template scope="scope">
+                                <div @click="onDetailOrder(scope.row.orderNum)"
+                                     style="font-weight: bold;"
+                                     class="btn btn-link">
+                                    {{scope.row.orderNum}}
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column label="拆单原因" align="center">
                             <template scope="scope">
@@ -205,6 +217,14 @@
             }
         },
         methods: {
+            onDetailOrder(ordernum)
+            {
+                sessionStorage.setItem('order_recorder', JSON.stringify({
+                    orderNum: ordernum,
+                }));
+                _this.$router.push("/home/order");
+            },
+
             formatDate(timeStamp) {
                 if (timeStamp == null || timeStamp == "") {
                     return "";
@@ -223,10 +243,12 @@
             getChangeOrderHistory() {
                 var condition = {
                     page: _this.changeCurrentPage,
-                    size: _this.pageSize
+                    size: _this.pageSize,
+                    id: "",
+                    orderId: "",
                 };
                 $.ajax({
-                    url: HOST + "/order/change/record/list",
+                    url: HOST + "/order/change/record/getChangeRecordList",
                     type: 'POST',
                     dataType: 'JSON',
                     data: condition,
@@ -245,11 +267,18 @@
                 })
             },
             getSplitOrderHistory() {
+
+                var condition = {
+                    page: _this.splitCurrentPage,
+                    size: _this.pageSize,
+                    id: "",
+                    orderId: "",
+                };
                 $.ajax({
-                    url: HOST + "/order/split/record/list",
+                    url: HOST + "/order/split/record/getSplitRecordList",
                     type: 'POST',
                     dataType: 'JSON',
-                    data: {},
+                    data: condition,
                     success: function (res) {
                         if (res.code == 200) {
                             _this.splitOrderHistory = res.data.list;
@@ -275,8 +304,8 @@
                             if (res.data != null) {
                                 _this.installingMachineNum = res.data.installingMachineNum;
                                 _this.changeMachineNum = res.data.changeMachineNum;
-                                _this.splitMachineNum = splitMachineNum;
-                                _this.abnormalTaskNum = abnormalTaskNum;
+                                _this.splitMachineNum = res.data.splitMachineNum;
+                                _this.abnormalTaskNum = res.data.abnormalTaskNum;
                             }
                         } else {
                             showMessage(_this, res.data.message, 0)

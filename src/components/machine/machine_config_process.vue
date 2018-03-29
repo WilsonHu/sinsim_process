@@ -225,7 +225,7 @@
                                     type="success"
                                     icon="el-icon-setting"
                                     :disabled="scope.row.status == 4"
-                                    @click="editWithItem(scope.$index, scope.row)">
+                                    @click="editWithItem(scope.$index, scope.row)">配置
                             </el-button>
                         </el-tooltip>
                     </template>

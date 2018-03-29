@@ -341,7 +341,7 @@
                                 </el-col>
                                 <el-col :span="24">
                                     <el-form-item label="包装备注：" :label-width="formLabelWidth"
-                                                  >
+                                    >
                                         <el-input
                                                 type="textarea"
                                                 :autosize="{ minRows: 6, maxRows: 6}"
@@ -766,7 +766,7 @@
                                 </el-col>
                                 <el-col :span="6">
                                     <el-form-item label="机针类型：" :label-width="formLabelWidth"
-                                                  >
+                                    >
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.axleNeedleType"
                                                        clearable
@@ -1574,6 +1574,11 @@
             if (isNull(this.userinfo)) {
                 this.$router.push({path: '/Login'});
                 return;
+            }
+            var oc = JSON.parse(sessionStorage.getItem('order_recorder'));//
+            if (!isUndefined(oc) && oc != null) {
+                _this.filters.order_num = oc.orderNum;
+                sessionStorage.removeItem('order_recorder');
             }
             _this.initAllRoles();
             _this.initMachineType();

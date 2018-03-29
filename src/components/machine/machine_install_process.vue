@@ -187,7 +187,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column
+                <el-table-column width="200"
                         label="操作" align="center">
                     <template scope="scope" style="text-align: center">
                         <el-tooltip placement="left" content="查看机器">
@@ -195,7 +195,7 @@
                                     size="mini"
                                     type="primary"
                                     icon="el-icon-view"
-                                    @click="editWithItem(scope.row)">
+                                    @click="editWithItem(scope.row)">查看
                             </el-button>
                         </el-tooltip>
                         <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4" placement="right">
@@ -205,7 +205,7 @@
                                     size="mini"
                                     type="danger"
                                     icon="el-icon-close"
-                                    @click="cancelMachine(scope.row)">
+                                    @click="cancelMachine(scope.row)">取消
                             </el-button>
                         </el-tooltip>
                         <el-tooltip v-show="scope.row.status==7 && userinfo.role.roleName.indexOf('超级管理员')>-1"
@@ -215,7 +215,7 @@
                                     size="mini"
                                     type="success"
                                     icon="el-icon-check"
-                                    @click="recoverMachine(scope.row)">
+                                    @click="recoverMachine(scope.row)">恢复
                             </el-button>
                         </el-tooltip>
                     </template>
