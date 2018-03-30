@@ -292,7 +292,7 @@
                     </el-col>
                     <el-col :span="1">
                         <el-tooltip class="item" effect="dark" content="点击生成二维码" placement="top">
-                            <el-button type="success" @click="onGeneralQRCode" style="margin-top:3px;" size="mini"
+                            <el-button type="success" @click="onGeneralQRCode" style="margin-top:5px; margin-left: 5px" size="mini"
                                        icon="el-icon-check"></el-button>
                         </el-tooltip>
                     </el-col>
@@ -588,7 +588,7 @@
                             _this.machineDialog = false;
 
                         } else {
-                            showMessage(_this, "机器信息更新失败!", 0)
+                            showMessage(_this, res.message, 0)
                         }
                     },
                 })
