@@ -676,7 +676,7 @@
                     return;
                 }
                 var trObjList = new Array();
-
+                var machineStatus = _this.addForm.status;
                 taskList.nodeDataArray.forEach(item=> {
                     if (item.category != "Start" && item.category != "End") {//排除start,end
                         if (isUndefined(item.taskStatus) || item.taskStatus == 0) {
@@ -686,6 +686,13 @@
                                 status: 0,
                                 processRecordId: _this.addForm.processRecordId
                             });
+                        }
+                        else if (machineStatus != MachineStatusList[3].value
+                                && parseInt(item.taskStatus) != TaskStatusList[6].value
+                                && parseInt(item.taskStatus) > TaskStatusList[1].value)//有一个是安装中
+
+                        {
+                            machineStatus = MachineStatusList[3].value//生产中
                         }
                         delete item["category"];
                         delete item["deletable"];
@@ -704,7 +711,7 @@
                         && _this.addForm.processRecordId != 0) {
                     prObj.id = parseInt(_this.addForm.processRecordId);
                 }
-
+                _this.addForm.status = machineStatus;
                 $.ajax({
                     url: HOST + "process/record/addProcessForMachine",
                     type: 'POST',
@@ -968,6 +975,7 @@
                                         if (item.category != "Start" && item.category != "End") {//排除start,end
                                             //已经排了计划，再生产中的，将不能删除，但可以接着增加流程
                                             if (item.taskStatus > 0) {
+                                                _this.addForm.isTaskOngoing = true;
                                                 item.category = ProcessCatergory.Working;
                                                 item.deletable = false;
                                                 item.movable = false;

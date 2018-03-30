@@ -185,7 +185,7 @@
                 abnormalTaskNum: 0,
                 changeMachineNum: 0,
                 splitMachineNum: 0,
-                installData: [115, 200, 136, 100, 300, 205, 115, 200, 136, 100, 300, 205],
+                installData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 abnormalData: [
                     {
                         name: '缺料',
@@ -315,41 +315,96 @@
                         showMessage(_this, "服务器访问出错！", 0)
                     }
                 })
-            }
+            },
+
+            getExpiredTaskStatistics() {
+                $.ajax({
+                    url: HOST + "/dashboard/getExpiredTaskStatistics",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        mode: 1 //取月份数据
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            for (var i = 0; i < res.data.length; i++) {
+                                var j = res.data[i].dateMonth - 1;
+                                _this.installData[j] = res.data[i].expiredCount;
+                            }
+                            _this.loadInstallData();
+                        }
+                    },
+                    error: function (res) {
+                        showMessage(_this, "服务器访问出错！", 0)
+                    }
+                })
+            },
+
+            loadInstallData() {
+                var installingChart = echarts.init(document.getElementById('installing'));
+                // 指定图表的配置项和数据
+                var installOption = {
+                    color: ['#3398DB'],
+                    title: {
+                        text: '未完成计划工序数/月'
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: {show: true, readOnly: true},
+                            magicType: {show: true, type: ['line', 'bar']},
+//                        restore: {show: true},
+//                        saveAsImage: {show: true}
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        }
+                    },
+                    legend: {
+                        data: ['超期工序数']
+                    },
+                    xAxis: {
+                        data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+                    },
+                    yAxis: {
+//                    type: 'value',
+//                    name: '超时工序',
+//                    min: 0,
+//                    max: 250,
+//                    interval: 50,
+//                    axisLabel: {
+//                        formatter: '{value}'
+//                    }
+                    },
+                    series: [{
+                        name: '超期工序数',
+                        type: 'bar',
+                        data: _this.installData
+                    }]
+                };
+                installingChart.setOption(installOption);
+            },
+
         },
-        computed: {},
-        filters: {},
+        computed: {}
+        ,
+        filters: {}
+        ,
         created: function () {
             this.getChangeOrderHistory();
             this.getSplitOrderHistory();
             this.getStatistic();
-        },
+            _this.getExpiredTaskStatistics();
+        }
+        ,
         mounted: function () {
             // 基于准备好的dom，初始化echarts实例
-            var installingChart = echarts.init(document.getElementById('installing'));
             var abnormalChart = echarts.init(document.getElementById('abnormal'));
-
-            // 指定图表的配置项和数据
-            var installOption = {
-                color: ['#3398DB'],
-                title: {
-                    text: '未完成计划工序数/月'
-                },
-                tooltip: {},
-                legend: {
-                    data: ['工序数']
-                },
-                xAxis: {
-                    data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
-                },
-                yAxis: {},
-                series: [{
-                    name: '工序数',
-                    type: 'bar',
-                    data: _this.installData
-                }]
-            };
-
             // 指定图表的配置项和数据
             var abnormalOption = {
                 title: {
@@ -374,9 +429,10 @@
             };
 
             // 使用刚指定的配置项和数据显示图表。
-            installingChart.setOption(installOption);
+
             abnormalChart.setOption(abnormalOption);
-        },
+        }
+        ,
         destroyed: function () {
         }
     }
