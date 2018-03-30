@@ -226,8 +226,13 @@
                                 <el-input v-model="contractForm.contractNum"
                                           :disabled="changeContractContentDisable(contractForm)"
                                           placeholder="合同号"
+                                          @blur="onContractInputUnfocus(contractForm.contractNum)"
                                 ></el-input>
                             </el-form-item>
+                            <div style="margin-top: -15px">
+                                <span v-if="contractExist"
+                                      style="color: red; font-size: 12px;">{{contractErrorMsg}}</span>
+                            </div>
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="客户：" :label-width="formLabelWidth">
@@ -274,7 +279,8 @@
                         <el-collapse-item :title="collapseTitle" name="1">
 
                             <el-tabs v-model="editableTabsValue" type="border-card" style="padding-right: 3px"
-                                     :editable="(mode == EDIT_MODE && (editContractSign.currentStep != '签核完成')) || mode == ADD_MODE" @edit="handleEditTab">
+                                     :editable="(mode == EDIT_MODE && (editContractSign.currentStep != '签核完成')) || mode == ADD_MODE"
+                                     @edit="handleEditTab">
                                 <el-tab-pane
                                         style="margin-left: 20px;margin-right: 20px"
                                         v-for="(item, index) in requisitionForms"
@@ -341,7 +347,8 @@
                                                     <el-form-item label="订单号：" :label-width="formLabelWidth">
                                                         <el-input v-model="item.machineOrder.orderNum"
                                                                   placeholder="订单号"
-                                                                  :disabled="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && item.machineOrder.status == ORDER_CHANGED)"
+                                                                  :disabled="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && item.machineOrder.status == 3)"
+                                                                  @blur="onOrderNumInputUnfocus"
                                                         ></el-input>
                                                     </el-form-item>
                                                 </el-col>
@@ -2109,10 +2116,38 @@
                             }
                         }
                     ]
-                }
+                },
+                contractExist: false,
+                contractErrorMsg: "",
             };
         },
         methods: {
+
+            onContractInputUnfocus(contractNum) {
+                if(_this.mode == _this.ADD_MODE) {
+                    if (contractNum == null || contractNum == "") {
+                        _this.contractExist = true;
+                        _this.contractErrorMsg = "合同编号不能为空！";
+                    } else {
+                        $.ajax({
+                            url: HOST + "contract/isContractExist",
+                            type: "POST",
+                            dataType: "JSON",
+                            data: {
+                                contractNum: contractNum
+                            },
+                            success: function (res) {
+                                if (res.code == 200) {
+                                    _this.contractExist = false;
+                                } else {
+                                    _this.contractExist = true;
+                                    _this.contractErrorMsg = res.message;
+                                }
+                            }
+                        });
+                    }
+                }
+            },
 
             handleConfirmPlanDate(item)
             {
@@ -2961,7 +2996,6 @@
                     iserror = true;
                     this.errorMsg = "合同号不能为空";
                 }
-
                 if (!iserror && isStringEmpty(formObj.customerName)) {
                     iserror = true;
                     this.errorMsg = "客户不能为空";
@@ -3181,6 +3215,10 @@
             onAdd() {
                 //先校验合同的内容,再校需求单的内容
                 _this.isError = this.validContractInfo(_this.contractForm, false);
+                if (_this.contractExist) {
+                    _this.iserror = true;
+                    _this.errorMsg = "合同号已存在";
+                }
                 //                if(!_this.isError) {
                 //                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
                 //                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
