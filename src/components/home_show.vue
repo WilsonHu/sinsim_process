@@ -390,6 +390,36 @@
                 installingChart.setOption(installOption);
             },
 
+            loadAbnormalData() {
+// 基于准备好的dom，初始化echarts实例
+                var abnormalChart = echarts.init(document.getElementById('abnormal'));
+                // 指定图表的配置项和数据
+                var abnormalOption = {
+                    title: {
+                        text: '异常次数/月'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data: ['缺料', '安装错误', '检验不合格']
+                    },
+                    xAxis: {
+                        data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: _this.abnormalData
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                abnormalChart.setOption(abnormalOption);
+            },
+
         },
         computed: {}
         ,
@@ -403,34 +433,7 @@
         }
         ,
         mounted: function () {
-            // 基于准备好的dom，初始化echarts实例
-            var abnormalChart = echarts.init(document.getElementById('abnormal'));
-            // 指定图表的配置项和数据
-            var abnormalOption = {
-                title: {
-                    text: '异常次数/月'
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                    }
-                },
-                legend: {
-                    data: ['缺料', '安装错误', '检验不合格']
-                },
-                xAxis: {
-                    data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: _this.abnormalData
-            };
-
-            // 使用刚指定的配置项和数据显示图表。
-
-            abnormalChart.setOption(abnormalOption);
+            _this.loadAbnormalData();
         }
         ,
         destroyed: function () {
