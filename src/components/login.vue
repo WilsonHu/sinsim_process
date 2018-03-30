@@ -17,7 +17,7 @@
                 <el-form-item label="密码:" prop="password">
                     <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码"
                               prefix-icon="el-icon-goods"
-                              @focus="onKeyup"></el-input>
+                              @change="onKeyup"></el-input>
                 </el-form-item>
                 <div class="alert alert-danger" v-if="isError" style="margin-top: 10px;padding: 5px;">
                     {{errorMsg}}!
@@ -74,12 +74,12 @@
                 return iserror;
             },
 
-            onChange: function () {
+            onChange() {
                 this.ruleForm2.name = '';
-                this.isError = this.validateForm();
+                _this.isError = this.validateForm();
             },
 
-            onKeyup: function () {
+            onKeyup(){
                 if (isStringEmpty(_this.ruleForm2.name) && !isStringEmpty(_this.ruleForm2.account)) {
 //				    $.ajax({
 //					    url: this.submitUrl, //this.queryUserUrl,
@@ -101,7 +101,7 @@
 //					    }
 //				    });
                 }
-                this.isError = this.validateForm();
+                _this.isError = this.validateForm();
             },
             reset: function () {
                 this.ruleForm2.account = "";
