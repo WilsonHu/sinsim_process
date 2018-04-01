@@ -390,7 +390,7 @@
                 var installOption = {
                     color: ['#3398DB'],
                     title: {
-                        text: '未完成计划工序数/月'
+                        text: '超期工序数/月'
                     },
                     toolbox: {
                         feature: {
