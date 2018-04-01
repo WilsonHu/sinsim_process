@@ -34,7 +34,14 @@
                             <label style="font-size: 15px;color: #f4f4f4;font-weight: normal;">
                                 欢迎您
                             </label>
-                            <label style="font-size: 18px;color: #f4f4f4;font-style: italic;font-weight: normal; padding-left: 10px">
+                            <label
+                                    style="font-size: 26px;
+                                    color: #f4f4f4;
+                                    cursor: pointer;
+                                    font-style: italic;font-weight: normal;
+                                    padding-left: 10px"
+                                    @click="showUserInfo"
+                            >
                                 {{userinfo.name}}
                             </label>
                             <label style="font-size: 16px;color: #3c3c3c;font-weight: bold; padding-left: 10px">{{userinfo.role.roleName}}</label>
@@ -53,6 +60,56 @@
             </el-container>
             <!--<el-footer >Footer</el-footer >-->
         </el-container>
+        <el-dialog title="用户密码修改" :visible.sync="userInfoDialog" size="tiny">
+            <el-row>
+                <el-form>
+                    <el-col :span="20">
+                        <el-form-item label="帐号：" :label-width="formLabelWidth">
+                            <el-input type="text" disabled v-model="submitUser.account" auto-complete="off">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="20">
+                        <el-form-item label="用户名：" :label-width="formLabelWidth">
+                            <el-input type="text" disabled v-model="submitUser.name" auto-complete="off">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="20">
+                        <el-form-item label="原密码：" :label-width="formLabelWidth">
+                            <el-input type="password" autofocus v-model="submitUser.oldPassword" auto-complete="off">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="20">
+                        <el-form-item label="新密码：" :label-width="formLabelWidth">
+                            <el-input v-if="!isShowPwd" type="password" autofocus v-model="submitUser.password"
+                                      auto-complete="off">
+                            </el-input>
+                            <el-input v-else type="text" v-model="submitUser.password" auto-complete="off">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-checkbox v-model="isShowPwd"
+                                     style="margin-top: 6px;margin-left: 3px;">显示密码
+                        </el-checkbox>
+                    </el-col>
+                </el-form>
+            </el-row>
+            <el-alert
+                    :title="errorMsg"
+                    v-show="isError"
+                    type="error"
+                    show-icon>
+            </el-alert>
+            <span slot="footer" class="dialog-footer">
+                    <el-button @click="userInfoDialog = false">取 消</el-button>
+                    <el-button type="success" @click="onConfirmUpdate"
+                               :disabled="validateUserPwd(submitUser)">确 定</el-button>
+                </span>
+
+        </el-dialog>
         <div class="modal fade" id="logOutConfirmMsg" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
@@ -90,33 +147,22 @@
                 system_name: SYSTEMNAME,
                 currentSec: 3,
                 timerDestroyed: false,
-                fetchSubDepartmentsURL: HOME + "DepartmentInfo/fetchSubDepartments",
                 current_time: '',
                 activeIndex: "1",
                 userinfo: {},
                 subDepartments: [],
                 isError: false,
                 errorMsg: '',
-                isErrorPwd: false,
-                errorPwdMsg: '',
-                editUrl: HOME + "User/modifyUserInfo",
-                submitData: {
+                currentUserRoleScope: {},
+                formLabelWidth: "100px",
+                userInfoDialog: false,
+                submitUser: {
                     account: '',
                     name: '',
-                    oldPwd: '',
-                    newPwd: "",
-                    confirmNewPwd: '',
+                    oldPassword: "",
+                    password: "",
                 },
-                modifyInfo: {
-                    account: '',
-                    name: '',
-                    department_name: '',
-                    work_post: "",
-                    phone: '',
-                    short_number: '',
-                },
-                dialogDetailVisible: false,
-                currentUserRoleScope: {}
+                isShowPwd: false,
             }
         },
         methods: {
@@ -124,105 +170,77 @@
                 _this.$router.push("/home");
             },
 
-            onUserInfo()
+            validateUserPwd(userObj)
             {
-                _this.dialogDetailVisible = true;
+                return isStringEmpty(userObj.password) ||
+                        isStringEmpty(userObj.oldPassword);
             },
 
-            onModifyInfo()
+            showUserInfo()
             {
-                this.verifyInfo();
-                if (!this.isError) {
-                    $.ajax({
-                        url: this.editUrl,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
+                _this.submitUser.account = _this.userinfo.account;
+                _this.submitUser.name = _this.userinfo.name;
+                _this.submitUser.password = "";
+                _this.submitUser.oldPassword = "";
+                _this.isShowPwd = false;
+                _this.isError = false;
+                _this.userInfoDialog = true;
+
+            },
+
+            submitNewPassword: function () {
+                $.ajax({
+                    url: HOST + "user/update",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        user: JSON.stringify({
                             id: _this.userinfo.id,
-                            phone: _this.modifyInfo.phone,
-                            short_number: _this.modifyInfo.short_number,
-                        },
-                        success: function (data) {
-                            _this.isError = data.status == 0;
-                            if (!_this.isError) {
-                                _this.dialogDetailVisible = false;
-                                showMessage(_this, '修改成功', 1);
-                            }
-                            else {
-                                _this.errorMsg = '修改失败';
-                                showMessage(_this, _this.errorMsg, 0);
-                            }
-                        },
-                        error: function (info) {
-                            showMessage(_this, '服务器访问出错', 0);
+                            password: _this.submitUser.password,
+                        }),
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.userInfoDialog = false;
+                            showMessage(_this, '密码修改成功', 1);
+                        } else {
+                            _this.errorMsg = '密码修改失败';
+                            showMessage(_this, _this.errorMsg, 0);
                         }
-                    })
-                }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        showMessage(_this, error, 0);
+                    }
+                });
             },
 
-            onModifyPwd()
+            onConfirmUpdate()
             {
-                this.verifyPwd();
-                if (!this.isErrorPwd) {
-                    $.ajax({
-                        url: this.editUrl,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            id: _this.userinfo.id,
-                            password: _this.submitData.newPwd,
-                        },
-                        success: function (data) {
-                            _this.isErrorPwd = data.status == 0;
-                            if (!_this.isErrorPwd) {
-                                _this.dialogDetailVisible = false;
-                                //window.setInterval(_this.reduceTime, 1000)
-                                $("#modifyPwdDialog").modal();
-                                //showMessage(_this, '修改成功', 1);
-                            }
-                            else {
-                                _this.errorPwdMsg = '修改失败';
-                                showMessage(_this, _this.errorPwdMsg, 0);
-                            }
-                        },
-                        error: function (info) {
-                            showMessage(_this, '服务器访问出错', 0);
+                $.ajax({
+                    url: HOST + "user/requestLogin",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        account: _this.submitUser.account,
+                        password: _this.submitUser.oldPassword,
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.submitNewPassword();
+                        } else {
+                            _this.errorMsg = "原密码不正确，请重新输入!";
+                            _this.isError = true;
+//                            showMessage(_this, "原密码不正确，请重新输入!", 0);
                         }
-                    })
-                }
+                    },
+                    error: function (error) {
+                        _this.errorMsg = "原密码不正确，请重新输入!";
+                        _this.isError = true;
+//                        showMessage(_this, "原密码不正确，请重新输入!", 0);
+                    }
+                });
             },
-
-            onKeyUp: function () {
-                this.verifyPwd();
-            },
-
-            verifyPwd: function () {
-                this.isErrorPwd = false;
-                if (isStringEmpty(this.submitData.newPwd)) {
-                    this.isErrorPwd = true;
-                    this.errorPwdMsg = '新密码不能为空';
-                } else if (this.submitData.newPwd != this.submitData.confirmNewPwd) {
-                    this.isErrorPwd = true;
-                    this.errorPwdMsg = '新密码和确认新密码不一致';
-                }
-
-                if (isStringEmpty(this.submitData.oldPwd)) {
-                    this.isErrorPwd = true;
-                    this.errorPwdMsg = '请输入正确的原密码';
-                }
-            },
-
-            verifyInfo: function () {
-                this.isError = false;
-                this.errorMsg = '';
-
-                if (this.modifyInfo.phone != '' && !regIsPhone(this.modifyInfo.phone)) {
-                    this.isError = true;
-                    this.errorMsg = '请输入正确的手机';
-                }
-            },
-
-
             getCurrentDate: function () {
                 var cdata = new Date();
                 this.current_time = cdata.toLocaleTimeString("yyyy-MM-dd HH:mm:ss");
@@ -331,8 +349,9 @@
         color: #333;
         text-align: center;
     }
-    .el-table__body{
-        table-layout:auto !important;
+
+    .el-table__body {
+        table-layout: auto !important;
     }
 
 </style>

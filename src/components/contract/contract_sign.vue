@@ -348,7 +348,6 @@
                                                         <el-input v-model="item.machineOrder.orderNum"
                                                                   placeholder="订单号"
                                                                   :disabled="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && item.machineOrder.status == 3)"
-                                                                  @blur="onOrderNumInputUnfocus"
                                                         ></el-input>
                                                     </el-form-item>
                                                 </el-col>
