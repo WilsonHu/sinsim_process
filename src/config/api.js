@@ -17,8 +17,14 @@ var ScrollTimerInterval = 5000;
 var DisableScroll = 1;
 var COM_CMD_INTERVAL = 5000;
 
+const STATISTICS_DATE_MODE = {
+    YEAR: 0,
+    MONTH: 1,
+    DAY: 2
+}
+
 const USER_ROLE = {
-    ROLE_SALEPERSON:9,
+    ROLE_SALEPERSON: 9,
 }
 
 const PROGRESSTYPE = {

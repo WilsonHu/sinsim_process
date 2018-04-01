@@ -206,12 +206,10 @@
                         name: '检验不合格',
                         type: 'bar',
                         stack: '异常',
-//                        itemStyle:{
-//                            normal:{color:'yellow'}
-//                        },
                         data: [1, 2, 0, 3, 8, 5, 5, 10, 6, 1, 3, 4]
                     }
                 ],
+                abnormalLegend: [],
                 changeOrderHistory: [],
                 splitOrderHistory: []
             }
@@ -323,7 +321,7 @@
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
-                        mode: 1 //取月份数据
+                        mode: STATISTICS_DATE_MODE.MONTH //取月份数据
                     },
                     success: function (res) {
                         if (res.code == 200) {
@@ -339,6 +337,52 @@
                     }
                 })
             },
+
+            getAbnormalStatistics() {
+                $.ajax({
+                    url: HOST + "/dashboard/getAbnormalStatistics",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        mode: STATISTICS_DATE_MODE.MONTH //取月份数据
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.abnormalData = [];
+                            _this.abnormalLegend = [];
+                            for (var i = 0; i < res.data.length; i++) {
+                                var j = res.data[i].dateMonth - 1;
+                                var existIndex = -1;
+                                for (var p = 0; p < _this.abnormalData.length; p++) {
+                                    if (_this.abnormalData[p].name.trim() == res.data[i].abnormalName.trim()) {
+                                        existIndex = p;
+                                        break;
+                                    }
+                                }
+                                if (existIndex > 0) {
+                                    _this.abnormalData[existIndex].data[j] = res.data[i].abnormalCount;
+                                }
+                                else {
+                                    _this.abnormalLegend.push(res.data[i].abnormalName.trim());
+                                    _this.abnormalData.push({
+                                        name: res.data[i].abnormalName.trim(),
+                                        type: 'bar',
+                                        stack: '异常',
+                                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                    },);
+                                    _this.abnormalData[_this.abnormalData.length - 1].data[j] = res.data[i].abnormalCount;
+                                }
+
+                            }
+                            _this.loadAbnormalData();
+                        }
+                    },
+                    error: function (res) {
+                        showMessage(_this, "服务器访问出错！", 0)
+                    }
+                })
+            },
+
 
             loadInstallData() {
                 var installingChart = echarts.init(document.getElementById('installing'));
@@ -359,10 +403,11 @@
                     tooltip: {
                         trigger: 'axis',
                         axisPointer: {
-                            type: 'cross',
-                            crossStyle: {
-                                color: '#999'
-                            }
+                            type: 'shadow',
+//                            type: 'cross',
+//                            crossStyle: {
+//                                color: '#999'
+//                            }
                         }
                     },
                     legend: {
@@ -398,6 +443,15 @@
                     title: {
                         text: '异常次数/月'
                     },
+                    toolbox: {
+                        feature: {
+                            dataView: {show: true, readOnly: true},
+                            magicType: {show: true, type: ['line', 'bar']},
+//                        restore: {show: true},
+//                        saveAsImage: {show: true}
+                        }
+                    },
+
                     tooltip: {
                         trigger: 'axis',
                         axisPointer: {            // 坐标轴指示器，坐标轴触发有效
@@ -405,7 +459,7 @@
                         }
                     },
                     legend: {
-                        data: ['缺料', '安装错误', '检验不合格']
+                        data: _this.abnormalLegend,//['缺料', '安装错误', '检验不合格']
                     },
                     xAxis: {
                         data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
@@ -430,12 +484,12 @@
             this.getSplitOrderHistory();
             this.getStatistic();
             _this.getExpiredTaskStatistics();
+            _this.getAbnormalStatistics();
         }
         ,
         mounted: function () {
-            _this.loadAbnormalData();
-        }
-        ,
+        },
+
         destroyed: function () {
         }
     }
