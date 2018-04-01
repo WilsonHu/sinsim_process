@@ -77,7 +77,7 @@
         },
         computed: {},
         created: function () {
-            _this.$router.push("/home/machine/machine_config_process");
+            _this.$router.push("/home/machine/machine_install_process");
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
             this.fetchUserRoleScope(this.userinfo.role.id);
         },

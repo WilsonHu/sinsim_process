@@ -79,7 +79,7 @@
         computed: {},
         created: function () {
 //		    var path = _this.$router.options.routes;
-            _this.$router.push("/home/task/task_content_manage");
+            _this.$router.push("/home/task/process_manage");
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
             this.fetchUserRoleScope(this.userinfo.role.id);
         },

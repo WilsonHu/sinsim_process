@@ -90,21 +90,6 @@ export default
                 component: Order,
                 name: 'Order',
                 meta: "订单管理",
-                // redirect: '/home/order/order_sign',
-                // children: [
-                //     {
-                //         path: '/home/order/order_sign',
-                //         component: OrderSign,
-                //         name: 'order_sign',
-                //         meta: '订单签核'
-                //     },
-                //     {
-                //         path: '/home/order/order_manage',
-                //         component: OrderManage,
-                //         name: 'order_manage',
-                //         meta: '订单安装'
-                //     },
-                // ]
             },
 
             {
@@ -112,20 +97,20 @@ export default
                 component: Machine,
                 name: 'Machine',
                 meta: "机器管理",
-                redirect: '/home/machine/machine_config_process',
+                redirect: '/home/machine/machine_install_process',
                 children: [
-                    {
-                        path: '/home/machine/machine_config_process',
-                        component: MachineConfigProcess,
-                        name: 'machine_config_process',
-                        meta: '配置流程'
-                    },
                     {
                         path: '/home/machine/machine_install_process',
                         component: MachineInstallProcess,
                         name: 'machine_install_process',
                         meta: '安装进度'
                     },
+                    {
+                        path: '/home/machine/machine_config_process',
+                        component: MachineConfigProcess,
+                        name: 'machine_config_process',
+                        meta: '配置流程'
+                    }
                 ]
             },
 
@@ -165,19 +150,19 @@ export default
                 component: Task,
                 name: 'Task',
                 meta: "流程管理",
-                redirect: '/home/task/task_content_manage',
+                redirect: '/home/task/process_manage',
                 children: [
-                    {
-                        path: '/home/task/task_content_manage',
-                        component: TaskContentManage,
-                        name: 'task_content_manage',
-                        meta: '安装子项'
-                    },
                     {
                         path: '/home/task/process_manage',
                         component: ProcessManage,
                         name: 'process_manage',
                         meta: '安装流程'
+                    },
+                    {
+                        path: '/home/task/task_content_manage',
+                        component: TaskContentManage,
+                        name: 'task_content_manage',
+                        meta: '安装子项'
                     }
                 ]
             },
@@ -207,8 +192,6 @@ export default
                         name: 'role_manage',
                         meta: '角色管理'
                     },
-                    // {path: '/home/system/qualification_manage', component: QualificationManage, name: 'qualification_manage', meta: '资质管理'},
-                    // {path: '/home/system/material_statistics', component: MaterialStatistics, name: 'material_statistics', meta: '材料统计'},
                     {
                         path: '/home/system/device_manager',
                         component: DeviceManager,
