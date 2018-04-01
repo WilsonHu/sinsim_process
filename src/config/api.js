@@ -1,13 +1,7 @@
 //Server root address
-var HOST = "http://127.0.0.1:8080/";
-//var HOST = "http://127.0.0.1/";
-var HOST_URL = HOST + "shcrhservice/";
-
-var SERVER_ROOT = HOST_URL + "index.php/";
-var HOME = SERVER_ROOT + "Home/";
-var DOWNLOADPATH = HOST + "oll/";
-var Import_URL = HOST_URL + "Import/";
-var Image_URL = HOST_URL + "Image/";
+var IP = "http://127.0.0.1";
+var HOST = IP + ":8080/";
+var DOWNLOADPATH = IP + "/oll/";
 var SOCKECT_ADDR = "ws://127.0.0.1:9998";//CRHService IP address(Windows service)
 var SYSTEMNAME = "SinSim流程管理系统";
 
