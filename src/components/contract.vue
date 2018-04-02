@@ -66,6 +66,9 @@
                     success: function (data) {
                         if (data.code == 200) {
                             _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+                            if(_this.currentUserRoleScope.abnormal.length > 0) {
+                                _this.$router.push(_this.currentUserRoleScope.contract[0]);
+                            }
                         } else {
                             showMessage(_this, data.message, 0);
                         }
@@ -79,7 +82,7 @@
         },
         computed: {},
         created: function () {
-            _this.$router.push("/home/contract/contract_sign");
+            //_this.$router.push("/home/contract/contract_sign");
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
             this.fetchUserRoleScope(this.userinfo.role.id);
 

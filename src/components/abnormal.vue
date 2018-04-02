@@ -64,6 +64,9 @@
                     success: function (data) {
                         if (data.code == 200) {
                             _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+                            if(_this.currentUserRoleScope.abnormal.length > 0) {
+                                _this.$router.push(_this.currentUserRoleScope.abnormal[0]);
+                            }
                         } else {
                             showMessage(_this, data.message, 0);
                         }
@@ -77,7 +80,7 @@
         },
         computed: {},
         created: function () {
-            _this.$router.push("/home/abnormal/abnormal_statistic_manage");
+            //_this.$router.push("/home/abnormal/abnormal_statistic_manage");
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
             this.fetchUserRoleScope(this.userinfo.role.id);
         },

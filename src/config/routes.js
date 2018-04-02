@@ -69,7 +69,6 @@ export default
                 component: Contract,
                 name: 'Contract',
                 meta: "签核管理",
-                redirect: '/home/contract/contract_sign',
                 children: [
                     {
                         path: '/home/contract/contract_sign',
@@ -97,7 +96,6 @@ export default
                 component: Machine,
                 name: 'Machine',
                 meta: "机器管理",
-                redirect: '/home/machine/machine_install_process',
                 children: [
                     {
                         path: '/home/machine/machine_install_process',
@@ -127,7 +125,6 @@ export default
                 component: Abnormal,
                 name: 'Abnormal',
                 meta: "异常管理",
-                redirect: "/home/abnormal/abnormal_statistic_manage",
                 children: [
                     {
                         path: '/home/abnormal/abnormal_statistic_manage',
@@ -150,7 +147,6 @@ export default
                 component: Task,
                 name: 'Task',
                 meta: "流程管理",
-                redirect: '/home/task/process_manage',
                 children: [
                     {
                         path: '/home/task/process_manage',
@@ -172,7 +168,6 @@ export default
                 component: System,
                 name: 'System',
                 meta: "系统管理",
-                redirect: '/home/system/user_manage',
                 children: [
                     {
                         path: '/home/system/user_manage',
