@@ -569,7 +569,7 @@
                     // location: _this.machineForm.location,
                 });
                 $.ajax({
-                    url: HOST + "/machine/update",
+                    url: HOST + "/machine/addMachineNum",
                     type: 'POST',
                     dataType: 'json',
                     data: {

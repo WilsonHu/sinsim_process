@@ -133,7 +133,7 @@ export default
                         path: '/home/abnormal/abnormal_statistic_manage',
                         component: AbnormalStatisticManage,
                         name: 'abnormal_statistic_manage',
-                        meta: '异常统计'
+                        meta: '安装异常'
                     },
                     {
                         path: '/home/abnormal/abnormal_type_manage',
