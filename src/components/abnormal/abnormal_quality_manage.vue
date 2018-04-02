@@ -10,17 +10,17 @@
                            </el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="异常:">
-                            <el-select v-model="filters.abnormalType" clearable>
-                                <el-option
-                                        v-for="item in abnormalList"
-                                        v-bind:value="item.id"
-                                        v-bind:label="item.abnormalName">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
+                    <!--<el-col :span="5">-->
+                        <!--<el-form-item label="异常:">-->
+                            <!--<el-select v-model="filters.abnormalType" clearable>-->
+                                <!--<el-option-->
+                                        <!--v-for="item in abnormalList"-->
+                                        <!--v-bind:value="item.id"-->
+                                        <!--v-bind:label="item.abnormalName">-->
+                                <!--</el-option>-->
+                            <!--</el-select>-->
+                        <!--</el-form-item>-->
+                    <!--</el-col>-->
                     <el-col :span="5">
                         <el-form-item label="工序:">
                             <el-select v-model="filters.taskName" clearable>
@@ -92,13 +92,13 @@
                 <el-table-column label="机器编号" align="center">
                     <template scope="scope">{{ scope.row.machine.nameplate}}</template>
                 </el-table-column>
-                <el-table-column label="异常类型" align="center">
-                    <template scope="scope" >
-                        <span style="color: #F56C6C">
-                            {{ scope.row.abnormalType | filterAbnormal }}
-                        </span>
-                    </template>
-                </el-table-column>
+                <!--<el-table-column label="异常类型" align="center">-->
+                    <!--<template scope="scope" >-->
+                        <!--<span style="color: #F56C6C">-->
+                            <!--{{ scope.row.abnormalType | filterAbnormal }}-->
+                        <!--</span>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
                 <el-table-column label="工序" align="center">
                     <template scope="scope">
                         <span style="color: #409EFF">
@@ -108,12 +108,12 @@
                 </el-table-column>
                 <el-table-column label="提交者" align="center">
                     <template scope="scope">
-                        {{ scope.row.submitUser | filterUser}}
+                        {{ scope.row.submitUser}}
                     </template>
                 </el-table-column>
                 <el-table-column label="解决者" align="center">
                     <template scope="scope">
-                        {{ scope.row.solutionUser | filterUser}}
+                        {{ scope.row.solutionUser}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -174,21 +174,21 @@
                             </el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="异常类型：">
-                            <el-select type="text"
-                                       v-model="addForm.abnormalType"
-                                       style="width:100%"
-                                       disabled>
-                                <el-option
-                                        v-for="item in abnormalList"
-                                        :key="item.id"
-                                        :label="item.abnormalName"
-                                        :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
+                    <!--<el-col :span="6">-->
+                        <!--<el-form-item label="异常类型：">-->
+                            <!--<el-select type="text"-->
+                                       <!--v-model="addForm.abnormalType"-->
+                                       <!--style="width:100%"-->
+                                       <!--disabled>-->
+                                <!--<el-option-->
+                                        <!--v-for="item in abnormalList"-->
+                                        <!--:key="item.id"-->
+                                        <!--:label="item.abnormalName"-->
+                                        <!--:value="item.id">-->
+                                <!--</el-option>-->
+                            <!--</el-select>-->
+                        <!--</el-form-item>-->
+                    <!--</el-col>-->
                     <el-col :span="6">
                         <el-form-item label="工序：">
                             <el-input type="text"
@@ -200,17 +200,11 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="提交者：">
-                            <el-select type="text"
+                            <el-input type="text"
                                        v-model="addForm.submitUser"
                                        style="width:100%"
                                        disabled>
-                                <el-option
-                                        v-for="item in userList"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                </el-option>
-                            </el-select>
+                            </el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -245,7 +239,7 @@
                                         v-for="item in userList"
                                         :key="item.id"
                                         :label="item.name"
-                                        :value="item.id">
+                                        :value="item.name">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -295,8 +289,8 @@
             _this = this;
             return {
                 userInfo: {},
-                queryDataUrl: HOST + "/abnormal/record/selectAbnormalRecordDetailList",
-                userListUrl: HOST + "/user/selectUsers",
+                queryDataUrl: HOST + "task/quality/record/selectTaskQualityList",
+                userListUrl: HOST + "user/selectUsers",
                 listLoading: false,
                 tableData: [],
                 totalNum: 1,
@@ -324,7 +318,7 @@
                 taskList: {},
                 filters: {
                     nameplate:"",
-                    abnormalType: "",
+                    // abnormalType: "",
                     taskName: "",
                     finishStatus: "",
                     selectDate: []
@@ -391,7 +385,7 @@
             exportData() {
                 var condition = {
                     nameplate: _this.filters.nameplate,
-                    abnormalType:_this.filters.abnormalType,
+                    // abnormalType:_this.filters.abnormalType,
                     taskName:_this.filters.taskName,
                     finishStatus: _this.filters.finishStatus,
                     queryStartTime: '',
@@ -404,7 +398,7 @@
                     condition.queryFinishTime = _this.filters.selectDate[1].format("yyyy-MM-dd");
                 }
                 $.ajax({
-                    url: HOST + "abnormal/record/export",
+                    url: HOST + "task/quality/record/export",
                     type: 'POST',
                     dataType: 'json',
                     data: condition,
@@ -426,7 +420,7 @@
                 _this.listLoading = true;
                 var condition = {
                     nameplate: _this.filters.nameplate,
-                    abnormalType:_this.filters.abnormalType,
+                    // abnormalType:_this.filters.abnormalType,
                     taskName:_this.filters.taskName,
                     finishStatus: _this.filters.finishStatus,
                     queryStartTime: '',
@@ -471,16 +465,16 @@
             },
             submit(){
                 if (!_this.isError) {
-                    let abnormalRecord = {
+                    let taskQualityRecord = {
                         id: _this.addForm.id,
                         solution: _this.addForm.solution,
                         solutionUser: _this.addForm.solutionUser
                     }
                     $.ajax({
-                        url: HOST + "abnormal/record/update",
+                        url: HOST + "task/quality/record/update",
                         type: 'POST',
                         dataType: 'json',
-                        data: {abnormalRecord: JSON.stringify(abnormalRecord)},
+                        data: {taskQualityRecord: JSON.stringify(taskQualityRecord)},
                         success: function (res) {
                             if (res.code == 200) {
                                 showMessage(_this, "修改成功", 1)
@@ -530,24 +524,24 @@
                     },
                 })
             },
-            getAbnormalList() {
-                $.ajax({
-                    url: HOST + "/abnormal/list",
-                    type: 'POST',
-                    dataType: 'JSON',
-                    data: {},
-                    success: function (res) {
-                        if (res.code == 200) {
-                            _this.abnormalList = res.data.list;
-                        } else {
-                            showMessage(_this, res.data.message, 0)
-                        }
-                    },
-                    error: function (res) {
-                        showMessage(_this, "服务器访问出错！", 0)
-                    }
-                })
-            },
+            // getAbnormalList() {
+            //     $.ajax({
+            //         url: HOST + "/abnormal/list",
+            //         type: 'POST',
+            //         dataType: 'JSON',
+            //         data: {},
+            //         success: function (res) {
+            //             if (res.code == 200) {
+            //                 _this.abnormalList = res.data.list;
+            //             } else {
+            //                 showMessage(_this, res.data.message, 0)
+            //             }
+            //         },
+            //         error: function (res) {
+            //             showMessage(_this, "服务器访问出错！", 0)
+            //         }
+            //     })
+            // },
             getTaskList() {
                 $.ajax({
                     url: HOST + "/task/list",
@@ -569,33 +563,33 @@
 
         },
         filters: {
-            filterUser(id) {
-                let result = "";
-                for (let i = 0; i < _this.userList.length; i++) {
-                    if (_this.userList[i].id == id) {
-                        result = _this.userList[i].name;
-                        break;
-                    }
-                }
-                return result;
-            },
-            filterAbnormal(id) {
-                let result = "";
-                for (let i = 0; i < _this.abnormalList.length; i++) {
-                    if (_this.abnormalList[i].id == id) {
-                        result = _this.abnormalList[i].abnormalName;
-                        break;
-                    }
-                }
-                return result;
-            }
+            // filterUser(id) {
+            //     let result = "";
+            //     for (let i = 0; i < _this.userList.length; i++) {
+            //         if (_this.userList[i].id == id) {
+            //             result = _this.userList[i].name;
+            //             break;
+            //         }
+            //     }
+            //     return result;
+            // },
+            // filterAbnormal(id) {
+            //     let result = "";
+            //     for (let i = 0; i < _this.abnormalList.length; i++) {
+            //         if (_this.abnormalList[i].id == id) {
+            //             result = _this.abnormalList[i].abnormalName;
+            //             break;
+            //         }
+            //     }
+            //     return result;
+            // }
         },
 
         computed: {},
         created: function () {
             _this.getUserList();
             _this.getStatisticsData();
-            _this.getAbnormalList();
+            // _this.getAbnormalList();
             _this.getTaskList();
         },
         mounted: function () {

@@ -14,6 +14,7 @@ import DeviceManager from '../components/system/device_manage.vue'
 import Abnormal from "../components/abnormal.vue"
 import AbnormalTypeManage from "../components/abnormal/abnormal_type_manage.vue"
 import AbnormalStatisticManage from "../components/abnormal/abnormal_statistic_manage.vue"
+import AbnormalQualityManage from "../components/abnormal/abnormal_quality_manage.vue"
 
 //task
 import Task from "../components/task.vue"
@@ -131,6 +132,12 @@ export default
                         component: AbnormalStatisticManage,
                         name: 'abnormal_statistic_manage',
                         meta: '安装异常'
+                    },
+                    {
+                        path: '/home/abnormal/abnormal_quality_manage',
+                        component: AbnormalQualityManage,
+                        name: 'abnormal_quality_manage',
+                        meta: '质检异常'
                     },
                     {
                         path: '/home/abnormal/abnormal_type_manage',
