@@ -1285,8 +1285,8 @@
         },
         methods: {
             notTechnicalTeam() {
-                if(this.userinfo.role != null && this.userinfo.role.roleName != null) {
-                    if(this.userinfo.role.roleName.indexOf("技术") != -1) {
+                if (this.userinfo.role != null && this.userinfo.role.roleName != null) {
+                    if (this.userinfo.role.roleName.indexOf("技术") != -1) {
                         return false;
                     } else {
                         return true;
@@ -1345,7 +1345,7 @@
                 _this.fileLists = [];
                 _this.uploadData.orderId = _this.selectedItem.id;
                 _this.uploadData.orderNum = _this.selectedItem.orderNum;
-                _this.uploadData.type = 2;
+                _this.uploadData.type = 1;//1-装车单，2-联系单
                 _this.uploadDialogVisible = true;
             },
             handleBefore(file)
