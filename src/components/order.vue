@@ -175,6 +175,7 @@
                             label="装车单">
                         <template slot-scope="scope">
                             <el-button
+                                    :disabled="notTechnicalTeam()"
                                     size="small"
                                     type="primary"
                                     icon="el-icon-upload"
@@ -203,7 +204,7 @@
             </el-col>
         </el-row>
         <el-dialog title="装车单上传" :visible.sync="uploadDialogVisible"
-                   width="50%" right @close="fileLists=[]">
+                   width="35%" right @close="fileLists=[]">
             <el-form id="uploadForm">
                 <el-row>
                     <el-form-item>
@@ -1283,6 +1284,16 @@
 
         },
         methods: {
+            notTechnicalTeam() {
+                if(this.userinfo.role != null && this.userinfo.role.roleName != null) {
+                    if(this.userinfo.role.roleName.indexOf("技术") != -1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                return true;
+            },
 
             formatDate(timeStamp) {
                 return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
@@ -1498,7 +1509,7 @@
 
             initMachineType()
             {
-                _this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
+                //_this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
                 if (_this.allMachineType == null || _this.allMachineType.length == 0) {
                     $.ajax({
                         url: _this.queryMachineTypeURL,
@@ -1508,7 +1519,7 @@
                         success: function (res) {
                             if (res.code == 200) {
                                 _this.allMachineType = res.data.list;
-                                sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
+                                //sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
                             }
                         }
                     })

@@ -352,7 +352,7 @@
 
             getGroupData()
             {
-                _this.groupList = JSON.parse(sessionStorage.getItem('groupList'));
+                //_this.groupList = JSON.parse(sessionStorage.getItem('groupList'));
                 if (_this.groupList != null && _this.groupList.length > 0) {
                     return;
                 }
@@ -364,7 +364,7 @@
                     success: function (res) {
                         if (res.code == 200) {
                             _this.groupList = res.data.list;
-                            sessionStorage.setItem('groupList', JSON.stringify(_this.groupList));
+                            //sessionStorage.setItem('groupList', JSON.stringify(_this.groupList));
                         }
                     },
                 })

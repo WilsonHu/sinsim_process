@@ -895,7 +895,7 @@
 
             initMachineType()
             {
-                _this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
+                //_this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
                 if (_this.allMachineType == null || _this.allMachineType.length == 0) {
                     $.ajax({
                         url: _this.queryMachineTypeURL,
@@ -905,7 +905,7 @@
                         success: function (res) {
                             if (res.code == 200) {
                                 _this.allMachineType = res.data.list;
-                                sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
+                                //sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
                             }
                         }
                     })
@@ -942,7 +942,7 @@
 
             getGroupData()
             {
-                _this.groupList = JSON.parse(sessionStorage.getItem('groupList'));
+                //_this.groupList = JSON.parse(sessionStorage.getItem('groupList'));
                 if (_this.groupList != null && _this.groupList.length > 0) {
                     return;
                 }
@@ -954,7 +954,7 @@
                     success: function (res) {
                         if (res.code == 200) {
                             _this.groupList = res.data.list;
-                            sessionStorage.setItem('groupList', JSON.stringify(_this.groupList));
+                            //sessionStorage.setItem('groupList', JSON.stringify(_this.groupList));
                         }
                     },
                 })

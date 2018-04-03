@@ -200,7 +200,7 @@
         methods: {
             getGroupData()
             {
-                _this.groupList = JSON.parse(sessionStorage.getItem('groupList'));
+                //_this.groupList = JSON.parse(sessionStorage.getItem('groupList'));
                 if (_this.groupList != null && _this.groupList.length > 0) {
                     return;
                 }
@@ -212,7 +212,7 @@
                     success: function (res) {
                         if (res.code == 200) {
                             _this.groupList = res.data.list;
-                            sessionStorage.setItem('groupList', JSON.stringify(_this.groupList));
+                            //sessionStorage.setItem('groupList', JSON.stringify(_this.groupList));
                         }
                     },
                 })
@@ -336,7 +336,6 @@
                     try {
                         init();
                         if (_this.isEdit == false) {//add
-                            _this.addForm = {};
                             myDiagram.model = go.Model.fromJson({
                                 "class": "go.GraphLinksModel",
                                 "linkFromPortIdProperty": "fromPort",
@@ -365,7 +364,7 @@
                     } finally {
                         _this.loadingInstance.close();
                     }
-                }, 1200)
+                }, 1200);
             },
 
             addDialogShow(){
@@ -424,10 +423,14 @@
             },
             onSave(){
                 _this.addForm.taskList = myDiagram.model.toJson();
-                if (_this.isEdit == true) {
-                    _this.onSubmitAsEdit();
+                if (_this.addForm.name == "") {
+                    showMessage(_this, "请填写流程名称！", 0)
                 } else {
-                    _this.onSubmitAsNew();
+                    if (_this.isEdit == true) {
+                        _this.onSubmitAsEdit();
+                    } else {
+                        _this.onSubmitAsNew();
+                    }
                 }
             },
             onClose(){

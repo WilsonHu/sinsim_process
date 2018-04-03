@@ -1563,7 +1563,7 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-row style="margin-top: 10px">
+                        <el-row style="margin-top: 10px" v-if="isFinanceVisible()">
                             <el-col :span="2" :offset="18" style="font-size: 16px;font-weight: bold">总价：</el-col>
                             <el-col :span="2" :offset="1" style="font-size: 18px;font-weight: bold; color: #409EFF">
                                 {{calculateTotalPrice()}}
@@ -3728,7 +3728,8 @@
                                 machineOrder.orderSign = null;
 
                                 var newItem = {
-                                    title: "需求单" + newTabName,
+                                    //title: "需求单" + newTabName,
+                                    title: machineOrder.orderNum,
                                     name: newTabName,
                                     machineOrder: machineOrder,
                                     orderDetail: orderDetail,
@@ -3880,9 +3881,7 @@
 
             initMachineType() {
                 //TODO：更新机型时必须清除缓存，需要设置一个有失效时间的缓存
-                _this.allMachineType = JSON.parse(
-                        sessionStorage.getItem("allMachineType")
-                );
+                //_this.allMachineType = JSON.parse(sessionStorage.getItem("allMachineType"));
                 if (_this.allMachineType == null || _this.allMachineType.length == 0) {
                     $.ajax({
                         url: _this.queryMachineTypeURL,
@@ -3892,10 +3891,7 @@
                         success: function (res) {
                             if (res.code == 200) {
                                 _this.allMachineType = res.data.list;
-                                sessionStorage.setItem(
-                                        "allMachineType",
-                                        JSON.stringify(res.data.list)
-                                );
+                                //sessionStorage.setItem("allMachineType",JSON.stringify(res.data.list));
                             } else {
                                 showMessage(_this, res.message, 0);
                             }

@@ -958,7 +958,7 @@
             },
 
             initMachineType() {
-                _this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
+                //_this.allMachineType = JSON.parse(sessionStorage.getItem('allMachineType'));
                 if (_this.allMachineType == null || _this.allMachineType.length == 0) {
                     $.ajax({
                         url: HOST + "machine/type/list",
@@ -968,7 +968,7 @@
                         success: function (res) {
                             if (res.code == 200) {
                                 _this.allMachineType = res.data.list;
-                                sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
+                                //sessionStorage.setItem('allMachineType', JSON.stringify(res.data.list));
                             }
                         }
                     })
