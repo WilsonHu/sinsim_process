@@ -65,7 +65,7 @@
                     success: function (data) {
                         if (data.code == 200) {
                             _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
-                            if(_this.currentUserRoleScope.abnormal.length > 0) {
+                            if(_this.currentUserRoleScope.system.length > 0) {
                                 _this.$router.push(_this.currentUserRoleScope.system[0]);
                             }
                         } else {

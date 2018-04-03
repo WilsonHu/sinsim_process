@@ -29,7 +29,11 @@ router.beforeEach((to, from, next) => {
     if (!user && to.path != '/login') {
         next({path: '/login'})
     } else {
-        next()
+        if(from.path.indexOf(to.path) == -1) {
+            next();
+        } else {
+            next(false);
+        }
     }
 })
 new Vue({
