@@ -446,7 +446,7 @@
                                                 align="center"
                                                 label="组长">
                                             <template scope="scope">
-                                                {{scope.row.leader}}
+                                                <span style="font-weight: bold;font-size: larger">{{scope.row.leader}}</span>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -454,11 +454,11 @@
                                                 align="center"
                                                 label="组员">
                                             <template scope="scope">
-                                                <div v-if="scope.row.workList==null||scope.row.workList.length==0 ">
+                                                <div v-if="scope.row.workerList==null||scope.row.workerList.length==0 ">
                                                     无
                                                 </div>
-                                                <el-tag v-else
-                                                        v-for="item in scope.row.workList">
+                                                <el-tag  size="small" style="margin-left: 3px" v-else
+                                                        v-for="item in scope.row.workerList.split(',')">
                                                     {{item}}
                                                 </el-tag>
                                             </template>
@@ -468,26 +468,26 @@
                                                 align="center"
                                                 label="状态">
                                             <template scope="scope">
-                                                <div v-if="scope.row.status < 2"
+                                                <el-tag v-if="scope.row.status < 2"
                                                      style="color: #00A9C9;">
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </div>
-                                                <div v-if="scope.row.status>=2&&scope.row.status<6"
+                                                </el-tag>
+                                                <el-tag v-if="scope.row.status>=2&&scope.row.status<6"
                                                      style="color: green">
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </div>
-                                                <div v-if="scope.row.status==6"
+                                                </el-tag>
+                                                <el-tag v-if="scope.row.status==6"
                                                      style="color: gray">
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </div>
-                                                <div v-if="scope.row.status>6&&scope.row.status<9"
+                                                </el-tag>
+                                                <el-tag v-if="scope.row.status>6&&scope.row.status<9"
                                                      style="color: red">
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </div>
-                                                <div v-if="scope.row.status==9"
+                                                </el-tag>
+                                                <el-tag v-if="scope.row.status==9"
                                                      style="color: orange">
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </div>
+                                                </el-tag>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
