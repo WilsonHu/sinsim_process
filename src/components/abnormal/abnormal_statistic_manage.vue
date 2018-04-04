@@ -289,7 +289,7 @@
     import {Notification} from 'element-ui'
     var _this;
     export default {
-        name: "task_content_manage",
+        name: "abnormal_statistic_manage",
         components: {},
         data () {
             _this = this;
@@ -365,12 +365,7 @@
                         }
                     }]
                 },
-                abnormalImgList:[
-                        "src/assets/img/system_configuration.png",
-                        "src/assets/img/system_configuration.png",
-                        "src/assets/img/system_configuration.png",
-                        "src/assets/img/system_configuration.png"
-                ],
+                abnormalImgList:[],
                 showBigImgVisible: false,
                 bigImgUrl:""
             }
@@ -464,6 +459,12 @@
                 _this.addForm = copyObject(data);
                 if(_this.addForm.solutionUser == 0) {
                     _this.addForm.solutionUser = null;
+                }
+                if(data.abnormalImage.image != null) {
+                    let temp = data.abnormalImage.image.replace('[','').replace(']', '').split(",");
+                    for (let i = 0; i < temp.length; i++) {
+                        _this.abnormalImgList.push(IP + temp[i]);
+                    }
                 }
                 _this.errorMsg = '';
                 _this.addDialogVisible = true;
