@@ -460,6 +460,7 @@
                 if(_this.addForm.solutionUser == 0) {
                     _this.addForm.solutionUser = null;
                 }
+                _this.abnormalImgList = [];
                 if(data.abnormalImage.image != null) {
                     let temp = data.abnormalImage.image.replace('[','').replace(']', '').split(",");
                     for (let i = 0; i < temp.length; i++) {
