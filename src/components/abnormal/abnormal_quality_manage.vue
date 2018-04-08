@@ -458,7 +458,8 @@
                 if(data.qualityRecordImage.image != null) {
                     let temp = data.qualityRecordImage.image.replace('[','').replace(']', '').split(",");
                     for (let i = 0; i < temp.length; i++) {
-                        _this.abnormalImgList.push(IP + temp[i]);
+                        let tmp = temp[i].split('/');
+                        _this.abnormalImgList.push(IP + "/quality/" + tmp[tmp.length-1]);
                     }
                 }
                 _this.errorMsg = '';
