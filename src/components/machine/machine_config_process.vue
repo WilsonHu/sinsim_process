@@ -677,6 +677,8 @@
                 }
                 var trObjList = new Array();
                 var machineStatus = _this.addForm.status;
+                let highTaskStatus = 0;
+                let allFinished = true;
                 taskList.nodeDataArray.forEach(item=> {
                     if (item.category != "Start" && item.category != "End") {//排除start,end
                         if (isUndefined(item.taskStatus) || item.taskStatus == 0) {
@@ -690,15 +692,28 @@
                         else if (machineStatus != MachineStatusList[3].value
                                 && parseInt(item.taskStatus) != TaskStatusList[6].value
                                 && parseInt(item.taskStatus) > TaskStatusList[1].value)//有一个是安装中
-
                         {
                             machineStatus = MachineStatusList[3].value//生产中
+                        }
+                        if(item.taskStatus > highTaskStatus) {
+                            highTaskStatus = parseInt(item.taskStatus);
+                        }
+                        if(parseInt(item.taskStatus) != TaskStatusList[6].value) {
+                            allFinished = false;
                         }
                         delete item["category"];
                         delete item["deletable"];
                         delete item["movable"];
                     }
                 });
+                //如果机器还处于已计划
+                if(highTaskStatus == TaskStatusList[1].value){
+                    machineStatus = MachineStatusList[2].value//已计划
+                }
+                //如果机器所有工序都完成
+                if(allFinished){
+                    machineStatus = MachineStatusList[4].value//已完成
+                }
 
                 var prObj = {
                     machineId: _this.addForm.id,

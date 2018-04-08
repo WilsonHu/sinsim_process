@@ -15,7 +15,7 @@
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
                         <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">拆单中：</div>
+                            <div style="font-size: 20px;font-weight: bold">改单中：</div>
                         </el-col>
                         <el-col :span="5">
                             <div style="font-size: 56px; font-weight: bold; color: #FA5555">{{changeMachineNum}}</div>
@@ -25,7 +25,7 @@
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
                         <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">改单中：</div>
+                            <div style="font-size: 20px;font-weight: bold">拆单中：</div>
                         </el-col>
                         <el-col :span="5">
                             <div style="font-size: 56px; font-weight: bold; color: #FA5555">{{splitMachineNum}}</div>
