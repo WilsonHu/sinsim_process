@@ -706,6 +706,10 @@
                         delete item["movable"];
                     }
                 });
+                //如果机器还处于初始化状态，则设置成已配置
+                if(highTaskStatus == TaskStatusList[0].value){
+                    machineStatus = MachineStatusList[1].value//已配置
+                }
                 //如果机器还处于已计划
                 if(highTaskStatus == TaskStatusList[1].value){
                     machineStatus = MachineStatusList[2].value//已计划
@@ -713,6 +717,10 @@
                 //如果机器所有工序都完成
                 if(allFinished){
                     machineStatus = MachineStatusList[4].value//已完成
+                }
+                //还处于初始化状态，则设置成已配置
+                if(machineStatus == 0) {
+                    machineStatus = MachineStatusList[1].value//已配置
                 }
 
                 var prObj = {
