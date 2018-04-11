@@ -3356,16 +3356,17 @@
                             i < _this.requisitionForms.length && !_this.isError;
                             i++
                     ) {
-                        if (
-                                this.requisitionForms[i].machineOrder.originalOrderId != 0 &&
-                                this.requisitionForms[i].machineOrder.status == ORDER_INITIAL
-                        ) {
-                            if (
-                                    this.requisitionForms[i].orderChangeRecord.changeReason == null ||
-                                    this.requisitionForms[i].orderChangeRecord.changeReason == ""
-                            ) {
+                        if (this.requisitionForms[i].machineOrder.originalOrderId != 0 &&
+                                this.requisitionForms[i].machineOrder.status == ORDER_INITIAL) {
+                            if (this.requisitionForms[i].orderChangeRecord.changeReason == null ||
+                                    this.requisitionForms[i].orderChangeRecord.changeReason == "") {
                                 _this.isError = true;
                                 _this.errorMsg = "改单原因不能为空！";
+                            }
+                            if (this.requisitionForms[i].orderChangeRecord.orderNum == null ||
+                                    this.requisitionForms[i].orderChangeRecord.orderNum == "") {
+                                _this.isError = true;
+                                _this.errorMsg = "改单编号不能为空！";
                             }
                         }
                     }
@@ -3434,16 +3435,17 @@
                             i < _this.requisitionForms.length && !_this.isError;
                             i++
                     ) {
-                        if (
-                                this.requisitionForms[i].machineOrder.originalOrderId != 0 &&
-                                this.requisitionForms[i].machineOrder.status == ORDER_INITIAL
-                        ) {
-                            if (
-                                    this.requisitionForms[i].orderSplitRecord.splitReason == null ||
-                                    this.requisitionForms[i].orderSplitRecord.splitReason == ""
-                            ) {
+                        if (this.requisitionForms[i].machineOrder.originalOrderId != 0 &&
+                                this.requisitionForms[i].machineOrder.status == ORDER_INITIAL) {
+                            if (this.requisitionForms[i].orderSplitRecord.splitReason == null ||
+                                    this.requisitionForms[i].orderSplitRecord.splitReason == "") {
                                 _this.isError = true;
                                 _this.errorMsg = "拆单原因不能为空！";
+                            }
+                            if (this.requisitionForms[i].orderSplitRecord.orderNum == null ||
+                                    this.requisitionForms[i].orderSplitRecord.orderNum == "") {
+                                _this.isError = true;
+                                _this.errorMsg = "拆单编号不能为空！";
                             }
                         }
                     }
