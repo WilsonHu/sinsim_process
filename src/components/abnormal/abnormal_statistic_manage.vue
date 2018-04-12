@@ -405,7 +405,8 @@
                     data: condition,
                     success: function (res) {
                         if (res.code == 200) {
-                            showMessage(_this, "导出成功！", 1);
+                            window.location.href = res.data;
+                            showMessage(_this, "安装异常导出成功！", 1);
                         }
                         _this.listLoading = false;
                     },

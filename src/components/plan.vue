@@ -710,6 +710,9 @@
                             _this.tableDataPlaned = data.data.list;
                             _this.totalNumPlaned = data.data.total;
                             _this.startRowPlaned = data.data.startRow;
+                            window.location.href = data.data;
+                            showMessage(_this, "计划导出成功！", 1);
+
                         } else {
                             showMessage(_this, "导出计划失败！", 0);
                         }
