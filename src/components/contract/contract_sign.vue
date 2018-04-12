@@ -179,7 +179,7 @@
                                             @click="handleSign(scope.$index, scope.row)">审核
                                     </el-button>
                                     <el-button
-                                            v-if="userInfo.role.roleName =='销售员' || userInfo.role.id == 1"
+                                            v-if="userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1"
                                             size="small"
                                             type="primary"
                                             icon="el-icon-edit"
@@ -2453,8 +2453,7 @@
                 let result = false;
                 for (let i = 0; i < this.requisitionForms.length; i++) {
                     if (
-                            this.requisitionForms[i].machineOrder.status == ORDER_INITIAL ||
-                            this.requisitionForms[i].machineOrder.status == ORDER_REJECTED
+                            this.requisitionForms[i].machineOrder.status == ORDER_INITIAL
                     ) {
                         result = true;
                         break;
@@ -3538,7 +3537,7 @@
                     showMessage(_this, "审核意见不能为空！", 0);
                 } else {
                     this.rejectSignResultVisible = true;
-                    tem.user = _this.userInfo.name;
+                    item.user = _this.userInfo.name;
                     item.date = new Date().format("yyyy-MM-dd hh:mm:ss");
                     item.result = SIGN_REJECT;
                     this.signResultObj = signObj;
