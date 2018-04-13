@@ -12,7 +12,8 @@
                 <!--</el-col>-->
                 <!--</el-row>-->
                 <!--</el-col>-->
-                <el-col :span="2" :offset="22">
+                <el-col :span="2" :offset="22"
+                        v-if="userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1">
                     <el-button
                             icon="el-icon-plus"
                             size="normal"

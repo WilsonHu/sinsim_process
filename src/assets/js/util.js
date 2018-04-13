@@ -63,6 +63,10 @@ let SIGN_REJECT = 2;
 let DAILY_PLAN= 1;
 let FLEX_PLAN= 2;
 
+Date.prototype.toJSON = function () {
+    return this.format("yyyy-MM-dd hh:mm:ss");
+}
+
 
 function loadXMLDoc(xml_name){
     var xmlDoc;
