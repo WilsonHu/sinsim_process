@@ -23,9 +23,9 @@
                     {{errorMsg}}!
                 </div>
                 <div style="text-align: center; margin-left: 20px">
-                    <el-button type="primary" style="width:35%;" @click.native.prevent="reset"
-                    >重置
-                    </el-button>
+                    <!--<el-button type="primary" style="width:35%;" @click.native.prevent="reset"-->
+                    <!--&gt;重置-->
+                    <!--</el-button>-->
                     <el-button type="primary" style="width:35%;" @click.native.prevent="login"
                     >登录
                     </el-button>

@@ -2,50 +2,50 @@
     <div>
         <el-form :model="filters" label-position="right" label-width="80px">
             <el-row>
-                <el-col :span="20">
-                    <el-col :span="5">
-                        <el-form-item label="机器编号:">
-                           <el-input v-model="filters.nameplate" clearable>
-
-                           </el-input>
-                        </el-form-item>
-                    </el-col>
-                    <!--<el-col :span="5">-->
-                        <!--<el-form-item label="异常:">-->
-                            <!--<el-select v-model="filters.abnormalType" clearable>-->
-                                <!--<el-option-->
-                                        <!--v-for="item in abnormalList"-->
-                                        <!--v-bind:value="item.id"-->
-                                        <!--v-bind:label="item.abnormalName">-->
-                                <!--</el-option>-->
-                            <!--</el-select>-->
-                        <!--</el-form-item>-->
-                    <!--</el-col>-->
-                    <el-col :span="5">
-                        <el-form-item label="工序:">
-                            <el-select v-model="filters.taskName" clearable>
-                                <el-option
-                                        v-for="item in taskList"
-                                        v-bind:value="item.taskName"
-                                        v-bind:label="item.taskName">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="状态:"
-                                      clearable>
-                            <el-select v-model="filters.finishStatus" clearable>
-                                <el-option
-                                        v-for="item in statusList"
-                                        v-bind:value="item.value"
-                                        v-bind:label="item.text">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
+                <el-col :span="6">
+                    <el-form-item label="订单号 :">
+                        <el-input v-model="filters.orderNum"
+                                  placeholder="订单号"
+                                  auto-complete="off"></el-input>
+                    </el-form-item>
                 </el-col>
-                <el-col :span="2">
+
+                <!--<el-col :span="5">-->
+                <!--<el-form-item label="异常:">-->
+                <!--<el-select v-model="filters.abnormalType" clearable>-->
+                <!--<el-option-->
+                <!--v-for="item in abnormalList"-->
+                <!--v-bind:value="item.id"-->
+                <!--v-bind:label="item.abnormalName">-->
+                <!--</el-option>-->
+                <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--</el-col>-->
+                <el-col :span="6">
+                    <el-form-item label="工序:">
+                        <el-select v-model="filters.taskName" clearable>
+                            <el-option
+                                    v-for="item in taskList"
+                                    v-bind:value="item.taskName"
+                                    v-bind:label="item.taskName">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="状态:"
+                                  clearable>
+                        <el-select v-model="filters.finishStatus" clearable>
+                            <el-option
+                                    v-for="item in statusList"
+                                    v-bind:value="item.value"
+                                    v-bind:label="item.text">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="2" :offset="2">
                     <el-button
                             icon="el-icon-search"
                             size="normal"
@@ -63,7 +63,16 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="4">
+                <el-col :span="6">
+                    <el-form-item label="机器编号:">
+                        <el-input v-model="filters.nameplate"
+                                  placeholder="机器编号"
+                                  clearable>
+
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
                     <el-form-item label="创建时间:" label-width="80px">
                         <el-date-picker
                                 v-model="filters.selectDate"
@@ -80,6 +89,7 @@
                 </el-col>
             </el-row>
         </el-form>
+
         <el-col class="well well-lg" style="background-color: white;">
             <el-table
                     :data="tableData"
@@ -89,15 +99,18 @@
                 <el-table-column label="序号" width="70" align="center">
                     <template scope="scope">{{ scope.$index+startRow}}</template>
                 </el-table-column>
+                <el-table-column label="订单号" align="center">
+                    <template scope="scope">{{ scope.row.orderNum}}</template>
+                </el-table-column>
                 <el-table-column label="机器编号" align="center">
                     <template scope="scope">{{ scope.row.machine.nameplate}}</template>
                 </el-table-column>
                 <!--<el-table-column label="异常类型" align="center">-->
-                    <!--<template scope="scope" >-->
-                        <!--<span style="color: #F56C6C">-->
-                            <!--{{ scope.row.abnormalType | filterAbnormal }}-->
-                        <!--</span>-->
-                    <!--</template>-->
+                <!--<template scope="scope" >-->
+                <!--<span style="color: #F56C6C">-->
+                <!--{{ scope.row.abnormalType | filterAbnormal }}-->
+                <!--</span>-->
+                <!--</template>-->
                 <!--</el-table-column>-->
                 <el-table-column label="工序" align="center">
                     <template scope="scope">
@@ -175,19 +188,19 @@
                         </el-form-item>
                     </el-col>
                     <!--<el-col :span="6">-->
-                        <!--<el-form-item label="异常类型：">-->
-                            <!--<el-select type="text"-->
-                                       <!--v-model="addForm.abnormalType"-->
-                                       <!--style="width:100%"-->
-                                       <!--disabled>-->
-                                <!--<el-option-->
-                                        <!--v-for="item in abnormalList"-->
-                                        <!--:key="item.id"-->
-                                        <!--:label="item.abnormalName"-->
-                                        <!--:value="item.id">-->
-                                <!--</el-option>-->
-                            <!--</el-select>-->
-                        <!--</el-form-item>-->
+                    <!--<el-form-item label="异常类型：">-->
+                    <!--<el-select type="text"-->
+                    <!--v-model="addForm.abnormalType"-->
+                    <!--style="width:100%"-->
+                    <!--disabled>-->
+                    <!--<el-option-->
+                    <!--v-for="item in abnormalList"-->
+                    <!--:key="item.id"-->
+                    <!--:label="item.abnormalName"-->
+                    <!--:value="item.id">-->
+                    <!--</el-option>-->
+                    <!--</el-select>-->
+                    <!--</el-form-item>-->
                     <!--</el-col>-->
                     <el-col :span="6">
                         <el-form-item label="工序：">
@@ -201,9 +214,9 @@
                     <el-col :span="6">
                         <el-form-item label="提交者：">
                             <el-input type="text"
-                                       v-model="addForm.submitUser"
-                                       style="width:100%"
-                                       disabled>
+                                      v-model="addForm.submitUser"
+                                      style="width:100%"
+                                      disabled>
                             </el-input>
                         </el-form-item>
                     </el-col>
@@ -307,7 +320,7 @@
                         taskName: ""
                     },
                     machine: {
-                        nameplate:""
+                        nameplate: ""
                     }
                 },
                 dialogLoading: true,
@@ -317,8 +330,9 @@
                 abnormalList: {},
                 taskList: {},
                 filters: {
-                    nameplate:"",
+                    nameplate: "",
                     // abnormalType: "",
+                    orderNum: "",
                     taskName: "",
                     finishStatus: "",
                     selectDate: []
@@ -359,9 +373,9 @@
                         }
                     }]
                 },
-                abnormalImgList:[],
+                abnormalImgList: [],
                 showBigImgVisible: false,
-                bigImgUrl:""
+                bigImgUrl: ""
             }
 
         },
@@ -371,9 +385,9 @@
                 this.bigImgUrl = src;
             },
             formatDate(timeStamp) {
-                if(timeStamp == null || timeStamp == "") {
+                if (timeStamp == null || timeStamp == "") {
                     return "";
-                }else {
+                } else {
                     return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
                 }
             },
@@ -381,15 +395,16 @@
                 var condition = {
                     nameplate: _this.filters.nameplate,
                     // abnormalType:_this.filters.abnormalType,
-                    taskName:_this.filters.taskName,
+                    orderNum: _this.filters.orderNum,
+                    taskName: _this.filters.taskName,
                     finishStatus: _this.filters.finishStatus,
                     queryStartTime: '',
                     queryFinishTime: ''
                 };
-                if(_this.filters.selectDate != null && _this.filters.selectDate[0] != null) {
+                if (_this.filters.selectDate != null && _this.filters.selectDate[0] != null) {
                     condition.queryStartTime = _this.filters.selectDate[0].format("yyyy-MM-dd");
                 }
-                if(_this.filters.selectDate != null && _this.filters.selectDate[1] != null) {
+                if (_this.filters.selectDate != null && _this.filters.selectDate[1] != null) {
                     condition.queryFinishTime = _this.filters.selectDate[1].format("yyyy-MM-dd");
                 }
                 $.ajax({
@@ -417,17 +432,18 @@
                 var condition = {
                     nameplate: _this.filters.nameplate,
                     // abnormalType:_this.filters.abnormalType,
-                    taskName:_this.filters.taskName,
+                    orderNum: _this.filters.orderNum,
+                    taskName: _this.filters.taskName,
                     finishStatus: _this.filters.finishStatus,
                     queryStartTime: '',
                     queryFinishTime: '',
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
-                if(_this.filters.selectDate != null && _this.filters.selectDate[0] != null) {
+                if (_this.filters.selectDate != null && _this.filters.selectDate[0] != null) {
                     condition.queryStartTime = _this.filters.selectDate[0].format("yyyy-MM-dd");
                 }
-                if(_this.filters.selectDate != null && _this.filters.selectDate[1] != null) {
+                if (_this.filters.selectDate != null && _this.filters.selectDate[1] != null) {
                     condition.queryFinishTime = _this.filters.selectDate[1].format("yyyy-MM-dd");
                 }
                 $.ajax({
@@ -452,15 +468,15 @@
             editWithItem(index, data){
                 _this.isError = false;
                 _this.addForm = copyObject(data);
-                if(_this.addForm.solutionUser == 0) {
+                if (_this.addForm.solutionUser == 0) {
                     _this.addForm.solutionUser = null;
                 }
                 _this.abnormalImgList = [];
-                if(data.qualityRecordImage.image != null) {
-                    let temp = data.qualityRecordImage.image.replace('[','').replace(']', '').split(",");
+                if (data.qualityRecordImage.image != null) {
+                    let temp = data.qualityRecordImage.image.replace('[', '').replace(']', '').split(",");
                     for (let i = 0; i < temp.length; i++) {
                         let tmp = temp[i].split('/');
-                        _this.abnormalImgList.push(IP + "/quality/" + tmp[tmp.length-1]);
+                        _this.abnormalImgList.push(IP + "/quality/" + tmp[tmp.length - 1]);
                     }
                 }
                 _this.errorMsg = '';
@@ -603,5 +619,7 @@
 
 </script>
 <style>
-
+    .el-select {
+        width: 100%;
+    }
 </style>

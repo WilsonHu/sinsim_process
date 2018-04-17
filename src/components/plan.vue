@@ -5,9 +5,9 @@
                 <el-form :model="filters" label-position="right" label-width="80px">
                     <el-row>
                         <el-col :span="4">
-                            <el-form-item label="需求单号:">
+                            <el-form-item label="订单号:">
                                 <el-input v-model="planedFilters.orderNum"
-                                          placeholder="需求单号"
+                                          placeholder="订单号"
                                           auto-complete="off"
                                           clearable></el-input>
                             </el-form-item>
@@ -107,7 +107,7 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="需求单号">
+                            label="订单号">
                         <template scope="scope">
                             {{scope.row.machineOrder.orderNum}}
                         </template>
@@ -235,9 +235,9 @@
                 <el-form :model="filters" label-position="right" label-width="80px">
                     <el-row>
                         <el-col :span="4">
-                            <el-form-item label="需求单号:">
+                            <el-form-item label="订单号:">
                                 <el-input v-model="filters.orderNum"
-                                          placeholder="需求单号"
+                                          placeholder="订单号"
                                           auto-complete="off"
                                           clearable></el-input>
                             </el-form-item>
@@ -328,7 +328,7 @@
                             {{scope.$index+startRow}}
                         </template>
                     </el-table-column>
-                    <el-table-column label="需求单号" align="center">
+                    <el-table-column label="订单号" align="center">
                         <template scope="scope"
                                   prop="orderNum">
                             <div
@@ -459,9 +459,9 @@
             <el-form :model="machineDoPlaning" label-position="right" label-width="110px">
                 <el-row>
                     <el-col :span="4">
-                        <el-form-item label="需求单号:">
+                        <el-form-item label="订单号:">
                             <el-input v-model="machineDoPlaning.orderNum"
-                                      placeholder="需求单号"
+                                      placeholder="订单号"
                                       auto-complete="off"
                                       disabled></el-input>
                         </el-form-item>
