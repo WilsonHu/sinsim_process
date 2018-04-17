@@ -344,6 +344,22 @@ const CountryList =
             text: "印度"
         }
     ];
+//币种
+const CurrencyTypeList =
+    [
+        {
+            value: 0,
+            text: "人民币"
+        },
+        {
+            value: 1,
+            text: "美元"
+        },
+        {
+            value: 2,
+            text: "欧元"
+        }
+    ];
 
 
 //电气主电机

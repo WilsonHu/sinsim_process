@@ -180,7 +180,7 @@
                 errorMsg: '',
                 isError: false,
                 dialogTitle: '',
-                qualityUsers:[]
+                qualityUsers: []
             }
 
         },
@@ -199,7 +199,7 @@
                     url: _this.queryDataUrl,
                     type: 'POST',
                     dataType: 'json',
-                    data: {page : _this.currentPage, size : _this.pageSize},
+                    data: {page: _this.currentPage, size: _this.pageSize},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.tableData = res.data.list;
@@ -261,6 +261,7 @@
                 _this.isEdit = true;
                 _this.isError = false;
                 _this.addForm = copyObject(data);
+                _this.addForm.qualityUserId = _this.addForm.qualityUserId == 0 ? "" : _this.addForm.qualityUserId;
                 _this.errorMsg = '';
                 _this.addDialogVisible = true;
 

@@ -1581,6 +1581,19 @@
                                         </el-input>
                                     </el-form-item>
                                 </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="付款币种：" :label-width="formLabelWidth">
+                                        <el-select v-model="contractForm.currencyType"
+                                                   :disabled="changeContractContentDisable(contractForm)"
+                                                   clearable>
+                                            <el-option
+                                                    v-for="item in currencyTypeList"
+                                                    v-bind:value="item.text"
+                                                    v-bind:label="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
                                 <el-col :span="4" :offset="1">
                                     <el-form-item label="合同交货日期：" :label-width="longFormLabelWidth">
                                         <el-date-picker
@@ -1899,7 +1912,7 @@
                 pageSize: EveryPageNum, //每一页的num
                 currentPage: 1,
                 startRow: 1,
-
+                currencyTypeList: CurrencyTypeList,
                 machineEquipmentList: MachineEquipmentList,
                 packageModeList: PackageModeList,
                 maintainTypeList: MaintainTypeList,
@@ -2124,7 +2137,7 @@
         methods: {
 
             onContractInputUnfocus(contractNum) {
-                if(_this.mode == _this.ADD_MODE) {
+                if (_this.mode == _this.ADD_MODE) {
                     if (contractNum == null || contractNum == "") {
                         _this.contractExist = true;
                         _this.contractErrorMsg = "合同编号不能为空！";
