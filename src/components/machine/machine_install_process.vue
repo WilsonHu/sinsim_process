@@ -188,7 +188,7 @@
                 </el-table-column>
 
                 <el-table-column width="200"
-                        label="操作" align="center">
+                                 label="操作" align="center">
                     <template scope="scope" style="text-align: center">
                         <el-tooltip placement="left" content="查看机器">
                             <el-button
@@ -327,13 +327,22 @@
                                                       style="width:100%"></el-input>
                                         </el-form-item>
                                     </el-col>
-
                                     <el-col :span="10" :offset="1">
-                                        <el-form-item label="当前流程：">
+                                        <el-form-item label="流程总数：">
                                             <el-input type="text"
                                                       disabled
-                                                      v-model="addForm.currentTaskName"
+                                                      v-model="addForm.totalTaskCount"
                                                       style="width:100%;"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+
+                                    <el-col :span="21">
+                                        <el-form-item label="当前流程：">
+                                        <el-input type="text"
+                                        disabled
+                                        v-model="addForm.currentTaskName"
+                                        style="width:100%;">
+                                        </el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="1">
@@ -341,12 +350,17 @@
                                              style="background-color: green;"></div>
                                     </el-col>
 
+
                                     <el-col :span="10">
-                                        <el-form-item label="流程总数：">
-                                            <el-input type="text"
-                                                      disabled
-                                                      v-model="addForm.totalTaskCount"
-                                                      style="width:100%;"></el-input>
+                                        <el-form-item label="当前进度：">
+
+                                            <el-progress type="circle"
+                                                         :text-inside="false"
+                                                         :stroke-width="18"
+                                                         width="180"
+                                                         show-text
+                                                         :status="addForm.progressStatus"
+                                                         :percentage="addForm.currentProgress"></el-progress>
                                         </el-form-item>
                                     </el-col>
 
@@ -361,18 +375,6 @@
                                     <el-col :span="1">
                                         <div class="colorDiv"
                                              style="background-color: gray;"></div>
-                                    </el-col>
-
-                                    <el-col :span="10">
-                                        <el-form-item label="当前进度：">
-
-                                            <el-progress type="circle"
-                                                         :text-inside="false"
-                                                         :stroke-width="15"
-                                                         show-text
-                                                         :status="addForm.progressStatus"
-                                                         :percentage="addForm.currentProgress"></el-progress>
-                                        </el-form-item>
                                     </el-col>
 
                                     <el-col :span="10" :offset="1">
@@ -401,7 +403,7 @@
                                              style="background-color: red;"></div>
                                     </el-col>
 
-                                    <el-col :span="10" :offset="1">
+                                    <el-col :span="10" :offset="11">
                                         <el-form-item label="跳过数：">
                                             <el-input type="text"
                                                       disabled
@@ -457,7 +459,7 @@
                                                 <div v-if="scope.row.workerList==null||scope.row.workerList.length==0 ">
                                                     无
                                                 </div>
-                                                <el-tag  size="small" style="margin-left: 3px" v-else
+                                                <el-tag size="small" style="margin-left: 3px" v-else
                                                         v-for="item in scope.row.workerList.split(',')">
                                                     {{item}}
                                                 </el-tag>
@@ -469,23 +471,23 @@
                                                 label="状态">
                                             <template scope="scope">
                                                 <el-tag v-if="scope.row.status < 2"
-                                                     style="color: #00A9C9;">
+                                                        style="color: #00A9C9;">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </el-tag>
                                                 <el-tag v-if="scope.row.status>=2&&scope.row.status<6"
-                                                     style="color: green">
+                                                        style="color: green">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </el-tag>
                                                 <el-tag v-if="scope.row.status==6"
-                                                     style="color: gray">
+                                                        style="color: gray">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </el-tag>
                                                 <el-tag v-if="scope.row.status>6&&scope.row.status<9"
-                                                     style="color: red">
+                                                        style="color: red">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </el-tag>
                                                 <el-tag v-if="scope.row.status==9"
-                                                     style="color: orange">
+                                                        style="color: orange">
                                                     {{scope.row.status|filterTaskStatus}}
                                                 </el-tag>
                                             </template>
@@ -835,12 +837,14 @@
                         _this.addForm.abnormalCount = 0;
                         _this.addForm.skipCount = 0;
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
-                        taskList.nodeDataArray.forEach(item=> {
-                            if (item.category != "Start" && item.category != "End") {
+                        _this.addForm.currentTaskName = "";
+                        taskList.nodeDataArray.forEach(item=>{
+                            if (item.category != "Start" && item.category != "End")
+                            {
                                 if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
-                                    _this.addForm.currentTaskName = item.text;
+                                    _this.addForm.currentTaskName += item.text + ",";
                                 }
                                 else if (parseInt(item.taskStatus) == 6) {//完成
                                     item.category = ProcessCatergory.Finished;
@@ -858,6 +862,9 @@
                                 }
                             }
                         });
+                        if (!isStringEmpty(_this.addForm.currentTaskName)) {
+                            _this.addForm.currentTaskName = _this.addForm.currentTaskName.substring(0, _this.addForm.currentTaskName.length - 1)
+                        }
                         _this.addForm.currentProgress = ( _this.addForm.finishedCount / _this.addForm.totalTaskCount) * 100;
                         _this.addForm.currentProgress = parseInt(_this.addForm.currentProgress);
                         if (_this.addForm.finishedCount == _this.addForm.totalTaskCount) {
