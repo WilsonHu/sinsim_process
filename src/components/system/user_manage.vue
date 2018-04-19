@@ -108,6 +108,11 @@
                         </el-table-column >
                         <el-table-column
                                 align="center"
+                                prop="marketGroupName"
+                                label="销售组" >
+                        </el-table-column >
+                        <el-table-column
+                                align="center"
                                 prop="valid"
                                 label="在职情况" >
                             <template scope="scope">
@@ -148,30 +153,30 @@
                 </el-col >
             </el-row >
         </el-col >
-        <el-dialog title="增加用户" :visible.sync="addDialogVisible" width="60%">
+        <el-dialog title="增加用户" :visible.sync="addDialogVisible" width="50%">
             <el-form :model="form" >
 
-                <el-col :span="12">
+                <el-col :span="8">
                     <el-form-item label="账号：" :label-width="formLabelWidth">
                         <el-input v-model="form.account" @change="onChange"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="8">
                     <el-form-item label="姓名：" :label-width="formLabelWidth">
                         <el-input v-model="form.name" @change="onChange"></el-input>
                     </el-form-item>
                 </el-col >
-				<el-col :span="12">
+				<el-col :span="8">
 				<el-form-item label="密码：" :label-width="formLabelWidth">
 				<el-input v-model="form.password" @change="onChange"></el-input>
 				</el-form-item>
 				</el-col>
-				<el-col :span="12">
-				<el-form-item label="确认密码：" :label-width="formLabelWidth">
-				<el-input v-model="form.confirmpwd" @change="onChange"></el-input>
-				</el-form-item>
-				</el-col>
-                <el-col :span="8" >
+				<!--<el-col :span="12">-->
+				<!--<el-form-item label="确认密码：" :label-width="formLabelWidth">-->
+				<!--<el-input v-model="form.confirmpwd" @change="onChange"></el-input>-->
+				<!--</el-form-item>-->
+				<!--</el-col>-->
+                <el-col :span="6" >
                     <el-form-item label="角色："  :label-width="formLabelWidth">
                         <el-select v-model="form.roleId" @change="onChange">
                             <el-option
@@ -182,7 +187,7 @@
                         </el-select >
                     </el-form-item >
                 </el-col >
-                <el-col :span="8" >
+                <el-col :span="6" >
                     <el-form-item label="安装组："  :label-width="formLabelWidth">
                         <el-select v-model="form.groupId" @change="onChange" clearable>
                             <el-option
@@ -193,7 +198,18 @@
                         </el-select >
                     </el-form-item >
                 </el-col >
-                <el-col :span="8" >
+                <el-col :span="6" >
+                    <el-form-item label="销售组："  :label-width="formLabelWidth">
+                        <el-select v-model="form.marketGroupName" @change="onChange" clearable>
+                            <el-option
+                                    v-for="item in allMarketGroups"
+                                    v-bind:value="item.groupName"
+                                    v-bind:label="item.groupName" >
+                            </el-option >
+                        </el-select >
+                    </el-form-item >
+                </el-col >
+                <el-col :span="6" >
                     <el-form-item label="在职情况："  :label-width="formLabelWidth">
                         <el-select v-model="form.valid" @change="onChange">
                             <el-option
@@ -217,29 +233,29 @@
             </div >
         </el-dialog >
 
-        <el-dialog title="编辑用户" :visible.sync="modifyDialogVisible" width="60%">
+        <el-dialog title="编辑用户" :visible.sync="modifyDialogVisible" width="50%">
             <el-form :model="modifyForm" >
-                <el-col :span="12" >
+                <el-col :span="8" >
                     <el-form-item label="账号：" :label-width="formLabelWidth">
                         <el-input v-model="modifyForm.account" @change="onChange" :disabled="modifyForm.account == 'admin'" ></el-input >
                     </el-form-item>
                 </el-col>
-                <el-col :span="12" >
+                <el-col :span="8" >
                     <el-form-item label="姓名：" :label-width="formLabelWidth" >
                         <el-input v-model="modifyForm.name" @change="onChange" ></el-input >
                     </el-form-item >
                 </el-col >
-				<el-col :span="12">
+				<el-col :span="8">
                     <el-form-item label="密码：" :label-width="formLabelWidth">
                         <el-input v-model="modifyForm.password" @change="onChange"></el-input>
                     </el-form-item>
 				</el-col>
-				<el-col :span="12">
-				<el-form-item label="确认密码：" :label-width="formLabelWidth">
-				    <el-input v-model="modifyForm.confirmpwd" @change="onChange"></el-input>
-				</el-form-item>
-				</el-col>
-                <el-col :span="8" >
+				<!--<el-col :span="12">-->
+				<!--<el-form-item label="确认密码：" :label-width="formLabelWidth">-->
+				    <!--<el-input v-model="modifyForm.confirmpwd" @change="onChange"></el-input>-->
+				<!--</el-form-item>-->
+				<!--</el-col>-->
+                <el-col :span="6" >
                     <el-form-item label="角色：" :label-width="formLabelWidth" >
                          <el-select v-model="modifyForm.roleId" @change="onChange">
                             <el-option
@@ -250,7 +266,7 @@
                         </el-select >
                     </el-form-item >
                 </el-col >
-                <el-col :span="8" >
+                <el-col :span="6" >
                     <el-form-item label="安装组：" :label-width="formLabelWidth" >
                         <el-select v-model="modifyForm.groupId" @change="onChange" clearable>
                             <el-option
@@ -261,7 +277,18 @@
                         </el-select >
                     </el-form-item >
                 </el-col >
-                <el-col :span="8" >
+                <el-col :span="6" >
+                    <el-form-item label="销售组："  :label-width="formLabelWidth">
+                        <el-select v-model="modifyForm.marketGroupName" @change="onChange" clearable>
+                            <el-option
+                                    v-for="item in allMarketGroups"
+                                    v-bind:value="item.groupName"
+                                    v-bind:label="item.groupName" >
+                            </el-option >
+                        </el-select >
+                    </el-form-item >
+                </el-col >
+                <el-col :span="6" >
                     <el-form-item label="在职情况："  :label-width="formLabelWidth">
                         <el-select v-model="modifyForm.valid" @change="onChange">
                             <el-option
@@ -325,6 +352,7 @@
                     confirmpwd:"",
 				    roleId: "",
 					groupId: "",
+                    marketGroupName:"",
                     valid:1
 			    },
 			    formLabelWidth: '100px',
@@ -339,6 +367,7 @@
                     confirmpwd:"",
 				    roleId: "",
                     groupId: "",
+                    marketGroupName:"",
                     valid:""
 			    },
 			    filters: {
@@ -350,6 +379,7 @@
 			    },
 			    allRoles: [],
                 allGroups: [],
+                allMarketGroups: [],
                 valid: [{"valid":1, "name":"在职"},{"valid":0, "name":"离职"}],
 			    loadingUI: false,
 		    }
@@ -423,6 +453,7 @@
                 this.modifyForm.name = item.name;
                 this.modifyForm.roleId = item.role.id;
                 this.modifyForm.groupId = item.group != null ? item.group.id : "";
+                this.modifyForm.marketGroupName = item.marketGroupName != null ? item.marketGroupName : "";
                 this.modifyForm.password =  "";
                 this.modifyForm.confirmpwd =  "";
                 this.modifyForm.valid =  item.valid;
@@ -471,15 +502,15 @@
                     this.errorMsg = '姓名不能为空';
                 }
 
-                if (!iserror && !isEdit) {
-                    if (isStringEmpty(formObj.password)) {
-                        iserror = true;
-                        this.errorMsg = '密码不能为空';
-                    } else if (!isEdit && formObj.password != formObj.confirmpwd) {
-                        iserror = true;
-                        this.errorMsg = '密码和确认密码不一致';
-                    }
-                }
+                // if (!iserror && !isEdit) {
+                //     if (isStringEmpty(formObj.password)) {
+                //         iserror = true;
+                //         this.errorMsg = '密码不能为空';
+                //     } else if (!isEdit && formObj.password != formObj.confirmpwd) {
+                //         iserror = true;
+                //         this.errorMsg = '密码和确认密码不一致';
+                //     }
+                // }
 
                 if (!iserror && formObj.roleId == "") {
                     iserror = true;
@@ -579,6 +610,22 @@
                     }
 			    })
 		    },
+            initMarketGroups() {
+                $.ajax({
+                    url: HOST + "/market/group/list",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.allMarketGroups = data.data.list;
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '获取销售组信息错误！', 0);
+                    }
+                })
+            },
 	    },
 	    computed: {},
 	    filters: {
@@ -592,6 +639,7 @@
 		    }
 		    this.initAllRoles();
 			this.initAllGroups();
+			this.initMarketGroups();
 
 	    },
 	    mounted: function () {

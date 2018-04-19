@@ -2653,6 +2653,7 @@
                     contractNum: _this.filters.contractNum,
                     status: _this.filters.status,
                     sellman: _this.filters.sellman,
+                    marketGroupName: _this.userInfo.marketGroupName,
                     roleName: _this.filters.roleName,
                     query_start_time: "",
                     query_finish_time: "",
@@ -3195,6 +3196,7 @@
                 this.contractForm = {
                     contractNum: "",
                     customerName: "",
+                    marketGroupName:"",
                     sellman: "",
                     mark: "",
                     status: CONTRACT_INITIAL,
@@ -3264,6 +3266,10 @@
                             );
                             return;
                         }
+                    }
+                    //设置合同属于哪一个销售组
+                    if(_this.userInfo != null) {
+                        _this.contractForm.marketGroupName = _this.userInfo.marketGroupName != "" ? _this.userInfo.marketGroupName : "";
                     }
                     $.ajax({
                         url: HOST + "contract/add",

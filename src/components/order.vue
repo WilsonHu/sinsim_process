@@ -1314,6 +1314,7 @@
                     status: _this.filters.status,
                     sellman: _this.filters.sellman,
                     customer: _this.filters.customer,
+                    marketGroupName: _this.userinfo.marketGroupName,
                     query_start_time: '',
                     query_finish_time: '',
                     page: _this.currentPage,

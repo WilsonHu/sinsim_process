@@ -7,6 +7,7 @@ import Home from '../components/home.vue'
 import System from "../components/system.vue"
 import UserManage from '../components/system/user_manage.vue'
 import InstallGroupManage from '../components/system/install_group_manage.vue'
+import MarketGroupManage from '../components/system/market_group_manage.vue'
 import RoleManage from '../components/system/role_manage.vue'
 import DeviceManager from '../components/system/device_manage.vue'
 
@@ -187,6 +188,12 @@ export default
                         component: InstallGroupManage,
                         name: 'install_group_manage',
                         meta: '安装组管理'
+                    },
+                    {
+                        path: '/home/system/market_group_manage',
+                        component: MarketGroupManage,
+                        name: 'market_group_manage',
+                        meta: '销售组管理'
                     },
                     {
                         path: '/home/system/role_manage',
