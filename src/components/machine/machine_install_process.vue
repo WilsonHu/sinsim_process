@@ -116,6 +116,16 @@
                 </el-table-column>
                 <el-table-column
                         align="center"
+                        label="当前工序">
+                    <template scope="scope">
+                        <el-tag size="small" style="margin-left: 3px;margin-top:3px;color: green;"
+                                v-for="item in scope.row.currentTaskList">
+                            {{item}}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
                         label="已完成/总工序">
                     <template scope="scope">
                         <span style="color: limegreen;font-weight: bold;">{{scope.row.finishedCount}}</span>
@@ -338,11 +348,11 @@
 
                                     <el-col :span="21">
                                         <el-form-item label="当前流程：">
-                                        <el-input type="text"
-                                        disabled
-                                        v-model="addForm.currentTaskName"
-                                        style="width:100%;">
-                                        </el-input>
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.currentTaskName"
+                                                      style="width:100%;">
+                                            </el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="1">
@@ -685,6 +695,7 @@
                             _this.tableData.forEach(itemObj=> {
                                 itemObj.finishedCount = 0;
                                 itemObj.totalTaskCount = 0;
+                                itemObj.currentTaskList = [];//当前的工序名
                                 try {
                                     var nodeDataArray = JSON.parse(itemObj.nodeData);
                                 } catch (ex) {
@@ -693,11 +704,16 @@
                                 if (nodeDataArray != null && nodeDataArray.length > 0) {
                                     itemObj.totalTaskCount = nodeDataArray.length - 2;//去掉开始，结束.
                                     nodeDataArray.forEach(item=> {
+                                        if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
+                                        {
+                                            itemObj.currentTaskList.push(item.text);
+                                        }
                                         if (parseInt(item.taskStatus) == 6) {//完成
                                             itemObj.finishedCount++;
                                         }
                                     });
                                 }
+                                itemObj.currentTaskName = itemObj.currentTaskList.join(",");
                             });
                         }
                         _this.loadingUI = false;
@@ -837,14 +853,11 @@
                         _this.addForm.abnormalCount = 0;
                         _this.addForm.skipCount = 0;
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
-                        _this.addForm.currentTaskName = "";
-                        taskList.nodeDataArray.forEach(item=>{
-                            if (item.category != "Start" && item.category != "End")
-                            {
+                        taskList.nodeDataArray.forEach(item=> {
+                            if (item.category != "Start" && item.category != "End") {
                                 if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
-                                    _this.addForm.currentTaskName += item.text + ",";
                                 }
                                 else if (parseInt(item.taskStatus) == 6) {//完成
                                     item.category = ProcessCatergory.Finished;
@@ -862,9 +875,6 @@
                                 }
                             }
                         });
-                        if (!isStringEmpty(_this.addForm.currentTaskName)) {
-                            _this.addForm.currentTaskName = _this.addForm.currentTaskName.substring(0, _this.addForm.currentTaskName.length - 1)
-                        }
                         _this.addForm.currentProgress = ( _this.addForm.finishedCount / _this.addForm.totalTaskCount) * 100;
                         _this.addForm.currentProgress = parseInt(_this.addForm.currentProgress);
                         if (_this.addForm.finishedCount == _this.addForm.totalTaskCount) {
