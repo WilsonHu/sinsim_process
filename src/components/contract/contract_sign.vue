@@ -2835,7 +2835,7 @@
                 this.tabIndex = this.requisitionForms.length;
                 let newTabName = ++this.tabIndex + "";
                 var newItem = {
-                    title: "需求单" + newTabName,
+                    title: "订单" + newTabName,
                     name: newTabName,
                     machineOrder: copyObjectByJSON(
                             this.requisitionChangingItem.machineOrder
@@ -3376,8 +3376,8 @@
                                 _this.isError = true;
                                 _this.errorMsg = "改单原因不能为空！";
                             }
-                            if (this.requisitionForms[i].orderChangeRecord.orderNum == null ||
-                                    this.requisitionForms[i].orderChangeRecord.orderNum == "") {
+                            if (this.requisitionForms[i].machineOrder.orderNum == null ||
+                                    this.requisitionForms[i].machineOrder.orderNum == "") {
                                 _this.isError = true;
                                 _this.errorMsg = "改单编号不能为空！";
                             }
@@ -3455,8 +3455,8 @@
                                 _this.isError = true;
                                 _this.errorMsg = "拆单原因不能为空！";
                             }
-                            if (this.requisitionForms[i].orderSplitRecord.orderNum == null ||
-                                    this.requisitionForms[i].orderSplitRecord.orderNum == "") {
+                            if (this.requisitionForms[i].machineOrder.orderNum == null ||
+                                    this.requisitionForms[i].machineOrder.orderNum == "") {
                                 _this.isError = true;
                                 _this.errorMsg = "拆单编号不能为空！";
                             }

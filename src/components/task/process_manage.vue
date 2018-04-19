@@ -6,7 +6,6 @@
                         icon="el-icon-plus"
                         size="normal"
                         type="primary"
-                        :disabled="isNotAdmin"
                         @click="addDialogShow">安装流程
                 </el-button>
             </div>
