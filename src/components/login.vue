@@ -2,7 +2,7 @@
     <div class="bg">
         <div class="login-container">
 
-            <h3 class="title">系统登录</h3>
+            <h3 class="title">SINSIM流程管理系统</h3>
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="60px">
 
                 <el-form-item label="账号:" prop="account">

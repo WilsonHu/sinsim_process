@@ -4,41 +4,41 @@
             <el-row style="margin-top: 10px">
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
-                        <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">安装中：</div>
+                        <el-col >
+                            <div style="font-size: 20px;font-weight: bold">安装中:</div>
                         </el-col>
-                        <el-col :span="5">
-                            <div style="font-size: 56px; font-weight: bold;">{{installingMachineNum}}</div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="4">
-                    <el-row type="flex" justify="center">
-                        <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">改单中：</div>
-                        </el-col>
-                        <el-col :span="5">
-                            <div style="font-size: 56px; font-weight: bold; color: #FA5555">{{changeMachineNum}}</div>
+                        <el-col>
+                            <div style="font-size: 52px; font-weight: bold;">{{installingMachineNum}}</div>
                         </el-col>
                     </el-row>
                 </el-col>
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
-                        <el-col :span="10">
-                            <div style="font-size: 20px;font-weight: bold">拆单中：</div>
+                        <el-col >
+                            <div style="font-size: 20px;font-weight: bold">改单中:</div>
                         </el-col>
-                        <el-col :span="5">
-                            <div style="font-size: 56px; font-weight: bold; color: #FA5555">{{splitMachineNum}}</div>
+                        <el-col >
+                            <div style="font-size: 52px; font-weight: bold; color: #FA5555">{{changeMachineNum}}</div>
                         </el-col>
                     </el-row>
                 </el-col>
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
-                        <el-col :span="11">
-                            <div style="font-size: 20px;font-weight: bold">异常工序：</div>
+                        <el-col >
+                            <div style="font-size: 20px;font-weight: bold">拆单中:</div>
                         </el-col>
-                        <el-col :span="5">
-                            <div style="font-size: 56px; font-weight: bold; color: #FA5555">{{abnormalTaskNum}}</div>
+                        <el-col >
+                            <div style="font-size: 52px; font-weight: bold; color: #FA5555">{{splitMachineNum}}</div>
+                        </el-col>
+                    </el-row>
+                </el-col>
+                <el-col :span="5">
+                    <el-row type="flex" justify="center">
+                        <el-col>
+                            <div style="font-size: 20px;font-weight: bold">异常工序:</div>
+                        </el-col>
+                        <el-col >
+                            <div style="font-size: 52px; font-weight: bold; color: #FA5555">{{abnormalTaskNum}}</div>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -54,10 +54,10 @@
                 </el-col>
             </el-row>
             <el-row style="margin-top: 25px">
-                <el-col :span="2" :offset="5">
+                <el-col :span="3" :offset="4">
                     <span style="font-size: 20px;font-weight: bold">改单记录</span>
                 </el-col>
-                <el-col :span="2" :offset="10">
+                <el-col :span="3" :offset="9">
                     <span style="font-size: 20px;font-weight: bold">拆单记录</span>
                 </el-col>
             </el-row>

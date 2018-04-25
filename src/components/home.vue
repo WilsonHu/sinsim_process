@@ -9,7 +9,7 @@
                             <img src="../assets/img/sinsim_logo.png" style="height: 30px; margin-left: 10px">
                         </span>
                     </el-col>
-                    <el-col :span="16">
+                    <el-col :span="17">
                         <el-menu background-color="#4682B4"
                                  text-color="#2D2F33"
                                  active-text-color="white"
@@ -29,7 +29,7 @@
                             </template>
                         </el-menu>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="4">
                         <div>
                             <label style="font-size: 15px;color: #f4f4f4;font-weight: normal;">
                                 欢迎您
