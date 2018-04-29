@@ -54,8 +54,16 @@ const ConfigStatusList = [
 
 //机器装置
 const MachineEquipmentList = [
-    {name: '佳宇绳绣'},
-    {name: '佳宇金片'},
+    {name: '简易绳绣'},
+    {name: '单金片'},
+    {name: '2mm单金片'},
+    {name: '单针双片'},
+    {name: '简易毛巾'},
+    {name: '雕孔'},
+    {name: '佳宇珠子装置'},
+    {name: '冠炯珠子装置'},
+    {name: '诺德珠子装置'},
+    {name: '激光装置'},
 ];
 
 //需求单状态
@@ -241,48 +249,32 @@ const PCModeList =
     [
         {
             value: 0,
-            text: "M98"
-        },
-        {
-            value: 1,
-            text: "C29"
-        },
-        {
-            value: 2,
             text: "528"
         },
         {
+            value: 1,
+            text: "M98"
+        },
+        {
+            value: 2,
+            text: "D16"
+        },
+        {
             value: 3,
-            text: "322"
+            text: "D56"
         },
         {
             value: 4,
-            text: "328"
+            text: "D19"
         },
         {
             value: 5,
-            text: "366"
+            text: "A18"
         },
         {
             value: 6,
-            text: "316"
-        },
-        {
-            value: 7,
-            text: "C98"
-        },
-        {
-            value: 8,
-            text: "C88"
-        },
-        {
-            value: 9,
-            text: "C19"
-        },
-        {
-            value: 10,
-            text: "C16"
-        },
+            text: "A58"
+        }
 
     ];
 
@@ -860,7 +852,11 @@ const DriverReelHoleList =
     [
         {
             value: 0,
-            text: "正常"
+            text: "有"
+        },
+        {
+            value: 1,
+            text: "无"
         },
     ];
 
@@ -870,7 +866,11 @@ const DriverReelList =
     [
         {
             value: 0,
-            text: "正常"
+            text: "有"
+        },
+        {
+            value: 1,
+            text: "无"
         },
     ];
 

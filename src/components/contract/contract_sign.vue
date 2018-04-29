@@ -1162,9 +1162,7 @@
                                                                              v-model="item.orderDetail.driverHorizonNum"
                                                                              :step="1"
                                                                              :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                             controls-position="right"
-                                                                             :min="1"
-                                                                             :max="100">
+                                                                             controls-position="right">
                                                             </el-input-number>
                                                         </el-form-item>
                                                     </el-col>
@@ -1175,9 +1173,7 @@
                                                                              v-model="item.orderDetail.driverVerticalNum"
                                                                              :step="1"
                                                                              :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                             controls-position="right"
-                                                                             :min="1"
-                                                                             :max="100">
+                                                                             controls-position="right">
                                                             </el-input-number>
                                                         </el-form-item>
                                                     </el-col>
@@ -1355,8 +1351,7 @@
                                                                                  :step="1"
                                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
                                                                                  controls-position="right"
-                                                                                 :min="1"
-                                                                                 :max="100">
+                                                                                 :min="1">
                                                                 </el-input-number>
                                                             </template>
                                                         </el-table-column>
@@ -2326,6 +2321,7 @@
                         (this.userInfo.role.roleName.indexOf("销售") != -1 ||
                         this.userInfo.role.roleName.indexOf("财务") != -1)) ||
                         this.userInfo.role.roleName.indexOf("总经理") != -1 ||
+                        this.userInfo.role.roleName.indexOf("成本核算") != -1 ||
                         this.userInfo.role.id == 1
                 ) {
                     return true;
