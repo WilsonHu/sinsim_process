@@ -186,32 +186,46 @@
                                     align="center"
                                     label="操作" width="280">
                                 <template scope="scope">
-                                    <el-button
-                                            v-if="userInfo.role.roleName !='销售员'"
-                                            size="small"
-                                            type="primary"
-                                            icon="el-icon-check"
-                                            @click="handleSign(scope.$index, scope.row)">审核
-                                    </el-button>
-                                    <el-button
-                                            v-if="userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1"
-                                            size="small"
-                                            type="primary"
-                                            icon="el-icon-edit"
-                                            @click="handleEdit(scope.$index, scope.row)">编辑
-                                    </el-button>
-                                    <!--<el-button-->
-                                    <!--size="small"-->
-                                    <!--type="danger"-->
-                                    <!--v-if="userInfo.account=='admin'"-->
-                                    <!--@click="handleDelete(scope.$index, scope.row)" >删除-->
-                                    <!--</el-button >-->
-                                    <el-button
-                                            size="small"
-                                            type="danger"
-                                            icon="el-icon-download"
-                                            @click="handleDownload(scope.$index, scope.row)">下载
-                                    </el-button>
+                                    <el-tooltip placement="top">
+                                        <div slot="content">审核</div>
+                                        <el-button
+                                                v-show="userInfo.role.roleName !='销售员'"
+                                                size="mini"
+                                                type="success"
+                                                icon="el-icon-check"
+                                                @click="handleSign(scope.$index, scope.row)">
+                                        </el-button>
+                                    </el-tooltip>
+                                    <el-tooltip placement="top">
+                                        <div slot="content">编辑</div>
+                                        <el-button
+                                                v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)"
+                                                size="mini"
+                                                type="primary"
+                                                icon="el-icon-edit"
+                                                @click="handleEdit(scope.$index, scope.row)">
+                                        </el-button>
+                                    </el-tooltip>
+
+                                    <el-tooltip placement="top">
+                                        <div slot="content">下载</div>
+                                        <el-button
+                                                size="mini"
+                                                type="info"
+                                                icon="el-icon-download"
+                                                @click="handleDownload(scope.$index, scope.row)">
+                                        </el-button>
+                                    </el-tooltip>
+                                    <el-tooltip placement="top">
+                                        <div slot="content">删除</div>
+                                        <el-button
+                                                v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)&&(scope.row.status>=5||scope.row.status==0)"
+                                                size="mini"
+                                                type="danger"
+                                                icon="el-icon-delete"
+                                                @click="handleDelete(scope.$index, scope.row)">
+                                        </el-button>
+                                    </el-tooltip>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -1812,8 +1826,8 @@
             </el-dialog>
         </el-dialog>
 
-        <el-dialog title="提示" :visible.sync="deleteConfirmVisible" append-to-body>
-            <span>确认要删除账号为[ <b style="color: #F56C6C">{{selectedItem.account}}</b> ]的用户吗？</span>
+        <el-dialog title="删除" :visible.sync="deleteConfirmVisible" append-to-body>
+            <span style="font-size: 22px">确认要删除编号为[ <b style="color: #F56C6C;font-weight: bold">{{selectedItem.contractNum}}</b> ]的合同吗？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
                 <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
@@ -1903,7 +1917,7 @@
             _this = this;
             return {
                 editUrl: HOST + "machine/order/update",
-                deleteUrl: HOST + "machine/order/delete",
+                deleteUrl: HOST + "contract/updateValid",
                 isError: false,
                 errorMsg: "",
                 totalRecords: 0,
@@ -2966,13 +2980,15 @@
                 $.ajax({
                     url: _this.deleteUrl,
                     type: "POST",
-                    dataType: "json",
-                    data: _this.selectedItem,
-                    success: function (data) {
-                        if (data.status > 0) {
-                            var index = _this.tableData.indexOf(_this.selectedItem);
-                            _this.tableData.splice(index, 1);
-
+                    dataType: "JSON",
+                    data: {
+                        id: _this.selectedItem.id
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+//                            var index = _this.tableData.indexOf(_this.selectedItem);
+//                            _this.tableData.splice(index, 1);
+                            _this.selectContracts();
                             showMessage(_this, "删除成功", 1);
                         } else {
                             showMessage(_this, "删除失败", 0);
