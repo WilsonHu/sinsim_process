@@ -215,7 +215,7 @@
                 </el-row>
             </el-col>
         </div>
-        <el-dialog :visible.sync="addContractVisible" fullscreen @close="dialogCloseCallback()">
+        <el-dialog :visible.sync="addContractVisible" fullscreen @close="dialogCloseCallback()" >
             <el-row type="flex" class="row-bg" justify="center">
                 <el-col :span="21">
                     <div style="text-align: center; font-weight: bold; font-size: 20px; font-weight:bold;padding-bottom: 20px">
@@ -225,7 +225,7 @@
                         <el-col :span="6">
                             <el-form-item label="合同号：" :label-width="formLabelWidth">
                                 <el-input v-model="contractForm.contractNum"
-                                          :disabled="changeContractContentDisable(contractForm)"
+                                          :readonly="changeContractContentDisable(contractForm)"
                                           placeholder="合同号"
                                           @blur="onContractInputUnfocus(contractForm.contractNum)"
                                 ></el-input>
@@ -238,11 +238,11 @@
                         <el-col :span="6">
                             <el-form-item label="客户：" :label-width="formLabelWidth">
                                 <!-- <el-input v-model="contractForm.customerName"
-                                          :disabled="changeContractContentDisable(contractForm)"
+                                          :readonly="changeContractContentDisable(contractForm)"
                                           placeholder="客户"
                                 ></el-input> -->
                                 <el-autocomplete
-                                        :disabled="changeContractContentDisable(contractForm)"
+                                        :readonly="changeContractContentDisable(contractForm)"
                                         v-model="contractForm.customerName"
                                         :fetch-suggestions="queryCustomer"
                                         placeholder="客户"
@@ -253,11 +253,11 @@
                         <el-col :span="6">
                             <el-form-item label="销售员：" :label-width="formLabelWidth">
                                 <!-- <el-input v-model="contractForm.sellman"
-                                          :disabled="changeContractContentDisable(contractForm)"
+                                          :readonly="changeContractContentDisable(contractForm)"
                                           placeholder="销售员"
                                 ></el-input> -->
                                 <el-autocomplete
-                                        :disabled="changeContractContentDisable(contractForm)"
+                                        :readonly="changeContractContentDisable(contractForm)"
                                         v-model="contractForm.sellman"
                                         :fetch-suggestions="querySearchAsync"
                                         placeholder="销售员"
@@ -303,14 +303,14 @@
                                                     <el-form-item label="改单原因：" :label-width="formLabelWidth"
                                                                   style="padding-bottom: 12px"
                                                                   prop="orderChangeRecord.changeReason"
-                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                   :rules="[
                                                                               { required: true, message: '改单原因不能为空'},
                                                                       ]">
                                                         <el-input v-model="item.orderChangeRecord.changeReason"
                                                                   type="textarea"
                                                                   auto-complete="off"
-                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                   :autosize="{ minRows: 3, maxRows: 3}"
                                                                   placeholder="改单原因"></el-input>
                                                     </el-form-item>
@@ -329,14 +329,14 @@
                                                     <el-form-item label="拆单原因：" :label-width="formLabelWidth"
                                                                   style="padding-bottom: 12px"
                                                                   prop="orderSplitRecord.splitReason"
-                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                   :rules="[
                                                                               { required: true, message: '拆单原因不能为空'},
                                                                       ]">
                                                         <el-input v-model="item.orderSplitRecord.splitReason"
                                                                   type="textarea"
                                                                   auto-complete="off"
-                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                   :autosize="{ minRows: 3, maxRows: 3}"
                                                                   placeholder="拆单原因"></el-input>
                                                     </el-form-item>
@@ -348,14 +348,14 @@
                                                     <el-form-item label="订单号：" :label-width="formLabelWidth">
                                                         <el-input v-model="item.machineOrder.orderNum"
                                                                   placeholder="订单号"
-                                                                  :disabled="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && item.machineOrder.status == 3)"
+                                                                  :readonly="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && item.machineOrder.status == 3)"
                                                         ></el-input>
                                                     </el-form-item>
                                                 </el-col>
                                                 <el-col :span="6" style="margin-bottom: 10px;margin-top: 10px">
                                                     <el-form-item label="填表日期：" :label-width="formLabelWidth">
-                                                        <el-input v-model="item.machineOrder.createTime" disabled
-                                                                  :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                        <el-input v-model="item.machineOrder.createTime"
+                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                   placeholder="日期"
                                                         ></el-input>
                                                     </el-form-item>
@@ -395,8 +395,8 @@
                                                         <el-form-item label="客户：" :label-width="formLabelWidth"
                                                                       clearable>
                                                             <el-input v-model="contractForm.customerName"
-                                                                      placeholder="客户" disabled
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      placeholder="客户"s
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
                                                             ></el-input>
                                                         </el-form-item>
                                                     </el-col>
@@ -407,7 +407,7 @@
                                                                     style="width: 100%"
                                                                     v-model="item.machineOrder.country"
                                                                     clearable
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in countryList"
@@ -424,7 +424,7 @@
                                                                       clearable
                                                                       :class="classWithDifferentValue(item, 'brand', false)">
                                                             <el-input v-model="item.machineOrder.brand"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                       placeholder="商标"></el-input>
                                                         </el-form-item>
                                                     </el-col>
@@ -436,7 +436,7 @@
                                                                     style="width: 100%"
                                                                     v-model="item.machineOrder.machineType"
                                                                     clearable
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in allMachineType"
@@ -452,11 +452,10 @@
                                                                       :class="classWithDifferentValue(item, 'needleNum', false)">
                                                             <el-input-number style="float: left;"
                                                                              v-model="item.machineOrder.needleNum"
-                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              :step="1"
                                                                              controls-position="right"
-                                                                             :min="1"
-                                                                             :max="100">
+                                                                             :min="1">
 
                                                             </el-input-number>
                                                         </el-form-item>
@@ -466,11 +465,10 @@
                                                                       :class="classWithDifferentValue(item, 'headNum',false)">
                                                             <el-input-number style="float: left"
                                                                              v-model="item.machineOrder.headNum"
-                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              :step="1"
                                                                              controls-position="right"
-                                                                             :min="1"
-                                                                             :max="100">
+                                                                             :min="1">
                                                             </el-input-number>
                                                         </el-form-item>
                                                     </el-col>
@@ -479,7 +477,7 @@
                                                                       :class="classWithDifferentValue(item, 'headDistance', false)">
                                                             <el-input-number style="float: left"
                                                                              v-model="item.machineOrder.headDistance"
-                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              :step="1"
                                                                              controls-position="right"
                                                                              :min="1"
@@ -491,7 +489,7 @@
                                                         <el-form-item label="X行程：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'xDistance', false)">
                                                             <el-input v-model="item.machineOrder.xDistance"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                       placeholder="X行程"></el-input>
                                                         </el-form-item>
                                                     </el-col>
@@ -499,7 +497,7 @@
                                                         <el-form-item label="Y行程：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'yDistance', false)">
                                                             <el-input v-model="item.machineOrder.yDistance"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                       placeholder="Y行程"></el-input>
                                                         </el-form-item>
                                                     </el-col>
@@ -529,7 +527,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelColor"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
                                                                 <el-option
@@ -548,7 +546,7 @@
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelDaxle"
                                                                     clearable
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in specialTowelDaxleList"
@@ -565,7 +563,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelHaxle"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
                                                                 <el-option
@@ -583,7 +581,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelMotor"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
                                                                 <el-option
@@ -601,7 +599,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTapingHead"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
                                                                 <el-option
@@ -619,7 +617,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelNeedle"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
                                                                 <el-option
@@ -644,7 +642,7 @@
                                                                       :class="classWithDifferentValue(item, 'electricPc', true)">
                                                             <el-select v-model="item.orderDetail.electricPc"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in pcModeList"
@@ -660,7 +658,7 @@
                                                                       :class="classWithDifferentValue(item, 'electricLanguage', true)">
                                                             <el-select v-model="item.orderDetail.electricLanguage"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in pcLanguageList"
@@ -676,7 +674,7 @@
                                                                       :class="classWithDifferentValue(item, 'electricMotor', true)">
                                                             <el-select v-model="item.orderDetail.electricMotor"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in electricMotorList"
@@ -693,7 +691,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricMotorXy"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in xyMotorList"
@@ -711,7 +709,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricTrim"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in trimList"
@@ -729,7 +727,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricPower"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in electricPowerList"
@@ -747,7 +745,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricSwitch"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in electricSwitchList"
@@ -790,7 +788,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axleSplit"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in axleSplitList"
@@ -808,7 +806,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axlePanel"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in axlePanelList"
@@ -826,7 +824,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axleNeedle"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in axleNeedleList"
@@ -844,7 +842,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axleNeedleType"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in axleNeedleTypeList"
@@ -862,7 +860,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axleRail"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in axleRailList"
@@ -879,7 +877,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleDownCheck', true)">
                                                             <el-select v-model="item.orderDetail.axleDownCheck"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in axleDownCheckList"
@@ -895,7 +893,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleHook', true)">
                                                             <el-select v-model="item.orderDetail.axleHook"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in axleHookList"
@@ -912,7 +910,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleJump', true)">
                                                             <el-select v-model="item.orderDetail.axleJump"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in axleJumpList"
@@ -929,7 +927,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleUpperThread', true)">
                                                             <el-select v-model="item.orderDetail.axleUpperThread"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in axleUpperThreadList"
@@ -945,9 +943,8 @@
                                                                       :class="classWithDifferentValue(item, 'axleAddition', true)">
                                                             <el-input v-model="item.orderDetail.axleAddition"
                                                                       type="textarea"
-                                                                      placeholder="附加装置，销售人员添加"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)||userInfo.role.roleName.indexOf('销售') < 0"
-                                                                      :autosize="{ minRows: 10, maxRows: 10}">
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)||userInfo.role.roleName.indexOf('销售') < 0"
+                                                                      :autosize="{ minRows: 4, maxRows: 8}">
                                                             </el-input>
                                                         </el-form-item>
                                                     </el-col>
@@ -964,7 +961,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkColor"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in frameworkColorList"
@@ -982,7 +979,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkPlaten"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in frameworkPlatenList"
@@ -1001,7 +998,7 @@
                                                                 <el-select
                                                                         v-model="item.orderDetail.frameworkPlatenColor"
                                                                         clearable
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                         placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in frameworkPlatenColorList"
@@ -1019,7 +1016,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkRing"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in frameworkRingList"
@@ -1037,7 +1034,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkBracket"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in frameworkBracketList"
@@ -1055,7 +1052,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkStop"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in frameworkStopList"
@@ -1072,7 +1069,7 @@
                                                                       :class="classWithDifferentValue(item, 'frameworkLight', true)">
                                                             <el-select v-model="item.orderDetail.frameworkLight"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in frameworkLightList"
@@ -1096,7 +1093,7 @@
                                                             <el-select v-model="item.orderDetail.driverType"
                                                                        style="width: 100%;"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in driverTypeList"
@@ -1112,7 +1109,7 @@
                                                                       :class="classWithDifferentValue(item, 'driverMethod', true)">
                                                             <el-select v-model="item.orderDetail.driverMethod"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in driverMethodList"
@@ -1128,7 +1125,7 @@
                                                                       :class="classWithDifferentValue(item, 'driverReelHole', true)">
                                                             <el-select v-model="item.orderDetail.driverReelHole"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in driverReelHoleList"
@@ -1144,7 +1141,7 @@
                                                                       :class="classWithDifferentValue(item, 'driverReel', true)">
                                                             <el-select v-model="item.orderDetail.driverReel"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in driverReelList"
@@ -1161,7 +1158,8 @@
                                                             <el-input-number style="float: left"
                                                                              v-model="item.orderDetail.driverHorizonNum"
                                                                              :step="1"
-                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                             min="0"
                                                                              controls-position="right">
                                                             </el-input-number>
                                                         </el-form-item>
@@ -1172,7 +1170,8 @@
                                                             <el-input-number style="float: left"
                                                                              v-model="item.orderDetail.driverVerticalNum"
                                                                              :step="1"
-                                                                             :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                             min="0"
+                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              controls-position="right">
                                                             </el-input-number>
                                                         </el-form-item>
@@ -1189,7 +1188,7 @@
                                                                       :class="classWithDifferentValue(item, 'packageMethod', false)">
                                                             <el-select v-model="item.machineOrder.packageMethod"
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in packageModeList"
@@ -1206,20 +1205,18 @@
                                                             <el-input
                                                                     type="textarea"
                                                                     :autosize="{ minRows: 6, maxRows: 10}"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                    placeholder="包装备注"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     v-model="item.machineOrder.packageMark">
                                                             </el-input>
                                                         </el-form-item>
                                                     </el-col>
                                                     <el-col :span="6">
-                                                        <el-form-item label="交货日期：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'contractShipDate', false)">
+                                                        <el-form-item label="交货日期：" :label-width="formLabelWidth">
                                                             <el-date-picker
                                                                     style="width: 100%"
                                                                     v-model="item.machineOrder.contractShipDate"
                                                                     type="date"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     placeholder="合同交货日期">
                                                             </el-date-picker>
                                                         </el-form-item>
@@ -1236,7 +1233,7 @@
                                                             <el-input style="float: left;"
                                                                       v-model.number="item.machineOrder.machineNum"
                                                                       auto-complete="off"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder) || isFromSplit(item.machineOrder)"
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder) || isFromSplit(item.machineOrder)"
                                                                       @blur="machineNumChanged(item)"
                                                                       controls-position="right">
 
@@ -1248,7 +1245,7 @@
                                                                       :class="classWithDifferentValue(item, 'sellman', false)">
                                                             <el-input v-model="contractForm.sellman"
                                                                       placeholder="销售人员"
-                                                                      :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                       auto-complete="off">
                                                             </el-input>
                                                         </el-form-item>
@@ -1259,7 +1256,7 @@
                                                             <el-select v-model="item.machineOrder.maintainType"
                                                                        placeholder=""
                                                                        clearable
-                                                                       :disabled="changeOrderContentDisable(item.machineOrder)">
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)">
                                                                 <el-option
                                                                         v-for="item in maintainTypeList"
                                                                         :key="item.text"
@@ -1271,8 +1268,7 @@
                                                     </el-col>
 
                                                     <el-col :span="6">
-                                                        <el-form-item label="计划日期：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'planShipDate', false)">
+                                                        <el-form-item label="计划日期：" :label-width="formLabelWidth">
                                                             <el-date-picker
                                                                     style="width: 100%"
                                                                     v-model="item.machineOrder.planShipDate"
@@ -1298,9 +1294,8 @@
                                                                       :class="classWithDifferentValue(item, 'machineOrder', false)">
                                                             <el-input
                                                                     type="textarea"
-                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                    :autosize="{ minRows: 4, maxRows: 10}"
-                                                                    placeholder="备注信息"
+                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                    :autosize="{ minRows: 2, maxRows: 6}"
                                                                     v-model="item.machineOrder.mark">
                                                             </el-input>
                                                         </el-form-item>
@@ -1330,7 +1325,7 @@
                                                                 <el-select v-model="scope.row.name"
                                                                            placeholder=""
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            style="width: 95%">
                                                                     <el-option
                                                                             v-for="item in machineEquipmentList"
@@ -1349,7 +1344,7 @@
                                                                 <el-input-number style="float: left"
                                                                                  v-model="scope.row.number"
                                                                                  :step="1"
-                                                                                 :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                                 :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                                  controls-position="right"
                                                                                  :min="1">
                                                                 </el-input-number>
@@ -1363,7 +1358,7 @@
                                                             <template slot-scope="scope">
                                                                 <el-input v-model="scope.row.price"
                                                                           placeholder="单价"
-                                                                          :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                          :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                           auto-complete="off">
                                                                 </el-input>
                                                             </template>
@@ -1397,7 +1392,7 @@
                                                                         style="margin: 10px;width: 95%"
                                                                         v-model="item.machineOrder.machinePrice"
                                                                         :step="1"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                         controls-position="right"
                                                                         :min="0">
                                                                 </el-input-number>
@@ -1464,7 +1459,7 @@
                                                             label="意见">
                                                         <template slot-scope="scope">
                                                             <el-input
-                                                                    :disabled="signDisable(scope.row.roleId)"
+                                                                    :readonly="signDisable(scope.row.roleId)"
                                                                     type="textarea"
                                                                     v-model="scope.row.comment"
                                                                     auto-complete="off">
@@ -1571,7 +1566,7 @@
                                     <el-form-item label="付款方式：" :label-width="formLabelWidth">
                                         <el-input
                                                 placeholder="付款方式"
-                                                :disabled="changeContractContentDisable(contractForm)"
+                                                :readonly="changeContractContentDisable(contractForm)"
                                                 v-model="contractForm.payMethod">
                                         </el-input>
                                     </el-form-item>
@@ -1579,7 +1574,7 @@
                                 <el-col :span="6">
                                     <el-form-item label="付款币种：" :label-width="formLabelWidth">
                                         <el-select v-model="contractForm.currencyType"
-                                                   :disabled="changeContractContentDisable(contractForm)"
+                                                   :readonly="changeContractContentDisable(contractForm)"
                                                    clearable>
                                             <el-option
                                                     v-for="item in currencyTypeList"
@@ -1594,7 +1589,7 @@
                                         <el-date-picker
                                                 type="date"
                                                 placeholder="合同交货日期"
-                                                :disabled="changeContractContentDisable(contractForm)"
+                                                :readonly="changeContractContentDisable(contractForm)"
                                                 v-model="contractForm.contractShipDate">
                                         </el-date-picker>
                                     </el-form-item>
@@ -1605,9 +1600,8 @@
                                     <el-form-item label="备注信息：" :label-width="formLabelWidth">
                                         <el-input
                                                 type="textarea"
-                                                :autosize="{ minRows: 6, maxRows: 10}"
-                                                :disabled="changeContractContentDisable(contractForm)"
-                                                placeholder="备注信息"
+                                                :autosize="{ minRows: 3, maxRows: 6}"
+                                                :readonly="changeContractContentDisable(contractForm)"
                                                 v-model="contractForm.mark">
                                         </el-input>
                                     </el-form-item>
@@ -1673,7 +1667,7 @@
                                                 label="意见">
                                             <template slot-scope="scope">
                                                 <el-input
-                                                        :disabled="signDisable(scope.row.roleId)"
+                                                        :readonly="signDisable(scope.row.roleId)"
                                                         type="textarea"
                                                         v-model="scope.row.comment"
                                                         auto-complete="off">
@@ -1703,9 +1697,8 @@
                     </el-card>
                 </el-col>
             </el-row>
-            <div slot="footer" class="dialog-footer" style="margin-bottom: 20px; margin-right:8%"
-                 v-if="mode == EDIT_MODE || mode == CHANGE_MODE || mode == ADD_MODE || mode == SPLIT_MODE">
-                <el-button @click="addContractVisible = false" icon="el-icon-back">取 消</el-button>
+            <div slot="footer" class="dialog-footer" style="margin-top: -20px; margin-right:8%">
+                <el-button @click="addContractVisible = false" icon="el-icon-back" type="danger">取 消</el-button>
                 <el-button v-if="mode == EDIT_MODE && haveInitialMachineOrder() || contractIsRejected()" type="primary"
                            @click="onEdit" icon="el-icon-check">保 存
                 </el-button>
@@ -1713,7 +1706,7 @@
                 </el-button>
                 <el-button v-if="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check">保存拆单
                 </el-button>
-                <el-button v-if="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">提 交</el-button>
+                <el-button v-if="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">保 存</el-button>
             </div>
             <el-dialog title="提示" :visible.sync="confirmPasteDialog" width="30%" append-to-body>
                 <span style="font-size: 15px">确定要粘贴到<b style="color: #F56C6C">{{currentSelectOrder.title}}</b>吗？</span>
@@ -1835,7 +1828,7 @@
                             label="签核人">
                         <template slot-scope="scope">
                             <el-input
-                                    :disabled="signDisable(scope.row.roleId)"
+                                    :readonly="signDisable(scope.row.roleId)"
                                     v-model="scope.row.user"
                                     auto-complete="off">
                             </el-input>
@@ -1848,14 +1841,14 @@
                         <template slot-scope="scope">
                                     <span> {{scope.row.date != null && scope.row.date != "" ? scope.row.date : "未提交" }}
                                     </span>
-                        </template>
+                        </template>a
                     </el-table-column>
                     <el-table-column
                             align="center"
                             label="意见">
                         <template slot-scope="scope">
                             <el-input
-                                    :disabled="signDisable(scope.row.roleId)"
+                                    :readonly="signDisable(scope.row.roleId)"
                                     type="textarea"
                                     v-model="scope.row.comment"
                                     auto-complete="off">
@@ -4042,6 +4035,21 @@
 
     .el-table .success-row {
         background: #f0f9eb;
+    }
+
+    .el-dialog__headerbtn{
+        position:absolute;
+        top:15px;
+        right:15px;
+        padding-left:8px;
+        padding-right:8px;
+        padding-top:5px;
+        padding-bottom:5px;
+        background: #f56c6c;
+        outline:0;
+        cursor:pointer;
+        font-size:24px;
+        font-weight: bold;
     }
 
     .different-value {

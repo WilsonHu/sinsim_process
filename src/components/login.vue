@@ -17,7 +17,7 @@
                 <el-form-item label="密码:" prop="password">
                     <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码"
                               prefix-icon="el-icon-goods"
-                              @change="onKeyup"></el-input>
+                              v-on:input="onKeyup"></el-input>
                 </el-form-item>
                 <div class="alert alert-danger" v-if="isError" style="margin-top: 10px;padding: 5px;">
                     {{errorMsg}}!
