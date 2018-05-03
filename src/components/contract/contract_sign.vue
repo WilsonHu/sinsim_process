@@ -67,9 +67,18 @@
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="4">
+                                    <el-form-item label="录单人:">
+                                        <el-input v-model="filters.recordUser"
+                                                  placeholder="录单人"
+                                                  auto-complete="off"
+                                                  clearable></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="2" :offset="2">
                                     <el-button
                                             icon="el-icon-search"
                                             size="normal"
+                                            style="float: right; margin-right: -12px"
                                             type="primary"
                                             @click="search">查询
                                     </el-button>
@@ -144,6 +153,11 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
+                                    prop="recordUser"
+                                    label="录单人">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
                                     prop="currentStep"
                                     label="审核阶段">
                             </el-table-column>
@@ -215,14 +229,14 @@
                 </el-row>
             </el-col>
         </div>
-        <el-dialog :visible.sync="addContractVisible" fullscreen @close="dialogCloseCallback()" >
+        <el-dialog :visible.sync="addContractVisible" fullscreen @close="dialogCloseCallback()">
             <el-row type="flex" class="row-bg" justify="center">
-                <el-col :span="21">
+                <el-col :span="24">
                     <div style="text-align: center; font-weight: bold; font-size: 20px; font-weight:bold;padding-bottom: 20px">
                         {{dialogTitle}}
                     </div>
                     <el-form class="panel-body">
-                        <el-col :span="6">
+                        <el-col :span="5">
                             <el-form-item label="合同号：" :label-width="formLabelWidth">
                                 <el-input v-model="contractForm.contractNum"
                                           :readonly="changeContractContentDisable(contractForm)"
@@ -235,7 +249,7 @@
                                       style="color: red; font-size: 12px;">{{contractErrorMsg}}</span>
                             </div>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="5">
                             <el-form-item label="客户：" :label-width="formLabelWidth">
                                 <!-- <el-input v-model="contractForm.customerName"
                                           :readonly="changeContractContentDisable(contractForm)"
@@ -250,7 +264,7 @@
                                 </el-autocomplete>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="5">
                             <el-form-item label="销售员：" :label-width="formLabelWidth">
                                 <!-- <el-input v-model="contractForm.sellman"
                                           :readonly="changeContractContentDisable(contractForm)"
@@ -265,7 +279,14 @@
                                 </el-autocomplete>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="2" :offset="4"
+                        <el-col :span="4">
+                            <el-form-item label="录单人：" :label-width="formLabelWidth">
+                                <el-input v-model="contractForm.recordUser"
+                                          disabled
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="2" :offset="1"
                                 v-if="haveInitialMachineOrder() && mode == EDIT_MODE">
                             <el-button
                                     size="normal"
@@ -395,7 +416,7 @@
                                                         <el-form-item label="客户：" :label-width="formLabelWidth"
                                                                       clearable>
                                                             <el-input v-model="contractForm.customerName"
-                                                                      placeholder="客户"s
+                                                                      placeholder="客户" s
                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                             ></el-input>
                                                         </el-form-item>
@@ -1841,7 +1862,8 @@
                         <template slot-scope="scope">
                                     <span> {{scope.row.date != null && scope.row.date != "" ? scope.row.date : "未提交" }}
                                     </span>
-                        </template>a
+                        </template>
+                        a
                     </el-table-column>
                     <el-table-column
                             align="center"
@@ -1976,6 +1998,7 @@
                     contractNum: "",
                     customerName: "",
                     sellman: "",
+                    recordUser: "",
                     mark: "",
                     status: CONTRACT_INITIAL,
                     payMethod: "",
@@ -2042,6 +2065,7 @@
                     //默认审核中
                     status: 1,
                     sellman: "",
+                    recordUser: "",
                     selectDate: ""
                 },
 
@@ -2644,6 +2668,7 @@
                     sellman: _this.filters.sellman,
                     marketGroupName: _this.userInfo.marketGroupName,
                     roleName: _this.filters.roleName,
+                    recordUser: _this.filters.recordUser,
                     query_start_time: "",
                     query_finish_time: "",
                     page: _this.currentPage,
@@ -2877,7 +2902,7 @@
                 this.dialogTitle = "新增合同";
                 this.addContractVisible = true;
                 this.editContract = "";
-
+                _this.contractForm.recordUser = _this.userInfo.account;
                 _this.requisitionForms[0].orderSign.signContent =
                         _this.normalOrderSignArray;
                 _this.contractSignForms[0].contractSignData =
@@ -2888,12 +2913,12 @@
                 this.isError = false;
                 this.errorMsg = "";
                 this.dialogTitle = "签核合同";
-
                 this.mode = this.SIGN_MODE;
                 this.editContract = item;
                 _this.fetchContractData(item.id);
                 _this.fetchContractSignData(item.id);
                 _this.fetchMachineOrdersData(item.id);
+//                _this.contractForm.recordUser = _this.userInfo.account;
                 this.addContractVisible = true;
             },
 
@@ -2907,6 +2932,7 @@
                 _this.fetchContractData(item.id);
                 _this.fetchContractSignData(item.id);
                 _this.fetchMachineOrdersData(item.id);
+//                _this.contractForm.recordUser = _this.userInfo.account;
                 this.addContractVisible = true;
             },
 
@@ -3185,7 +3211,7 @@
                 this.contractForm = {
                     contractNum: "",
                     customerName: "",
-                    marketGroupName:"",
+                    marketGroupName: "",
                     sellman: "",
                     mark: "",
                     status: CONTRACT_INITIAL,
@@ -3222,14 +3248,14 @@
                     _this.iserror = true;
                     _this.errorMsg = "合同号已存在";
                 }
-                //                if(!_this.isError) {
-                //                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
-                //                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
-                //                        if(_this.isError ) {
-                //                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
-                //                        }
-                //                    }
-                //                }
+                if (!_this.isError) {
+                    for (let i = 0; i < _this.requisitionForms.length && !_this.isError; i++) {
+                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
+                        if (_this.isError) {
+                            _this.errorMsg = "需求单" + (i + 1) + ":" + _this.errorMsg;
+                        }
+                    }
+                }
                 //Just for test
                 //sessionStorage.setItem("requisitionForms", JSON.stringify(_this.requisitionForms));
                 if (_this.isError) {
@@ -3257,9 +3283,10 @@
                         }
                     }
                     //设置合同属于哪一个销售组
-                    if(_this.userInfo != null) {
+                    if (_this.userInfo != null) {
                         _this.contractForm.marketGroupName = _this.userInfo.marketGroupName != "" ? _this.userInfo.marketGroupName : "";
                     }
+
                     $.ajax({
                         url: HOST + "contract/add",
                         type: "POST",
@@ -3293,14 +3320,14 @@
 
             onEdit() {
                 _this.isError = this.validContractInfo(_this.contractForm, false);
-                //                if(!_this.isError) {
-                //                    for (let i=0; i< _this.requisitionForms.length && !_this.isError; i++) {
-                //                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
-                //                        if(_this.isError ) {
-                //                            _this.errorMsg = "需求单"+(i+1) + ":" + _this.errorMsg;
-                //                        }
-                //                    }
-                //                }
+                if (!_this.isError) {
+                    for (let i = 0; i < _this.requisitionForms.length && !_this.isError; i++) {
+                        _this.isError = this.validateOrderInfo(_this.requisitionForms[i], false);
+                        if (_this.isError) {
+                            _this.errorMsg = "需求单" + (i + 1) + ":" + _this.errorMsg;
+                        }
+                    }
+                }
                 if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
@@ -3325,6 +3352,7 @@
                             }
                         }
                     }
+                    _this.contractForm.recordUser = _this.userInfo.account;
                     $.ajax({
                         url: HOST + "contract/update",
                         type: "POST",
@@ -3404,6 +3432,7 @@
                             );
                         }
                     }
+                    _this.contractForm.recordUser = _this.userInfo.account;
                     $.ajax({
                         url: HOST + "contract/changeOrder",
                         type: "POST",
@@ -3483,6 +3512,7 @@
                             );
                         }
                     }
+                    _this.contractForm.recordUser = _this.userInfo.account;
                     $.ajax({
                         url: HOST + "contract/splitOrder",
                         type: "POST",
@@ -4037,18 +4067,18 @@
         background: #f0f9eb;
     }
 
-    .el-dialog__headerbtn{
-        position:absolute;
-        top:15px;
-        right:15px;
-        padding-left:8px;
-        padding-right:8px;
-        padding-top:5px;
-        padding-bottom:5px;
+    .el-dialog__headerbtn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 5px;
+        padding-bottom: 5px;
         background: #f56c6c;
-        outline:0;
-        cursor:pointer;
-        font-size:24px;
+        outline: 0;
+        cursor: pointer;
+        font-size: 24px;
         font-weight: bold;
     }
 

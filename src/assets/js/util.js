@@ -28,7 +28,7 @@ let ORDER_CHANGED = 3;
 //已拆单
 let ORDER_SPLITED = 4;
 //已驳回
-let ORDER_REJECTED= 5;
+let ORDER_REJECTED = 5;
 //已取消
 let ORDER_CANCELED = 6;
 
@@ -46,7 +46,7 @@ let CONTRACT_CHANGED = 3;
 //已拆单
 let CONTRACT_SPLITED = 4;
 //已驳回
-let CONTRACT_REJECTED= 5;
+let CONTRACT_REJECTED = 5;
 //已取消
 let CONTRACT_CANCELED = 6;
 
@@ -60,32 +60,32 @@ let SIGN_REJECT = 2;
 /**
  *计划方式: 日计划、弹性计划
  */
-let DAILY_PLAN= 1;
-let FLEX_PLAN= 2;
+let DAILY_PLAN = 1;
+let FLEX_PLAN = 2;
 
 Date.prototype.toJSON = function () {
     return this.format("yyyy-MM-dd hh:mm:ss");
 }
 
 
-function loadXMLDoc(xml_name){
+function loadXMLDoc(xml_name) {
     var xmlDoc;
     try {
         xmlDoc = new ActiveXObject("Microsoft.XMLDOM"); // Support IE
     }
-    catch(e) {
+    catch (e) {
         try {
             // Support Firefox, Mozilla, Opera, etc
-            xmlDoc = document.implementation.createDocument("", "", xml_name) ;// 创建一个空的 XML 文档对象。
-        } catch(e) {
+            xmlDoc = document.implementation.createDocument("", "", xml_name);// 创建一个空的 XML 文档对象。
+        } catch (e) {
             // alert(e.message);
         }
     }
     // 加载XML文档
-    try{
+    try {
         xmlDoc.async = false; // 关闭异步加载
         xmlDoc.load(xml_name);
-    }catch(e){
+    } catch (e) {
         // alert(e.message) 如果浏览器是Chrome，则会catch这个异常：Object # (a Document) has no method "load"，所以，以下实现支持chrome加载XML文档（只是粗略的写下）
         var xhr = new XMLHttpRequest();
         xhr.open("GET", xml_name, false);
@@ -96,21 +96,21 @@ function loadXMLDoc(xml_name){
 }
 
 function addCommandsForToolBox(docXML, command, type) {
-    if(docXML == null) return docXML;
+    if (docXML == null) return docXML;
     var found = false;
-    for(var i=0; i< docXML.childNodes.length && !found; i++) {
-        if(docXML.childNodes[i].childNodes.length > 0) {
-            for(var j=0; j< docXML.childNodes[i].childNodes.length; j++) {
+    for (var i = 0; i < docXML.childNodes.length && !found; i++) {
+        if (docXML.childNodes[i].childNodes.length > 0) {
+            for (var j = 0; j < docXML.childNodes[i].childNodes.length; j++) {
 
                 //添加到高级控制
-                if(type == EXPERT && docXML.childNodes[i].childNodes[j].className == "expert_control") {
+                if (type == EXPERT && docXML.childNodes[i].childNodes[j].className == "expert_control") {
                     var element = document.createElement("block");
                     element.setAttribute("type", command);
                     docXML.childNodes[i].childNodes[j].appendChild(element);
                     found = true;
                 }
                 //添加到基本控制
-                if(type == NORMAL && docXML.childNodes[i].childNodes[j].className == "normal_control") {
+                if (type == NORMAL && docXML.childNodes[i].childNodes[j].className == "normal_control") {
                     var element = document.createElement("block");
                     element.setAttribute("type", command);
                     docXML.childNodes[i].childNodes[j].appendChild(element);
@@ -118,7 +118,7 @@ function addCommandsForToolBox(docXML, command, type) {
                 }
 
                 //添加到class控制
-                if(type == CLASS && docXML.childNodes[i].childNodes[j].className == "class_control") {
+                if (type == CLASS && docXML.childNodes[i].childNodes[j].className == "class_control") {
                     var element = document.createElement("block");
                     element.setAttribute("type", command);
                     docXML.childNodes[i].childNodes[j].appendChild(element);
@@ -131,8 +131,8 @@ function addCommandsForToolBox(docXML, command, type) {
 }
 
 
-String.prototype.replaceAll = function(s1,s2){
-    return this.replace(new RegExp(s1,"gm"),s2);
+String.prototype.replaceAll = function (s1, s2) {
+    return this.replace(new RegExp(s1, "gm"), s2);
 }
 
 Array.prototype.getMaxValue = function () {
@@ -161,6 +161,20 @@ Array.prototype.getMinValue = function () {
         return a - b;
     });
     return this[0];
+}
+
+function objValueIsEmpty(obj) {
+    for (var key in obj) {
+        if (typeof(obj[key]) == 'object') {
+            return objValueIsEmpty(obj[key]);
+        }
+        if (typeof(obj[key]) == 'string') {
+            if (isStringEmpty(obj[key])) {
+                return key;
+            }
+        }
+    }
+    return "";
 }
 
 function isNull(obj) {
