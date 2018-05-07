@@ -325,16 +325,1247 @@ const CountryList =
     [
         {
             value: 0,
-            text: "中国"
+            en: "China",
+            cn: "中国"
+
         },
         {
             value: 1,
-            text: "巴基斯坦"
+            en: "Andorra",
+            cn: "安道尔共和国"
         },
         {
             value: 2,
-            text: "印度"
-        }
+            en: "United Arab Emirates",
+            cn: "阿拉伯联合酋长国"
+        },
+        {
+            value: 3,
+            en: "Afghanistan",
+            cn: "阿富汗"
+        },
+        {
+            value: 4,
+            en: "Antigua and Barbuda",
+            cn: "安提瓜和巴布达"
+        },
+        {
+            value: 5,
+            en: "Anguilla",
+            cn: "安圭拉岛"
+        },
+        {
+            value: 6,
+            en: "Albania",
+            cn: "阿尔巴尼亚"
+        },
+        {
+            value: 7,
+            en: "Armenia",
+            cn: "亚美尼亚"
+        },
+        {
+            value: 8,
+            en: "Angola",
+            cn: "安哥拉"
+        },
+        {
+            value: 9,
+            en: "Argentina",
+            cn: "阿根廷"
+        },
+        {
+            value: 10,
+            en: "Austria",
+            cn: "奥地利"
+        },
+        {
+            value: 11,
+            en: "Australia",
+            cn: "澳大利亚"
+        },
+        {
+            value: 12,
+            en: "Azerbaijan",
+            cn: "阿塞拜疆"
+        },
+        {
+            value: 13,
+            en: "Barbados",
+            cn: "巴巴多斯"
+        },
+        {
+            value: 14,
+            en: "Bangladesh",
+            cn: "孟加拉国"
+        },
+        {
+            value: 15,
+            en: "Belgium",
+            cn: "比利时"
+        },
+        {
+            value: 16,
+            en: "Burkina-faso",
+            cn: "布基纳法索"
+        },
+        {
+            value: 17,
+            en: "Bulgaria",
+            cn: "保加利亚"
+        },
+        {
+            value: 18,
+            en: "Bahrain",
+            cn: "巴林"
+        },
+        {
+            value: 19,
+            en: "Burundi",
+            cn: "布隆迪"
+        },
+        {
+            value: 20,
+            en: "Benin",
+            cn: "贝宁"
+        },
+        {
+            value: 21,
+            en: "Palestine",
+            cn: "巴勒斯坦"
+        },
+        {
+            value: 22,
+            en: "Bermuda Is.",
+            cn: "百慕大群岛"
+        },
+        {
+            value: 23,
+            en: "Brunei",
+            cn: "文莱"
+        },
+        {
+            value: 24,
+            en: "Bolivia",
+            cn: "玻利维亚"
+        },
+        {
+            value: 25,
+            en: "Brazil",
+            cn: "巴西"
+        },
+        {
+            value: 26,
+            en: "Bahamas",
+            cn: "巴哈马"
+        },
+        {
+            value: 27,
+            en: "Botswana",
+            cn: "博茨瓦纳"
+        },
+        {
+            value: 28,
+            en: "Belarus",
+            cn: "白俄罗斯"
+        },
+        {
+            value: 29,
+            en: "Belize",
+            cn: "伯利兹"
+        },
+        {
+            value: 30,
+            en: "Canada",
+            cn: "加拿大"
+        },
+        {
+            value: 31,
+            en: "Central African Republic",
+            cn: "中非共和国"
+        },
+        {
+            value: 32,
+            en: "Congo",
+            cn: "刚果"
+        },
+        {
+            value: 33,
+            en: "Switzerland",
+            cn: "瑞士"
+        },
+        {
+            value: 34,
+            en: "Cook Is.",
+            cn: "库克群岛"
+        },
+        {
+            value: 35,
+            en: "Chile",
+            cn: "智利"
+        },
+        {
+            value: 36,
+            en: "Cameroon",
+            cn: "喀麦隆"
+        },
+        {
+            value: 37,
+            en: "Colombia",
+            cn: "哥伦比亚"
+        },
+        {
+            value: 38,
+            en: "Costa Rica",
+            cn: "哥斯达黎加"
+        },
+        {
+            value: 39,
+            en: "Czech",
+            cn: "捷克"
+        },
+        {
+            value: 40,
+            en: "Cuba",
+            cn: "古巴"
+        },
+        {
+            value: 41,
+            en: "Cyprus",
+            cn: "塞浦路斯"
+        },
+        {
+            value: 42,
+            en: "Czech Republic",
+            cn: "捷克"
+        },
+        {
+            value: 43,
+            en: "Germany",
+            cn: "德国"
+        },
+        {
+            value: 44,
+            en: "Djibouti",
+            cn: "吉布提"
+        },
+        {
+            value: 45,
+            en: "Denmark",
+            cn: "丹麦"
+        },
+        {
+            value: 46,
+            en: "Dominica Rep.",
+            cn: "多米尼加共和国"
+        },
+        {
+            value: 47,
+            en: "Algeria",
+            cn: "阿尔及利亚"
+        },
+        {
+            value: 48,
+            en: "Costa Rica",
+            cn: "厄瓜多尔"
+        },
+        {
+            value: 49,
+            en: "Estonia",
+            cn: "爱沙尼亚"
+        },
+        {
+            value: 50,
+            en: "Egypt",
+            cn: "埃及"
+        },
+        {
+            value: 51,
+            en: "Spain",
+            cn: "西班牙"
+        },
+        {
+            value: 52,
+            en: "Ethiopia",
+            cn: "埃塞俄比亚"
+        },
+        {
+            value: 53,
+            en: "Finland",
+            cn: "芬兰"
+        },
+        {
+            value: 54,
+            en: "Fiji",
+            cn: "斐济"
+        },
+        {
+            value: 55,
+            en: "France",
+            cn: "法国"
+        },
+        {
+            value: 56,
+            en: "Gabon",
+            cn: "加蓬"
+        },
+        {
+            value: 57,
+            en: "United Kiongdom",
+            cn: "英国"
+        },
+        {
+            value: 58,
+            en: "Grenada",
+            cn: "格林纳达"
+        },
+        {
+            value: 59,
+            en: "Georgia",
+            cn: "格鲁吉亚"
+        },
+        {
+            value: 60,
+            en: "French Guiana",
+            cn: "法属圭亚那"
+        },
+        {
+            value: 61,
+            en: "Ghana",
+            cn: "加纳"
+        },
+        {
+            value: 62,
+            en: "Gibraltar",
+            cn: "直布罗陀"
+        },
+        {
+            value: 63,
+            en: "Gambia",
+            cn: "冈比亚"
+        },
+        {
+            value: 64,
+            en: "Guinea",
+            cn: "几内亚"
+        },
+        {
+            value: 65,
+            en: "Greece",
+            cn: "希腊"
+        },
+        {
+            value: 66,
+            en: "Guatemala",
+            cn: "危地马拉"
+        },
+        {
+            value: 67,
+            en: "Guam",
+            cn: "关岛"
+        },
+        {
+            value: 68,
+            en: "Guyana",
+            cn: "圭亚那"
+        },
+        {
+            value: 69,
+            en: "Hongkong",
+            cn: "香港特别行政区"
+        },
+        {
+            value: 70,
+            en: "Honduras",
+            cn: "洪都拉斯"
+        },
+        {
+            value: 71,
+            en: "Haiti",
+            cn: "海地"
+        },
+        {
+            value: 72,
+            en: "Hungary",
+            cn: "匈牙利"
+        },
+        {
+            value: 73,
+            en: "Indonesia",
+            cn: "印度尼西亚"
+        },
+        {
+            value: 74,
+            en: "Ireland",
+            cn: "爱尔兰"
+        },
+        {
+            value: 75,
+            en: "India",
+            cn: "印度"
+        },
+        {
+            value: 76,
+            en: "Iraq",
+            cn: "伊拉克"
+        },
+        {
+            value: 77,
+            en: "Iran",
+            cn: "伊朗"
+        },
+        {
+            value: 78,
+            en: "Iceland",
+            cn: "冰岛"
+        },
+        {
+            value: 79,
+            en: "Jamaica",
+            cn: "牙买加"
+        },
+        {
+            value: 80,
+            en: "Jordan",
+            cn: "约旦"
+        },
+        {
+            value: 81,
+            en: "Japan",
+            cn: "日本"
+        },
+        {
+            value: 82,
+            en: "Kenya",
+            cn: "肯尼亚"
+        },
+        {
+            value: 83,
+            en: "Kyrgyzstan",
+            cn: "吉尔吉斯坦"
+        },
+        {
+            value: 84,
+            en: "Kampuchea (Cambodia)",
+            cn: "柬埔寨"
+        },
+        {
+            value: 85,
+            en: "North Korea",
+            cn: "朝鲜"
+        },
+        {
+            value: 86,
+            en: "Korea",
+            cn: "韩国"
+        },
+        {
+            value: 87,
+            en: "Republic of Ivory Coast",
+            cn: "科特迪瓦共和国"
+        },
+        {
+            value: 88,
+            en: "Kuwait",
+            cn: "科威特"
+        },
+        {
+            value: 89,
+            en: "Kazakstan",
+            cn: "哈萨克斯坦"
+        },
+        {
+            value: 90,
+            en: "Laos",
+            cn: "老挝"
+        },
+        {
+            value: 91,
+            en: "Lebanon",
+            cn: "黎巴嫩"
+        },
+        {
+            value: 92,
+            en: "St.Lucia",
+            cn: "圣卢西亚"
+        },
+        {
+            value: 93,
+            en: "Liechtenstein",
+            cn: "列支敦士登"
+        },
+        {
+            value: 94,
+            en: "Sri Lanka",
+            cn: "斯里兰卡"
+        },
+        {
+            value: 95,
+            en: "Lesotho",
+            cn: "利比里亚"
+        },
+        {
+            value: 96,
+            en: "Korea",
+            cn: "莱索托"
+        },
+        {
+            value: 97,
+            en: "Lithuania",
+            cn: "立陶宛"
+        },
+        {
+            value: 98,
+            en: "Luxembourg",
+            cn: "卢森堡"
+        },
+        {
+            value: 99,
+            en: "Latvia",
+            cn: "拉脱维亚"
+        },
+        {
+            value: 100,
+            en: "Libya",
+            cn: "利比亚"
+        },
+        {
+            value: 101,
+            en: "Morocco",
+            cn: "摩洛哥"
+        },
+        {
+            value: 102,
+            en: "Monaco",
+            cn: "摩纳哥"
+        },
+        {
+            value: 103,
+            en: "Moldova, Republic of",
+            cn: "摩尔多瓦"
+        },
+        {
+            value: 104,
+            en: "Madagascar",
+            cn: "马达加斯加"
+        },
+        {
+            value: 105,
+            en: "Mali",
+            cn: "马里"
+        },
+        {
+            value: 106,
+            en: "Burma",
+            cn: "缅甸"
+        },
+        {
+            value: 107,
+            en: "Mongolia",
+            cn: "蒙古"
+        },
+        {
+            value: 108,
+            en: "Macao",
+            cn: "澳门"
+        },
+        {
+            value: 109,
+            en: "Montserrat Is",
+            cn: "蒙特塞拉特岛"
+        },
+        {
+
+            value: 110,
+
+            en: "Malta",
+
+            cn: "马耳他"
+
+        },
+
+        {
+
+            value: 111,
+
+            en: "Mauritius",
+
+            cn: "毛里求斯"
+
+        },
+
+        {
+
+            value: 112,
+
+            en: "Maldives",
+
+            cn: "马尔代夫"
+
+        },
+
+        {
+
+            value: 113,
+
+            en: "Malawi",
+
+            cn: "马拉维"
+
+        },
+
+        {
+
+            value: 114,
+
+            en: "Mexico",
+
+            cn: "墨西哥"
+
+        },
+
+        {
+
+            value: 115,
+
+            en: "Malaysia",
+
+            cn: "马来西亚"
+
+        },
+
+        {
+
+            value: 116,
+
+            en: "Mozambique",
+
+            cn: "莫桑比克"
+
+        },
+
+        {
+
+            value: 117,
+
+            en: "Namibia",
+
+            cn: "纳米比亚"
+
+        },
+
+        {
+
+            value: 118,
+
+            en: "Niger",
+
+            cn: "尼日尔"
+
+        },
+
+        {
+
+            value: 119,
+
+            en: "Nigeria",
+
+            cn: "尼日利亚"
+
+        },
+
+        {
+
+            value: 120,
+
+            en: "Nicaragua",
+
+            cn: "尼加拉瓜"
+
+        },
+
+        {
+
+            value: 121,
+
+            en: "Netherlands",
+
+            cn: "荷兰"
+
+        },
+
+        {
+
+            value: 122,
+
+            en: "Norway",
+
+            cn: "挪威"
+
+        },
+
+        {
+
+            value: 123,
+
+            en: "Nepal",
+
+            cn: "尼泊尔"
+
+        },
+
+        {
+
+            value: 124,
+
+            en: "Nauru",
+
+            cn: "瑙鲁"
+
+        },
+
+        {
+
+            value: 125,
+
+            en: "New Zealand",
+
+            cn: "新西兰"
+
+        },
+
+        {
+
+            value: 126,
+
+            en: "Oman",
+
+            cn: "阿曼"
+
+        },
+
+        {
+
+            value: 127,
+
+            en: "Panama",
+
+            cn: "巴拿马"
+
+        },
+
+        {
+
+            value: 128,
+
+            en: "Peru",
+
+            cn: "秘鲁"
+
+        },
+
+        {
+
+            value: 129,
+
+            en: "French Polynesia",
+
+            cn: "法属玻利尼西亚"
+
+        },
+
+        {
+
+            value: 130,
+
+            en: "Papua New Cuinea",
+
+            cn: "巴布亚新几内亚"
+
+        },
+
+        {
+
+            value: 131,
+
+            en: "Philippines",
+
+            cn: "菲律宾"
+
+        },
+
+        {
+
+            value: 132,
+
+            en: "Pakistan",
+
+            cn: "巴基斯坦"
+
+        },
+
+        {
+
+            value: 133,
+
+            en: "Poland",
+
+            cn: "波兰"
+
+        },
+
+        {
+
+            value: 134,
+
+            en: "Puerto Rico",
+
+            cn: "波多黎各"
+
+        },
+
+        {
+
+            value: 135,
+
+            en: "Portugal",
+
+            cn: "葡萄牙"
+
+        },
+
+        {
+
+            value: 136,
+
+            en: "Paraguay",
+
+            cn: "巴拉圭"
+
+        },
+
+        {
+
+            value: 137,
+
+            en: "Qatar",
+
+            cn: "卡塔尔"
+
+        },
+
+        {
+
+            value: 138,
+
+            en: "Romania",
+
+            cn: "罗马尼亚"
+
+        },
+
+        {
+
+            value: 139,
+
+            en: "Russia",
+
+            cn: "俄罗斯"
+
+        },
+
+        {
+
+            value: 140,
+
+            en: "Saudi Arabia",
+
+            cn: "沙特阿拉伯"
+
+        },
+
+        {
+
+            value: 141,
+
+            en: "Solomon Is",
+
+            cn: "所罗门群岛"
+
+        },
+
+        {
+
+            value: 142,
+
+            en: "Seychelles",
+
+            cn: "塞舌尔"
+
+        },
+
+        {
+
+            value: 143,
+
+            en: "Sudan",
+
+            cn: "苏丹"
+
+        },
+
+        {
+
+            value: 144,
+
+            en: "Sweden",
+
+            cn: "瑞典"
+
+        },
+
+        {
+
+            value: 145,
+
+            en: "Singapore",
+
+            cn: "新加坡"
+
+        },
+
+        {
+
+            value: 146,
+
+            en: "Slovenia",
+
+            cn: "斯洛文尼亚"
+
+        },
+
+        {
+
+            value: 147,
+
+            en: "Slovakia",
+
+            cn: "斯洛伐克"
+
+        },
+
+        {
+
+            value: 148,
+
+            en: "Sierra Leone",
+
+            cn: "塞拉利昂"
+
+        },
+
+        {
+
+            value: 149,
+
+            en: "San Marino",
+
+            cn: "圣马力诺"
+
+        },
+
+        {
+
+            value: 150,
+
+            en: "Senegal",
+
+            cn: "塞内加尔"
+
+        },
+
+        {
+
+            value: 151,
+
+            en: "Somali",
+
+            cn: "索马里"
+
+        },
+
+        {
+
+            value: 152,
+
+            en: "Suriname",
+
+            cn: "苏里南"
+
+        },
+
+        {
+
+            value: 153,
+
+            en: "Sao Tome and Principe",
+
+            cn: "圣多美和普林西比"
+
+        },
+
+        {
+
+            value: 154,
+
+            en: "EI Salvador",
+
+            cn: "萨尔瓦多"
+
+        },
+
+        {
+
+            value: 155,
+
+            en: "Syria",
+
+            cn: "叙利亚"
+
+        },
+
+        {
+
+            value: 156,
+
+            en: "Swaziland",
+
+            cn: "斯威士兰"
+
+        },
+
+        {
+
+            value: 157,
+
+            en: "Chad",
+
+            cn: "乍得"
+
+        },
+
+        {
+
+            value: 158,
+
+            en: "Togo",
+
+            cn: "多哥"
+
+        },
+
+        {
+
+            value: 159,
+
+            en: "Thailand",
+
+            cn: "泰国"
+
+        },
+
+        {
+
+            value: 160,
+
+            en: "Tajikstan",
+
+            cn: "塔吉克斯坦"
+
+        },
+
+        {
+
+            value: 161,
+
+            en: "Turkmenistan",
+
+            cn: "土库曼斯坦"
+
+        },
+
+        {
+
+            value: 162,
+
+            en: "Tunisia",
+
+            cn: "突尼斯"
+
+        },
+
+        {
+
+            value: 163,
+
+            en: "Tonga",
+
+            cn: "汤加"
+
+        },
+
+        {
+
+            value: 164,
+
+            en: "Turkey",
+
+            cn: "土耳其"
+
+        },
+
+        {
+
+            value: 165,
+
+            en: "Trinidad and Tobago",
+
+            cn: "特立尼达和多巴哥"
+
+        },
+
+        {
+
+            value: 166,
+
+            en: "Taiwan",
+
+            cn: "台湾省"
+
+        },
+
+        {
+
+            value: 167,
+
+            en: "Tanzania",
+
+            cn: "坦桑尼亚"
+
+        },
+
+        {
+
+            value: 168,
+
+            en: "Ukraine",
+
+            cn: "乌克兰"
+
+        },
+
+        {
+
+            value: 169,
+
+            en: "Uganda",
+
+            cn: "乌干达"
+
+        },
+
+        {
+
+            value: 170,
+
+            en: "United States of America",
+
+            cn: "美国"
+
+        },
+
+        {
+
+            value: 171,
+
+            en: "Uruguay",
+
+            cn: "乌拉圭"
+
+        },
+
+        {
+
+            value: 172,
+
+            en: "Uzbekistan",
+
+            cn: "乌兹别克斯坦"
+
+        },
+
+        {
+
+            value: 173,
+
+            en: "Saint Vincent",
+
+            cn: "圣文森特岛"
+
+        },
+
+        {
+
+            value: 174,
+
+            en: "Venezuela",
+
+            cn: "委内瑞拉"
+
+        },
+
+        {
+
+            value: 175,
+
+            en: "Vietnam",
+
+            cn: "越南"
+
+        },
+
+        {
+            value: 176,
+            en: "Yemen",
+            cn: "也门"
+        },
+
+        {
+            value: 177,
+            en: "Yugoslavia",
+            cn: "南斯拉夫"
+        },
+
+        {
+            value: 178,
+            en: "South Africa",
+            cn: "南非"
+        },
+        {
+            value: 179,
+            en: "Zambia",
+            cn: "赞比亚"
+        },
+        {
+            value: 180,
+            en: "Zaire",
+            cn: "扎伊尔"
+        },
+        {
+            value: 181,
+            en: "Zimbabwe ",
+            cn: "津巴布韦"
+        },
     ];
 //币种
 const CurrencyTypeList =

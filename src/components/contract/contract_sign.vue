@@ -442,13 +442,17 @@
                                                                     style="width: 100%"
                                                                     v-model="item.machineOrder.country"
                                                                     clearable
+                                                                    filterable
+                                                                    :filter-method="filterCountry"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     placeholder="请选择">
                                                                 <el-option
-                                                                        v-for="item in countryList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
+                                                                        v-for="item in countryListTmp"
+                                                                        :key="item.value"
+                                                                        :label="item.cn"
+                                                                        :value="item.cn">
+                                                                    <span style="float: left">{{ item.cn }}</span>
+                                                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.en }}</span>
                                                                 </el-option>
                                                             </el-select>
                                                         </el-form-item>
@@ -1942,6 +1946,7 @@
                 maintainTypeList: MaintainTypeList,
                 orderStatusList: OrderStatusList,
                 countryList: CountryList,
+                countryListTmp: CountryList,
                 allMachineType: [],
                 pcModeList: PCModeList,
                 pcLanguageList: LanguageList,
@@ -2617,7 +2622,15 @@
             formatDate(timeStamp) {
                 return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
             },
-
+            filterCountry(value) {
+                if(value != null && value != "") {
+                    this.countryListTmp = _this.countryList.filter(item => {
+                        return item.cn.toLowerCase().indexOf(value.toLowerCase()) > -1 || item.en.toLowerCase().indexOf(value.toLowerCase()) > -1;
+                    });
+                } else {
+                    this.countryListTmp = copyObjectByJSON( _this.countryList);
+                }
+            },
             filterContractStatus(value) {
                 let result = "";
                 for (let i = 0; i < _this.orderStatusList.length; i++) {
