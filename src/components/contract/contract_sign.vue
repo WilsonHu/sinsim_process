@@ -1198,7 +1198,7 @@
                                                                              v-model="item.orderDetail.driverHorizonNum"
                                                                              :step="1"
                                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                             min="0"
+                                                                             :min="0"
                                                                              controls-position="right">
                                                             </el-input-number>
                                                         </el-form-item>
@@ -1209,7 +1209,7 @@
                                                             <el-input-number style="float: left"
                                                                              v-model="item.orderDetail.driverVerticalNum"
                                                                              :step="1"
-                                                                             min="0"
+                                                                             :min="0"
                                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              controls-position="right">
                                                             </el-input-number>
@@ -1912,7 +1912,9 @@
         specialTowelHaxle: "",
         specialTowelMotor: "",
         specialTapingHead: "",
-        specialTowelNeedle: ""
+        specialTowelNeedle: "",
+        driverHorizonNum: 0,
+        driverVerticalNum:0
     };
     export default {
         name: "contract_sign",
@@ -2040,7 +2042,7 @@
                             status: ORDER_INITIAL,
                             createUserId: JSON.parse(sessionStorage.getItem("user")).id
                         },
-                        orderDetail: DefaultOrderDetail,
+                        orderDetail: copyObjectByJSON(DefaultOrderDetail),
                         //每个需求单中的签核记录
                         orderSign: {}
                     }
@@ -2112,7 +2114,7 @@
                         status: ORDER_INITIAL,
                         createUserId: JSON.parse(sessionStorage.getItem("user")).id
                     },
-                    orderDetail: DefaultOrderDetail,
+                    orderDetail: copyObjectByJSON(DefaultOrderDetail),
                 },
 
                 currentSelectOrder: {},
@@ -2930,10 +2932,8 @@
                 this.addContractVisible = true;
                 this.editContract = "";
                 _this.contractForm.recordUser = _this.userInfo.account;
-                _this.requisitionForms[0].orderSign.signContent =
-                        _this.normalOrderSignArray;
-                _this.contractSignForms[0].contractSignData =
-                        _this.normalContractSignArray;
+                _this.requisitionForms[0].orderSign.signContent = _this.normalOrderSignArray;
+                _this.contractSignForms[0].contractSignData = _this.normalContractSignArray;
             },
 
             handleSign(index, item) {
