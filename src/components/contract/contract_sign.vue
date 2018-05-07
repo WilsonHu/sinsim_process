@@ -3167,7 +3167,7 @@
                     iserror = true;
                     this.errorMsg = "请选择跳跃方式";
                 }
-                if (!iserror && isStringEmpty(formObj.axleUpperThread)) {
+                if (!iserror && isStringEmpty(formObj.orderDetail.axleUpperThread)) {
                     iserror = true;
                     this.errorMsg = "请选择面线夹持";
                 }
@@ -3217,7 +3217,6 @@
                     iserror = true;
                     this.errorMsg = "请选择 绷架";
                 }
-
                 return iserror;
             },
 

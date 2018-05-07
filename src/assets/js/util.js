@@ -241,9 +241,11 @@ function isInteger(obj) {
 }
 
 function isStringEmpty(data) {
-
     if (data == null)
         return true;
+    if (typeof(data) == "number") {
+        data = data.toString();
+    }
     return data.replace(/(^s*)|(s*$)/g, "").length == 0;
 }
 
