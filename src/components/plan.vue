@@ -219,6 +219,19 @@
                         </template>
 
                     </el-table-column>
+                    <el-table-column
+                            align="center"
+                            label="操作" width="100">
+                        <template scope="scope">
+                            <el-button
+                                    size="small"
+                                    type="danger"
+                                    v-show="scope.row.status == 1 || scope.row.status == 2"
+                                    icon="el-icon-delete"
+                                    @click="deletePlan(scope.row)">计划
+                            </el-button>
+                        </template>
+                    </el-table-column>
                 </el-table>
                 <div class="block" style="text-align: center; margin-top: 20px">
                     <el-pagination
@@ -722,6 +735,28 @@
                         showMessage(_this, data.message, 0);
                     }
                 })
+            },
+            deletePlan(data) {
+                if(data != null && data.taskPlan.id > 0) {
+                    $.ajax({
+                        url: HOST + "task/plan/deletePlan",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {id:data.taskPlan.id, taskRecordId:data.id},
+                        success: function (data) {
+                            if (data.code == 200) {
+                                _this.onSearchPlanedData();
+                                _this.onSearchPlanningData();
+                                showMessage(_this, "删除计划成功！", 1);
+                            } else {
+                                showMessage(_this, "删除计划失败！", 0);
+                            }
+                        },
+                        error: function (data) {
+                            showMessage(_this, data.message, 0);
+                        }
+                    })
+                }
             },
             generateTasks() {
                 const data = [];
