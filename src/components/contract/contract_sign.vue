@@ -860,19 +860,24 @@
                                                     <el-col :span="6">
                                                         <el-form-item label="机针：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'axleNeedle', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.axleNeedle"
-                                                                           clearable
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in axleNeedleList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
+                                                            <el-input v-model="item.orderDetail.axleNeedle"
+                                                                      style="width: 100%;"
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            >
+                                                            </el-input>
+                                                            <!--<template scope="scope">-->
+                                                            <!--<el-select v-model="item.orderDetail.axleNeedle"-->
+                                                            <!--clearable-->
+                                                            <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                                            <!--placeholder="请选择">-->
+                                                            <!--<el-option-->
+                                                            <!--v-for="item in axleNeedleList"-->
+                                                            <!--:key="item.text"-->
+                                                            <!--:label="item.text"-->
+                                                            <!--:value="item.text">-->
+                                                            <!--</el-option>-->
+                                                            <!--</el-select>-->
+                                                            <!--</template>-->
                                                         </el-form-item>
                                                     </el-col>
                                                     <el-col :span="6">
@@ -884,7 +889,7 @@
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
-                                                                            v-for="item in axleNeedleTypeList"
+                                                                            v-for="item in axleNeedleList"
                                                                             :key="item.text"
                                                                             :label="item.text"
                                                                             :value="item.text">
@@ -1914,7 +1919,7 @@
         specialTapingHead: "",
         specialTowelNeedle: "",
         driverHorizonNum: 0,
-        driverVerticalNum:0
+        driverVerticalNum: 0
     };
     export default {
         name: "contract_sign",
@@ -2625,12 +2630,12 @@
                 return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
             },
             filterCountry(value) {
-                if(value != null && value != "") {
+                if (value != null && value != "") {
                     this.countryListTmp = _this.countryList.filter(item => {
                         return item.cn.toLowerCase().indexOf(value.toLowerCase()) > -1 || item.en.toLowerCase().indexOf(value.toLowerCase()) > -1;
                     });
                 } else {
-                    this.countryListTmp = copyObjectByJSON( _this.countryList);
+                    this.countryListTmp = copyObjectByJSON(_this.countryList);
                 }
             },
             filterContractStatus(value) {
@@ -4134,6 +4139,18 @@
 
     .divOrderStatusUnChecked {
         color: red;
+    }
+
+    .el-input {
+        width: 100%;
+    }
+
+    .el-select {
+        width: 100%;
+    }
+
+    .el-input-number{
+        width: 100%;
     }
 
     .my-autocomplete {
