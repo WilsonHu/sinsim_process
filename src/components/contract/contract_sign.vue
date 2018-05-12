@@ -246,7 +246,7 @@
         <el-dialog :visible.sync="addContractVisible" fullscreen @close="dialogCloseCallback()">
             <el-row type="flex" class="row-bg" justify="center">
                 <el-col :span="24">
-                    <div style="text-align: center; font-weight: bold; font-size: 20px; font-weight:bold;padding-bottom: 20px">
+                    <div style="text-align: center; font-weight: bold; font-size: 28px; font-family: 'Microsoft YaHei UI';padding-bottom: 20px">
                         {{dialogTitle}}
                     </div>
                     <el-form class="panel-body">
@@ -310,6 +310,265 @@
                             </el-button>
                         </el-col>
                     </el-form>
+
+                    <el-card class="box-card" style="margin: 25px">
+                        <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 10px;margin-top: 20px">
+                            合同概要信息
+                        </div>
+                        <el-table
+                                v-if="isFinanceVisible()"
+                                border
+                                :data="requisitionForms|filterContractInfo"
+                                :row-class-name="tableRowDisabledClassName">
+                            <el-table-column
+                                    align="center"
+                                    width="150"
+                                    label="订单名">
+                                <template scope="scope">
+                                    <span>{{scope.row.title}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    width="150"
+                                    prop="machineName"
+                                    label="机器">
+                                <!--<template scope="scope">-->
+                                    <!--<span>{{scope.row.machineOrder.machineType | filterMachineTypeName}}</span>-->
+                                <!--</template>-->
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    width="200"
+                                    label="机器信息">
+                                <template slot-scope="scope">
+                                    <span v-html="scope.row.machineInfo"></span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    width="50px"
+                                    prop="machineNum"
+                                    label="数量">
+                                <template slot-scope="scope">
+                                    <span> {{scope.row.machineNum}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="machinePrice"
+                                    width="100px"
+                                    label="单价">
+                                <template slot-scope="scope">
+                                    <span> {{scope.row.machinePrice}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="machinePrice"
+                                    width="100px"
+                                    label="总价">
+                                <template slot-scope="scope">
+                                    <span> {{scope.row.machinePrice*scope.row.machineNum}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    label="装置">
+                                <template slot-scope="item">
+                                    <el-table border
+                                              :data="item.row.machineOrder.equipment">
+                                        <el-table-column
+                                                label="装置名称"
+                                                align="center">
+                                            <template slot-scope="scope">
+                                               <span>{{scope.row.name}}</span>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="数量"
+                                                align="center">
+                                            <template slot-scope="scope">
+                                               <span>{{scope.row.number}}</span>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="单价"
+                                                align="center"
+                                                v-if="isFinanceVisible()">
+                                            <template slot-scope="scope">
+                                                <span>{{scope.row.price}}</span>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="总价"
+                                                align="center"
+                                                v-if="isFinanceVisible()">
+                                            <template slot-scope="scope">
+                                                <span>{{scope.row.price*scope.row.number}}</span>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                    <!--<span> {{caculateOrderEquipmentPrice(scope.row.machineOrder)}}</span>-->
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    width="100px"
+                                    label="总价">
+                                <template slot-scope="scope">
+                                    <span style="font-size: larger; font-weight: bold;color: #409EFF">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+
+                        <el-row style="margin-top: 10px" v-if="isFinanceVisible()">
+                            <el-col :span="2" :offset="18" style="font-size: 16px;font-weight: bold">总价：</el-col>
+                            <el-col :span="2" :offset="1" style="font-size: 18px;font-weight: bold; color: #409EFF">
+                                {{calculateTotalPrice()}}
+                            </el-col>
+                        </el-row>
+                        <br/>
+                        <br/>
+                        <el-form style="margin-top: 10px">
+                            <el-row>
+                                <el-col :span="6">
+                                    <el-form-item label="付款方式：" :label-width="formLabelWidth">
+                                        <el-input
+                                                placeholder="付款方式"
+                                                :readonly="changeContractContentDisable(contractForm)"
+                                                v-model="contractForm.payMethod">
+                                        </el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="付款币种：" :label-width="formLabelWidth">
+                                        <el-select v-model="contractForm.currencyType"
+                                                   :readonly="changeContractContentDisable(contractForm)"
+                                                   clearable>
+                                            <el-option
+                                                    v-for="item in currencyTypeList"
+                                                    v-bind:value="item.text"
+                                                    v-bind:label="item.text">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4" :offset="1">
+                                    <el-form-item label="合同交货日期：" :label-width="longFormLabelWidth">
+                                        <el-date-picker
+                                                type="date"
+                                                placeholder="合同交货日期"
+                                                :readonly="changeContractContentDisable(contractForm)"
+                                                v-model="contractForm.contractShipDate">
+                                        </el-date-picker>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="24">
+                                    <el-form-item label="备注信息：" :label-width="formLabelWidth">
+                                        <el-input
+                                                type="textarea"
+                                                :autosize="{ minRows: 3, maxRows: 6}"
+                                                :readonly="changeContractContentDisable(contractForm)"
+                                                v-model="contractForm.mark">
+                                        </el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                        </el-form>
+                        <!--
+                         <el-tabs v-model="editableContractTabsValue"
+                                  type="border-card"
+                                  style="margin-top: 20px">
+                             <el-tab-pane
+                                     style="margin-left: 20px;margin-right: 20px"
+                                     v-for="(item, index) in contractSignForms"
+                                     :key="item.name"
+                                     :label="item.title"
+                                     :name="item.name">
+                                 <div style="text-align: left;margin-bottom: 10px">
+                                     <el-button style="text-align: right" type="success" round size="small"
+                                                icon="el-icon-view" @click="viewContractSignHistory">历史
+                                     </el-button>
+                                 </div>
+                                 <el-col :span="24">
+                                     <el-table
+                                             border
+                                             :row-class-name="tableRowClassName"
+                                             :data="item.contractSignData"
+                                             style="margin-bottom: 30px">
+                                         <el-table-column
+                                                 label="签核步骤"
+                                                 width="80">
+                                             <template scope="scope">
+                                                 <el-button style="font-size: 14px; font-weight: bold" type="primary"
+                                                            round size="mini">{{scope.row.number}}
+                                                 </el-button>
+                                             </template>
+                                         </el-table-column>
+                                         <el-table-column
+                                                 width="150"
+                                                 align="center"
+                                                 label="签核角色">
+                                             <template slot-scope="scope">
+                                                 <span style="font-size: 14px; font-weight: bold">{{scope.row.roleId | filterRole}}</span>
+                                             </template>
+                                         </el-table-column>
+                                         <el-table-column
+                                                 width="150"
+                                                 align="center"
+                                                 label="签核人">
+                                             <template slot-scope="scope">
+                                                 <span style="font-size: 14px; font-weight: bold">{{scope.row.user}}</span>
+                                             </template>
+                                         </el-table-column>
+                                         <el-table-column
+                                                 width="180"
+                                                 align="center"
+                                                 label="日期">
+                                             <template slot-scope="scope">
+                                                 <span> {{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}
+                                                 </span>
+                                             </template>
+                                         </el-table-column>
+                                         <el-table-column
+                                                 align="center"
+                                                 label="意见">
+                                             <template slot-scope="scope">
+                                                 <el-input
+                                                         :readonly="signDisable(scope.row.roleId)"
+                                                         type="textarea"
+                                                         v-model="scope.row.comment"
+                                                         auto-complete="off">
+                                                 </el-input>
+                                             </template>
+                                         </el-table-column>
+                                         <el-table-column
+                                                 label="操作"
+                                                 align="center"
+                                                 width="200">
+                                             <template scope="scope">
+                                                 <el-button type="primary" @click="onSubmitContractSign(scope.row, item)"
+                                                            icon="el-icon-check" size="small"
+                                                            :disabled="signDisable(scope.row.roleId)">同意
+                                                 </el-button>
+                                                 <el-button type="danger"
+                                                            @click="handleRejectContractSign(scope.row, item)"
+                                                            icon="el-icon-close" size="small"
+                                                            :disabled="signDisable(scope.row.roleId)">驳回
+                                                 </el-button>
+                                             </template>
+                                         </el-table-column>
+                                     </el-table>
+                                 </el-col>
+                             </el-tab-pane>
+                         </el-tabs>-->
+                    </el-card>
+
+
                     <el-collapse v-model="collapseActiveNames" @change="handleCollapseChange"
                                  style="margin-left: 25px;margin-right: 25px">
                         <el-collapse-item :title="collapseTitle" name="1">
@@ -1543,214 +1802,19 @@
                             <!--</el-alert >-->
                         </el-collapse-item>
                     </el-collapse>
-                    <el-card class="box-card" style="margin: 25px">
-                        <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 10px;margin-top: 20px">
-                            合同评审单
-                        </div>
-                        <el-table
-                                v-if="isFinanceVisible()"
-                                border
-                                :data="requisitionForms"
-                                :row-class-name="tableRowDisabledClassName">
-                            <el-table-column
-                                    align="center"
-                                    label="机器名称">
-                                <template scope="scope">
-                                    <span>{{scope.row.machineOrder.brand}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    label="机型">
-                                <template slot-scope="scope">
-                                    <span>{{scope.row.machineOrder.machineType | filterMachineTypeName}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="machineNum"
-                                    label="数量">
-                                <template slot-scope="scope">
-                                    <span> {{scope.row.machineOrder.machineNum}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="machinePrice"
-                                    label="单价">
-                                <template slot-scope="scope">
-                                    <span> {{scope.row.machineOrder.machinePrice}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="machineEquipmentPrice"
-                                    label="装置价格">
-                                <template slot-scope="scope">
-                                    <span> {{caculateOrderEquipmentPrice(scope.row.machineOrder)}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    label="总价">
-                                <template slot-scope="scope">
-                                    <span style="font-size: larger; font-weight: bold;color: #409EFF">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <el-row style="margin-top: 10px" v-if="isFinanceVisible()">
-                            <el-col :span="2" :offset="18" style="font-size: 16px;font-weight: bold">总价：</el-col>
-                            <el-col :span="2" :offset="1" style="font-size: 18px;font-weight: bold; color: #409EFF">
-                                {{calculateTotalPrice()}}
-                            </el-col>
-                        </el-row>
-                        <el-form style="margin-top: 10px">
-                            <el-row>
-                                <el-col :span="6">
-                                    <el-form-item label="付款方式：" :label-width="formLabelWidth">
-                                        <el-input
-                                                placeholder="付款方式"
-                                                :readonly="changeContractContentDisable(contractForm)"
-                                                v-model="contractForm.payMethod">
-                                        </el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6">
-                                    <el-form-item label="付款币种：" :label-width="formLabelWidth">
-                                        <el-select v-model="contractForm.currencyType"
-                                                   :readonly="changeContractContentDisable(contractForm)"
-                                                   clearable>
-                                            <el-option
-                                                    v-for="item in currencyTypeList"
-                                                    v-bind:value="item.text"
-                                                    v-bind:label="item.text">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="4" :offset="1">
-                                    <el-form-item label="合同交货日期：" :label-width="longFormLabelWidth">
-                                        <el-date-picker
-                                                type="date"
-                                                placeholder="合同交货日期"
-                                                :readonly="changeContractContentDisable(contractForm)"
-                                                v-model="contractForm.contractShipDate">
-                                        </el-date-picker>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                            <el-row>
-                                <el-col :span="24">
-                                    <el-form-item label="备注信息：" :label-width="formLabelWidth">
-                                        <el-input
-                                                type="textarea"
-                                                :autosize="{ minRows: 3, maxRows: 6}"
-                                                :readonly="changeContractContentDisable(contractForm)"
-                                                v-model="contractForm.mark">
-                                        </el-input>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                        </el-form>
-                        <el-tabs v-model="editableContractTabsValue"
-                                 type="border-card"
-                                 style="margin-top: 20px">
-                            <el-tab-pane
-                                    style="margin-left: 20px;margin-right: 20px"
-                                    v-for="(item, index) in contractSignForms"
-                                    :key="item.name"
-                                    :label="item.title"
-                                    :name="item.name">
-                                <div style="text-align: left;margin-bottom: 10px">
-                                    <el-button style="text-align: right" type="success" round size="small"
-                                               icon="el-icon-view" @click="viewContractSignHistory">历史
-                                    </el-button>
-                                </div>
-                                <el-col :span="24">
-                                    <el-table
-                                            border
-                                            :row-class-name="tableRowClassName"
-                                            :data="item.contractSignData"
-                                            style="margin-bottom: 30px">
-                                        <el-table-column
-                                                label="签核步骤"
-                                                width="80">
-                                            <template scope="scope">
-                                                <el-button style="font-size: 14px; font-weight: bold" type="primary"
-                                                           round size="mini">{{scope.row.number}}
-                                                </el-button>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column
-                                                width="150"
-                                                align="center"
-                                                label="签核角色">
-                                            <template slot-scope="scope">
-                                                <span style="font-size: 14px; font-weight: bold">{{scope.row.roleId | filterRole}}</span>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column
-                                                width="150"
-                                                align="center"
-                                                label="签核人">
-                                            <template slot-scope="scope">
-                                                <span style="font-size: 14px; font-weight: bold">{{scope.row.user}}</span>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column
-                                                width="180"
-                                                align="center"
-                                                label="日期">
-                                            <template slot-scope="scope">
-                                                <span> {{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}
-                                                </span>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column
-                                                align="center"
-                                                label="意见">
-                                            <template slot-scope="scope">
-                                                <el-input
-                                                        :readonly="signDisable(scope.row.roleId)"
-                                                        type="textarea"
-                                                        v-model="scope.row.comment"
-                                                        auto-complete="off">
-                                                </el-input>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column
-                                                label="操作"
-                                                align="center"
-                                                width="200">
-                                            <template scope="scope">
-                                                <el-button type="primary" @click="onSubmitContractSign(scope.row, item)"
-                                                           icon="el-icon-check" size="small"
-                                                           :disabled="signDisable(scope.row.roleId)">同意
-                                                </el-button>
-                                                <el-button type="danger"
-                                                           @click="handleRejectContractSign(scope.row, item)"
-                                                           icon="el-icon-close" size="small"
-                                                           :disabled="signDisable(scope.row.roleId)">驳回
-                                                </el-button>
-                                            </template>
-                                        </el-table-column>
-                                    </el-table>
-                                </el-col>
-                            </el-tab-pane>
-                        </el-tabs>
-                    </el-card>
+
                 </el-col>
             </el-row>
-            <div slot="footer" class="dialog-footer" style="margin-top: -20px; margin-right:8%">
-                <el-button @click="addContractVisible = false" icon="el-icon-back" type="danger">取 消</el-button>
-                <el-button v-if="mode == EDIT_MODE && haveInitialMachineOrder() || contractIsRejected()" type="primary"
+            <div slot="footer" class="dialog-footer" style="margin-top: -20px; margin-right:2%">
+                <el-button @click="addContractVisible = false" icon="el-icon-back" type="info">关 闭</el-button>
+                <el-button v-show="mode == EDIT_MODE && haveInitialMachineOrder() || contractIsRejected()" type="primary"
                            @click="onEdit" icon="el-icon-check">保 存
                 </el-button>
-                <el-button v-if="mode == CHANGE_MODE" type="primary" @click="onSaveChange" icon="el-icon-check">保存改单
+                <el-button v-show="mode == CHANGE_MODE" type="primary" @click="onSaveChange" icon="el-icon-check">保存改单
                 </el-button>
-                <el-button v-if="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check">保存拆单
+                <el-button v-show="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check">保存拆单
                 </el-button>
-                <el-button v-if="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">保 存</el-button>
+                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">保 存</el-button>
             </div>
             <el-dialog title="提示" :visible.sync="confirmPasteDialog" width="30%" append-to-body>
                 <span style="font-size: 15px">确定要粘贴到<b style="color: #F56C6C">{{currentSelectOrder.title}}</b>吗？</span>
@@ -2052,6 +2116,7 @@
                         orderSign: {}
                     }
                 ],
+
 
                 tabIndex: 1,
 
@@ -2631,9 +2696,7 @@
             },
             filterCountry(value) {
                 if (value != null && value != "") {
-                    this.countryListTmp = _this.countryList.filter(item => {
-                        return item.cn.toLowerCase().indexOf(value.toLowerCase()) > -1 || item.en.toLowerCase().indexOf(value.toLowerCase()) > -1;
-                    });
+                    this.countryListTmp = _this.countryList.filter(item=>{ return item.cn.toLowerCase().indexOf(value.toLowerCase()) > -1 || item.en.toLowerCase().indexOf(value.toLowerCase()) > -1;});
                 } else {
                     this.countryListTmp = copyObjectByJSON(_this.countryList);
                 }
@@ -4073,6 +4136,54 @@
                     result = "divOrderStatusChecking";
                 }
                 return result;
+            },
+            filterContractInfo(formsData)
+            {
+                var resData=[];
+                for (var i = 0; i < formsData.length; i++) {
+                    var item = formsData[i];
+                    var newItem={};
+                    newItem.machineOrder=copyObjectByJSON(item.machineOrder);
+                    newItem.title=item.title;
+                    newItem.machineInfo = "";
+                    newItem.machineName = item.machineOrder.brand;
+                    for (let i = 0; i < _this.allMachineType.length; i++) {
+                        if (_this.allMachineType[i].id == item.machineOrder.machineType) {
+                            newItem.machineInfo +="<span class='scopeMachine'>" +  _this.allMachineType[i].name+ "</span>";
+                            break;
+                        }
+                    }
+
+                    if (!isUndefined(item.machineOrder.needleNum)) {
+                        newItem.machineInfo += "<br /><span class='scopeMachine'>" + item.machineOrder.needleNum + "</span>";
+                    }
+                    if (!isUndefined(item.machineOrder.headNum)) {
+                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.machineOrder.headNum + "</span>";
+                    }
+                    if (!isUndefined(item.machineOrder.headDistance)) {
+                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.machineOrder.headDistance + "</span>";
+                    }
+                    if (!isUndefined(item.machineOrder.xDistance)) {
+                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.machineOrder.xDistance + "</span>";
+                    }
+                    if (!isUndefined(item.machineOrder.yDistance)) {
+
+                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.machineOrder.yDistance + "</span>";
+                    }
+
+                    if (!isUndefined(item.orderDetail.electricTrim)) {
+                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.orderDetail.electricTrim + "</span>";
+                    }
+                    if (!isUndefined(item.orderDetail.electricPc)) {
+                        newItem.machineInfo += "<br />电脑:" + "<span class='scopeMachine'>" + item.orderDetail.electricPc + "</span>";
+                    }
+                    newItem.machineNum=item.machineOrder.machineNum;
+                    newItem.machinePrice=item.machineOrder.machinePrice;
+
+                    resData.push(newItem);
+
+                }
+                return resData;
             }
         },
         created: function () {
@@ -4092,6 +4203,10 @@
     };
 </script>
 <style>
+    .scopeMachine {
+        font-weight: bold;
+    }
+
     .el-table .warning-row {
         background: #909399;
     }
@@ -4149,7 +4264,7 @@
         width: 100%;
     }
 
-    .el-input-number{
+    .el-input-number {
         width: 100%;
     }
 
