@@ -4193,6 +4193,9 @@
                 this.$router.push({path: "/login"});
                 return;
             }
+            if(this.userInfo.role.roleName != null && this.userInfo.role.roleName.indexOf("销售") == -1) {
+               _this.filters.roleName = this.userInfo.role.roleName;
+            }
             _this.requestCustomerList();
             _this.initAllRoles();
             _this.initMachineType();
