@@ -688,8 +688,8 @@
                                                         <el-form-item label="客户：" :label-width="formLabelWidth"
                                                                       clearable>
                                                             <el-input v-model="contractForm.customerName"
-                                                                      placeholder="客户" s
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                      placeholder="客户"
+                                                                      readonly
                                                             ></el-input>
                                                         </el-form-item>
                                                     </el-col>
