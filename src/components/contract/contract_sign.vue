@@ -311,12 +311,11 @@
                         </el-col>
                     </el-form>
 
-                    <el-card class="box-card" style="margin: 25px">
+                    <el-card class="box-card" style="margin: 25px" v-if="isFinanceVisible()">
                         <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 10px;margin-top: 20px">
                             合同概要信息
                         </div>
                         <el-table
-                                v-if="isFinanceVisible()"
                                 border
                                 :data="requisitionForms|filterContractInfo"
                                 :row-class-name="tableRowDisabledClassName">
@@ -569,9 +568,9 @@
                     </el-card>
 
 
-                    <el-collapse v-model="collapseActiveNames" @change="handleCollapseChange"
-                                 style="margin-left: 25px;margin-right: 25px">
-                        <el-collapse-item :title="collapseTitle" name="1">
+                    <!--<el-collapse v-model="collapseActiveNames" @change="handleCollapseChange"-->
+                                 <!--style="margin-left: 25px;margin-right: 25px">-->
+                        <!--<el-collapse-item :title="collapseTitle" name="1">-->
 
                             <el-tabs v-model="editableTabsValue" type="border-card" style="padding-right: 3px"
                                      :editable="(mode == EDIT_MODE && (editContractSign.currentStep != '签核完成')) || mode == ADD_MODE"
@@ -1061,7 +1060,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricOil"
                                                                            clearable
-                                                                           :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
                                                                             v-for="item in electricOilList"
@@ -1800,8 +1799,8 @@
                             <!--:closable="false"-->
                             <!--show-icon >-->
                             <!--</el-alert >-->
-                        </el-collapse-item>
-                    </el-collapse>
+                        <!--</el-collapse-item>-->
+                    <!--</el-collapse>-->
 
                 </el-col>
             </el-row>
@@ -3884,7 +3883,9 @@
                                 }
                                 _this.isShowConfirmPlanDate = _this.checkPlanDateIsShow(machineOrder);
                                 _this.requisitionForms.push(newItem);
-                                _this.editableTabsValue = newTabName;
+                                if(_this.editContract.orderNum == machineOrder.orderNum) {
+                                    _this.editableTabsValue = newTabName;
+                                }
                                 _this.tabIndex = i + 1;
                             }
                         }
