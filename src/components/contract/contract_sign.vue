@@ -1897,7 +1897,7 @@
         </el-dialog>
 
         <el-dialog title="删除" :visible.sync="deleteConfirmVisible" append-to-body>
-            <span style="font-size: 22px">确认要删除编号为[ <b style="color: #F56C6C;font-weight: bold">{{selectedItem.contractNum}}</b> ]的合同吗？</span>
+            <span style="font-size: 22px">确认要删除编号为[ <b style="color: #F56C6C;font-weight: bold">{{selectedItem.orderNum}}</b> ]的需求单吗？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
                 <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
