@@ -366,9 +366,9 @@
                                     align="center"
                                     prop="machinePrice"
                                     width="100px"
-                                    label="总价">
+                                    label="机器总价">
                                 <template slot-scope="scope">
-                                    <span> {{scope.row.machinePrice*scope.row.machineNum}}</span>
+                                    <span style="font-weight: bold;color: #409EFF"> {{scope.row.machinePrice*scope.row.machineNum}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -393,18 +393,17 @@
                                         </el-table-column>
                                         <el-table-column
                                                 label="单价"
-                                                align="center"
-                                                v-if="isFinanceVisible()">
+                                                align="center">
                                             <template slot-scope="scope">
                                                 <span>{{scope.row.price}}</span>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
-                                                label="总价"
+                                                label="装置总价"
                                                 align="center"
-                                                v-if="isFinanceVisible()">
+                                              >
                                             <template slot-scope="scope">
-                                                <span>{{scope.row.price*scope.row.number}}</span>
+                                                <span style="font-weight: bold;color: #409EFF">{{scope.row.price*scope.row.number}}</span>
                                             </template>
                                         </el-table-column>
                                     </el-table>
@@ -413,18 +412,18 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="100px"
-                                    label="总价">
+                                    width="150px"
+                                    label="订单总价">
                                 <template slot-scope="scope">
-                                    <span style="font-size: larger; font-weight: bold;color: #409EFF">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
+                                    <span style="font-size:20px; font-weight: bold;color: #409EFF">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
                                 </template>
                             </el-table-column>
                         </el-table>
 
 
-                        <el-row style="margin-top: 10px" v-if="isFinanceVisible()">
-                            <el-col :span="2" :offset="18" style="font-size: 16px;font-weight: bold">总价：</el-col>
-                            <el-col :span="2" :offset="1" style="font-size: 18px;font-weight: bold; color: #409EFF">
+                        <el-row style="margin-top: 10px" v-show="isFinanceVisible()">
+                            <el-col :span="3" :offset="18" style="font-size: 16px;font-weight: bold;text-align: right;">合同总价({{contractForm.currencyType}})：</el-col>
+                            <el-col :span="2" :offset="1" style="font-size: 26px;font-weight: bold; color: red">
                                 {{calculateTotalPrice()}}
                             </el-col>
                         </el-row>
