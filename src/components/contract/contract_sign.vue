@@ -184,12 +184,12 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    label="操作" width="280">
+                                    label="操作" width="240">
                                 <template scope="scope">
                                     <el-tooltip placement="top">
                                         <div slot="content">审核</div>
                                         <el-button
-                                                v-show="userInfo.role.roleName !='销售员'"
+                                                v-show="userInfo.role.roleName !='销售员' && scope.row.status == 1"
                                                 size="mini"
                                                 type="success"
                                                 icon="el-icon-check"
@@ -321,7 +321,7 @@
                                 :row-class-name="tableRowDisabledClassName">
                             <el-table-column
                                     align="center"
-                                    width="150"
+                                    width="120"
                                     label="订单名">
                                 <template scope="scope">
                                     <span>{{scope.row.title}}</span>
@@ -329,7 +329,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="150"
+                                    width="140"
                                     prop="machineName"
                                     label="机器">
                                 <!--<template scope="scope">-->
@@ -338,7 +338,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="200"
+                                    width="220"
                                     label="机器信息">
                                 <template slot-scope="scope">
                                     <span v-html="scope.row.machineInfo"></span>
@@ -412,7 +412,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="150px"
+                                    width="140px"
                                     label="订单总价">
                                 <template slot-scope="scope">
                                     <span style="font-size:20px; font-weight: bold;color: #409EFF">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
@@ -423,7 +423,7 @@
 
                         <el-row style="margin-top: 10px" v-show="isFinanceVisible()">
                             <el-col :span="3" :offset="18" style="font-size: 16px;font-weight: bold;text-align: right;">合同总价({{contractForm.currencyType}})：</el-col>
-                            <el-col :span="2" :offset="1" style="font-size: 26px;font-weight: bold; color: red">
+                            <el-col :span="2" :offset="1" style="font-size: 28px;font-weight: bold; color: red;padding-left: 50px">
                                 {{calculateTotalPrice()}}
                             </el-col>
                         </el-row>
