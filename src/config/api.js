@@ -152,6 +152,10 @@ const SpecialTowelColorList = [
         value: 2,
         text: "6色"
     },
+    {
+        value: 3,
+        text: "9色"
+    }
 ];
 
 //盘带头
@@ -1637,6 +1641,10 @@ const TrimList =
             value: 2,
             text: "不剪线"
         },
+        {
+            value: 3,
+            text: "电机静态剪线"
+        },
     ];
 
 //电源
@@ -1693,19 +1701,15 @@ const ElectricOilList =
         },
         {
             value: 1,
-            text: "下自动"
+            text: "上油盒"
         },
         {
             value: 2,
-            text: "下点动"
+            text: "上油盒下点动"
         },
         {
             value: 3,
-            text: "上机壳旁油盒下自动"
-        },
-        {
-            value: 4,
-            text: "上机壳旁油盒下点动"
+            text: "上油盒下手压"
         },
     ];
 
@@ -1715,36 +1719,20 @@ const AxleSplitList =
     [
         {
             value: 0,
-            text: "伟龙款"
+            text: "信胜款"
         },
         {
             value: 1,
-            text: "15款信胜普通"
+            text: "NXE款"
         },
         {
             value: 2,
-            text: "15款信胜高速"
-        },
-        {
-            value: 3,
-            text: "信胜普通"
-        },
-        {
-            value: 4,
-            text: "信胜高速"
-        },
-        {
-            value: 5,
             text: "仿田岛"
         },
         {
-            value: 6,
-            text: "上海"
-        },
-        {
-            value: 7,
+            value: 3,
             text: "固定式"
-        },
+        }
     ];
 
 //面板
@@ -1775,28 +1763,20 @@ const AxleNeedleList =
     [
         {
             value: 0,
-            text: "9"
+            text: "尖头针"
         },
         {
             value: 1,
-            text: "11"
+            text: "SUK"
         },
         {
             value: 2,
-            text: "12"
+            text: "GROZ"
         },
         {
             value: 3,
-            text: "14"
-        },
-        {
-            value: 4,
-            text: "16"
-        },
-        {
-            value: 5,
-            text: "18"
-        },
+            text: "风琴尖头"
+        }
     ];
 
 //SUK,GROZ
@@ -1804,12 +1784,21 @@ const AxleNeedleTypeList =
     [
         {
             value: 0,
-            text: "SUK"
+            text: "尖头针"
         },
         {
             value: 1,
+            text: "SUK"
+        },
+        {
+            value: 2,
             text: "GROZ"
         },
+        {
+            value: 3,
+            text: "风琴尖头"
+        }
+
     ];
 
 //机头导轨
@@ -1831,11 +1820,6 @@ const AxleDownCheckList =
     [
         {
             value: 0,
-            text: "二位底检"
-        },
-
-        {
-            value: 1,
             text: "三型断检"
         },
     ];
@@ -1907,6 +1891,10 @@ const AxleHookList =
         },
         {
             value: 14,
+            text: "广濑ATR(MG1F)黑心"
+        },
+	{
+            value: 15,
             text: "广濑ATR(MG1QF)黑心"
         },
     ];
@@ -1923,10 +1911,6 @@ const AxleJumpList =
         {
             value: 1,
             text: "电机跳跃"
-        },
-        {
-            value: 2,
-            text: "电磁铁跳跃带轴承"
         },
     ];
 
@@ -1959,6 +1943,10 @@ const FrameworkColorList =
             value: 2,
             text: "乳白色"
         },
+        {
+            value: 3,
+            text: "NXE蓝色"
+        },
     ];
 
 //台板
@@ -1981,6 +1969,10 @@ const FrameworkPlatenColorList =
         {
             value: 1,
             text: "浅绿"
+        },
+        {
+            value: 2,
+            text: "NXE白色"
         },
     ];
 

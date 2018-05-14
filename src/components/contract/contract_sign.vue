@@ -667,14 +667,13 @@
                                                 <el-col :span="1" :offset="4">
                                                     <el-button type="danger" size="small" style="margin-top: 15px"
                                                                v-if="canSplitOrChangeOrder(item.machineOrder.status)"
-                                                               :disabled="item.machineOrder.machineNum <= 1||editContract.status==1"
+                                                               :disabled="item.machineOrder.machineNum <= 1"
                                                                @click="handleSplitOrder(item)">拆单
                                                     </el-button>
                                                 </el-col>
                                                 <el-col :span="1" :offset="1">
                                                     <el-button type="danger" size="small" style="margin-top: 15px"
                                                                v-if="canSplitOrChangeOrder(item.machineOrder.status)"
-                                                               :disabled="editContract.status==1"
                                                                @click="handleChangeOrder(item)">改单
                                                     </el-button>
                                                 </el-col>
@@ -1147,7 +1146,7 @@
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
-                                                                            v-for="item in axleNeedleList"
+                                                                            v-for="item in axleNeedleTypeList"
                                                                             :key="item.text"
                                                                             :label="item.text"
                                                                             :value="item.text">
@@ -1806,7 +1805,7 @@
             </el-row>
             <div slot="footer" class="dialog-footer" style="margin-top: -20px; margin-right:2%">
                 <el-button @click="addContractVisible = false" icon="el-icon-back" type="info">关 闭</el-button>
-                <el-button v-show="mode == EDIT_MODE && haveInitialMachineOrder() || contractIsRejected()" type="primary"
+                <el-button v-show="mode == EDIT_MODE && haveInitialMachineOrder() || contractHasRejectedOrder()" type="primary"
                            @click="onEdit" icon="el-icon-check">保 存
                 </el-button>
                 <el-button v-show="mode == CHANGE_MODE" type="primary" @click="onSaveChange" icon="el-icon-check">保存改单
@@ -2461,8 +2460,7 @@
                         this.mode != this.SIGN_MODE &&
                         this.mode != this.CHANGE_MODE &&
                         this.mode != this.SPLIT_MODE &&
-                        (status == ORDER_CHECKING ||
-                        status == ORDER_CHECKING_FINISHED ||
+                        (status == ORDER_CHECKING_FINISHED ||
                         status == ORDER_SPLITED)
                 ) {
                     return true;
@@ -2579,8 +2577,18 @@
                 return result;
             },
 
-            contractIsRejected() {
-                return this.contractForm.status == CONTRACT_REJECTED;
+            contractHasRejectedOrder() {
+
+                let result = false;
+                for (let i = 0; i < this.requisitionForms.length; i++) {
+                    if (
+                            this.requisitionForms[i].machineOrder.status == ORDER_REJECTED
+                    ) {
+                        result = true;
+                        break;
+                    }
+                }
+                return result;
             },
 
             handleEditTab(targetName, action) {
@@ -2668,7 +2676,6 @@
             },
 
             startToSign() {
-                //alert(this.editContract.id);
                 $.ajax({
                     url: HOST + "contract/startSign",
                     type: "POST",
