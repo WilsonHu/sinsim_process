@@ -127,7 +127,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    label="订单数" width="80">
+                                    label="订单号" width="80">
                                 <template scope="scope">
                                     <div v-on:click="onCourseDetail(scope.row)"
                                          style="font-weight: bold;"
