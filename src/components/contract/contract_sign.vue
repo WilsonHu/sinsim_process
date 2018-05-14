@@ -109,7 +109,7 @@
                                 style="width: 100%;">
                             <el-table-column
                                     align="center"
-                                    width="60"
+                                    width="50"
                                     label="序号">
                                 <template scope="scope">
                                     {{scope.$index+startRow}}
@@ -164,7 +164,7 @@
                             <el-table-column
                                     align="center"
                                     prop="createTime"
-                                    width="160"
+                                    width="100"
                                     label="创建时间">
                                 <template scope="scope">
                                     <div>
@@ -174,7 +174,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="160"
+                                    width="100"
                                     label="更新时间">
                                 <template scope="scope">
                                     <div>
@@ -184,7 +184,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    label="操作" width="280">
+                                    label="操作" width="250">
                                 <template scope="scope">
                                     <el-tooltip placement="top">
                                         <div slot="content">审核</div>
