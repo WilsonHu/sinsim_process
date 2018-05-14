@@ -396,14 +396,14 @@
 
             deleteData(item) {
                 $.ajax({
-                    url: HOST + "sisgn/process/delete",
+                    url: HOST + "sign/process/delete",
                     type: 'POST',
                     dataType: 'json',
                     data: {"id":item.id},
                     success: function (data) {
                         if (data.code == 200) {
                             showMessage(_this, '删除签核流程成功', 1);
-                            _this.fetchDevices();
+                            _this.fetchSignProcesses();
                         } else {
                             showMessage(_this, data.message, 0);
                         }
