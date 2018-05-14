@@ -1990,7 +1990,7 @@
             _this = this;
             return {
                 editUrl: HOST + "machine/order/update",
-                deleteUrl: HOST + "contract/updateValid",
+                deleteUrl: HOST + "machine/order/updateValid",
                 isError: false,
                 errorMsg: "",
                 totalRecords: 0,
@@ -3069,16 +3069,16 @@
                     type: "POST",
                     dataType: "JSON",
                     data: {
-                        id: _this.selectedItem.id
+                        orderNum: _this.selectedItem.orderNum
                     },
                     success: function (res) {
                         if (res.code == 200) {
 //                            var index = _this.tableData.indexOf(_this.selectedItem);
 //                            _this.tableData.splice(index, 1);
                             _this.selectContracts();
-                            showMessage(_this, "删除成功", 1);
+                            showMessage(_this, "删除需求单成功", 1);
                         } else {
-                            showMessage(_this, "删除失败", 0);
+                            showMessage(_this, res.message, 0);
                         }
                     },
                     error: function (info) {
