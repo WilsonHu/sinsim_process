@@ -1844,13 +1844,21 @@
             </span>
             </el-dialog>
             <el-dialog title="提示" :visible.sync="splitOrderVisible" width="50%" append-to-body>
-                <span>拆分需求单<b style="color: #F56C6C">{{requisitionSplitItem != "" ? requisitionSplitItem.machineOrder.orderNum : ""}}</b></span>
-                <span>，拆分出机器数:</span>
+                <el-row>
+                    <el-col :span="3">
+                        <span>拆分需求单<b style="color: #F56C6C;font-weight: bold">{{requisitionSplitItem != "" ? requisitionSplitItem.machineOrder.orderNum : ""}}</b></span>
+                    </el-col>
+                    <el-col :span="3">
+                        <span>，拆分出机器数:</span>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-input-number v-model="splitNum" :min="1" size="small" style="margin-left: 10px"
+                                         :max=" requisitionSplitItem != '' ? requisitionSplitItem.machineOrder.machineNum -1: 1"
+                                         label="拆分机器数">
+                        </el-input-number>
+                    </el-col>
+                </el-row>
                 <template>
-                    <el-input-number v-model="splitNum" :min="1" size="small" style="margin-left: 10px"
-                                     :max=" requisitionSplitItem != '' ? requisitionSplitItem.machineOrder.machineNum -1: 1"
-                                     label="拆分机器数">
-                    </el-input-number>
                     <el-table
                             border
                             ref="splitMachinesTable"
