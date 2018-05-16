@@ -506,8 +506,8 @@
                                                 align="center"
                                                 label="操作" width="120">
                                             <template scope="scope">
-                                                <!--非完成状态下，都可以跳过，方便流程在任何情况下都可以改变-->
-                                                <el-button v-if="scope.row.status!=6&&scope.row.status!=9"
+                                                <!--待安装或者安装中的工序可以跳过，方便流程在任何情况下都可以改变-->
+                                                <el-button v-if="scope.row.status == 2 || scope.row.status == 3"
                                                            size="small"
                                                            type="danger"
                                                            :disabled="addForm.status==7"
@@ -1007,10 +1007,8 @@
 
             onConfirmSkip()
             {
-                var taskRecord = {
-                    id: _this.selectedTaskItem.id,
-                    status: TaskStatusList[9].value,
-                };
+                var taskRecord = copyObjectByJSON(_this.selectedTaskItem);
+                taskRecord.status = TaskStatusList[9].value;
                 _this.onUpdateData(taskRecord);
                 _this.confirmSkipDialog = false;
             },
@@ -1024,10 +1022,8 @@
 
             onConfirmRecover()
             {
-                var taskRecord = {
-                    id: _this.selectedTaskItem.id,
-                    status: TaskStatusList[1].value,
-                };
+                var taskRecord = copyObjectByJSON(_this.selectedTaskItem);
+                taskRecord.status = TaskStatusList[2].value;//工序从跳过恢复后，处于待安装状态
                 _this.onUpdateData(taskRecord);
                 _this.confirmRecoverDialog = false;
             },
@@ -1062,7 +1058,7 @@
                     console.log(ex);
                 }
                 $.ajax({
-                    url: HOST + "task/record/updateStatus",
+                    url: HOST + "task/record/updateTaskInfo",
                     type: 'POST',
                     dataType: 'JSON',
                     data: dataInfo,
