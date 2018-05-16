@@ -371,7 +371,7 @@
                                 <el-col :span="24" :offset="0">
                                     <el-form-item label="流程模板：">
                                         <el-select
-                                                :disabled="addForm.isTaskOngoing"
+                                                :disabled="isTaskOngoing"
                                                 v-model="addForm.processId"
                                                 @change="onSelectedChange"
                                                 clearable
@@ -503,6 +503,7 @@
                 machineForm: {},
                 machineDialog: false,
                 isShowGeneral: false,
+                isTaskOngoing:false
             }
 
         },
@@ -639,7 +640,7 @@
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
                 _this.addForm = copyObject(_this.selectedItem);
-                _this.addForm.isTaskOngoing = false;
+                _this.isTaskOngoing = false;
                 _this.addForm.machineTypeName = _this.filterMachineType(_this.addForm.machineType);
                 if (_this.addForm.processRecordId != '') {
                     /*
@@ -998,7 +999,7 @@
                                         if (item.category != "Start" && item.category != "End") {//排除start,end
                                             //已经排了计划，再生产中的，将不能删除，但可以接着增加流程
                                             if (item.taskStatus > 0) {
-                                                _this.addForm.isTaskOngoing = true;
+                                                _this.isTaskOngoing = true;
                                                 item.category = ProcessCatergory.Working;
                                                 item.deletable = false;
                                                 item.movable = false;
