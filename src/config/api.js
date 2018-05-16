@@ -28,6 +28,8 @@ const PROGRESSTYPE = {
 }
 
 const ProcessCatergory = {
+    Planed: "Planed",
+    Waiting: "Waiting",
     Working: "Working",
     Finished: "Finished",
     Abnormal: "Abnormal",

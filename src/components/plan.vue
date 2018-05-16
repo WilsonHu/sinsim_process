@@ -820,7 +820,13 @@
                             taskList.linkDataArray = JSON.parse(data.data.list[0].linkData);
                             taskList.nodeDataArray = JSON.parse(data.data.list[0].nodeData);
                             taskList.nodeDataArray.forEach(item=> {
-                                if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
+                                if (parseInt(item.taskStatus) > 0 && parseInt(item.taskStatus) < 2)//已计划
+                                {
+                                    item.category = ProcessCatergory.Planed;
+                                }else if (parseInt(item.taskStatus) > 1 && parseInt(item.taskStatus) < 3)//待安装
+                                {
+                                    item.category = ProcessCatergory.Waiting;
+                                }else if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
                                 } else if (parseInt(item.taskStatus) == 6) {//完成
@@ -1257,7 +1263,61 @@
                         // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Rectangle",
-                                        {fill: "yellow", stroke: null},
+                                        {fill: "green", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: "black",
+                                            margin: 8,
+//                                            maxSize: new go.Size(160, NaN),
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
+        myDiagram.nodeTemplateMap.add("Planed",  // the default category
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "#CAE1FF", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: "black",
+                                            margin: 8,
+//                                            maxSize: new go.Size(160, NaN),
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
+        myDiagram.nodeTemplateMap.add("Waiting",  // the default category
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "#71C671", stroke: null},
                                         new go.Binding("figure", "figure")),
                                 $(go.TextBlock,
                                         {
