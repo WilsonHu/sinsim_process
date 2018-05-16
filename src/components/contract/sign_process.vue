@@ -263,7 +263,7 @@
                 //所有角色
                 allRoles:"",
                 //签核类型
-                signTypes:["合同签核","需求单签核"]
+                signTypes:["需求单签核"]
             }
         },
         methods: {
@@ -396,14 +396,14 @@
 
             deleteData(item) {
                 $.ajax({
-                    url: HOST + "sisgn/process/delete",
+                    url: HOST + "sign/process/delete",
                     type: 'POST',
                     dataType: 'json',
                     data: {"id":item.id},
                     success: function (data) {
                         if (data.code == 200) {
                             showMessage(_this, '删除签核流程成功', 1);
-                            _this.fetchDevices();
+                            _this.fetchSignProcesses();
                         } else {
                             showMessage(_this, data.message, 0);
                         }
