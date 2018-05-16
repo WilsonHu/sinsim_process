@@ -584,13 +584,17 @@
                                         <div>
                                             <el-card
                                                     v-if="(item.machineOrder.originalOrderId != null && item.machineOrder.originalOrderId != 0) && item.orderChangeRecord != null && (mode == CHANGE_MODE ||item.orderChangeRecord.changeReason != '')">
-                                                <el-col :span="6">
-                                                    <el-form-item label="原单号：" :label-width="formLabelWidth">
-                                                            <span style="text-align: left; font-weight: bold;font-size: 16px; color: #409EFF">
+                                                <el-row>
+                                                    <el-col :span="2">
+                                                        <el-form-item label="原单号：" :label-width="formLabelWidth">
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="4" style="text-align: left;margin-top: 5px">
+                                                        <span style="font-weight: bold;font-size: 16px; color: #409EFF">
                                                                 {{filterOrderNum(item.machineOrder.originalOrderId)}}
-                                                            </span>
-                                                    </el-form-item>
-                                                </el-col>
+                                                        </span>
+                                                    </el-col>
+                                                </el-row>
                                                 <el-col>
                                                     <el-form-item label="改单原因：" :label-width="formLabelWidth"
                                                                   style="padding-bottom: 12px"
@@ -610,13 +614,17 @@
                                             </el-card>
                                             <el-card
                                                     v-if="item.machineOrder.originalOrderId != null && item.orderSplitRecord != null && (mode == SPLIT_MODE ||item.orderSplitRecord.splitReason != '')">
-                                                <el-col :span="6">
-                                                    <el-form-item label="原单号：" :label-width="formLabelWidth">
-                                                            <span style="text-align: left; font-weight: bold;font-size: 16px; color: #409EFF">
+                                                <el-row>
+                                                    <el-col :span="2">
+                                                        <el-form-item label="原单号：" :label-width="formLabelWidth">
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="4" style="text-align: left;margin-top: 5px">
+                                                        <span style="font-weight: bold;font-size: 16px; color: #409EFF">
                                                                 {{filterOrderNum(item.machineOrder.originalOrderId)}}
-                                                            </span>
-                                                    </el-form-item>
-                                                </el-col>
+                                                        </span>
+                                                    </el-col>
+                                                </el-row>
                                                 <el-col>
                                                     <el-form-item label="拆单原因：" :label-width="formLabelWidth"
                                                                   style="padding-bottom: 12px"
