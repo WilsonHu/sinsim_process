@@ -648,7 +648,8 @@
                                                     <el-form-item label="订单号：" :label-width="formLabelWidth">
                                                         <el-input v-model="item.machineOrder.orderNum"
                                                                   placeholder="订单号"
-                                                                  :readonly="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && item.machineOrder.status == 3)"
+                                                                  :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                  :readonly="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && mode == 4)"
                                                         ></el-input>
                                                     </el-form-item>
                                                 </el-col>
@@ -656,6 +657,7 @@
                                                     <el-form-item label="填表日期：" :label-width="formLabelWidth">
                                                         <el-input v-model="item.machineOrder.createTime"
                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                  :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                   placeholder="日期"
                                                         ></el-input>
                                                     </el-form-item>
@@ -694,6 +696,7 @@
                                                         <el-form-item label="客户：" :label-width="formLabelWidth"
                                                                       clearable>
                                                             <el-input v-model="contractForm.customerName"
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                       placeholder="客户"
                                                                       readonly
                                                             ></el-input>
@@ -709,6 +712,7 @@
                                                                     filterable
                                                                     :filter-method="filterCountry"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     placeholder="请选择">
                                                                 <el-option
                                                                         v-for="item in countryListTmp"
@@ -728,6 +732,7 @@
                                                                       :class="classWithDifferentValue(item, 'brand', false)">
                                                             <el-input v-model="item.machineOrder.brand"
                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                       placeholder="商标"></el-input>
                                                         </el-form-item>
                                                     </el-col>
@@ -739,6 +744,7 @@
                                                                     style="width: 100%"
                                                                     v-model="item.machineOrder.machineType"
                                                                     clearable
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     placeholder="请选择">
                                                                 <el-option
@@ -755,6 +761,7 @@
                                                                       :class="classWithDifferentValue(item, 'needleNum', false)">
                                                             <el-input-number style="float: left;"
                                                                              v-model="item.machineOrder.needleNum"
+                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              :step="1"
                                                                              controls-position="right"
@@ -768,6 +775,7 @@
                                                                       :class="classWithDifferentValue(item, 'headNum',false)">
                                                             <el-input-number style="float: left"
                                                                              v-model="item.machineOrder.headNum"
+                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              :step="1"
                                                                              controls-position="right"
@@ -780,6 +788,7 @@
                                                                       :class="classWithDifferentValue(item, 'headDistance', false)">
                                                             <el-input-number style="float: left"
                                                                              v-model="item.machineOrder.headDistance"
+                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              :step="1"
                                                                              controls-position="right"
@@ -792,6 +801,7 @@
                                                         <el-form-item label="X行程：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'xDistance', false)">
                                                             <el-input v-model="item.machineOrder.xDistance"
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                       placeholder="X行程"></el-input>
                                                         </el-form-item>
@@ -800,6 +810,7 @@
                                                         <el-form-item label="Y行程：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'yDistance', false)">
                                                             <el-input v-model="item.machineOrder.yDistance"
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                       placeholder="Y行程"></el-input>
                                                         </el-form-item>
@@ -830,6 +841,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelColor"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
@@ -849,6 +861,7 @@
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelDaxle"
                                                                     clearable
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     placeholder="请选择">
                                                                 <el-option
@@ -866,6 +879,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelHaxle"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
@@ -884,6 +898,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelMotor"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
@@ -902,6 +917,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTapingHead"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
@@ -920,6 +936,7 @@
                                                             <el-select
                                                                     style="width: 100%"
                                                                     v-model="item.orderDetail.specialTowelNeedle"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     clearable
                                                                     placeholder="请选择">
@@ -945,6 +962,7 @@
                                                                       :class="classWithDifferentValue(item, 'electricPc', true)">
                                                             <el-select v-model="item.orderDetail.electricPc"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -961,6 +979,7 @@
                                                                       :class="classWithDifferentValue(item, 'electricLanguage', true)">
                                                             <el-select v-model="item.orderDetail.electricLanguage"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -977,6 +996,7 @@
                                                                       :class="classWithDifferentValue(item, 'electricMotor', true)">
                                                             <el-select v-model="item.orderDetail.electricMotor"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -994,6 +1014,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricMotorXy"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1012,6 +1033,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricTrim"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1030,6 +1052,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricPower"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1048,6 +1071,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricSwitch"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1066,6 +1090,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.electricOil"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1091,6 +1116,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axleSplit"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1109,6 +1135,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axlePanel"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1126,8 +1153,8 @@
                                                                       :class="classWithDifferentValue(item, 'axleNeedle', true)">
                                                             <el-input v-model="item.orderDetail.axleNeedle"
                                                                       style="width: 100%;"
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                            >
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)">
                                                             </el-input>
                                                             <!--<template scope="scope">-->
                                                             <!--<el-select v-model="item.orderDetail.axleNeedle"-->
@@ -1150,6 +1177,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axleNeedleType"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1168,6 +1196,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.axleRail"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1185,6 +1214,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleDownCheck', true)">
                                                             <el-select v-model="item.orderDetail.axleDownCheck"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1201,6 +1231,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleHook', true)">
                                                             <el-select v-model="item.orderDetail.axleHook"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1218,6 +1249,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleJump', true)">
                                                             <el-select v-model="item.orderDetail.axleJump"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1235,6 +1267,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleUpperThread', true)">
                                                             <el-select v-model="item.orderDetail.axleUpperThread"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1251,6 +1284,7 @@
                                                                       :class="classWithDifferentValue(item, 'axleAddition', true)">
                                                             <el-input v-model="item.orderDetail.axleAddition"
                                                                       type="textarea"
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                       :readonly="changeOrderContentDisable(item.machineOrder)||userInfo.role.roleName.indexOf('销售') < 0"
                                                                       :autosize="{ minRows: 4, maxRows: 8}">
                                                             </el-input>
@@ -1269,6 +1303,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkColor"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1287,6 +1322,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkPlaten"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1306,6 +1342,7 @@
                                                                 <el-select
                                                                         v-model="item.orderDetail.frameworkPlatenColor"
                                                                         clearable
+                                                                        :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                         :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                         placeholder="请选择">
                                                                     <el-option
@@ -1324,6 +1361,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkRing"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1342,6 +1380,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkBracket"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1360,6 +1399,7 @@
                                                             <template scope="scope">
                                                                 <el-select v-model="item.orderDetail.frameworkStop"
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            placeholder="请选择">
                                                                     <el-option
@@ -1377,6 +1417,7 @@
                                                                       :class="classWithDifferentValue(item, 'frameworkLight', true)">
                                                             <el-select v-model="item.orderDetail.frameworkLight"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1401,6 +1442,7 @@
                                                             <el-select v-model="item.orderDetail.driverType"
                                                                        style="width: 100%;"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1417,6 +1459,7 @@
                                                                       :class="classWithDifferentValue(item, 'driverMethod', true)">
                                                             <el-select v-model="item.orderDetail.driverMethod"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1433,6 +1476,7 @@
                                                                       :class="classWithDifferentValue(item, 'driverReelHole', true)">
                                                             <el-select v-model="item.orderDetail.driverReelHole"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1449,6 +1493,7 @@
                                                                       :class="classWithDifferentValue(item, 'driverReel', true)">
                                                             <el-select v-model="item.orderDetail.driverReel"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1466,6 +1511,7 @@
                                                             <el-input-number style="float: left"
                                                                              v-model="item.orderDetail.driverHorizonNum"
                                                                              :step="1"
+                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              :min="0"
                                                                              controls-position="right">
@@ -1479,6 +1525,7 @@
                                                                              v-model="item.orderDetail.driverVerticalNum"
                                                                              :step="1"
                                                                              :min="0"
+                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                              controls-position="right">
                                                             </el-input-number>
@@ -1496,6 +1543,7 @@
                                                                       :class="classWithDifferentValue(item, 'packageMethod', false)">
                                                             <el-select v-model="item.machineOrder.packageMethod"
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                        placeholder="请选择">
                                                                 <el-option
@@ -1513,6 +1561,7 @@
                                                             <el-input
                                                                     type="textarea"
                                                                     :autosize="{ minRows: 6, maxRows: 10}"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     v-model="item.machineOrder.packageMark">
                                                             </el-input>
@@ -1524,6 +1573,7 @@
                                                                     style="width: 100%"
                                                                     v-model="item.machineOrder.contractShipDate"
                                                                     type="date"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     placeholder="合同交货日期">
                                                             </el-date-picker>
@@ -1541,6 +1591,7 @@
                                                             <el-input style="float: left;"
                                                                       v-model.number="item.machineOrder.machineNum"
                                                                       auto-complete="off"
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                       :readonly="changeOrderContentDisable(item.machineOrder) || isFromSplit(item.machineOrder)"
                                                                       @blur="machineNumChanged(item)"
                                                                       controls-position="right">
@@ -1553,6 +1604,7 @@
                                                                       :class="classWithDifferentValue(item, 'sellman', false)">
                                                             <el-input v-model="contractForm.sellman"
                                                                       placeholder="销售人员"
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                       auto-complete="off">
                                                             </el-input>
@@ -1564,6 +1616,7 @@
                                                             <el-select v-model="item.machineOrder.maintainType"
                                                                        placeholder=""
                                                                        clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                        :readonly="changeOrderContentDisable(item.machineOrder)">
                                                                 <el-option
                                                                         v-for="item in maintainTypeList"
@@ -1578,6 +1631,7 @@
                                                     <el-col :span="6">
                                                         <el-form-item label="计划日期：" :label-width="formLabelWidth">
                                                             <el-date-picker
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     style="width: 100%"
                                                                     v-model="item.machineOrder.planShipDate"
                                                                     type="date"
@@ -1602,6 +1656,7 @@
                                                                       :class="classWithDifferentValue(item, 'machineOrder', false)">
                                                             <el-input
                                                                     type="textarea"
+                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                     :autosize="{ minRows: 2, maxRows: 6}"
                                                                     v-model="item.machineOrder.mark">
@@ -1618,6 +1673,7 @@
                                                     <el-col :span="1" :offset="22">
                                                         <el-button type="primary" size="small" class="el-icon-plus"
                                                                    style="margin: 15px"
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                    v-if="!changeOrderContentDisable(item.machineOrder)"
                                                                    @click="addEquipment(item.machineOrder)">
                                                             装置
@@ -1633,6 +1689,7 @@
                                                                 <el-select v-model="scope.row.name"
                                                                            placeholder=""
                                                                            clearable
+                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                            style="width: 95%">
                                                                     <el-option
@@ -1652,6 +1709,7 @@
                                                                 <el-input-number style="float: left"
                                                                                  v-model="scope.row.number"
                                                                                  :step="1"
+                                                                                 :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                                  controls-position="right"
                                                                                  :min="1">
@@ -1666,6 +1724,7 @@
                                                             <template slot-scope="scope">
                                                                 <el-input v-model="scope.row.price"
                                                                           placeholder="单价"
+                                                                          :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                           auto-complete="off">
                                                                 </el-input>
@@ -1700,6 +1759,7 @@
                                                                         style="margin: 10px;width: 95%"
                                                                         v-model="item.machineOrder.machinePrice"
                                                                         :step="1"
+                                                                        :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                         :readonly="changeOrderContentDisable(item.machineOrder)"
                                                                         controls-position="right"
                                                                         :min="0">
@@ -3797,8 +3857,7 @@
                         item.status == ORDER_CHECKING_FINISHED ||
                         item.status == ORDER_CANCELED ||
                         item.status == ORDER_SPLITED ||
-                        (item.status == ORDER_CHECKING &&
-                        _this.contractForm.status == CONTRACT_CHECKING) ||
+                        (item.status == ORDER_CHECKING) ||
                         this.mode == this.SIGN_MODE
                 );
             },
