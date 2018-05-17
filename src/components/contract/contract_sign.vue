@@ -86,7 +86,7 @@
                             </el-row>
                             <el-row>
                                 <el-col :span="4">
-                                    <el-form-item label="选择日期:">
+                                    <el-form-item label="创建日期:">
                                         <el-date-picker
                                                 v-model="filters.selectDate"
                                                 type="daterange"

@@ -59,7 +59,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="选择日期:">
+                            <el-form-item label="创建日期:">
                                 <el-date-picker
                                         v-model="filters.selectDate"
                                         type="daterange"
@@ -139,7 +139,16 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="contractShipDate"
+                            sortable
+                            label="创建日期">
+                        <template slot-scope="scope">
+                            <span>
+                                {{(scope.row.createTime)|filterDateString}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            align="center"
                             sortable
                             label="合同交货日期">
                         <template slot-scope="scope">
@@ -150,7 +159,6 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="planShipDate"
                             sortable
                             label="计划交货日期">
                         <template slot-scope="scope">
@@ -1092,7 +1100,6 @@
                                             width="200"
                                             prop="number"
                                             align="center">
-                                    </el-table-column>
                                     </el-table-column>
                                 </el-table>
                             </div>

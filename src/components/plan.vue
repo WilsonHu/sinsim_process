@@ -361,7 +361,7 @@
                             label="已计划 / 总工序">
                         <template scope="scope">
                             <el-button style="font-size: 14px; font-weight: bold" type="primary" size="mini">
-                                {{getAllPlanedTaskNum(scope.row)}} / {{scope.row.totalTaskNum}}
+                                {{scope.row.planedTaskNum}} / {{scope.row.totalTaskNum}}
                             </el-button>
                         </template>
                     </el-table-column>
