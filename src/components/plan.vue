@@ -228,7 +228,7 @@
                                     type="danger"
                                     v-show="scope.row.status == 1 || scope.row.status == 2"
                                     icon="el-icon-delete"
-                                    @click="deletePlan(scope.row)">计划
+                                    @click="toDeletePlanConfirm(scope.row)">计划
                             </el-button>
                         </template>
                     </el-table-column>
@@ -468,6 +468,13 @@
                 </div>
             </el-tab-pane>
         </el-tabs>
+        <el-dialog title="提示" :visible.sync="deletePlanDialogVisible" width="25%">
+          <span style="font-size: 16px">确认要删除作业计划[ <b >{{deleteData.taskName}}</b > ]？</span >
+          <span slot="footer" class="dialog-footer" >
+            <el-button @click="deletePlanDialogVisible = false" icon="el-icon-close">取 消</el-button >
+            <el-button type="primary" @click="deletePlan()" icon="el-icon-check">确 定</el-button >
+          </span >
+        </el-dialog>
         <el-dialog :visible.sync="doPlaningDialogVisible" fullscreen append-to-body>
             <el-form :model="machineDoPlaning" label-position="right" label-width="110px">
                 <el-row>
@@ -647,6 +654,8 @@
                     planDate: new Date()
                 },
                 doPlaningDialogVisible: false,
+                deletePlanDialogVisible: false,
+                deleteData:"",
                 machineDoPlaning: {},
                 notPlanedTasks: [],
                 toPlanTasks: [],
@@ -736,13 +745,17 @@
                     }
                 })
             },
-            deletePlan(data) {
-                if(data != null && data.taskPlan.id > 0) {
+            toDeletePlanConfirm(data) {
+                this.deleteData = data;
+                this.deletePlanDialogVisible = true;
+            },
+            deletePlan() {
+                if(_this.deleteData != null && _this.deleteData.taskPlan.id > 0) {
                     $.ajax({
                         url: HOST + "task/plan/deletePlan",
                         type: 'POST',
                         dataType: 'json',
-                        data: {id:data.taskPlan.id, taskRecordId:data.id},
+                        data: {id:_this.deleteData.taskPlan.id, taskRecordId:_this.deleteData.id},
                         success: function (data) {
                             if (data.code == 200) {
                                 _this.onSearchPlanedData();
@@ -757,6 +770,7 @@
                         }
                     })
                 }
+                this.deletePlanDialogVisible = false;
             },
             generateTasks() {
                 const data = [];
