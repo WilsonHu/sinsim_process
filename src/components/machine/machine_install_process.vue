@@ -1,15 +1,15 @@
-<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div>
-        <el-col class="well well-lg" style="background-color: white;">
-            <el-form :model="filters" label-position="right" label-width="80px">
-                <el-row>
-                    <el-col :span="6">
-                        <el-form-item label="订单号:">
+<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" >
+    <div >
+        <el-col class="well well-lg" style="background-color: white;" >
+            <el-form :model="filters" label-position="right" label-width="80px" >
+                <el-row >
+                    <el-col :span="6" >
+                        <el-form-item label="订单号:" >
                             <el-input v-model="filters.orderNum"
                                       placeholder="订单号"
-                                      auto-complete="off"></el-input>
-                        </el-form-item>
-                    </el-col>
+                                      auto-complete="off" ></el-input >
+                        </el-form-item >
+                    </el-col >
                     <!--<el-col :span="6">-->
                     <!--<el-form-item label="合同编号:">-->
                     <!--<el-input v-model="filters.contract_num"-->
@@ -17,36 +17,36 @@
                     <!--auto-complete="off"></el-input>-->
                     <!--</el-form-item>-->
                     <!--</el-col>-->
-                    <el-col :span="6">
-                        <el-form-item label="完成状态:">
-                            <el-select v-model="filters.status" clearable>
+                    <el-col :span="6" >
+                        <el-form-item label="完成状态:" >
+                            <el-select v-model="filters.status" clearable >
                                 <el-option
                                         v-for="item in statusList"
                                         :value="item.value"
-                                        :label="item.name">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
+                                        :label="item.name" >
+                                </el-option >
+                            </el-select >
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="6" >
                         <el-button
                                 icon="el-icon-search"
                                 size="normal"
                                 type="primary"
-                                @click="search">查询
-                        </el-button>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <el-form-item label="机器编号:">
+                                @click="search" >查询
+                        </el-button >
+                    </el-col >
+                </el-row >
+                <el-row >
+                    <el-col :span="6" >
+                        <el-form-item label="机器编号:" >
                             <el-input v-model="filters.nameplate"
                                       placeholder="机器编号"
-                                      auto-complete="off"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="选择日期:">
+                                      auto-complete="off" ></el-input >
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="6" >
+                        <el-form-item label="选择日期:" >
                             <el-date-picker
                                     v-model="filters.selectDate"
                                     type="daterange"
@@ -55,12 +55,12 @@
                                     range-separator="—"
                                     start-placeholder="开始日期"
                                     end-placeholder="结束日期"
-                                    :picker-options="pickerOptions">
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
+                                    :picker-options="pickerOptions" >
+                            </el-date-picker >
+                        </el-form-item >
+                    </el-col >
+                </el-row >
+            </el-form >
             <el-table
                     v-loading="loadingUI"
                     element-loading-text="获取数据中..."
@@ -70,15 +70,15 @@
                     ref="singleTable"
                     highlight-current-row
                     show-overflow-tooltip="true"
-                    style="width: 100%; ">
+                    style="width: 100%; " >
                 <el-table-column
                         width="75"
                         align="center"
-                        label="序号">
-                    <template scope="scope">
+                        label="序号" >
+                    <template scope="scope" >
                         {{scope.$index+startRow}}
-                    </template>
-                </el-table-column>
+                    </template >
+                </el-table-column >
 
                 <!-- <el-table-column
                         align="center"
@@ -88,281 +88,282 @@
                 <el-table-column
                         align="center"
                         prop="nameplate"
-                        label="机器编号">
-                </el-table-column>
+                        label="机器编号" >
+                </el-table-column >
                 <el-table-column
                         align="center"
                         prop="machineType"
-                        label="机型">
-                    <template scope="scope">
-                        <div>
+                        label="机型" >
+                    <template scope="scope" >
+                        <div >
                             {{scope.row.machineType|filterMachineType}}
-                        </div>
-                    </template>
-                </el-table-column>
+                        </div >
+                    </template >
+                </el-table-column >
                 <el-table-column label="订单号"
                                  align="center"
-                                 prop="orderNum">
-                    <template scope="scope">
-                        <div>
+                                 prop="orderNum" >
+                    <template scope="scope" >
+                        <div >
                             {{scope.row.orderNum}}
-                        </div>
-                    </template>
-                </el-table-column>
+                        </div >
+                    </template >
+                </el-table-column >
                 <el-table-column
                         align="center"
                         prop="location"
-                        label="位置">
-                </el-table-column>
+                        label="位置" >
+                </el-table-column >
                 <el-table-column
                         align="center"
-                        label="当前工序">
-                    <template scope="scope">
+                        label="当前工序" >
+                    <template scope="scope" >
                         <el-tag size="small" style="margin-left: 3px;margin-top:3px;color: green;"
-                                v-for="item in scope.row.currentTaskList">
+                                v-for="item in scope.row.currentTaskList" >
                             {{item}}
-                        </el-tag>
-                    </template>
-                </el-table-column>
+                        </el-tag >
+                    </template >
+                </el-table-column >
                 <el-table-column
                         align="center"
-                        label="已完成/总工序">
-                    <template scope="scope">
-                        <span style="color: limegreen;font-weight: bold;">{{scope.row.finishedCount}}</span>
-                        <span>/</span>
-                        <span style="color: darkslategrey;font-weight: bold;">{{scope.row.totalTaskCount}}</span>
-                    </template>
-                </el-table-column>
+                        label="已完成/总工序" >
+                    <template scope="scope" >
+                        <span style="color: limegreen;font-weight: bold;" >{{scope.row.finishedCount}}</span >
+                        <span >/</span >
+                        <span style="color: darkslategrey;font-weight: bold;" >{{scope.row.totalTaskCount}}</span >
+                    </template >
+                </el-table-column >
 
                 <el-table-column
                         align="center"
-                        label="安装状态">
-                    <template scope="scope">
+                        label="安装状态" >
+                    <template scope="scope" >
                         <div v-if="scope.row.status==0"
-                             style="color: #686868">
+                             style="color: #686868" >
                             {{scope.row.status|filterStatus}}
-                        </div>
+                        </div >
                         <div v-if="scope.row.status==1"
-                             style="color: #8b6c0e">
+                             style="color: #8b6c0e" >
                             {{scope.row.status|filterStatus}}
-                        </div>
+                        </div >
                         <div v-if="scope.row.status==2"
-                             style="color: #13678b">
+                             style="color: #13678b" >
                             {{scope.row.status|filterStatus}}
-                        </div>
+                        </div >
                         <div v-if="scope.row.status==3"
-                             style="color: #198b57">
+                             style="color: #198b57" >
                             {{scope.row.status|filterStatus}}
-                        </div>
+                        </div >
                         <div v-if="scope.row.status==4"
-                             style="color: darkred">
+                             style="color: darkred" >
                             {{scope.row.status|filterStatus}}
-                        </div>
+                        </div >
                         <div v-if="scope.row.status==5"
-                             style="color: indianred">
+                             style="color: indianred" >
                             {{scope.row.status|filterStatus}}
-                        </div>
+                        </div >
                         <div v-if="scope.row.status==6"
-                             style="color: darkred">
+                             style="color: darkred" >
                             {{scope.row.status|filterStatus}}
-                        </div>
+                        </div >
                         <div v-if="scope.row.status==7"
-                             style="color: red">
+                             style="color: red" >
                             {{scope.row.status|filterStatus}}
-                        </div>
-                    </template>
-                </el-table-column>
+                        </div >
+                    </template >
+                </el-table-column >
                 <el-table-column
                         align="center"
                         prop="processCreateTime"
-                        label="开始时间">
-                    <template slot-scope="scope">
-                        <span>
+                        label="开始时间" >
+                    <template slot-scope="scope" >
+                        <span >
                             {{(scope.row.processCreateTime)|filterDateString}}
-                        </span>
-                    </template>
-                </el-table-column>
+                        </span >
+                    </template >
+                </el-table-column >
                 <el-table-column
                         align="center"
                         prop="processEndTime"
-                        label="完成时间">
-                    <template slot-scope="scope">
+                        label="完成时间" >
+                    <template slot-scope="scope" >
                         <span v-if="scope.row.processEndTime==null"
-                              style="color: darkorange">
+                              style="color: darkorange" >
                             未完成
-                        </span>
-                        <span v-else>
+                        </span >
+                        <span v-else >
                             {{(scope.row.processEndTime)|filterDateString}}
-                        </span>
-                    </template>
-                </el-table-column>
+                        </span >
+                    </template >
+                </el-table-column >
 
                 <el-table-column width="200"
-                                 label="操作" align="center">
-                    <template scope="scope" style="text-align: center">
-                        <el-tooltip placement="left" content="查看机器">
+                                 label="操作" align="center" >
+                    <template scope="scope" style="text-align: center" >
+                        <el-tooltip placement="left" content="查看机器" >
                             <el-button
                                     size="mini"
                                     type="primary"
                                     icon="el-icon-view"
-                                    @click="editWithItem(scope.row)">查看
-                            </el-button>
-                        </el-tooltip>
-                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4" placement="right">
-                            <div slot="content">取消机器</div>
+                                    @click="editWithItem(scope.row)" >查看
+                            </el-button >
+                        </el-tooltip >
+                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4" placement="right" >
+                            <div slot="content" >取消机器</div >
                             <el-button
 
                                     size="mini"
                                     type="danger"
                                     icon="el-icon-close"
-                                    @click="cancelMachine(scope.row)">取消
-                            </el-button>
-                        </el-tooltip>
+                                    @click="cancelMachine(scope.row)" >取消
+                            </el-button >
+                        </el-tooltip >
                         <el-tooltip v-show="scope.row.status==7 && userinfo.role.roleName.indexOf('超级管理员')>-1"
-                                    placement="right">
-                            <div slot="content">恢复安装</div>
+                                    placement="right" >
+                            <div slot="content" >恢复安装</div >
                             <el-button
                                     size="mini"
                                     type="success"
                                     icon="el-icon-check"
-                                    @click="recoverMachine(scope.row)">恢复
-                            </el-button>
-                        </el-tooltip>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="block" style="text-align: center; margin-top: 20px">
+                                    @click="recoverMachine(scope.row)" >恢复
+                            </el-button >
+                        </el-tooltip >
+                    </template >
+                </el-table-column >
+            </el-table >
+            <div class="block" style="text-align: center; margin-top: 20px" >
                 <el-pagination
                         background
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-size="pageSize"
                         layout="total, prev, pager, next, jumper"
-                        :total="totalRecords">
-                </el-pagination>
-            </div>
+                        :total="totalRecords" >
+                </el-pagination >
+            </div >
             <el-dialog title="确认取消机器" :visible.sync="confirmCancelDialog" width="30%"
-                       :modal="false">
-                <span>确定要取消机器编号为 [<b style="color: red;font-size: 18px">{{selectedItem.nameplate}}</b>] 吗？</span>
-                <span slot="footer" class="dialog-footer">
-                                    <el-button @click="confirmCancelDialog = false" icon="el-icon-close">取 消</el-button>
+                       :modal="false" >
+                <span >确定要取消机器编号为 [<b style="color: red;font-size: 18px" >{{selectedItem.nameplate}}</b >] 吗？</span >
+                <span slot="footer" class="dialog-footer" >
+                                    <el-button @click="confirmCancelDialog = false"
+                                               icon="el-icon-close" >取 消</el-button >
                                     <el-button type="primary" @click="onConfirmCancel"
-                                               icon="el-icon-check">确 定</el-button>
-                                </span>
-            </el-dialog>
+                                               icon="el-icon-check" >确 定</el-button >
+                                </span >
+            </el-dialog >
             <el-dialog title="确认恢复机器" :visible.sync="confirmRecoverMachineDialog" width="30%"
-                       :modal="false">
-                <span>确定要恢复机器编号为 [<b style="color: red;font-size: 18px">{{selectedItem.nameplate}}</b>] 吗？</span>
-                <span slot="footer" class="dialog-footer">
+                       :modal="false" >
+                <span >确定要恢复机器编号为 [<b style="color: red;font-size: 18px" >{{selectedItem.nameplate}}</b >] 吗？</span >
+                <span slot="footer" class="dialog-footer" >
                                     <el-button @click="confirmRecoverMachineDialog = false"
-                                               icon="el-icon-close">取 消</el-button>
+                                               icon="el-icon-close" >取 消</el-button >
                                     <el-button type="primary" @click="onConfirmRecoverMachine"
-                                               icon="el-icon-check">确 定</el-button>
-                                </span>
-            </el-dialog>
-        </el-col>
+                                               icon="el-icon-check" >确 定</el-button >
+                                </span >
+            </el-dialog >
+        </el-col >
 
         <el-dialog title="机器安装进度" :visible.sync="addDialogVisible"
                    fullscreen
-                   @open="onopened">
-            <table style="width: 100%">
-                <tr style="width: 100%;vertical-align: text-top;">
-                    <td style="padding-right: 5px">
-                        <div id="sample" style="width:100%; white-space:nowrap;">
-                            <div id="myDiagramDiv" style="border: solid 1px black;"></div>
-                        </div>
+                   @open="onopened" >
+            <table style="width: 100%" >
+                <tr style="width: 100%;vertical-align: text-top;" >
+                    <td style="padding-right: 5px" >
+                        <div id="sample" style="width:100%; white-space:nowrap;" >
+                            <div id="myDiagramDiv" style="border: solid 1px black;" ></div >
+                        </div >
 
-                    </td>
-                    <td style="width: 50%">
-                        <div>
-                            <el-row>
-                                <el-form :model="addForm" label-position="right" label-width="120px">
+                    </td >
+                    <td style="width: 50%" >
+                        <div >
+                            <el-row >
+                                <el-form :model="addForm" label-position="right" label-width="120px" >
 
-                                    <el-col :span="10">
-                                        <el-form-item label="订单号：">
+                                    <el-col :span="10" >
+                                        <el-form-item label="订单号：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.orderNum"
-                                                      style="width:100%"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="10" :offset="1">
-                                        <el-form-item label="机型：">
+                                                      style="width:100%" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="10" :offset="1" >
+                                        <el-form-item label="机型：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.machineTypeName"
-                                                      style="width:100%"></el-input>
-                                        </el-form-item>
-                                    </el-col>
+                                                      style="width:100%" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
 
-                                    <el-col :span="10">
-                                        <el-form-item label="机器编号：">
+                                    <el-col :span="10" >
+                                        <el-form-item label="机器编号：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.nameplate"
-                                                      style="width:100%"></el-input>
-                                        </el-form-item>
-                                    </el-col>
+                                                      style="width:100%" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
 
-                                    <el-col :span="10" :offset="1">
-                                        <el-form-item label="交货日期：">
+                                    <el-col :span="10" :offset="1" >
+                                        <el-form-item label="交货日期：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.shipTime"
-                                                      style="width:100%"></el-input>
-                                        </el-form-item>
-                                    </el-col>
+                                                      style="width:100%" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
 
-                                    <el-col :span="10">
-                                        <el-form-item label="开始时间：">
+                                    <el-col :span="10" >
+                                        <el-form-item label="开始时间：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.processCreateTime"
-                                                      style="width:100%"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="10" :offset="1">
-                                        <el-form-item label="完成时间：">
+                                                      style="width:100%" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="10" :offset="1" >
+                                        <el-form-item label="完成时间：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.processEndTime"
-                                                      style="width:100%"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="10">
-                                        <el-form-item label="位置：">
+                                                      style="width:100%" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="10" >
+                                        <el-form-item label="位置：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.location"
-                                                      style="width:100%"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="10" :offset="1">
-                                        <el-form-item label="流程总数：">
+                                                      style="width:100%" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="10" :offset="1" >
+                                        <el-form-item label="流程总数：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.totalTaskCount"
-                                                      style="width:100%;"></el-input>
-                                        </el-form-item>
-                                    </el-col>
+                                                      style="width:100%;" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
 
-                                    <el-col :span="21">
-                                        <el-form-item label="当前流程：">
+                                    <el-col :span="21" >
+                                        <el-form-item label="当前流程：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.currentTaskName"
-                                                      style="width:100%;">
-                                            </el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="1">
+                                                      style="width:100%;" >
+                                            </el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="1" >
                                         <div class="colorDiv"
-                                             style="background-color: green;"></div>
-                                    </el-col>
+                                             style="background-color: green;" ></div >
+                                    </el-col >
 
 
-                                    <el-col :span="10">
-                                        <el-form-item label="当前进度：">
+                                    <el-col :span="10" >
+                                        <el-form-item label="当前进度：" >
 
                                             <el-progress type="circle"
                                                          :text-inside="false"
@@ -370,67 +371,67 @@
                                                          width="180"
                                                          show-text
                                                          :status="addForm.progressStatus"
-                                                         :percentage="addForm.currentProgress"></el-progress>
-                                        </el-form-item>
-                                    </el-col>
+                                                         :percentage="addForm.currentProgress" ></el-progress >
+                                        </el-form-item >
+                                    </el-col >
 
-                                    <el-col :span="10" :offset="1">
-                                        <el-form-item label="已完成数：">
+                                    <el-col :span="10" :offset="1" >
+                                        <el-form-item label="已完成数：" >
                                             <el-input type="text"
                                                       readonly
                                                       v-model="addForm.finishedCount"
-                                                      style="width:100%;"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="1">
+                                                      style="width:100%;" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="1" >
                                         <div class="colorDiv"
-                                             style="background-color: gray;"></div>
-                                    </el-col>
+                                             style="background-color: gray;" ></div >
+                                    </el-col >
 
-                                    <el-col :span="10" :offset="1">
-                                        <el-form-item label="未完成数：">
+                                    <el-col :span="10" :offset="1" >
+                                        <el-form-item label="未完成数：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.totalTaskCount-addForm.finishedCount"
-                                                      style="width:100%;"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="1">
+                                                      style="width:100%;" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="1" >
                                         <div class="colorDiv"
-                                             style="background-color: #00A9C9;"></div>
-                                    </el-col>
+                                             style="background-color: #00A9C9;" ></div >
+                                    </el-col >
 
-                                    <el-col :span="10" :offset="1">
-                                        <el-form-item label="异常数：">
+                                    <el-col :span="10" :offset="1" >
+                                        <el-form-item label="异常数：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.abnormalCount"
-                                                      style="width:100%;"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="1">
+                                                      style="width:100%;" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="1" >
                                         <div class="colorDiv"
-                                             style="background-color: red;"></div>
-                                    </el-col>
+                                             style="background-color: red;" ></div >
+                                    </el-col >
 
-                                    <el-col :span="10" :offset="11">
-                                        <el-form-item label="跳过数：">
+                                    <el-col :span="10" :offset="11" >
+                                        <el-form-item label="跳过数：" >
                                             <el-input type="text"
                                                       disabled
                                                       v-model="addForm.skipCount"
-                                                      style="width:100%;"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="1">
+                                                      style="width:100%;" ></el-input >
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="1" >
                                         <div class="colorDiv"
-                                             style="background-color: orange;"></div>
-                                    </el-col>
+                                             style="background-color: orange;" ></div >
+                                    </el-col >
 
-                                </el-form>
-                            </el-row>
-                            <br>
-                            <el-row>
-                                <el-col :span="23" :offset="1">
+                                </el-form >
+                            </el-row >
+                            <br >
+                            <el-row >
+                                <el-col :span="23" :offset="1" >
                                     <el-table
                                             :data="taskDataList"
                                             border
@@ -440,94 +441,94 @@
                                         <el-table-column
                                                 width="75"
                                                 align="center"
-                                                label="序号">
-                                            <template scope="scope">
+                                                label="序号" >
+                                            <template scope="scope" >
                                                 {{scope.$index+1}}
-                                            </template>
-                                        </el-table-column>
+                                            </template >
+                                        </el-table-column >
                                         <el-table-column
                                                 width="120"
                                                 align="center"
-                                                label="工序名">
-                                            <template scope="scope">
+                                                label="工序名" >
+                                            <template scope="scope" >
                                                 {{scope.row.taskName}}
-                                            </template>
-                                        </el-table-column>
+                                            </template >
+                                        </el-table-column >
                                         <el-table-column
                                                 width="120"
                                                 align="center"
-                                                label="组长">
-                                            <template scope="scope">
-                                                <span style="font-weight: bold;font-size: larger">{{scope.row.leader}}</span>
-                                            </template>
-                                        </el-table-column>
+                                                label="组长" >
+                                            <template scope="scope" >
+                                                <span style="font-weight: bold;font-size: larger" >{{scope.row.leader}}</span >
+                                            </template >
+                                        </el-table-column >
                                         <el-table-column
 
                                                 align="center"
-                                                label="组员">
-                                            <template scope="scope">
-                                                <div v-if="scope.row.workerList==null||scope.row.workerList.length==0 ">
+                                                label="组员" >
+                                            <template scope="scope" >
+                                                <div v-if="scope.row.workerList==null||scope.row.workerList.length==0 " >
                                                     无
-                                                </div>
+                                                </div >
                                                 <el-tag size="small" style="margin-left: 3px" v-else
-                                                        v-for="item in scope.row.workerList.split(',')">
+                                                        v-for="item in scope.row.workerList.split(',')" >
                                                     {{item}}
-                                                </el-tag>
-                                            </template>
-                                        </el-table-column>
+                                                </el-tag >
+                                            </template >
+                                        </el-table-column >
                                         <el-table-column
                                                 width="120"
                                                 align="center"
-                                                label="状态">
-                                            <template scope="scope">
+                                                label="状态" >
+                                            <template scope="scope" >
                                                 <el-tag v-if="scope.row.status < 2"
-                                                        style="color: #00A9C9;">
+                                                        style="color: #00A9C9;" >
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </el-tag>
+                                                </el-tag >
                                                 <el-tag v-if="scope.row.status>=2&&scope.row.status<6"
-                                                        style="color: green">
+                                                        style="color: green" >
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </el-tag>
+                                                </el-tag >
                                                 <el-tag v-if="scope.row.status==6"
-                                                        style="color: gray">
+                                                        style="color: gray" >
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </el-tag>
+                                                </el-tag >
                                                 <el-tag v-if="scope.row.status>6&&scope.row.status<9"
-                                                        style="color: red">
+                                                        style="color: red" >
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </el-tag>
+                                                </el-tag >
                                                 <el-tag v-if="scope.row.status==9"
-                                                        style="color: orange">
+                                                        style="color: orange" >
                                                     {{scope.row.status|filterTaskStatus}}
-                                                </el-tag>
-                                            </template>
-                                        </el-table-column>
+                                                </el-tag >
+                                            </template >
+                                        </el-table-column >
                                         <el-table-column
                                                 align="center"
-                                                label="操作" width="120">
-                                            <template scope="scope">
+                                                label="操作" width="120" >
+                                            <template scope="scope" >
                                                 <!--待安装或者安装中的工序可以跳过，方便流程在任何情况下都可以改变-->
                                                 <el-button v-if="scope.row.status == 2 || scope.row.status == 3"
                                                            size="small"
                                                            type="danger"
                                                            :disabled="addForm.status==7"
                                                            icon="el-icon-tickets"
-                                                           @click="showSkip(scope.row)">跳过
-                                                </el-button>
+                                                           @click="showSkip(scope.row)" >跳过
+                                                </el-button >
                                                 <el-button v-if="scope.row.status==9"
                                                            size="small"
                                                            type="primary"
                                                            :disabled="addForm.status==7"
                                                            icon="el-icon-tickets"
-                                                           @click="showRecover(scope.row)">恢复
-                                                </el-button>
-                                            </template>
-                                        </el-table-column>
+                                                           @click="showRecover(scope.row)" >恢复
+                                                </el-button >
+                                            </template >
+                                        </el-table-column >
 
-                                    </el-table>
+                                    </el-table >
 
-                                </el-col>
-                            </el-row>
+                                </el-col >
+                            </el-row >
                             <!--<el-row>-->
                             <!--<el-col :span="2" :offset="22">-->
                             <!--<el-button-->
@@ -541,42 +542,44 @@
                             <!--</el-col>-->
                             <!--</el-row>-->
                             <el-dialog title="跳过工序" :visible.sync="confirmSkipDialog" width="30%"
-                                       :modal="false">
-                                <span>确定要跳过这一步骤 [<b style="color: red;font-size: 18px">{{selectedTaskItem.taskName}}</b>] 吗？</span>
-                                <span slot="footer" class="dialog-footer">
-                                    <el-button @click="confirmSkipDialog = false" icon="el-icon-close">取 消</el-button>
+                                       :modal="false" >
+                                <span >确定要跳过这一步骤 [<b
+                                        style="color: red;font-size: 18px" >{{selectedTaskItem.taskName}}</b >] 吗？</span >
+                                <span slot="footer" class="dialog-footer" >
+                                    <el-button @click="confirmSkipDialog = false" icon="el-icon-close" >取 消</el-button >
                                     <el-button type="primary" @click="onConfirmSkip"
-                                               icon="el-icon-check">确 定</el-button>
-                                </span>
-                            </el-dialog>
+                                               icon="el-icon-check" >确 定</el-button >
+                                </span >
+                            </el-dialog >
                             <el-dialog title="恢复工序" :visible.sync="confirmRecoverDialog" width="30%"
-                                       :modal="false">
-                                <span>确定要恢复这一步骤 [<b style="color: red;font-size: 18px">{{selectedTaskItem.taskName}}</b>] 吗？</span>
-                                <span slot="footer" class="dialog-footer">
+                                       :modal="false" >
+                                <span >确定要恢复这一步骤 [<b
+                                        style="color: red;font-size: 18px" >{{selectedTaskItem.taskName}}</b >] 吗？</span >
+                                <span slot="footer" class="dialog-footer" >
                                     <el-button @click="confirmRecoverDialog = false"
-                                               icon="el-icon-close">取 消</el-button>
+                                               icon="el-icon-close" >取 消</el-button >
                                     <el-button type="primary" @click="onConfirmRecover"
-                                               icon="el-icon-check">确 定</el-button>
-                                </span>
-                            </el-dialog>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <div slot="footer" class="dialog-footer">
-                <el-col :span="24" style="margin-bottom: 30px;">
+                                               icon="el-icon-check" >确 定</el-button >
+                                </span >
+                            </el-dialog >
+                        </div >
+                    </td >
+                </tr >
+            </table >
+            <div slot="footer" class="dialog-footer" >
+                <el-col :span="24" style="margin-bottom: 30px;" >
                     <el-button icon="el-icon-close"
                                size="normal"
                                type="danger"
-                               @click="addDialogVisible = false">关 闭
-                    </el-button>
-                </el-col>
-            </div>
-        </el-dialog>
-    </div>
-</template>
+                               @click="addDialogVisible = false" >关 闭
+                    </el-button >
+                </el-col >
+            </div >
+        </el-dialog >
+    </div >
+</template >
 
-<script>
+<script >
     import Vue from 'vue'
     import {Loading} from 'element-ui';
     var _this;
@@ -855,7 +858,11 @@
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
                         taskList.nodeDataArray.forEach(item=> {
                             if (item.category != "Start" && item.category != "End") {
-                                if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
+                                if (parseInt(item.taskStatus) == 2)//待安装
+                                {
+                                    item.category = ProcessCatergory.Waiting;
+                                }
+                                else if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
                                 }
@@ -1341,6 +1348,34 @@
                         makePort("B", go.Spot.Bottom, true, false)
                 ));
 
+        myDiagram.nodeTemplateMap.add("Waiting",  //category
+                $(go.Node, "Spot", nodeStyle(),
+                        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+                        $(go.Panel, "Auto",
+                                $(go.Shape, "Rectangle",
+                                        {fill: "#66ff66", stroke: null},
+                                        new go.Binding("figure", "figure")),
+                                $(go.TextBlock,
+                                        {
+                                            font: "bold 11pt Arial",
+                                            stroke: "black",
+                                            margin: 8,
+//                                            maxSize: new go.Size(160, NaN),
+                                            maxSize: new go.Size(160, 160),
+                                            wrap: go.TextBlock.WrapFit,
+                                            editable: false,
+                                            textAlign: 'center',
+                                            isMultiline: true
+                                        },
+                                        new go.Binding("text").makeTwoWay())
+                        ),
+                        // four named ports, one on each side:
+                        makePort("T", go.Spot.Top, false, true),
+                        makePort("L", go.Spot.Left, true, true),
+                        makePort("R", go.Spot.Right, true, true),
+                        makePort("B", go.Spot.Bottom, true, false)
+                ));
+
 
         myDiagram.nodeTemplateMap.add("Finished",  // Finished category
                 $(go.Node, "Spot", nodeStyle(),
@@ -1565,8 +1600,8 @@
         });
     }
 
-</script>
-<style>
+</script >
+<style >
     .el-select {
         width: 100%;
     }
@@ -1585,6 +1620,6 @@
         margin-left: 10px;
     }
 
-</style>
+</style >
 
 

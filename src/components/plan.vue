@@ -1331,7 +1331,7 @@
                         // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
                         $(go.Panel, "Auto",
                                 $(go.Shape, "Rectangle",
-                                        {fill: "#71C671", stroke: null},
+                                        {fill: "#66ff66", stroke: null},
                                         new go.Binding("figure", "figure")),
                                 $(go.TextBlock,
                                         {
