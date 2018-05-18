@@ -208,17 +208,23 @@
                                     @click="editWithItem(scope.row)" >查看
                             </el-button >
                         </el-tooltip >
-                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4" placement="right" >
+                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4
+                                    && (userinfo.role.roleName.indexOf('生产部')>-1
+                                    || userinfo.role.roleName.indexOf('PMC')>-1)
+                                    || userinfo.role.roleName.indexOf('超级管理员')>-1)"
+                                    placement="right" >
                             <div slot="content" >取消机器</div >
                             <el-button
-
                                     size="mini"
                                     type="danger"
                                     icon="el-icon-close"
                                     @click="cancelMachine(scope.row)" >取消
                             </el-button >
                         </el-tooltip >
-                        <el-tooltip v-show="scope.row.status==7 && userinfo.role.roleName.indexOf('超级管理员')>-1"
+                        <el-tooltip v-show="scope.row.status==7
+                                    && (userinfo.role.roleName.indexOf('生产部')>-1
+                                        || userinfo.role.roleName.indexOf('PMC')>-1
+                                        || userinfo.role.roleName.indexOf('超级管理员')>-1)"
                                     placement="right" >
                             <div slot="content" >恢复安装</div >
                             <el-button
