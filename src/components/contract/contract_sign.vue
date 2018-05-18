@@ -3440,21 +3440,17 @@
                     //由于signContent在DB中是以String方式存储的，防止Server端解析失败，需要在前端转成String形式，而不是array
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
-                        obj[i].orderSign.signContent = JSON.stringify(
-                                obj[i].orderSign.signContent
-                        );
+                        if(obj[i].orderSign.signContent != null && obj[i].orderSign.signContent.length == 0 ) {
+                            showMessage(_this, "需求单" + obj[i].machineOrder.orderNum + "的签核为空！若改需求单新创建，请删除后再次创建；若该需求单已签核，请联系管理员！", 0);
+                            return;
+                        }
+                        obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
                         //将machineOrder中的装置array对象转换成Json String
-                        obj[i].machineOrder.equipment = JSON.stringify(
-                                obj[i].machineOrder.equipment
-                        );
+                        obj[i].machineOrder.equipment = JSON.stringify(obj[i].machineOrder.equipment);
                         //增加销售员信息，因为之前是绑定信息是在合同contractForm里面 --No.3
                         obj[i].machineOrder.sellman = this.contractForm.sellman;
                         if (parseInt(obj[i].machineOrder.machinePrice) <= 0) {
-                            showMessage(
-                                    _this,
-                                    "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！",
-                                    0
-                            );
+                            showMessage(_this, "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！", 0);
                             return;
                         }
                     }
@@ -3511,19 +3507,17 @@
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
                         if (obj[i].orderSign != null) {
-                            obj[i].orderSign.signContent = JSON.stringify(
-                                    obj[i].orderSign.signContent
-                            );
+                            if(obj[i].orderSign.signContent != null && obj[i].orderSign.signContent.length == 0 ) {
+                                showMessage(_this, "需求单" + obj[i].machineOrder.orderNum + "的签核不能为空！请删除后再次创建；若该需求单已签核，请联系管理员！", 0);
+                                return;
+                            }
+                            obj[i].orderSign.signContent = JSON.stringify(bj[i].orderSign.signContent);
                             //将machineOrder中的装置array对象转换成Json String
                             obj[i].machineOrder.equipment = JSON.stringify(
                                     obj[i].machineOrder.equipment
                             );
                             if (parseInt(obj[i].machineOrder.machinePrice) <= 0) {
-                                showMessage(
-                                        _this,
-                                        "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！",
-                                        0
-                                );
+                                showMessage(_this, "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！", 0);
                                 return;
                             }
                         }
