@@ -210,8 +210,8 @@
                         </el-tooltip >
                         <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4
                                     && (userinfo.role.roleName.indexOf('生产部')>-1
-                                    || userinfo.role.roleName.indexOf('PMC')>-1)
-                                    || userinfo.role.roleName.indexOf('超级管理员')>-1)"
+                                    || userinfo.role.roleName.indexOf('PMC')>-1
+                                    || userinfo.role.roleName.indexOf('超级管理员')>-1) "
                                     placement="right" >
                             <div slot="content" >取消机器</div >
                             <el-button
