@@ -1879,7 +1879,7 @@
                 </el-button>
                 <el-button v-show="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check">保存拆单
                 </el-button>
-                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">保 存</el-button>
+                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">提 交</el-button>
             </div>
             <el-dialog title="提示" :visible.sync="confirmPasteDialog" width="30%" append-to-body>
                 <span style="font-size: 15px">确定要粘贴到<b style="color: #F56C6C">{{currentSelectOrder.title}}</b>吗？</span>
@@ -3511,7 +3511,7 @@
                                 showMessage(_this, "需求单" + obj[i].machineOrder.orderNum + "的签核不能为空！请删除后再次创建；若该需求单已签核，请联系管理员！", 0);
                                 return;
                             }
-                            obj[i].orderSign.signContent = JSON.stringify(bj[i].orderSign.signContent);
+                            obj[i].orderSign.signContent = JSON.stringify(obj[i].orderSign.signContent);
                             //将machineOrder中的装置array对象转换成Json String
                             obj[i].machineOrder.equipment = JSON.stringify(
                                     obj[i].machineOrder.equipment
