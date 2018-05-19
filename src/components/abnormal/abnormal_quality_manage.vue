@@ -484,45 +484,47 @@
 
             },
             submit(){
-                if (!_this.isError) {
-                    let taskQualityRecord = {
-                        id: _this.addForm.id,
-                        solution: _this.addForm.solution,
-                        solutionUser: _this.addForm.solutionUser
-                    }
-                    $.ajax({
-                        url: HOST + "task/quality/record/update",
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {taskQualityRecord: JSON.stringify(taskQualityRecord)},
-                        success: function (res) {
-                            if (res.code == 200) {
-                                showMessage(_this, "修改成功", 1)
-                                _this.getStatisticsData();
-
-                            } else {
-                                showMessage(_this, "修改失败", 0)
-                            }
-                            _this.addDialogVisible = false;
-
-                        },
-                    })
+                if (_this.isError) {
+                    return;
                 }
+                let taskQualityRecord = {
+                    id: _this.addForm.id,
+                    solution: _this.addForm.solution,
+                    solutionUser: _this.addForm.solutionUser
+                }
+                $.ajax({
+                    url: HOST + "task/quality/record/update",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {taskQualityRecord: JSON.stringify(taskQualityRecord)},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            showMessage(_this, "修改成功", 1)
+                            _this.getStatisticsData();
+
+                        } else {
+                            showMessage(_this, "修改失败", 0)
+                        }
+                        _this.addDialogVisible = false;
+
+                    },
+                })
             },
 
             onSubmit()
             {
+                _this.isError = false;
                 if (_this.addForm.solutionUser == null || _this.addForm.solutionUser == "") {
                     _this.errorMsg = "异常解决者不能为空！";
                     _this.isError = true;
                     return;
-                } else if (isStringEmpty(_this.addForm.solution)) {
+                }
+                if (isStringEmpty(_this.addForm.solution)) {
                     _this.errorMsg = "解决问题不能为空！";
                     _this.isError = true;
                     return;
-                } else {
-                    _this.submit();
                 }
+                _this.submit();
             },
 
             handleCurrentChange(val) {
