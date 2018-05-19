@@ -81,8 +81,8 @@
                                 unlink-panels
                                 clearable
                                 range-separator="—"
-                                start-placeholder="开始日期（计划）"
-                                end-placeholder="结束日期（计划）"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
                                 :picker-options="pickerOptions">
                         </el-date-picker>
                     </el-form-item>

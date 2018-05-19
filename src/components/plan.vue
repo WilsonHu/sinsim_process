@@ -107,6 +107,7 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
+                            mini-width="200"
                             label="订单号">
                         <template scope="scope">
                             {{scope.row.machineOrder.orderNum}}
@@ -151,6 +152,7 @@
                             label="安装">
                         <el-table-column
                                 align="center"
+                                width="100"
                                 label="开始时间">
                             <template scope="scope">
                                 <div>
@@ -160,6 +162,7 @@
                         </el-table-column>
                         <el-table-column
                                 align="center"
+                                width="100"
                                 label="结束时间">
                             <template scope="scope">
                                 <div>
@@ -173,6 +176,7 @@
                             label="质检">
                         <el-table-column
                                 align="center"
+                                width="100"
                                 label="开始时间">
                             <template scope="scope">
                                 <div>
@@ -182,6 +186,7 @@
                         </el-table-column>
                         <el-table-column
                                 align="center"
+                                width="100"
                                 label="结束时间">
                             <template scope="scope">
                                 <div>
@@ -200,15 +205,15 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column
-                            align="center"
-                            label="合同交货日期">
-                        <template slot-scope="scope">
-                    <span>
-                        {{(scope.row.machineOrder.contractShipDate)|filterDateString}}
-                    </span>
-                        </template>
-                    </el-table-column>
+                    <!--<el-table-column-->
+                            <!--align="center"-->
+                            <!--label="合同交货日期">-->
+                        <!--<template slot-scope="scope">-->
+                    <!--<span>-->
+                        <!--{{(scope.row.machineOrder.contractShipDate)|filterDateString}}-->
+                    <!--</span>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
                     <el-table-column
                             align="center"
                             label="计划交货日期">
