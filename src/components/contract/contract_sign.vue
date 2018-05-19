@@ -127,7 +127,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    label="订单号" width="80">
+                                    label="订单号" min-width="200">
                                 <template scope="scope">
                                     <div v-on:click="onCourseDetail(scope.row)"
                                          style="font-weight: bold;"
@@ -184,7 +184,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    label="操作" width="240">
+                                    label="操作" width="200">
                                 <template scope="scope">
                                     <el-tooltip placement="top">
                                         <div slot="content">审核</div>
@@ -2772,7 +2772,7 @@
             },
 
             formatDate(timeStamp) {
-                return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
+                return new Date(timeStamp).format("yyyy-MM-dd");
             },
             filterCountry(value) {
                 if (value != null && value != "") {

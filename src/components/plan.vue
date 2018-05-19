@@ -174,7 +174,7 @@
                         <el-table-column
                                 align="center"
                                 label="开始时间">
-			    <template scope="scope">
+                            <template scope="scope">
                                 <div>
                                     {{scope.row.qualityBeginTime | filterDateTimeString}}
                                 </div>
@@ -183,7 +183,7 @@
                         <el-table-column
                                 align="center"
                                 label="结束时间">
-			    <template scope="scope">
+                            <template scope="scope">
                                 <div>
                                     {{scope.row.qualityEndTime | filterDateTimeString}}
                                 </div>
@@ -221,15 +221,18 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="操作" width="100">
+                            label="操作" width="60">
                         <template scope="scope">
-                            <el-button
-                                    size="small"
-                                    type="danger"
-                                    v-show="scope.row.status == 1 || scope.row.status == 2"
-                                    icon="el-icon-delete"
-                                    @click="toDeletePlanConfirm(scope.row)">计划
-                            </el-button>
+                            <el-tooltip placement="top">
+                                <div slot="content">删除计划</div>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        v-show="scope.row.status == 1 || scope.row.status == 2"
+                                        icon="el-icon-delete"
+                                        @click="toDeletePlanConfirm(scope.row)">
+                                </el-button>
+                            </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -345,7 +348,7 @@
                         <template scope="scope"
                                   prop="orderNum">
                             <div
-                                style="font-weight: bold;">
+                                    style="font-weight: bold;">
                                 {{scope.row.orderNum}}
                             </div>
                         </template>
@@ -373,7 +376,8 @@
                                 scope="scope"
                                 label="待安装">
                             <template scope="scope">
-                                <el-tag type="danger" style="font-weight: bold">{{scope.row.installWaitingTaskNum}}</el-tag>
+                                <el-tag type="danger" style="font-weight: bold">{{scope.row.installWaitingTaskNum}}
+                                </el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -445,14 +449,17 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="操作" width="100">
+                            label="操作" width="60">
                         <template scope="scope">
-                            <el-button
-                                    size="small"
-                                    type="primary"
-                                    icon="el-icon-tickets"
-                                    @click="doPlan(scope.row)">计划
-                            </el-button>
+                            <el-tooltip placement="top">
+                                <div slot="content">设置计划</div>
+                                <el-button
+                                        size="mini"
+                                        type="success"
+                                        icon="el-icon-setting"
+                                        @click="doPlan(scope.row)">
+                                </el-button>
+                            </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -469,11 +476,11 @@
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="提示" :visible.sync="deletePlanDialogVisible" width="25%">
-          <span style="font-size: 16px">确认要删除作业计划[ <b >{{deleteData.taskName}}</b > ]？</span >
-          <span slot="footer" class="dialog-footer" >
-            <el-button @click="deletePlanDialogVisible = false" icon="el-icon-close">取 消</el-button >
-            <el-button type="primary" @click="deletePlan()" icon="el-icon-check">确 定</el-button >
-          </span >
+            <span style="font-size: 16px">确认要删除作业计划[ <b>{{deleteData.taskName}}</b> ]？</span>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="deletePlanDialogVisible = false" icon="el-icon-close">取 消</el-button>
+            <el-button type="primary" @click="deletePlan()" icon="el-icon-check">确 定</el-button>
+          </span>
         </el-dialog>
         <el-dialog :visible.sync="doPlaningDialogVisible" fullscreen append-to-body>
             <el-form :model="machineDoPlaning" label-position="right" label-width="110px">
@@ -655,7 +662,7 @@
                 },
                 doPlaningDialogVisible: false,
                 deletePlanDialogVisible: false,
-                deleteData:"",
+                deleteData: "",
                 machineDoPlaning: {},
                 notPlanedTasks: [],
                 toPlanTasks: [],
@@ -750,12 +757,12 @@
                 this.deletePlanDialogVisible = true;
             },
             deletePlan() {
-                if(_this.deleteData != null && _this.deleteData.taskPlan.id > 0) {
+                if (_this.deleteData != null && _this.deleteData.taskPlan.id > 0) {
                     $.ajax({
                         url: HOST + "task/plan/deletePlan",
                         type: 'POST',
                         dataType: 'json',
-                        data: {id:_this.deleteData.taskPlan.id, taskRecordId:_this.deleteData.id},
+                        data: {id: _this.deleteData.taskPlan.id, taskRecordId: _this.deleteData.id},
                         success: function (data) {
                             if (data.code == 200) {
                                 _this.onSearchPlanedData();
@@ -837,10 +844,10 @@
                                 if (parseInt(item.taskStatus) > 0 && parseInt(item.taskStatus) < 2)//已计划
                                 {
                                     item.category = ProcessCatergory.Planed;
-                                }else if (parseInt(item.taskStatus) > 1 && parseInt(item.taskStatus) < 3)//待安装
+                                } else if (parseInt(item.taskStatus) > 1 && parseInt(item.taskStatus) < 3)//待安装
                                 {
                                     item.category = ProcessCatergory.Waiting;
-                                }else if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
+                                } else if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
                                 } else if (parseInt(item.taskStatus) == 6) {//完成

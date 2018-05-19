@@ -269,6 +269,10 @@
                     success: function (res) {
                         if (res.code == 200) {
                             _this.tableData = res.data.list;
+                            //倒序排序方法
+                            _this.tableData.sort(function (a, b) {
+                                return a.createTime < b.createTime;
+                            });
                             _this.totalNum = res.data.total;
                             _this.startRow = res.data.startRow;
                         } else {

@@ -98,6 +98,7 @@
                             label="合同号">
                     </el-table-column>
                     <el-table-column label="订单号"
+                                     min-width="150"
                                      sortable
                                      prop="orderNum"
                                      align="center">
@@ -110,6 +111,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                            width="80"
                             align="center"
                             prop="machineNum"
                             label="机器数量">

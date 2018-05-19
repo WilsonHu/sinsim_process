@@ -198,20 +198,20 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column
-                        align="center"
-                        prop="shipTime"
-                        label="发货时间">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.shipTime==null"
-                              style="color: darkorange">
-                            无
-                        </span>
-                        <span v-else>
-                            {{(scope.row.shipTime)|filterDateString}}
-                        </span>
-                    </template>
-                </el-table-column>
+                <!--<el-table-column-->
+                        <!--align="center"-->
+                        <!--prop="shipTime"-->
+                        <!--label="发货时间">-->
+                    <!--<template slot-scope="scope">-->
+                        <!--<span v-if="scope.row.shipTime==null"-->
+                              <!--style="color: darkorange">-->
+                            <!--无-->
+                        <!--</span>-->
+                        <!--<span v-else>-->
+                            <!--{{(scope.row.shipTime)|filterDateString}}-->
+                        <!--</span>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
 
                 <el-table-column
                         label="操作" width="100" align="center">

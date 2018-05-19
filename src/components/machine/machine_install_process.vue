@@ -315,7 +315,7 @@
                                         <el-form-item label="交货日期：" >
                                             <el-input type="text"
                                                       disabled
-                                                      v-model="addForm.shipTime"
+                                                      v-model="addForm.contractShipDate"
                                                       style="width:100%" ></el-input >
                                         </el-form-item >
                                     </el-col >
@@ -845,8 +845,8 @@
                 if (_this.addForm.processEndTime != null) {
                     _this.addForm.processEndTime = _this.filterDateString(_this.addForm.processEndTime)
                 }
-                if (_this.addForm.shipTime != null) {
-                    _this.addForm.shipTime = _this.filterDateString(_this.addForm.shipTime)
+                if (_this.addForm.contractShipDate != null) {
+                    _this.addForm.contractShipDate = _this.filterDateString(_this.addForm.contractShipDate)
                 }
                 if (_this.addForm.processRecordId != '') {
                     /*
