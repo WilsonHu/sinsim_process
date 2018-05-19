@@ -4,7 +4,7 @@
             <el-row style="margin-top: 10px">
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
-                        <el-col >
+                        <el-col>
                             <div style="font-size: 20px;font-weight: bold">安装中:</div>
                         </el-col>
                         <el-col>
@@ -14,20 +14,20 @@
                 </el-col>
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
-                        <el-col >
+                        <el-col>
                             <div style="font-size: 20px;font-weight: bold">改单中:</div>
                         </el-col>
-                        <el-col >
+                        <el-col>
                             <div style="font-size: 52px; font-weight: bold; color: #FA5555">{{changeMachineNum}}</div>
                         </el-col>
                     </el-row>
                 </el-col>
                 <el-col :span="4">
                     <el-row type="flex" justify="center">
-                        <el-col >
+                        <el-col>
                             <div style="font-size: 20px;font-weight: bold">拆单中:</div>
                         </el-col>
-                        <el-col >
+                        <el-col>
                             <div style="font-size: 52px; font-weight: bold; color: #FA5555">{{splitMachineNum}}</div>
                         </el-col>
                     </el-row>
@@ -37,7 +37,7 @@
                         <el-col>
                             <div style="font-size: 20px;font-weight: bold">异常工序:</div>
                         </el-col>
-                        <el-col >
+                        <el-col>
                             <div style="font-size: 52px; font-weight: bold; color: #FA5555">{{abnormalTaskNum}}</div>
                         </el-col>
                     </el-row>
@@ -363,14 +363,24 @@
                                     _this.abnormalData[existIndex].data[j] = res.data[i].abnormalCount;
                                 }
                                 else {
-                                    _this.abnormalLegend.push(res.data[i].abnormalName.trim());
-                                    _this.abnormalData.push({
-                                        name: res.data[i].abnormalName.trim(),
-                                        type: 'bar',
-                                        stack: '异常',
-                                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                                    },);
-                                    _this.abnormalData[_this.abnormalData.length - 1].data[j] = res.data[i].abnormalCount;
+                                    let isNeedAdd = true;
+                                    for (var legendValue of  _this.abnormalLegend) {
+                                        if (legendValue === res.data[i].abnormalName.trim()) {
+                                            isNeedAdd = false;
+                                            _this.abnormalData[existIndex].data[j] = res.data[i].abnormalCount;
+                                            break;
+                                        }
+                                    }
+                                    if (isNeedAdd == true) {
+                                        _this.abnormalLegend.push(res.data[i].abnormalName.trim());
+                                        _this.abnormalData.push({
+                                            name: res.data[i].abnormalName.trim(),
+                                            type: 'bar',
+                                            stack: '异常',
+                                            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                        });
+                                        _this.abnormalData[_this.abnormalData.length - 1].data[j] = res.data[i].abnormalCount;
+                                    }
                                 }
 
                             }
