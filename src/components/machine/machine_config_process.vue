@@ -46,7 +46,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="选择日期:">
+                        <el-form-item label="创建日期:">
                             <el-date-picker
                                     v-model="filters.selectDate"
                                     type="daterange"
@@ -187,7 +187,7 @@
                 <el-table-column
                         align="center"
                         prop="createTime"
-                        label="创建时间">
+                        label="创建日期">
                     <template slot-scope="scope">
                         <span v-if="scope.row.createTime==null"
                               style="color: darkorange">

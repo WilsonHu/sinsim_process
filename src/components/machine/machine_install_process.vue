@@ -46,7 +46,7 @@
                         </el-form-item >
                     </el-col >
                     <el-col :span="6" >
-                        <el-form-item label="选择日期:" >
+                        <el-form-item label="开始日期:" >
                             <el-date-picker
                                     v-model="filters.selectDate"
                                     type="daterange"
@@ -175,7 +175,7 @@
                 <el-table-column
                         align="center"
                         prop="processCreateTime"
-                        label="开始时间" >
+                        label="开始日期" >
                     <template slot-scope="scope" >
                         <span >
                             {{(scope.row.processCreateTime)|filterDateString}}
@@ -185,7 +185,7 @@
                 <el-table-column
                         align="center"
                         prop="processEndTime"
-                        label="完成时间" >
+                        label="完成日期" >
                     <template slot-scope="scope" >
                         <span v-if="scope.row.processEndTime==null"
                               style="color: darkorange" >
