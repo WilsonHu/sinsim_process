@@ -1879,7 +1879,7 @@
                 </el-button>
                 <el-button v-show="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check">保存拆单
                 </el-button>
-                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">提 交</el-button>
+                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">保 存</el-button>
             </div>
             <el-dialog title="提示" :visible.sync="confirmPasteDialog" width="30%" append-to-body>
                 <span style="font-size: 15px">确定要粘贴到<b style="color: #F56C6C">{{currentSelectOrder.title}}</b>吗？</span>
