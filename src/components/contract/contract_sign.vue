@@ -773,14 +773,11 @@
                                                     <el-col :span="6">
                                                         <el-form-item label="头数：" :label-width="formLabelWidth"
                                                                       :class="classWithDifferentValue(item, 'headNum',false)">
-                                                            <el-input-number style="float: left"
-                                                                             v-model="item.machineOrder.headNum"
-                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                             :step="1"
-                                                                             controls-position="right"
-                                                                             :min="1">
-                                                            </el-input-number>
+                                                            <el-input style="float: left"
+                                                                     v-model="item.machineOrder.headNum"
+                                                                     :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                     :readonly="changeOrderContentDisable(item.machineOrder)">
+                                                            </el-input>
                                                         </el-form-item>
                                                     </el-col>
                                                     <el-col :span="6">
