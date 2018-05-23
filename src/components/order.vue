@@ -448,14 +448,10 @@
                                 </el-col>
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="头数：" :label-width="formLabelWidth">
-                                        <el-input-number style="float: left"
-                                                         disabled
-                                                         v-model="form.headNum"
-                                                         :step="1"
-                                                         controls-position="right"
-                                                         :min="1"
-                                                         :max="100">
-                                        </el-input-number>
+                                        <el-input style="float: left"
+                                                 disabled
+                                                 v-model="form.headNum">
+                                        </el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6" :offset="0">
