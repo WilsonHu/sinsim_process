@@ -333,7 +333,7 @@
                                     prop="machineName"
                                     label="机器">
                                 <!--<template scope="scope">-->
-                                    <!--<span>{{scope.row.machineOrder.machineType | filterMachineTypeName}}</span>-->
+                                <!--<span>{{scope.row.machineOrder.machineType | filterMachineTypeName}}</span>-->
                                 <!--</template>-->
                             </el-table-column>
                             <el-table-column
@@ -363,14 +363,14 @@
                                                 label="装置名称"
                                                 align="center">
                                             <template slot-scope="scope">
-                                               <span>{{scope.row.name}}</span>
+                                                <span>{{scope.row.name}}</span>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
                                                 label="数量"
                                                 align="center">
                                             <template slot-scope="scope">
-                                               <span>{{scope.row.number}}</span>
+                                                <span>{{scope.row.number}}</span>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -383,7 +383,7 @@
                                         <el-table-column
                                                 label="装置总价"
                                                 align="center"
-                                              >
+                                        >
                                             <template slot-scope="scope">
                                                 <span style="font-weight: bold;color: #409EFF">{{scope.row.price*scope.row.number}}</span>
                                             </template>
@@ -422,7 +422,9 @@
 
 
                         <el-row style="margin-top: 10px" v-show="isFinanceVisible()">
-                            <el-col :span="3" :offset="18" style="font-size: 16px;font-weight: bold;text-align: right;">合同总价({{contractForm.currencyType}})：</el-col>
+                            <el-col :span="3" :offset="18" style="font-size: 16px;font-weight: bold;text-align: right;">
+                                合同总价({{contractForm.currencyType}})：
+                            </el-col>
                             <el-col :span="2" :offset="1" style="font-size: 28px;font-weight: bold; color: red">
                                 {{calculateTotalPrice()}}
                             </el-col>
@@ -568,1308 +570,1318 @@
 
 
                     <!--<el-collapse v-model="collapseActiveNames" @change="handleCollapseChange"-->
-                                 <!--style="margin-left: 25px;margin-right: 25px">-->
-                        <!--<el-collapse-item :title="collapseTitle" name="1">-->
+                    <!--style="margin-left: 25px;margin-right: 25px">-->
+                    <!--<el-collapse-item :title="collapseTitle" name="1">-->
 
-                            <el-tabs v-model="editableTabsValue" type="border-card" style="padding-right: 3px"
-                                     :editable="(mode == EDIT_MODE && (editContractSign.currentStep != '签核完成')) || mode == ADD_MODE"
-                                     @edit="handleEditTab">
-                                <el-tab-pane
-                                        style="margin-left: 20px;margin-right: 20px"
-                                        v-for="(item, index) in requisitionForms"
-                                        :key="item.name"
-                                        :label="item.title"
-                                        :name="item.name">
-                                    <el-form :model="item">
-                                        <div>
-                                            <el-card
-                                                    v-if="(item.machineOrder.originalOrderId != null && item.machineOrder.originalOrderId != 0) && item.orderChangeRecord != null && (mode == CHANGE_MODE ||item.orderChangeRecord.changeReason != '')">
-                                                <el-row>
-                                                    <el-col :span="2">
-                                                        <el-form-item label="原单号：" :label-width="formLabelWidth">
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="4" style="text-align: left;margin-top: 5px">
+                    <el-tabs v-model="editableTabsValue" type="border-card" style="padding-right: 3px"
+                             :editable="(mode == EDIT_MODE && (editContractSign.currentStep != '签核完成')) || mode == ADD_MODE"
+                             @edit="handleEditTab">
+                        <el-tab-pane
+                                style="margin-left: 20px;margin-right: 20px"
+                                v-for="(item, index) in requisitionForms"
+                                :key="item.name"
+                                :label="item.title"
+                                :name="item.name">
+                            <el-form :model="item">
+                                <div>
+                                    <el-card
+                                            v-if="(item.machineOrder.originalOrderId != null && item.machineOrder.originalOrderId != 0) && item.orderChangeRecord != null && (mode == CHANGE_MODE ||item.orderChangeRecord.changeReason != '')">
+                                        <el-row>
+                                            <el-col :span="2">
+                                                <el-form-item label="原单号：" :label-width="formLabelWidth">
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="4" style="text-align: left;margin-top: 5px">
                                                         <span style="font-weight: bold;font-size: 16px; color: #409EFF">
                                                                 {{filterOrderNum(item.machineOrder.originalOrderId)}}
                                                         </span>
-                                                    </el-col>
-                                                </el-row>
-                                                <el-col>
-                                                    <el-form-item label="改单原因：" :label-width="formLabelWidth"
-                                                                  style="padding-bottom: 12px"
-                                                                  prop="orderChangeRecord.changeReason"
-                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                  :rules="[
+                                            </el-col>
+                                        </el-row>
+                                        <el-col>
+                                            <el-form-item label="改单原因：" :label-width="formLabelWidth"
+                                                          style="padding-bottom: 12px"
+                                                          prop="orderChangeRecord.changeReason"
+                                                          :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                          :rules="[
                                                                               { required: true, message: '改单原因不能为空'},
                                                                       ]">
-                                                        <el-input v-model="item.orderChangeRecord.changeReason"
-                                                                  type="textarea"
-                                                                  auto-complete="off"
-                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                  :autosize="{ minRows: 3, maxRows: 3}"
-                                                                  placeholder="改单原因"></el-input>
-                                                    </el-form-item>
-                                                </el-col>
-                                            </el-card>
-                                            <el-card
-                                                    v-if="item.machineOrder.originalOrderId != null && item.orderSplitRecord != null && (mode == SPLIT_MODE ||item.orderSplitRecord.splitReason != '')">
-                                                <el-row>
-                                                    <el-col :span="2">
-                                                        <el-form-item label="原单号：" :label-width="formLabelWidth">
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="4" style="text-align: left;margin-top: 5px">
+                                                <el-input v-model="item.orderChangeRecord.changeReason"
+                                                          type="textarea"
+                                                          auto-complete="off"
+                                                          :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                          :autosize="{ minRows: 3, maxRows: 3}"
+                                                          placeholder="改单原因"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-card>
+                                    <el-card
+                                            v-if="item.machineOrder.originalOrderId != null && item.orderSplitRecord != null && (mode == SPLIT_MODE ||item.orderSplitRecord.splitReason != '')">
+                                        <el-row>
+                                            <el-col :span="2">
+                                                <el-form-item label="原单号：" :label-width="formLabelWidth">
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="4" style="text-align: left;margin-top: 5px">
                                                         <span style="font-weight: bold;font-size: 16px; color: #409EFF">
                                                                 {{filterOrderNum(item.machineOrder.originalOrderId)}}
                                                         </span>
-                                                    </el-col>
-                                                </el-row>
-                                                <el-col>
-                                                    <el-form-item label="拆单原因：" :label-width="formLabelWidth"
-                                                                  style="padding-bottom: 12px"
-                                                                  prop="orderSplitRecord.splitReason"
-                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                  :rules="[
+                                            </el-col>
+                                        </el-row>
+                                        <el-col>
+                                            <el-form-item label="拆单原因：" :label-width="formLabelWidth"
+                                                          style="padding-bottom: 12px"
+                                                          prop="orderSplitRecord.splitReason"
+                                                          :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                          :rules="[
                                                                               { required: true, message: '拆单原因不能为空'},
                                                                       ]">
-                                                        <el-input v-model="item.orderSplitRecord.splitReason"
-                                                                  type="textarea"
-                                                                  auto-complete="off"
-                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                  :autosize="{ minRows: 3, maxRows: 3}"
-                                                                  placeholder="拆单原因"></el-input>
-                                                    </el-form-item>
-                                                </el-col>
-                                            </el-card>
+                                                <el-input v-model="item.orderSplitRecord.splitReason"
+                                                          type="textarea"
+                                                          auto-complete="off"
+                                                          :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                          :autosize="{ minRows: 3, maxRows: 3}"
+                                                          placeholder="拆单原因"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-card>
+                                    <el-row>
+                                        <el-col :span="6"
+                                                style="font-size: 20px; margin-bottom: 10px;margin-top: 10px">
+                                            <el-form-item label="订单号：" :label-width="formLabelWidth">
+                                                <el-input v-model="item.machineOrder.orderNum"
+                                                          placeholder="订单号"
+                                                          :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                          :readonly="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && mode == 4)"
+                                                ></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="6" style="margin-bottom: 10px;margin-top: 10px">
+                                            <el-form-item label="填表日期：" :label-width="formLabelWidth">
+                                                <el-input v-model="item.machineOrder.createTime"
+                                                          :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                          :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                          placeholder="日期"
+                                                ></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="1" :offset="2 ">
+                                            <el-button type="success" size="small" style="margin-top: 15px"
+                                                       @click="handleCopyOrder(item)">复制
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="1" :offset="1">
+                                            <el-button type="danger" size="small" style="margin-top: 15px"
+                                                       :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                       @click="handlePasteOrder(item)">粘贴
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="1" :offset="4">
+                                            <el-button type="danger" size="small" style="margin-top: 15px"
+                                                       v-if="canSplitOrChangeOrder(item.machineOrder.status)"
+                                                       :disabled="item.machineOrder.machineNum <= 1"
+                                                       @click="handleSplitOrder(item)">拆单
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="1" :offset="1">
+                                            <el-button type="danger" size="small" style="margin-top: 15px"
+                                                       v-if="canSplitOrChangeOrder(item.machineOrder.status)"
+                                                       @click="handleChangeOrder(item)">改单
+                                            </el-button>
+                                        </el-col>
+                                    </el-row>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" style="text-align: left">
+                                            <h3 class="panel-title">客户机型信息</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <el-col :span="6">
+                                                <el-form-item label="客户：" :label-width="formLabelWidth"
+                                                              clearable>
+                                                    <el-input v-model="contractForm.customerName"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              placeholder="客户"
+                                                              readonly
+                                                    ></el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="国家：" :label-width="formLabelWidth"
+                                                              clearable>
+                                                    <el-select
+                                                            style="width: 100%"
+                                                            v-model="item.machineOrder.country"
+                                                            clearable
+                                                            filterable
+                                                            :filter-method="filterCountry"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in countryListTmp"
+                                                                :key="item.value"
+                                                                :label="item.cn"
+                                                                :value="item.cn">
+                                                            <span style="float: left">{{ item.cn }}</span>
+                                                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.en }}</span>
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+
+                                            <el-col :span="6">
+                                                <el-form-item label="商标：" :label-width="formLabelWidth"
+                                                              clearable
+                                                              :class="classWithDifferentValue(item, 'brand', false)">
+                                                    <el-input v-model="item.machineOrder.brand"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              placeholder="商标"></el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="机型：" :label-width="formLabelWidth"
+                                                              clearable
+                                                              :class="classWithDifferentValue(item, 'machineType', false)">
+                                                    <el-select
+                                                            style="width: 100%"
+                                                            v-model="item.machineOrder.machineType"
+                                                            clearable
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in allMachineType"
+                                                                :key="item.id"
+                                                                :label="item.name"
+                                                                :value="item.id">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="针数：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'needleNum', false)">
+                                                    <el-input v-model="item.machineOrder.needleNum"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                              placeholder="头距"></el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="头数：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'headNum',false)">
+                                                    <el-input style="float: left"
+                                                              v-model="item.machineOrder.headNum"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)">
+                                                    </el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="头距：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'headDistance', false)">
+                                                    <el-input v-model="item.machineOrder.headDistance"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                              placeholder="头距"></el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="X行程：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'xDistance', false)">
+                                                    <el-input v-model="item.machineOrder.xDistance"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                              placeholder="X行程"></el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="Y行程：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'yDistance', false)">
+                                                    <el-input v-model="item.machineOrder.yDistance"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                              placeholder="Y行程"></el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" style="text-align: left">
                                             <el-row>
-                                                <el-col :span="6"
-                                                        style="font-size: 20px; margin-bottom: 10px;margin-top: 10px">
-                                                    <el-form-item label="订单号：" :label-width="formLabelWidth">
-                                                        <el-input v-model="item.machineOrder.orderNum"
-                                                                  placeholder="订单号"
-                                                                  :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                  :readonly="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && mode == 4)"
-                                                        ></el-input>
-                                                    </el-form-item>
+                                                <el-col :span="3">
+                                                    <h3 class="panel-title">特种绣选项</h3>
                                                 </el-col>
-                                                <el-col :span="6" style="margin-bottom: 10px;margin-top: 10px">
-                                                    <el-form-item label="填表日期：" :label-width="formLabelWidth">
-                                                        <el-input v-model="item.machineOrder.createTime"
-                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                  :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                  placeholder="日期"
-                                                        ></el-input>
-                                                    </el-form-item>
-                                                </el-col>
-                                                <el-col :span="1" :offset="2 ">
-                                                    <el-button type="success" size="small" style="margin-top: 15px"
-                                                               @click="handleCopyOrder(item)">复制
-                                                    </el-button>
-                                                </el-col>
-                                                <el-col :span="1" :offset="1">
-                                                    <el-button type="danger" size="small" style="margin-top: 15px"
-                                                               :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                               @click="handlePasteOrder(item)">粘贴
-                                                    </el-button>
-                                                </el-col>
-                                                <el-col :span="1" :offset="4">
-                                                    <el-button type="danger" size="small" style="margin-top: 15px"
-                                                               v-if="canSplitOrChangeOrder(item.machineOrder.status)"
-                                                               :disabled="item.machineOrder.machineNum <= 1"
-                                                               @click="handleSplitOrder(item)">拆单
-                                                    </el-button>
-                                                </el-col>
-                                                <el-col :span="1" :offset="1">
-                                                    <el-button type="danger" size="small" style="margin-top: 15px"
-                                                               v-if="canSplitOrChangeOrder(item.machineOrder.status)"
-                                                               @click="handleChangeOrder(item)">改单
+                                                <el-col :span="1">
+                                                    <el-button
+                                                            icon="el-icon-check"
+                                                            size="small"
+                                                            type="success"
+                                                            :disabled="item.machineOrder.status != 0"
+                                                            @click="onSetDefault(item.name)">默认值
                                                     </el-button>
                                                 </el-col>
                                             </el-row>
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">客户机型信息</h3>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <el-col :span="6">
-                                                        <el-form-item label="客户：" :label-width="formLabelWidth"
-                                                                      clearable>
-                                                            <el-input v-model="contractForm.customerName"
-                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                      placeholder="客户"
-                                                                      readonly
-                                                            ></el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="国家：" :label-width="formLabelWidth"
-                                                                      clearable>
-                                                            <el-select
-                                                                    style="width: 100%"
-                                                                    v-model="item.machineOrder.country"
-                                                                    clearable
-                                                                    filterable
-                                                                    :filter-method="filterCountry"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in countryListTmp"
-                                                                        :key="item.value"
-                                                                        :label="item.cn"
-                                                                        :value="item.cn">
-                                                                    <span style="float: left">{{ item.cn }}</span>
-                                                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.en }}</span>
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
+                                        </div>
+                                        <div class="panel-body">
+                                            <el-col :span="6">
+                                                <el-form-item label="色数：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'specialTowelColor', true)">
+                                                    <el-select
+                                                            style="width: 100%"
+                                                            v-model="item.orderDetail.specialTowelColor"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            clearable
+                                                            placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in specialTowelColorList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="D轴上：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'specialTowelDaxle', true)">
+                                                    <el-select
+                                                            style="width: 100%"
+                                                            v-model="item.orderDetail.specialTowelDaxle"
+                                                            clearable
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in specialTowelDaxleList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="H轴下：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'specialTowelHaxle', true)">
+                                                    <el-select
+                                                            style="width: 100%"
+                                                            v-model="item.orderDetail.specialTowelHaxle"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            clearable
+                                                            placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in specialTowelHaxleList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="主电机：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'specialTowelMotor', true)">
+                                                    <el-select
+                                                            style="width: 100%"
+                                                            v-model="item.orderDetail.specialTowelMotor"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            clearable
+                                                            placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in specialTowelMotorList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="盘带头：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'specialTapingHead', true)">
+                                                    <el-select
+                                                            style="width: 100%"
+                                                            v-model="item.orderDetail.specialTapingHead"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            clearable
+                                                            placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in specialTapingHeadList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="毛巾机针：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'specialTowelNeedle', true)">
+                                                    <el-select
+                                                            style="width: 100%"
+                                                            v-model="item.orderDetail.specialTowelNeedle"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            clearable
+                                                            placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in specialTowelNeedleList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
 
-                                                    <el-col :span="6">
-                                                        <el-form-item label="商标：" :label-width="formLabelWidth"
-                                                                      clearable
-                                                                      :class="classWithDifferentValue(item, 'brand', false)">
-                                                            <el-input v-model="item.machineOrder.brand"
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                      placeholder="商标"></el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="机型：" :label-width="formLabelWidth"
-                                                                      clearable
-                                                                      :class="classWithDifferentValue(item, 'machineType', false)">
-                                                            <el-select
-                                                                    style="width: 100%"
-                                                                    v-model="item.machineOrder.machineType"
-                                                                    clearable
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in allMachineType"
-                                                                        :key="item.id"
-                                                                        :label="item.name"
-                                                                        :value="item.id">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="针数：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'needleNum', false)">
-                                                            <el-input-number style="float: left;"
-                                                                             v-model="item.machineOrder.needleNum"
-                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                             :step="1"
-                                                                             controls-position="right"
-                                                                             :min="1">
-
-                                                            </el-input-number>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="头数：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'headNum',false)">
-                                                            <el-input style="float: left"
-                                                                     v-model="item.machineOrder.headNum"
-                                                                     :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                     :readonly="changeOrderContentDisable(item.machineOrder)">
-                                                            </el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="头距：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'headDistance', false)">
-                                                            <el-input-number style="float: left"
-                                                                             v-model="item.machineOrder.headDistance"
-                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                             :step="1"
-                                                                             controls-position="right"
-                                                                             :min="1"
-                                                            >
-                                                            </el-input-number>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="X行程：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'xDistance', false)">
-                                                            <el-input v-model="item.machineOrder.xDistance"
-                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                      placeholder="X行程"></el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="Y行程：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'yDistance', false)">
-                                                            <el-input v-model="item.machineOrder.yDistance"
-                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                      placeholder="Y行程"></el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </div>
-                                            </div>
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading" style="text-align: left">
-                                                    <el-row>
-                                                        <el-col :span="3">
-                                                            <h3 class="panel-title">特种绣选项</h3>
-                                                        </el-col>
-                                                        <el-col :span="1">
-                                                            <el-button
-                                                                    icon="el-icon-check"
-                                                                    size="small"
-                                                                    type="success"
-                                                                    :disabled="item.machineOrder.status != 0"
-                                                                    @click="onSetDefault(item.name)">默认值
-                                                            </el-button>
-                                                        </el-col>
-                                                    </el-row>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <el-col :span="6">
-                                                        <el-form-item label="色数：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'specialTowelColor', true)">
-                                                            <el-select
-                                                                    style="width: 100%"
-                                                                    v-model="item.orderDetail.specialTowelColor"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    clearable
-                                                                    placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in specialTowelColorList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="D轴上：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'specialTowelDaxle', true)">
-                                                            <el-select
-                                                                    style="width: 100%"
-                                                                    v-model="item.orderDetail.specialTowelDaxle"
-                                                                    clearable
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in specialTowelDaxleList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="H轴下：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'specialTowelHaxle', true)">
-                                                            <el-select
-                                                                    style="width: 100%"
-                                                                    v-model="item.orderDetail.specialTowelHaxle"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    clearable
-                                                                    placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in specialTowelHaxleList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="主电机：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'specialTowelMotor', true)">
-                                                            <el-select
-                                                                    style="width: 100%"
-                                                                    v-model="item.orderDetail.specialTowelMotor"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    clearable
-                                                                    placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in specialTowelMotorList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="盘带头：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'specialTapingHead', true)">
-                                                            <el-select
-                                                                    style="width: 100%"
-                                                                    v-model="item.orderDetail.specialTapingHead"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    clearable
-                                                                    placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in specialTapingHeadList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="毛巾机针：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'specialTowelNeedle', true)">
-                                                            <el-select
-                                                                    style="width: 100%"
-                                                                    v-model="item.orderDetail.specialTowelNeedle"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    clearable
-                                                                    placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in specialTowelNeedleList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-
-                                                </div>
-                                            </div>
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">电气</h3>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <el-col :span="6">
-                                                        <el-form-item label="电脑：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'electricPc', true)">
-                                                            <el-select v-model="item.orderDetail.electricPc"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in pcModeList"
-                                                                        :key="item.text"
-                                                                        :value="item.text"
-                                                                        :label="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="语言：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'electricLanguage', true)">
-                                                            <el-select v-model="item.orderDetail.electricLanguage"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in pcLanguageList"
-                                                                        :key="item.text"
-                                                                        :value="item.text"
-                                                                        :label="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="主电机：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'electricMotor', true)">
-                                                            <el-select v-model="item.orderDetail.electricMotor"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in electricMotorList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="XY电机：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'electricMotorXy', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.electricMotorXy"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in xyMotorList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="剪线方式：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'electricTrim', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.electricTrim"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in trimList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="电源：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'electricPower', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.electricPower"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in electricPowerList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="按钮开关：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'electricSwitch', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.electricSwitch"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in electricSwitchList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="加油系统：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'electricOil', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.electricOil"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in electricOilList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </div>
-                                            </div>
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">上轴下轴主传动</h3>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <el-col :span="6">
-                                                        <el-form-item label="夹线器：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleSplit', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.axleSplit"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in axleSplitList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="面板：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axlePanel', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.axlePanel"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in axlePanelList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="机针：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleNeedle', true)">
-                                                            <el-input v-model="item.orderDetail.axleNeedle"
-                                                                      style="width: 100%;"
-                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder)">
-                                                            </el-input>
-                                                            <!--<template scope="scope">-->
-                                                            <!--<el-select v-model="item.orderDetail.axleNeedle"-->
-                                                            <!--clearable-->
-                                                            <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
-                                                            <!--placeholder="请选择">-->
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" style="text-align: left">
+                                            <h3 class="panel-title">电气</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <el-col :span="6">
+                                                <el-form-item label="电脑：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'electricPc', true)">
+                                                    <el-select v-model="item.orderDetail.electricPc"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in pcModeList"
+                                                                :key="item.text"
+                                                                :value="item.text"
+                                                                :label="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="语言：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'electricLanguage', true)">
+                                                    <el-select v-model="item.orderDetail.electricLanguage"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in pcLanguageList"
+                                                                :key="item.text"
+                                                                :value="item.text"
+                                                                :label="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="主电机：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'electricMotor', true)">
+                                                    <el-select v-model="item.orderDetail.electricMotor"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in electricMotorList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="XY电机：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'electricMotorXy', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.electricMotorXy"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in xyMotorList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="剪线方式：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'electricTrim', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.electricTrim"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in trimList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="电源：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'electricPower', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.electricPower"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in electricPowerList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <!--<el-form-item label="按钮开关：" :label-width="formLabelWidth"-->
+                                                <!--:class="classWithDifferentValue(item, 'electricSwitch', true)">-->
+                                                <!--<template scope="scope">-->
+                                                <!--<el-select v-model="item.orderDetail.electricSwitch"-->
+                                                <!--clearable-->
+                                                <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                                <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                                <!--placeholder="请选择">-->
+                                                <!--<el-option-->
+                                                <!--v-for="item in electricSwitchList"-->
+                                                <!--:key="item.text"-->
+                                                <!--:label="item.text"-->
+                                                <!--:value="item.text">-->
+                                                <!--</el-option>-->
+                                                <!--</el-select>-->
+                                                <!--</template>-->
+                                                <!--</el-form-item>-->
+                                                <el-form-item label="换色方式：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'colorChangeMode', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.colorChangeMode"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in colorChangeModeList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="加油系统：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'electricOil', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.electricOil"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in electricOilList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" style="text-align: left">
+                                            <h3 class="panel-title">上轴下轴主传动</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <el-col :span="6">
+                                                <el-form-item label="夹线器：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axleSplit', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.axleSplit"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in axleSplitList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="面板：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axlePanel', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.axlePanel"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in axlePanelList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="机针：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axleNeedle', true)">
+                                                    <el-input v-model="item.orderDetail.axleNeedle"
+                                                              style="width: 100%;"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)">
+                                                    </el-input>
+                                                    <!--<template scope="scope">-->
+                                                    <!--<el-select v-model="item.orderDetail.axleNeedle"-->
+                                                    <!--clearable-->
+                                                    <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                                    <!--placeholder="请选择">-->
+                                                    <!--<el-option-->
+                                                    <!--v-for="item in axleNeedleList"-->
+                                                    <!--:key="item.text"-->
+                                                    <!--:label="item.text"-->
+                                                    <!--:value="item.text">-->
+                                                    <!--</el-option>-->
+                                                    <!--</el-select>-->
+                                                    <!--</template>-->
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="机针类型：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axleNeedleType', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.axleNeedleType"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in axleNeedleTypeList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <!--<el-col :span="6">-->
+                                                <!--<el-form-item label="机头导轨：" :label-width="formLabelWidth"-->
+                                                              <!--:class="classWithDifferentValue(item, 'axleRail', true)">-->
+                                                    <!--<template scope="scope">-->
+                                                        <!--<el-select v-model="item.orderDetail.axleRail"-->
+                                                                   <!--clearable-->
+                                                                   <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                                                   <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                                                   <!--placeholder="请选择">-->
                                                             <!--<el-option-->
-                                                            <!--v-for="item in axleNeedleList"-->
-                                                            <!--:key="item.text"-->
-                                                            <!--:label="item.text"-->
-                                                            <!--:value="item.text">-->
+                                                                    <!--v-for="item in axleRailList"-->
+                                                                    <!--:key="item.text"-->
+                                                                    <!--:label="item.text"-->
+                                                                    <!--:value="item.text">-->
                                                             <!--</el-option>-->
-                                                            <!--</el-select>-->
-                                                            <!--</template>-->
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="机针类型：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleNeedleType', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.axleNeedleType"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in axleNeedleTypeList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="机头导轨：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleRail', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.axleRail"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in axleRailList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="底检方式：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleDownCheck', true)">
-                                                            <el-select v-model="item.orderDetail.axleDownCheck"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in axleDownCheckList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="旋梭：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleHook', true)">
-                                                            <el-select v-model="item.orderDetail.axleHook"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in axleHookList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
+                                                        <!--</el-select>-->
+                                                    <!--</template>-->
+                                                <!--</el-form-item>-->
+                                            <!--</el-col>-->
+                                            <!--<el-col :span="6">-->
+                                                <!--<el-form-item label="底检方式：" :label-width="formLabelWidth"-->
+                                                              <!--:class="classWithDifferentValue(item, 'axleDownCheck', true)">-->
+                                                    <!--<el-select v-model="item.orderDetail.axleDownCheck"-->
+                                                               <!--clearable-->
+                                                               <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                                               <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                                               <!--placeholder="请选择">-->
+                                                        <!--<el-option-->
+                                                                <!--v-for="item in axleDownCheckList"-->
+                                                                <!--:key="item.text"-->
+                                                                <!--:label="item.text"-->
+                                                                <!--:value="item.text">-->
+                                                        <!--</el-option>-->
+                                                    <!--</el-select>-->
+                                                <!--</el-form-item>-->
+                                            <!--</el-col>-->
+                                            <el-col :span="6">
+                                                <el-form-item label="旋梭：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axleHook', true)">
+                                                    <el-select v-model="item.orderDetail.axleHook"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in axleHookList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
 
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="跳跃方式：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleJump', true)">
-                                                            <el-select v-model="item.orderDetail.axleJump"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in axleJumpList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="跳跃方式：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axleJump', true)">
+                                                    <el-select v-model="item.orderDetail.axleJump"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in axleJumpList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
 
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="面线夹持：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleUpperThread', true)">
-                                                            <el-select v-model="item.orderDetail.axleUpperThread"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in axleUpperThreadList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="24">
-                                                        <el-form-item label="附加装置：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'axleAddition', true)">
-                                                            <el-input v-model="item.orderDetail.axleAddition"
-                                                                      type="textarea"
-                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder)||userInfo.role.roleName.indexOf('销售') < 0"
-                                                                      :autosize="{ minRows: 4, maxRows: 8}">
-                                                            </el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </div>
-                                            </div>
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">机架台板</h3>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <el-col :span="6">
-                                                        <el-form-item label="机架颜色：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'frameworkColor', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.frameworkColor"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in frameworkColorList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="台板：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'frameworkPlaten', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.frameworkPlaten"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in frameworkPlatenList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="台板颜色：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'frameworkPlatenColor', true)">
-                                                            <template scope="scope">
-                                                                <el-select
-                                                                        v-model="item.orderDetail.frameworkPlatenColor"
-                                                                        clearable
-                                                                        :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                        placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in frameworkPlatenColorList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="吊环：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'frameworkRing', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.frameworkRing"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in frameworkRingList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="电脑托架：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'frameworkBracket', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.frameworkBracket"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in frameworkBracketList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="急停装置：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'frameworkStop', true)">
-                                                            <template scope="scope">
-                                                                <el-select v-model="item.orderDetail.frameworkStop"
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           placeholder="请选择">
-                                                                    <el-option
-                                                                            v-for="item in frameworkStopList"
-                                                                            :key="item.text"
-                                                                            :label="item.text"
-                                                                            :value="item.text">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="日光灯：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'frameworkLight', true)">
-                                                            <el-select v-model="item.orderDetail.frameworkLight"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in frameworkLightList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </div>
-                                            </div>
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">驱动框架绷架</h3>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <el-col :span="6">
-                                                        <el-form-item label="驱动类型：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'driverType', true)">
-                                                            <el-select v-model="item.orderDetail.driverType"
-                                                                       style="width: 100%;"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in driverTypeList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="驱动方式：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'driverMethod', true)">
-                                                            <el-select v-model="item.orderDetail.driverMethod"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in driverMethodList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="绷架孔：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'driverReelHole', true)">
-                                                            <el-select v-model="item.orderDetail.driverReelHole"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in driverReelHoleList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="绷架：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'driverReel', true)">
-                                                            <el-select v-model="item.orderDetail.driverReel"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in driverReelList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="横档数量：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'driverHorizonNum', true)">
-                                                            <el-input-number style="float: left"
-                                                                             v-model="item.orderDetail.driverHorizonNum"
-                                                                             :step="1"
-                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                             :min="0"
-                                                                             controls-position="right">
-                                                            </el-input-number>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="直档数量：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'driverVerticalNum', true)">
-                                                            <el-input-number style="float: left"
-                                                                             v-model="item.orderDetail.driverVerticalNum"
-                                                                             :step="1"
-                                                                             :min="0"
-                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                             controls-position="right">
-                                                            </el-input-number>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </div>
-                                            </div>
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">其他信息</h3>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <el-col :span="6">
-                                                        <el-form-item label="包装方式：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'packageMethod', false)">
-                                                            <el-select v-model="item.machineOrder.packageMethod"
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                       placeholder="请选择">
-                                                                <el-option
-                                                                        v-for="item in packageModeList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="24">
-                                                        <el-form-item label="包装备注：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'packageMark', false)">
-                                                            <el-input
-                                                                    type="textarea"
-                                                                    :autosize="{ minRows: 6, maxRows: 10}"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    v-model="item.machineOrder.packageMark">
-                                                            </el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="交货日期：" :label-width="formLabelWidth">
-                                                            <el-date-picker
-                                                                    style="width: 100%"
-                                                                    v-model="item.machineOrder.contractShipDate"
-                                                                    type="date"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    placeholder="合同交货日期">
-                                                            </el-date-picker>
-                                                        </el-form-item>
-                                                    </el-col>
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="面线夹持：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axleUpperThread', true)">
+                                                    <el-select v-model="item.orderDetail.axleUpperThread"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in axleUpperThreadList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="24">
+                                                <el-form-item label="附加装置：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axleAddition', true)">
+                                                    <el-input v-model="item.orderDetail.axleAddition"
+                                                              type="textarea"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)||userInfo.role.roleName.indexOf('销售') < 0"
+                                                              :autosize="{ minRows: 4, maxRows: 8}">
+                                                    </el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" style="text-align: left">
+                                            <h3 class="panel-title">机架台板</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <el-col :span="6">
+                                                <el-form-item label="机架颜色：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'frameworkColor', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.frameworkColor"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in frameworkColorList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="台板：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'frameworkPlaten', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.frameworkPlaten"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in frameworkPlatenList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="台板颜色：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'frameworkPlatenColor', true)">
+                                                    <template scope="scope">
+                                                        <el-select
+                                                                v-model="item.orderDetail.frameworkPlatenColor"
+                                                                clearable
+                                                                :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in frameworkPlatenColorList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="吊环：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'frameworkRing', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.frameworkRing"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in frameworkRingList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="电脑托架：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'frameworkBracket', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.frameworkBracket"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in frameworkBracketList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="急停装置：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'frameworkStop', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.frameworkStop"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in frameworkStopList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
+                                            <!--<el-col :span="6">-->
+                                                <!--<el-form-item label="日光灯：" :label-width="formLabelWidth"-->
+                                                              <!--:class="classWithDifferentValue(item, 'frameworkLight', true)">-->
+                                                    <!--<el-select v-model="item.orderDetail.frameworkLight"-->
+                                                               <!--clearable-->
+                                                               <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                                               <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                                               <!--placeholder="请选择">-->
+                                                        <!--<el-option-->
+                                                                <!--v-for="item in frameworkLightList"-->
+                                                                <!--:key="item.text"-->
+                                                                <!--:label="item.text"-->
+                                                                <!--:value="item.text">-->
+                                                        <!--</el-option>-->
+                                                    <!--</el-select>-->
+                                                <!--</el-form-item>-->
+                                            <!--</el-col>-->
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" style="text-align: left">
+                                            <h3 class="panel-title">驱动框架绷架</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <el-col :span="6">
+                                                <el-form-item label="驱动类型：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'driverType', true)">
+                                                    <el-select v-model="item.orderDetail.driverType"
+                                                               style="width: 100%;"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in driverTypeList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="驱动方式：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'driverMethod', true)">
+                                                    <el-select v-model="item.orderDetail.driverMethod"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in driverMethodList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="绷架孔：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'driverReelHole', true)">
+                                                    <el-select v-model="item.orderDetail.driverReelHole"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in driverReelHoleList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="绷架：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'driverReel', true)">
+                                                    <el-select v-model="item.orderDetail.driverReel"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in driverReelList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="横档数量：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'driverHorizonNum', true)">
+                                                    <el-input-number style="float: left"
+                                                                     v-model="item.orderDetail.driverHorizonNum"
+                                                                     :step="1"
+                                                                     :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                     :min="0"
+                                                                     controls-position="right">
+                                                    </el-input-number>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="直档数量：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'driverVerticalNum', true)">
+                                                    <el-input-number style="float: left"
+                                                                     v-model="item.orderDetail.driverVerticalNum"
+                                                                     :step="1"
+                                                                     :min="0"
+                                                                     :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                     controls-position="right">
+                                                    </el-input-number>
+                                                </el-form-item>
+                                            </el-col>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" style="text-align: left">
+                                            <h3 class="panel-title">其他信息</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <el-col :span="6">
+                                                <el-form-item label="包装方式：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'packageMethod', false)">
+                                                    <el-select v-model="item.machineOrder.packageMethod"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in packageModeList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="24">
+                                                <el-form-item label="包装备注：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'packageMark', false)">
+                                                    <el-input
+                                                            type="textarea"
+                                                            :autosize="{ minRows: 6, maxRows: 10}"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            v-model="item.machineOrder.packageMark">
+                                                    </el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="交货日期：" :label-width="formLabelWidth">
+                                                    <el-date-picker
+                                                            style="width: 100%"
+                                                            v-model="item.machineOrder.contractShipDate"
+                                                            type="date"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            placeholder="合同交货日期">
+                                                    </el-date-picker>
+                                                </el-form-item>
+                                            </el-col>
 
-                                                    <el-col :span="6">
-                                                        <el-form-item label="订机数量：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'machineNum', false)"
-                                                                      prop="machineOrder.machineNum"
-                                                                      :rules="[
+                                            <el-col :span="6">
+                                                <el-form-item label="订机数量：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'machineNum', false)"
+                                                              prop="machineOrder.machineNum"
+                                                              :rules="[
                                                                               { required: true, message: '订机数不能为空'},
                                                                               { type: 'number', message: '订机数必须是数字'}
                                                                             ]">
-                                                            <el-input style="float: left;"
-                                                                      v-model.number="item.machineOrder.machineNum"
-                                                                      auto-complete="off"
-                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder) || isFromSplit(item.machineOrder)"
-                                                                      @blur="machineNumChanged(item)"
-                                                                      controls-position="right">
+                                                    <el-input style="float: left;"
+                                                              v-model.number="item.machineOrder.machineNum"
+                                                              auto-complete="off"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder) || isFromSplit(item.machineOrder)"
+                                                              @blur="machineNumChanged(item)"
+                                                              controls-position="right">
 
-                                                            </el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="销售人员：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'sellman', false)">
-                                                            <el-input v-model="contractForm.sellman"
-                                                                      placeholder="销售人员"
-                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                      auto-complete="off">
-                                                            </el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="6">
-                                                        <el-form-item label="保修方式：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'sellman', false)">
-                                                            <el-select v-model="item.machineOrder.maintainType"
-                                                                       placeholder=""
-                                                                       clearable
-                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                       :readonly="changeOrderContentDisable(item.machineOrder)">
-                                                                <el-option
-                                                                        v-for="item in maintainTypeList"
-                                                                        :key="item.text"
-                                                                        :label="item.text"
-                                                                        :value="item.text">
-                                                                </el-option>
-                                                            </el-select>
-                                                        </el-form-item>
-                                                    </el-col>
+                                                    </el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="销售人员：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'sellman', false)">
+                                                    <el-input v-model="contractForm.sellman"
+                                                              placeholder="销售人员"
+                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                              auto-complete="off">
+                                                    </el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="保修方式：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'sellman', false)">
+                                                    <el-select v-model="item.machineOrder.maintainType"
+                                                               placeholder=""
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)">
+                                                        <el-option
+                                                                v-for="item in maintainTypeList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
 
-                                                    <el-col :span="6">
-                                                        <el-form-item label="计划日期：" :label-width="formLabelWidth">
-                                                            <el-date-picker
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    style="width: 100%"
-                                                                    v-model="item.machineOrder.planShipDate"
-                                                                    type="date"
-                                                                    placeholder="合同计划日期">
-                                                            </el-date-picker>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="2" :offset="0">
-                                                        <el-button
-                                                                icon="el-icon-check"
-                                                                size="small"
-                                                                style="margin-left: 5px;"
-                                                                type="success"
-                                                                v-show="isShowConfirmPlanDate"
-                                                                @click="handleConfirmPlanDate(item.machineOrder)">
-                                                            确认
-                                                        </el-button>
-                                                    </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="计划日期：" :label-width="formLabelWidth">
+                                                    <el-date-picker
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            style="width: 100%"
+                                                            v-model="item.machineOrder.planShipDate"
+                                                            type="date"
+                                                            placeholder="合同计划日期">
+                                                    </el-date-picker>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="2" :offset="0">
+                                                <el-button
+                                                        icon="el-icon-check"
+                                                        size="small"
+                                                        style="margin-left: 5px;"
+                                                        type="success"
+                                                        v-show="isShowConfirmPlanDate"
+                                                        @click="handleConfirmPlanDate(item.machineOrder)">
+                                                    确认
+                                                </el-button>
+                                            </el-col>
 
-                                                    <el-col :span="24">
-                                                        <el-form-item label="备注信息：" :label-width="formLabelWidth"
-                                                                      :class="classWithDifferentValue(item, 'machineOrder', false)">
-                                                            <el-input
-                                                                    type="textarea"
-                                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                    :autosize="{ minRows: 2, maxRows: 6}"
-                                                                    v-model="item.machineOrder.mark">
-                                                            </el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </div>
-                                            </div>
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading" style="text-align: left">
-                                                    <h3 class="panel-title">装置信息</h3>
-                                                </div>
-                                                <el-row>
-                                                    <el-col :span="1" :offset="22">
-                                                        <el-button type="primary" size="small" class="el-icon-plus"
-                                                                   style="margin: 15px"
-                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                   v-if="!changeOrderContentDisable(item.machineOrder)"
-                                                                   @click="addEquipment(item.machineOrder)">
-                                                            装置
-                                                        </el-button>
-                                                    </el-col>
-                                                    <el-table
-                                                            border
-                                                            :data="item.machineOrder.equipment">
-                                                        <el-table-column
-                                                                label="装置名称"
-                                                                align="center">
-                                                            <template slot-scope="scope">
-                                                                <el-select v-model="scope.row.name"
-                                                                           placeholder=""
-                                                                           clearable
-                                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                           :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                           style="width: 95%">
-                                                                    <el-option
-                                                                            v-for="item in machineEquipmentList"
-                                                                            :key="item.name"
-                                                                            :label="item.name"
-                                                                            :value="item.name">
-                                                                    </el-option>
-                                                                </el-select>
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column
-                                                                label="数量"
-                                                                width="200"
-                                                                align="center">
-                                                            <template slot-scope="scope">
-                                                                <el-input-number style="float: left"
-                                                                                 v-model="scope.row.number"
-                                                                                 :step="1"
-                                                                                 :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                                 :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                                 controls-position="right"
-                                                                                 :min="1">
-                                                                </el-input-number>
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column
-                                                                label="单价"
-                                                                width="200"
-                                                                align="center"
-                                                                v-if="isFinanceVisible()">
-                                                            <template slot-scope="scope">
-                                                                <el-input v-model="scope.row.price"
-                                                                          placeholder="单价"
-                                                                          :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                          :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                          auto-complete="off">
-                                                                </el-input>
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column
-                                                                label="操作"
-                                                                width="200"
-                                                                align="center">
-                                                            <template slot-scope="scope">
-                                                                <el-button
-                                                                        size="mini"
-                                                                        type="danger"
-                                                                        icon="el-icon-delete"
-                                                                        :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                        @click="handleDeleteEquipment(item.machineOrder.equipment, scope.$index)">
-                                                                    删除
-                                                                </el-button>
-                                                            </template>
-                                                        </el-table-column>
-                                                    </el-table>
-
-                                                </el-row>
-                                                <div class="panel-body" v-if="isFinanceVisible()">
-                                                    <table border="1" width="100%">
-                                                        <tr>
-                                                            <td colspan="2" style="font-weight: bold; font-size: 14px">
-                                                                机器价格（不含装置）
-                                                            </td>
-                                                            <td>
-                                                                <el-input-number
-                                                                        style="margin: 10px;width: 95%"
-                                                                        v-model="item.machineOrder.machinePrice"
-                                                                        :step="1"
-                                                                        :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                        :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                        controls-position="right"
-                                                                        :min="0">
-                                                                </el-input-number>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2" style="font-weight: bold; font-size: 14px">
-                                                                订单总价（含装置）
-                                                            </td>
-                                                            <td style="height: 56px">
-                                                                <span style="margin-left: -35px;font-size: 16px; font-weight: bold; color: #409EFF">{{calculateOrderPrice(item.machineOrder)}}</span>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 10px">
-                                                需求评审单
-                                            </div>
                                             <el-col :span="24">
-                                                <el-table
-                                                        border
-                                                        :row-class-name="tableRowClassName"
-                                                        :data="item.orderSign != null ? item.orderSign.signContent : []"
-                                                        style="margin-bottom: 30px">
-                                                    <el-table-column
-                                                            align="center"
-                                                            label="签核步骤"
-                                                            width="80">
-                                                        <template scope="scope">
-                                                            <el-button style="font-size: 14px; font-weight: bold"
-                                                                       type="primary" round size="mini">
-                                                                {{scope.row.number}}
-                                                            </el-button>
-                                                        </template>
-                                                    </el-table-column>
-                                                    <el-table-column
-                                                            align="center"
-                                                            width="150"
-                                                            label="签核角色">
-                                                        <template slot-scope="scope">
-                                                            <span style="font-size: 14px; font-weight: bold">{{scope.row.roleId | filterRole}}</span>
-                                                        </template>
-                                                    </el-table-column>
-                                                    <el-table-column
-                                                            align="center"
-                                                            width="150"
-                                                            label="签核人">
-                                                        <template slot-scope="scope">
-                                                            <span style="font-size: 14px; font-weight: bold">{{scope.row.user}}</span>
-                                                        </template>
-                                                    </el-table-column>
-                                                    <el-table-column
-                                                            align="center"
-                                                            width="180"
-                                                            label="日期">
-                                                        <template slot-scope="scope">
-                                                    <span> {{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}
-                                                    </span>
-                                                        </template>
-                                                    </el-table-column>
-                                                    <el-table-column
-                                                            align="center"
-                                                            label="意见">
-                                                        <template slot-scope="scope">
-                                                            <el-input
-                                                                    :readonly="signDisable(scope.row.roleId,item.machineOrder.status)"
-                                                                    type="textarea"
-                                                                    v-model="scope.row.comment"
-                                                                    auto-complete="off">
-                                                            </el-input>
-                                                        </template>
-                                                    </el-table-column>
-                                                    <el-table-column
-                                                            align="center"
-                                                            label="操作"
-                                                            width="200">
-                                                        <template scope="scope">
-                                                            <el-button type="primary"
-                                                                       @click="onSubmitOrderSign(scope.row, item.orderSign)"
-                                                                       icon="el-icon-check" size="small"
-                                                                       :disabled="signDisable(scope.row.roleId,item.machineOrder.status)">同意
-                                                            </el-button>
-                                                            <el-button type="danger"
-                                                                       @click="handleRejectOrderSign(scope.row, item.orderSign)"
-                                                                       icon="el-icon-close" size="small"
-                                                                       :disabled="signDisable(scope.row.roleId,item.machineOrder.status)">驳回
-                                                            </el-button>
-                                                        </template>
-                                                    </el-table-column>
-                                                </el-table>
+                                                <el-form-item label="备注信息：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'machineOrder', false)">
+                                                    <el-input
+                                                            type="textarea"
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            :autosize="{ minRows: 2, maxRows: 6}"
+                                                            v-model="item.machineOrder.mark">
+                                                    </el-input>
+                                                </el-form-item>
                                             </el-col>
                                         </div>
-                                    </el-form>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" style="text-align: left">
+                                            <h3 class="panel-title">装置信息</h3>
+                                        </div>
+                                        <el-row>
+                                            <el-col :span="1" :offset="22">
+                                                <el-button type="primary" size="small" class="el-icon-plus"
+                                                           style="margin: 15px"
+                                                           :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                           v-if="!changeOrderContentDisable(item.machineOrder)"
+                                                           @click="addEquipment(item.machineOrder)">
+                                                    装置
+                                                </el-button>
+                                            </el-col>
+                                            <el-table
+                                                    border
+                                                    :data="item.machineOrder.equipment">
+                                                <el-table-column
+                                                        label="装置名称"
+                                                        align="center">
+                                                    <template slot-scope="scope">
+                                                        <el-select v-model="scope.row.name"
+                                                                   placeholder=""
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   style="width: 95%">
+                                                            <el-option
+                                                                    v-for="item in machineEquipmentList"
+                                                                    :key="item.name"
+                                                                    :label="item.name"
+                                                                    :value="item.name">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column
+                                                        label="数量"
+                                                        width="200"
+                                                        align="center">
+                                                    <template slot-scope="scope">
+                                                        <el-input-number style="float: left"
+                                                                         v-model="scope.row.number"
+                                                                         :step="1"
+                                                                         :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                         :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                         controls-position="right"
+                                                                         :min="1">
+                                                        </el-input-number>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column
+                                                        label="单价"
+                                                        width="200"
+                                                        align="center"
+                                                        v-if="isFinanceVisible()">
+                                                    <template slot-scope="scope">
+                                                        <el-input v-model="scope.row.price"
+                                                                  placeholder="单价"
+                                                                  :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                  auto-complete="off">
+                                                        </el-input>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column
+                                                        label="操作"
+                                                        width="200"
+                                                        align="center">
+                                                    <template slot-scope="scope">
+                                                        <el-button
+                                                                size="mini"
+                                                                type="danger"
+                                                                icon="el-icon-delete"
+                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                @click="handleDeleteEquipment(item.machineOrder.equipment, scope.$index)">
+                                                            删除
+                                                        </el-button>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+
+                                        </el-row>
+                                        <div class="panel-body" v-if="isFinanceVisible()">
+                                            <table border="1" width="100%">
+                                                <tr>
+                                                    <td colspan="2" style="font-weight: bold; font-size: 14px">
+                                                        机器价格（不含装置）
+                                                    </td>
+                                                    <td>
+                                                        <el-input-number
+                                                                style="margin: 10px;width: 95%"
+                                                                v-model="item.machineOrder.machinePrice"
+                                                                :step="1"
+                                                                :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                controls-position="right"
+                                                                :min="0">
+                                                        </el-input-number>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="font-weight: bold; font-size: 14px">
+                                                        订单总价（含装置）
+                                                    </td>
+                                                    <td style="height: 56px">
+                                                        <span style="margin-left: -35px;font-size: 16px; font-weight: bold; color: #409EFF">{{calculateOrderPrice(item.machineOrder)}}</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 10px">
+                                        需求评审单
+                                    </div>
+                                    <el-col :span="24">
+                                        <el-table
+                                                border
+                                                :row-class-name="tableRowClassName"
+                                                :data="item.orderSign != null ? item.orderSign.signContent : []"
+                                                style="margin-bottom: 30px">
+                                            <el-table-column
+                                                    align="center"
+                                                    label="签核步骤"
+                                                    width="80">
+                                                <template scope="scope">
+                                                    <el-button style="font-size: 14px; font-weight: bold"
+                                                               type="primary" round size="mini">
+                                                        {{scope.row.number}}
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    align="center"
+                                                    width="150"
+                                                    label="签核角色">
+                                                <template slot-scope="scope">
+                                                    <span style="font-size: 14px; font-weight: bold">{{scope.row.roleId | filterRole}}</span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    align="center"
+                                                    width="150"
+                                                    label="签核人">
+                                                <template slot-scope="scope">
+                                                    <span style="font-size: 14px; font-weight: bold">{{scope.row.user}}</span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    align="center"
+                                                    width="180"
+                                                    label="日期">
+                                                <template slot-scope="scope">
+                                                    <span> {{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}
+                                                    </span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    align="center"
+                                                    label="意见">
+                                                <template slot-scope="scope">
+                                                    <el-input
+                                                            :readonly="signDisable(scope.row.roleId,item.machineOrder.status)"
+                                                            type="textarea"
+                                                            v-model="scope.row.comment"
+                                                            auto-complete="off">
+                                                    </el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    align="center"
+                                                    label="操作"
+                                                    width="200">
+                                                <template scope="scope">
+                                                    <el-button type="primary"
+                                                               @click="onSubmitOrderSign(scope.row, item.orderSign)"
+                                                               icon="el-icon-check" size="small"
+                                                               :disabled="signDisable(scope.row.roleId,item.machineOrder.status)">
+                                                        同意
+                                                    </el-button>
+                                                    <el-button type="danger"
+                                                               @click="handleRejectOrderSign(scope.row, item.orderSign)"
+                                                               icon="el-icon-close" size="small"
+                                                               :disabled="signDisable(scope.row.roleId,item.machineOrder.status)">
+                                                        驳回
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-col>
+                                </div>
+                            </el-form>
 
 
-                                </el-tab-pane>
-                            </el-tabs>
-                            <!--<el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"-->
-                            <!--:title="errorMsg"-->
-                            <!--type="error"-->
-                            <!--:closable="false"-->
-                            <!--show-icon >-->
-                            <!--</el-alert >-->
-                        <!--</el-collapse-item>-->
+                        </el-tab-pane>
+                    </el-tabs>
+                    <!--<el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"-->
+                    <!--:title="errorMsg"-->
+                    <!--type="error"-->
+                    <!--:closable="false"-->
+                    <!--show-icon >-->
+                    <!--</el-alert >-->
+                    <!--</el-collapse-item>-->
                     <!--</el-collapse>-->
 
                 </el-col>
             </el-row>
             <div slot="footer" class="dialog-footer" style="margin-top: -20px; margin-right:2%">
                 <el-button @click="addContractVisible = false" icon="el-icon-back" type="info">关 闭</el-button>
-                <el-button v-show="mode == EDIT_MODE && haveInitialMachineOrder() || contractHasRejectedOrder()" type="primary"
+                <el-button v-show="mode == EDIT_MODE && haveInitialMachineOrder() || contractHasRejectedOrder()"
+                           type="primary"
                            @click="onEdit" icon="el-icon-check">保 存
                 </el-button>
                 <el-button v-show="mode == CHANGE_MODE" type="primary" @click="onSaveChange" icon="el-icon-check">保存改单
@@ -2124,6 +2136,7 @@
                 specialTowelHaxleList: SpecialTowelHaxleList,
                 specialTowelMotorList: SpecialTowelMotorList,
                 specialTowelNeedleList: SpecialTowelNeedleList,
+                colorChangeModeList: ColorChangeModeList,
 
                 //增加对话框
                 addContractVisible: false,
@@ -2556,7 +2569,7 @@
             },
 
             calculateOrderTotalPrice(item) {
-                return this.calculateMachineTotalPrice(item)*parseInt(item.machineNum);
+                return this.calculateMachineTotalPrice(item) * parseInt(item.machineNum);
             },
 
             calculateTotalPrice() {
@@ -3251,9 +3264,13 @@
                     iserror = true;
                     this.errorMsg = "请选择电源";
                 }
-                if (!iserror && isStringEmpty(formObj.orderDetail.electricSwitch)) {
+//                if (!iserror && isStringEmpty(formObj.orderDetail.electricSwitch)) {
+//                    iserror = true;
+//                    this.errorMsg = "请选择按钮开关";
+//                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.colorChangeMode)) {
                     iserror = true;
-                    this.errorMsg = "请选择按钮开关";
+                    this.errorMsg = "请选择换色方式";
                 }
                 if (!iserror && isStringEmpty(formObj.orderDetail.electricOil)) {
                     iserror = true;
@@ -3276,14 +3293,14 @@
                     iserror = true;
                     this.errorMsg = "请选择机针类型";
                 }
-                if (!iserror && isStringEmpty(formObj.orderDetail.axleRail)) {
-                    iserror = true;
-                    this.errorMsg = "请选择机头导轨";
-                }
-                if (!iserror && isStringEmpty(formObj.orderDetail.axleDownCheck)) {
-                    iserror = true;
-                    this.errorMsg = "请选择底检方式";
-                }
+//                if (!iserror && isStringEmpty(formObj.orderDetail.axleRail)) {
+//                    iserror = true;
+//                    this.errorMsg = "请选择机头导轨";
+//                }
+//                if (!iserror && isStringEmpty(formObj.orderDetail.axleDownCheck)) {
+//                    iserror = true;
+//                    this.errorMsg = "请选择底检方式";
+//                }
                 if (!iserror && isStringEmpty(formObj.orderDetail.axleHook)) {
                     iserror = true;
                     this.errorMsg = "请选择旋梭";
@@ -3321,10 +3338,10 @@
                     iserror = true;
                     this.errorMsg = "请选择 急停装置";
                 }
-                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkLight)) {
-                    iserror = true;
-                    this.errorMsg = "请选择 日光灯";
-                }
+//                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkLight)) {
+//                    iserror = true;
+//                    this.errorMsg = "请选择 日光灯";
+//                }
 
                 if (!iserror && isStringEmpty(formObj.orderDetail.driverType)) {
                     iserror = true;
@@ -3404,7 +3421,7 @@
                     //由于signContent在DB中是以String方式存储的，防止Server端解析失败，需要在前端转成String形式，而不是array
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
-                        if(obj[i].orderSign.signContent != null && obj[i].orderSign.signContent.length == 0 ) {
+                        if (obj[i].orderSign.signContent != null && obj[i].orderSign.signContent.length == 0) {
                             showMessage(_this, "需求单" + obj[i].machineOrder.orderNum + "的签核为空！若改需求单新创建，请删除后再次创建；若该需求单已签核，请联系管理员！", 0);
                             return;
                         }
@@ -3471,7 +3488,7 @@
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
                         if (obj[i].orderSign != null) {
-                            if(obj[i].orderSign.signContent != null && obj[i].orderSign.signContent.length == 0 ) {
+                            if (obj[i].orderSign.signContent != null && obj[i].orderSign.signContent.length == 0) {
                                 showMessage(_this, "需求单" + obj[i].machineOrder.orderNum + "的签核不能为空！请删除后再次创建；若该需求单已签核，请联系管理员！", 0);
                                 return;
                             }
@@ -3921,7 +3938,7 @@
                                 }
                                 _this.isShowConfirmPlanDate = _this.checkPlanDateIsShow(machineOrder);
                                 _this.requisitionForms.push(newItem);
-                                if(_this.editContract.orderNum == machineOrder.orderNum) {
+                                if (_this.editContract.orderNum == machineOrder.orderNum) {
                                     _this.editableTabsValue = newTabName;
                                 }
                                 _this.tabIndex = i + 1;
@@ -4178,12 +4195,12 @@
             },
             filterContractInfo(formsData)
             {
-                var resData=[];
+                var resData = [];
                 for (var i = 0; i < formsData.length; i++) {
                     var item = formsData[i];
-                    var newItem={};
-                    newItem.machineOrder=copyObjectByJSON(item.machineOrder);
-                    newItem.title=item.title;
+                    var newItem = {};
+                    newItem.machineOrder = copyObjectByJSON(item.machineOrder);
+                    newItem.title = item.title;
                     newItem.machineInfo = "";
                     newItem.machineName = item.machineOrder.brand;
                     for (let i = 0; i < _this.allMachineType.length; i++) {
@@ -4231,8 +4248,8 @@
                 this.$router.push({path: "/login"});
                 return;
             }
-            if(this.userInfo.role.roleName != null && this.userInfo.role.roleName.indexOf("销售") == -1) {
-               _this.filters.roleName = this.userInfo.role.roleName;
+            if (this.userInfo.role.roleName != null && this.userInfo.role.roleName.indexOf("销售") == -1) {
+                _this.filters.roleName = this.userInfo.role.roleName;
             }
             _this.requestCustomerList();
             _this.initAllRoles();

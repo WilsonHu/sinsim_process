@@ -140,6 +140,15 @@ const MaintainTypeList =
 
 const DefaultSelectedValue = "无";
 
+const ColorChangeModeList = [
+    {
+        value: 0, text: "凸轮换色"
+    },
+    {
+        value: 0, text: "丝杆换色"
+    }
+];
+
 //色数
 const SpecialTowelColorList = [
     {
@@ -1895,7 +1904,7 @@ const AxleHookList =
             value: 14,
             text: "广濑ATR(MG1F)黑心"
         },
-	{
+        {
             value: 15,
             text: "广濑ATR(MG1QF)黑心"
         },
