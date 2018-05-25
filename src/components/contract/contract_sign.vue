@@ -763,8 +763,7 @@
                                                               :class="classWithDifferentValue(item, 'needleNum', false)">
                                                     <el-input v-model="item.machineOrder.needleNum"
                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                              placeholder="头距"></el-input>
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)"></el-input>
                                                 </el-form-item>
                                             </el-col>
                                             <el-col :span="6">
@@ -782,8 +781,7 @@
                                                               :class="classWithDifferentValue(item, 'headDistance', false)">
                                                     <el-input v-model="item.machineOrder.headDistance"
                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                              :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                              placeholder="头距"></el-input>
+                                                              :readonly="changeOrderContentDisable(item.machineOrder)"></el-input>
                                                 </el-form-item>
                                             </el-col>
                                             <el-col :span="6">

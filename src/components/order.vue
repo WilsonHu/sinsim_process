@@ -274,7 +274,7 @@
                                 <el-col :span="6">
                                     <el-form-item label="合同号：" :label-width="formLabelWidth">
                                         <el-input
-                                                disabled
+                                                readonly
                                                 v-model="form.contractNum"
                                                 placeholder="合同号"
                                         ></el-input>
@@ -283,14 +283,14 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="订单号：" :label-width="formLabelWidth">
                                         <el-input v-model="form.orderNum"
-                                                  disabled
+                                                  readonly
                                         ></el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-form-item label="订机数量：" :label-width="formLabelWidth">
                                         <el-input-number style="float: left;"
-                                                         disabled
+                                                         readonly
                                                          v-model="form.machineNum"
                                                          :step="1"
                                                          controls-position="right"
@@ -303,7 +303,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="交货日期：" :label-width="formLabelWidth">
                                         <el-date-picker
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.contractShipDate"
                                                 type="date"
@@ -315,7 +315,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="计划日期：" :label-width="formLabelWidth">
                                         <el-date-picker
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.planShipDate"
                                                 type="date"
@@ -327,7 +327,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="销售人员：" :label-width="formLabelWidth">
                                         <el-input
-                                                disabled
+                                                readonly
                                                 v-model="form.sellman"
                                                 placeholder="销售人员"
                                                 auto-complete="off">
@@ -338,7 +338,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="包装方式：" :label-width="formLabelWidth">
                                         <el-select
-                                                disabled
+                                                readonly
                                                 v-model="form.packageMethod"
                                                 clearable
                                                 placeholder="请选择">
@@ -355,8 +355,8 @@
                                     >
                                         <el-input
                                                 type="textarea"
-                                                :autosize="{ minRows: 6, maxRows: 6}"
-                                                disabled
+                                                :autosize="{ minRows: 3, maxRows: 6}"
+                                                readonly
                                                 placeholder="包装备注"
                                                 v-model="form.packageMark">
                                         </el-input>
@@ -366,9 +366,9 @@
                                 <el-col :span="24" :offset="0">
                                     <el-form-item label="备注信息：" :label-width="formLabelWidth">
                                         <el-input
-                                                disabled
+                                                readonly
                                                 type="textarea"
-                                                :autosize="{ minRows: 10, maxRows: 10}"
+                                                :autosize="{ minRows: 3, maxRows: 10}"
                                                 placeholder="备注信息"
                                                 v-model="form.mark">
                                         </el-input>
@@ -386,7 +386,7 @@
                                     <el-form-item label="客户：" :label-width="formLabelWidth">
                                         <el-input
 
-                                                disabled
+                                                readonly
                                                 v-model="form.customer"
                                                 placeholder="客户"
                                         ></el-input>
@@ -395,7 +395,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="国家：" :label-width="formLabelWidth">
                                         <el-select
-                                                disabled
+                                                readonly
                                                 v-model="form.country"
                                                 clearable
                                                 placeholder="请选择">
@@ -411,7 +411,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="商标：" :label-width="formLabelWidth">
                                         <el-input
-                                                disabled
+                                                readonly
                                                 v-model="form.brand"
                                                 placeholder="商标"
                                         ></el-input>
@@ -420,7 +420,7 @@
                                 <el-col :span="6">
                                     <el-form-item label="机型：" :label-width="formLabelWidth">
                                         <el-select
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.machineType"
                                                 clearable
@@ -435,41 +435,33 @@
                                 </el-col>
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="针数：" :label-width="formLabelWidth">
-                                        <el-input-number style="float: left;"
-                                                         disabled
-                                                         v-model="form.needleNum"
-                                                         :step="2"
-                                                         controls-position="right"
-                                                         :min="1"
-                                                         :max="100">
+                                        <el-input style="float: left;"
+                                                  readonly
+                                                 v-model="form.needleNum">
 
-                                        </el-input-number>
+                                        </el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="头数：" :label-width="formLabelWidth">
                                         <el-input style="float: left"
-                                                 disabled
+                                                  readonly
                                                  v-model="form.headNum">
                                         </el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="头距：" :label-width="formLabelWidth">
-                                        <el-input-number style="float: left"
-                                                         v-model="form.headDistance"
-                                                         disabled
-                                                         :step="1"
-                                                         controls-position="right"
-                                                         :min="1"
-                                                         :max="100">
-                                        </el-input-number>
+                                        <el-input style="float: left"
+                                                 v-model="form.headDistance"
+                                                  readonly>
+                                        </el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-form-item label="X行程：" :label-width="formLabelWidth">
                                         <el-input
-                                                disabled
+                                                readonly
                                                 v-model="form.xDistance"
                                                 placeholder="X行程"
                                         ></el-input>
@@ -478,7 +470,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="Y行程：" :label-width="formLabelWidth">
                                         <el-input
-                                                disabled
+                                                readonly
                                                 v-model="form.yDistance"
                                                 placeholder="Y行程"
                                         ></el-input>
@@ -495,7 +487,7 @@
                                 <el-col :span="6">
                                     <el-form-item label="色数：" :label-width="formLabelWidth">
                                         <el-select
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.orderDetail.specialTowelColor"
                                                 clearable
@@ -512,7 +504,7 @@
                                     <el-form-item label="D轴上：" :label-width="formLabelWidth">
                                         <el-select
 
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.orderDetail.specialTowelDaxle"
                                                 clearable
@@ -528,7 +520,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="H轴下：" :label-width="formLabelWidth">
                                         <el-select
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.orderDetail.specialTowelHaxle"
                                                 clearable
@@ -544,7 +536,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="主电机：" :label-width="formLabelWidth">
                                         <el-select
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.orderDetail.specialTowelMotor"
                                                 clearable
@@ -560,7 +552,7 @@
                                 <el-col :span="6">
                                     <el-form-item label="盘带头：" :label-width="formLabelWidth">
                                         <el-select
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.orderDetail.specialTapingHead"
                                                 clearable
@@ -576,7 +568,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="毛巾机针：" :label-width="formLabelWidth">
                                         <el-select
-                                                disabled
+                                                readonly
                                                 style="width: 100%"
                                                 v-model="form.orderDetail.specialTowelNeedle"
                                                 clearable
@@ -602,7 +594,7 @@
                                     <el-form-item label="电脑：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.electricPc"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in pcModeList"
@@ -616,7 +608,7 @@
                                     <el-form-item label="语言：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.PClanguage"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in countryList"
@@ -630,7 +622,7 @@
                                     <el-form-item label="主电机：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.electricMotor"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in electricMotorList"
@@ -645,7 +637,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.electricMotorXy"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in xyMotorList"
@@ -661,7 +653,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.electricTrim"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in trimList"
@@ -676,7 +668,7 @@
                                     <el-form-item label="电源：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.electricPower"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in electricPowerList"
@@ -686,18 +678,33 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
+                                <!--<el-col :span="6" :offset="0">-->
+                                    <!--<el-form-item label="按钮开关：" :label-width="formLabelWidth">-->
+                                        <!--<el-select v-model="form.orderDetail.electricSwitch"-->
+                                                   <!--clearable-->
+                                                   <!--readonly-->
+                                                   <!--placeholder="请选择">-->
+                                            <!--<el-option-->
+                                                    <!--v-for="item in electricSwitchList"-->
+                                                    <!--:label="item.text"-->
+                                                    <!--:value="item.text">-->
+                                            <!--</el-option>-->
+                                        <!--</el-select>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
                                 <el-col :span="6" :offset="0">
-                                    <el-form-item label="按钮开关：" :label-width="formLabelWidth">
-                                        <el-select v-model="form.orderDetail.electricSwitch"
-                                                   clearable
-                                                   disabled
-                                                   placeholder="请选择">
-                                            <el-option
-                                                    v-for="item in electricSwitchList"
-                                                    :label="item.text"
-                                                    :value="item.text">
-                                            </el-option>
-                                        </el-select>
+                                    <el-form-item label="换色方式：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.colorChangeMode"
+                                                       readonly>
+                                                <el-option
+                                                        v-for="item in colorChangeModeList"
+                                                        :key="item.text"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6" :offset="0">
@@ -705,7 +712,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.electricOil"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in electricOilList"
@@ -730,7 +737,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.axleSplit"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in axleSplitList"
@@ -746,7 +753,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.axlePanel"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in axlePanelList"
@@ -761,7 +768,7 @@
                                     <el-form-item label="机针：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.axleNeedle"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in axleNeedleList"
@@ -777,7 +784,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.axleNeedleType"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in axleNeedleTypeList"
@@ -789,39 +796,39 @@
                                         </template>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6" :offset="0">
-                                    <el-form-item label="机头导轨：" :label-width="formLabelWidth">
-                                        <el-select v-model="form.orderDetail.axleRail"
-                                                   clearable
-                                                   disabled
-                                                   placeholder="请选择">
-                                            <el-option
-                                                    v-for="item in axleRailList"
-                                                    :label="item.text"
-                                                    :value="item.text">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6" :offset="0">
-                                    <el-form-item label="底检方式：" :label-width="formLabelWidth">
-                                        <el-select v-model="form.orderDetail.axleDownCheck"
-                                                   clearable
-                                                   disabled
-                                                   placeholder="请选择">
-                                            <el-option
-                                                    v-for="item in axleDownCheckList"
-                                                    :label="item.text"
-                                                    :value="item.text">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
+                                <!--<el-col :span="6" :offset="0">-->
+                                    <!--<el-form-item label="机头导轨：" :label-width="formLabelWidth">-->
+                                        <!--<el-select v-model="form.orderDetail.axleRail"-->
+                                                   <!--clearable-->
+                                                   <!--readonly-->
+                                                   <!--placeholder="请选择">-->
+                                            <!--<el-option-->
+                                                    <!--v-for="item in axleRailList"-->
+                                                    <!--:label="item.text"-->
+                                                    <!--:value="item.text">-->
+                                            <!--</el-option>-->
+                                        <!--</el-select>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
+                                <!--<el-col :span="6" :offset="0">-->
+                                    <!--<el-form-item label="底检方式：" :label-width="formLabelWidth">-->
+                                        <!--<el-select v-model="form.orderDetail.axleDownCheck"-->
+                                                   <!--clearable-->
+                                                   <!--readonly-->
+                                                   <!--placeholder="请选择">-->
+                                            <!--<el-option-->
+                                                    <!--v-for="item in axleDownCheckList"-->
+                                                    <!--:label="item.text"-->
+                                                    <!--:value="item.text">-->
+                                            <!--</el-option>-->
+                                        <!--</el-select>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="旋梭：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.axleHook"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in axleHookList"
@@ -836,7 +843,7 @@
                                     <el-form-item label="跳跃方式：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.axleJump"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in axleJumpList"
@@ -851,7 +858,7 @@
                                     <el-form-item label="面线夹持：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.axleUpperThread"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in axleUpperThreadList"
@@ -865,9 +872,9 @@
                                     <el-form-item label="附加装置：" :label-width="formLabelWidth">
                                         <el-input
                                                 type="textarea"
-                                                disabled
+                                                readonly
                                                 v-model="form.orderDetail.axleAddition"
-                                                :autosize="{ minRows: 10, maxRows: 10}">
+                                                :autosize="{ minRows: 3, maxRows: 10}">
                                         </el-input>
                                     </el-form-item>
                                 </el-col>
@@ -884,7 +891,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.frameworkColor"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in frameworkColorList"
@@ -900,7 +907,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.frameworkPlaten"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in frameworkPlatenList"
@@ -916,7 +923,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.frameworkPlatenColor"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in frameworkPlatenColorList"
@@ -933,7 +940,7 @@
                                             <el-select v-model="form.orderDetail.frameworkRing"
                                                        clearable
 
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in frameworkRingList"
@@ -949,7 +956,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.frameworkBracket"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in frameworkBracketList"
@@ -965,7 +972,7 @@
                                         <template scope="scope">
                                             <el-select v-model="form.orderDetail.frameworkStop"
                                                        clearable
-                                                       disabled
+                                                       readonly
                                                        placeholder="请选择">
                                                 <el-option
                                                         v-for="item in frameworkStopList"
@@ -976,20 +983,20 @@
                                         </template>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6" :offset="0">
-                                    <el-form-item label="日光灯：" :label-width="formLabelWidth">
-                                        <el-select v-model="form.orderDetail.frameworkLight"
-                                                   clearable
-                                                   disabled
-                                                   placeholder="请选择">
-                                            <el-option
-                                                    v-for="item in frameworkLightList"
-                                                    :label="item.text"
-                                                    :value="item.text">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
+                                <!--<el-col :span="6" :offset="0">-->
+                                    <!--<el-form-item label="日光灯：" :label-width="formLabelWidth">-->
+                                        <!--<el-select v-model="form.orderDetail.frameworkLight"-->
+                                                   <!--clearable-->
+                                                   <!--readonly-->
+                                                   <!--placeholder="请选择">-->
+                                            <!--<el-option-->
+                                                    <!--v-for="item in frameworkLightList"-->
+                                                    <!--:label="item.text"-->
+                                                    <!--:value="item.text">-->
+                                            <!--</el-option>-->
+                                        <!--</el-select>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
                             </div>
                         </div>
 
@@ -1002,7 +1009,7 @@
                                     <el-form-item label="驱动类型：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.driverType" style="width: 100%;"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in driverTypeList"
@@ -1016,7 +1023,7 @@
                                     <el-form-item label="驱动方式：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.driverMethod"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in friverMethodList"
@@ -1030,7 +1037,7 @@
                                     <el-form-item label="绷架孔：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.driverReelHole"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in driverReelHoleList"
@@ -1044,7 +1051,7 @@
                                     <el-form-item label="绷架：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.driverReel"
                                                    clearable
-                                                   disabled
+                                                   readonly
                                                    placeholder="请选择">
                                             <el-option
                                                     v-for="item in driverReelList"
@@ -1058,11 +1065,8 @@
                                     <el-form-item label="横档数量：" :label-width="formLabelWidth">
                                         <el-input-number style="float: left"
                                                          v-model="form.orderDetail.driverHorizonNum"
-                                                         :step="1"
-                                                         disabled
-                                                         controls-position="right"
-                                                         :min="1"
-                                                         :max="100">
+                                                         readonly
+                                                         controls-position="right">
                                         </el-input-number>
                                     </el-form-item>
                                 </el-col>
@@ -1070,11 +1074,8 @@
                                     <el-form-item label="直档数量：" :label-width="formLabelWidth">
                                         <el-input-number style="float: left"
                                                          v-model="form.orderDetail.driverVerticalNum"
-                                                         :step="1"
-                                                         disabled
-                                                         controls-position="right"
-                                                         :min="1"
-                                                         :max="100">
+                                                         readonly
+                                                         controls-position="right">
                                         </el-input-number>
                                     </el-form-item>
                                 </el-col>
@@ -1173,6 +1174,7 @@
                 specialTowelHaxleList: SpecialTowelHaxleList,
                 specialTowelMotorList: SpecialTowelMotorList,
                 specialTowelNeedleList: SpecialTowelNeedleList,
+                colorChangeModeList: ColorChangeModeList,
 
                 //增加对话框
                 addDialogVisible: false,
