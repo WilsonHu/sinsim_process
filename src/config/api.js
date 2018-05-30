@@ -142,10 +142,14 @@ const DefaultSelectedValue = "无";
 
 const ColorChangeModeList = [
     {
-        value: 0, text: "凸轮换色"
+        value: 0,
+        text: "无"
     },
     {
-        value: 0, text: "丝杆换色"
+        value: 1, text: "凸轮换色"
+    },
+    {
+        value: 2, text: "丝杆换色"
     }
 ];
 
@@ -1642,18 +1646,22 @@ const TrimList =
     [
         {
             value: 0,
-            text: "电机剪线"
+            text: "无"
         },
         {
             value: 1,
-            text: "普通剪线"
+            text: "电机剪线"
         },
         {
             value: 2,
-            text: "不剪线"
+            text: "普通剪线"
         },
         {
             value: 3,
+            text: "不剪线"
+        },
+        {
+            value: 4,
             text: "电机静态剪线"
         },
     ];

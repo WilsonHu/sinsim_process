@@ -354,6 +354,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
+                                    min-width="400px"
                                     align="center"
                                     label="装置">
                                 <template slot-scope="item">
@@ -422,7 +423,8 @@
 
 
                         <el-row style="margin-top: 10px" v-show="isFinanceVisible()">
-                            <el-col :span="3" :offset="18" style="font-size: 16px;font-weight: bold;text-align: right;">
+                            <el-col :span="3" :offset="18"
+                                    style="font-size: 16px;font-weight: bold;text-align: right;">
                                 合同总价({{contractForm.currencyType}})：
                             </el-col>
                             <el-col :span="2" :offset="1" style="font-size: 28px;font-weight: bold; color: red">
@@ -1195,40 +1197,40 @@
                                                 </el-form-item>
                                             </el-col>
                                             <!--<el-col :span="6">-->
-                                                <!--<el-form-item label="机头导轨：" :label-width="formLabelWidth"-->
-                                                              <!--:class="classWithDifferentValue(item, 'axleRail', true)">-->
-                                                    <!--<template scope="scope">-->
-                                                        <!--<el-select v-model="item.orderDetail.axleRail"-->
-                                                                   <!--clearable-->
-                                                                   <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
-                                                                   <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
-                                                                   <!--placeholder="请选择">-->
-                                                            <!--<el-option-->
-                                                                    <!--v-for="item in axleRailList"-->
-                                                                    <!--:key="item.text"-->
-                                                                    <!--:label="item.text"-->
-                                                                    <!--:value="item.text">-->
-                                                            <!--</el-option>-->
-                                                        <!--</el-select>-->
-                                                    <!--</template>-->
-                                                <!--</el-form-item>-->
+                                            <!--<el-form-item label="机头导轨：" :label-width="formLabelWidth"-->
+                                            <!--:class="classWithDifferentValue(item, 'axleRail', true)">-->
+                                            <!--<template scope="scope">-->
+                                            <!--<el-select v-model="item.orderDetail.axleRail"-->
+                                            <!--clearable-->
+                                            <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                            <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                            <!--placeholder="请选择">-->
+                                            <!--<el-option-->
+                                            <!--v-for="item in axleRailList"-->
+                                            <!--:key="item.text"-->
+                                            <!--:label="item.text"-->
+                                            <!--:value="item.text">-->
+                                            <!--</el-option>-->
+                                            <!--</el-select>-->
+                                            <!--</template>-->
+                                            <!--</el-form-item>-->
                                             <!--</el-col>-->
                                             <!--<el-col :span="6">-->
-                                                <!--<el-form-item label="底检方式：" :label-width="formLabelWidth"-->
-                                                              <!--:class="classWithDifferentValue(item, 'axleDownCheck', true)">-->
-                                                    <!--<el-select v-model="item.orderDetail.axleDownCheck"-->
-                                                               <!--clearable-->
-                                                               <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
-                                                               <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
-                                                               <!--placeholder="请选择">-->
-                                                        <!--<el-option-->
-                                                                <!--v-for="item in axleDownCheckList"-->
-                                                                <!--:key="item.text"-->
-                                                                <!--:label="item.text"-->
-                                                                <!--:value="item.text">-->
-                                                        <!--</el-option>-->
-                                                    <!--</el-select>-->
-                                                <!--</el-form-item>-->
+                                            <!--<el-form-item label="底检方式：" :label-width="formLabelWidth"-->
+                                            <!--:class="classWithDifferentValue(item, 'axleDownCheck', true)">-->
+                                            <!--<el-select v-model="item.orderDetail.axleDownCheck"-->
+                                            <!--clearable-->
+                                            <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                            <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                            <!--placeholder="请选择">-->
+                                            <!--<el-option-->
+                                            <!--v-for="item in axleDownCheckList"-->
+                                            <!--:key="item.text"-->
+                                            <!--:label="item.text"-->
+                                            <!--:value="item.text">-->
+                                            <!--</el-option>-->
+                                            <!--</el-select>-->
+                                            <!--</el-form-item>-->
                                             <!--</el-col>-->
                                             <el-col :span="6">
                                                 <el-form-item label="旋梭：" :label-width="formLabelWidth"
@@ -1417,21 +1419,21 @@
                                                 </el-form-item>
                                             </el-col>
                                             <!--<el-col :span="6">-->
-                                                <!--<el-form-item label="日光灯：" :label-width="formLabelWidth"-->
-                                                              <!--:class="classWithDifferentValue(item, 'frameworkLight', true)">-->
-                                                    <!--<el-select v-model="item.orderDetail.frameworkLight"-->
-                                                               <!--clearable-->
-                                                               <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
-                                                               <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
-                                                               <!--placeholder="请选择">-->
-                                                        <!--<el-option-->
-                                                                <!--v-for="item in frameworkLightList"-->
-                                                                <!--:key="item.text"-->
-                                                                <!--:label="item.text"-->
-                                                                <!--:value="item.text">-->
-                                                        <!--</el-option>-->
-                                                    <!--</el-select>-->
-                                                <!--</el-form-item>-->
+                                            <!--<el-form-item label="日光灯：" :label-width="formLabelWidth"-->
+                                            <!--:class="classWithDifferentValue(item, 'frameworkLight', true)">-->
+                                            <!--<el-select v-model="item.orderDetail.frameworkLight"-->
+                                            <!--clearable-->
+                                            <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                            <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                            <!--placeholder="请选择">-->
+                                            <!--<el-option-->
+                                            <!--v-for="item in frameworkLightList"-->
+                                            <!--:key="item.text"-->
+                                            <!--:label="item.text"-->
+                                            <!--:value="item.text">-->
+                                            <!--</el-option>-->
+                                            <!--</el-select>-->
+                                            <!--</el-form-item>-->
                                             <!--</el-col>-->
                                         </div>
                                     </div>
@@ -1886,10 +1888,13 @@
                 </el-button>
                 <el-button v-show="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check">保存拆单
                 </el-button>
-                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check">保 存</el-button>
+                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd"
+                           icon="el-icon-check">保 存
+                </el-button>
             </div>
             <el-dialog title="提示" :visible.sync="confirmPasteDialog" width="30%" append-to-body>
-                <span style="font-size: 15px">确定要粘贴到<b style="color: #F56C6C">{{currentSelectOrder.title}}</b>吗？</span>
+                <span style="font-size: 15px">确定要粘贴到<b
+                        style="color: #F56C6C">{{currentSelectOrder.title}}</b>吗？</span>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="confirmPasteDialog = false" icon="el-icon-back">取 消</el-button>
                     <el-button type="primary" @click="onConfirmPasteOrder" icon="el-icon-check">确 定</el-button>
@@ -2677,19 +2682,22 @@
                 var newItem = {
                     title: "需求单" + newTabName,
                     name: newTabName,
-                    machineOrder: copyObjectByJSON(
-                            this.requisitionForms[this.tabIndex - 2].machineOrder
-                    ),
-                    orderDetail: copyObjectByJSON(
-                            this.requisitionForms[this.tabIndex - 2].orderDetail
-                    ),
-                    orderSign: copyObjectByJSON(
-                            this.requisitionForms[this.tabIndex - 2].orderSign
-                    ) != null
-                            ? copyObjectByJSON(
-                            this.requisitionForms[this.tabIndex - 2].orderSign
-                    )
-                            : {}
+//				    machineOrder: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].machineOrder),
+//				    orderDetail: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderDetail),
+//				    orderSign: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign) != null
+//						    ? copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign): {}
+
+                    machineOrder: {
+                        machineType: '',
+                        country: CountryList[0].text,
+                        brand: "",
+                        createTime: new Date().format("yyyy-MM-dd"),
+                        equipment: [],
+                        status: ORDER_INITIAL,
+                        createUserId: JSON.parse(sessionStorage.getItem("user")).id
+                    },
+                    orderDetail: copyObjectByJSON(DefaultOrderDetail),
+                    orderSign: {}
                 };
                 //设置时间
                 newItem.machineOrder.createTime = new Date().format("yyyy-MM-dd");
@@ -2705,8 +2713,7 @@
                 this.requisitionForms.push(newItem);
                 this.editableTabsValue = newTabName;
                 //TODO:合同的签核内容此时也需要更新
-                this.contractSignForms[0].contractSignData =
-                        _this.normalContractSignArray;
+                this.contractSignForms[0].contractSignData = _this.normalContractSignArray;
             },
 
             removeTab(targetName) {
@@ -2755,7 +2762,9 @@
             },
             filterCountry(value) {
                 if (value != null && value != "") {
-                    this.countryListTmp = _this.countryList.filter(item=>{ return item.cn.toLowerCase().indexOf(value.toLowerCase()) > -1 || item.en.toLowerCase().indexOf(value.toLowerCase()) > -1;});
+                    this.countryListTmp = _this.countryList.filter(item=> {
+                        return item.cn.toLowerCase().indexOf(value.toLowerCase()) > -1 || item.en.toLowerCase().indexOf(value.toLowerCase()) > -1;
+                    });
                 } else {
                     this.countryListTmp = copyObjectByJSON(_this.countryList);
                 }
@@ -4203,37 +4212,34 @@
                     newItem.machineName = item.machineOrder.brand;
                     for (let i = 0; i < _this.allMachineType.length; i++) {
                         if (_this.allMachineType[i].id == item.machineOrder.machineType) {
-                            newItem.machineInfo +="<span class='scopeMachine'>" +  _this.allMachineType[i].name+ "</span>";
+                            newItem.machineInfo += `<span class="scopeMachine">${_this.allMachineType[i].name}</span>`;
                             break;
                         }
                     }
-
                     if (!isUndefined(item.machineOrder.needleNum)) {
-                        newItem.machineInfo += "<br /><span class='scopeMachine'>" + item.machineOrder.needleNum + "</span>";
+                        newItem.machineInfo += `<br /><span class="scopeMachine">${item.machineOrder.needleNum}</span>`;
                     }
                     if (!isUndefined(item.machineOrder.headNum)) {
-                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.machineOrder.headNum + "</span>";
+                        newItem.machineInfo += `/<span class="scopeMachine">${item.machineOrder.headNum}</span>`;
                     }
                     if (!isUndefined(item.machineOrder.headDistance)) {
-                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.machineOrder.headDistance + "</span>";
+                        newItem.machineInfo += `/<span class="scopeMachine">${item.machineOrder.headDistance}</span>`;
                     }
                     if (!isUndefined(item.machineOrder.xDistance)) {
-                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.machineOrder.xDistance + "</span>";
+                        newItem.machineInfo += `/<span class="scopeMachine">${item.machineOrder.xDistance}</span>`;
                     }
                     if (!isUndefined(item.machineOrder.yDistance)) {
-
-                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.machineOrder.yDistance + "</span>";
+                        newItem.machineInfo += `/<span class="scopeMachine">${item.machineOrder.yDistance}</span>`;
                     }
 
                     if (!isUndefined(item.orderDetail.electricTrim)) {
-                        newItem.machineInfo += "/<span class='scopeMachine'>" + item.orderDetail.electricTrim + "</span>";
+                        newItem.machineInfo += `/<span class="scopeMachine">${item.orderDetail.electricTrim}</span>`;
                     }
                     if (!isUndefined(item.orderDetail.electricPc)) {
-                        newItem.machineInfo += "<br />电脑:" + "<span class='scopeMachine'>" + item.orderDetail.electricPc + "</span>";
+                        newItem.machineInfo += `<br />电脑:<span class="scopeMachine">${ item.orderDetail.electricPc }</span>`;
                     }
-                    newItem.machineNum=item.machineOrder.machineNum;
-                    newItem.machinePrice=item.machineOrder.machinePrice;
-
+                    newItem.machineNum = item.machineOrder.machineNum;
+                    newItem.machinePrice = item.machineOrder.machinePrice;
                     resData.push(newItem);
 
                 }
