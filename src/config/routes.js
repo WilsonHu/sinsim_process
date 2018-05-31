@@ -10,6 +10,7 @@ import InstallGroupManage from '../components/system/install_group_manage.vue'
 import MarketGroupManage from '../components/system/market_group_manage.vue'
 import RoleManage from '../components/system/role_manage.vue'
 import DeviceManager from '../components/system/device_manage.vue'
+import MachineTypeManager from '../components/system/machine_type_manage.vue'
 
 //abnormal
 import Abnormal from "../components/abnormal.vue"
@@ -206,6 +207,12 @@ export default
                         component: DeviceManager,
                         name: 'device_manager',
                         meta: '设备管理'
+                    },
+                    {
+                        path: '/home/system/machine_type_manager',
+                        component: MachineTypeManager,
+                        name: 'machine_type_manager',
+                        meta: '机型管理'
                     },
                 ]
             },
