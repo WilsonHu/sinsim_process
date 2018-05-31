@@ -1736,21 +1736,25 @@ const ElectricOilList =
 //伟龙款,15款信胜普通,15款信胜高速,信胜普通,信胜高速,仿田岛,上海,固定式
 const AxleSplitList =
     [
-        {
+    	{
             value: 0,
-            text: "信胜款"
+            text: "无"
         },
         {
             value: 1,
-            text: "NXE款"
+            text: "信胜款"
         },
         {
             value: 2,
-            text: "仿田岛"
+            text: "NXE款"
         },
         {
             value: 3,
-            text: "固定式"
+            text: "仿田岛"
+        },
+        {
+            value: 4,
+            text: "固定式"	    
         }
     ];
 
@@ -1758,20 +1762,24 @@ const AxleSplitList =
 //上下分体面板,上塑料下铁,上塑料下复合,上塑料下塑料
 const AxlePanelList =
     [
-        {
+    	{
             value: 0,
-            text: "上下分体面板"
+            text: "无"
         },
         {
             value: 1,
-            text: "上塑料下铁"
+            text: "上下分体面板"
         },
         {
             value: 2,
-            text: "上塑料下复合"
+            text: "上塑料下铁"
         },
         {
             value: 3,
+            text: "上塑料下复合"
+        },
+        {
+            value: 4,
             text: "上塑料下塑料"
         },
     ];
@@ -1780,20 +1788,24 @@ const AxlePanelList =
 //9,11,12,14,16,18
 const AxleNeedleList =
     [
-        {
+    	{
             value: 0,
-            text: "尖头针"
+            text: "无"
         },
         {
             value: 1,
-            text: "SUK"
+            text: "尖头针"
         },
         {
             value: 2,
-            text: "GROZ"
+            text: "SUK"
         },
         {
             value: 3,
+            text: "GROZ"
+        },
+        {
+            value: 4,
             text: "风琴尖头"
         }
     ];
@@ -1801,20 +1813,24 @@ const AxleNeedleList =
 //SUK,GROZ
 const AxleNeedleTypeList =
     [
-        {
+    	{
             value: 0,
-            text: "尖头针"
+            text: "无"
         },
         {
             value: 1,
-            text: "SUK"
+            text: "尖头针"
         },
         {
             value: 2,
-            text: "GROZ"
+            text: "SUK"
         },
         {
             value: 3,
+            text: "GROZ"
+        },
+        {
+            value: 4,
             text: "风琴尖头"
         }
 
@@ -1848,72 +1864,76 @@ const AxleDownCheckList =
 // 德盛精品,广濑AO(MG1),广濑ATR(MG1),广濑ATR(MG1QF)黑心
 const AxleHookList =
     [
-        {
+    	{
             value: 0,
-            text: "广濑1.6倍高速"
+            text: "无"
         },
         {
             value: 1,
-            text: "广濑1.6倍"
+            text: "广濑1.6倍高速"
         },
         {
             value: 2,
-            text: "佐伩12-R"
+            text: "广濑1.6倍"
         },
         {
             value: 3,
-            text: "佐伩12-RP"
+            text: "佐伩12-R"
         },
         {
             value: 4,
-            text: "佐伩12-RY"
+            text: "佐伩12-RP"
         },
         {
             value: 5,
-            text: "佐伩12RYP"
+            text: "佐伩12-RY"
         },
         {
             value: 6,
-            text: "佐文"
+            text: "佐伩12RYP"
         },
         {
             value: 7,
-            text: "韩大"
+            text: "佐文"
         },
         {
             value: 8,
-            text: "韩大黑芯"
+            text: "韩大"
         },
         {
             value: 9,
+            text: "韩大黑芯"
+        },
+        {
+            value: 10,
             text: "广濑普通"
         },
         {
-            value: 10,
+            value: 11,
             text: "广濑高速"
         },
         {
-            value: 10,
+            value: 12,
             text: "SINSIM"
         },
         {
-            value: 11,
+            value: 13,
             text: "德盛精品"
         },
         {
-            value: 12,
+            value: 14,
             text: "广濑AO(MG1)"
         },
         {
-            value: 13,
+            value: 15,
             text: "广濑ATR(MG1)"
         },
         {
-            value: 14,
+            value: 16,
             text: "广濑ATR(MG1F)黑心"
         },
-        {
-            value: 15,
+	{
+            value: 17,
             text: "广濑ATR(MG1QF)黑心"
         },
     ];
@@ -1923,12 +1943,16 @@ const AxleHookList =
 //电磁铁跳跃,电机跳跃,电磁铁跳跃带轴承
 const AxleJumpList =
     [
-        {
+    	{
             value: 0,
+            text: "无"
+        }
+        {
+            value: 1,
             text: "电磁铁跳跃"
         },
         {
-            value: 1,
+            value: 2,
             text: "电机跳跃"
         },
     ];
