@@ -1135,25 +1135,25 @@
                                                     </template >
                                                 </el-form-item >
                                             </el-col >
-                                            <el-col :span="6" >
-                                                <el-form-item label="面板：" :label-width="formLabelWidth"
-                                                              :class="classWithDifferentValue(item, 'axlePanel', true)" >
-                                                    <template scope="scope" >
-                                                        <el-select v-model="item.orderDetail.axlePanel"
-                                                                   clearable
-                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                   placeholder="请选择" >
-                                                            <el-option
-		                                                            v-for="item in axlePanelList"
-		                                                            :key="item.text"
-		                                                            :label="item.text"
-		                                                            :value="item.text" >
-                                                            </el-option >
-                                                        </el-select >
-                                                    </template >
-                                                </el-form-item >
-                                            </el-col >
+                                            <!--<el-col :span="6" >-->
+                                                <!--<el-form-item label="面板：" :label-width="formLabelWidth"-->
+                                                              <!--:class="classWithDifferentValue(item, 'axlePanel', true)" >-->
+                                                    <!--<template scope="scope" >-->
+                                                        <!--<el-select v-model="item.orderDetail.axlePanel"-->
+                                                                   <!--clearable-->
+                                                                   <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                                                   <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                                                   <!--placeholder="请选择" >-->
+                                                            <!--<el-option-->
+		                                                            <!--v-for="item in axlePanelList"-->
+		                                                            <!--:key="item.text"-->
+		                                                            <!--:label="item.text"-->
+		                                                            <!--:value="item.text" >-->
+                                                            <!--</el-option >-->
+                                                        <!--</el-select >-->
+                                                    <!--</template >-->
+                                                <!--</el-form-item >-->
+                                            <!--</el-col >-->
                                             <el-col :span="6" >
                                                 <el-form-item label="机针：" :label-width="formLabelWidth"
                                                               :class="classWithDifferentValue(item, 'axleNeedle', true)" >
@@ -3194,19 +3194,18 @@
 				    iserror = true;
 				    this.errorMsg = "销售人员不能为空";
 			    }
-
-			    if (!iserror && formObj.contractShipDate == "") {
-				    iserror = true;
-				    this.errorMsg = "合同交货时间不能为空";
-			    }
+                if (!iserror && isStringEmpty(formObj.payMethod)) {
+                    iserror = true;
+                    this.errorMsg = "付款方式不能为空";
+                }
 			    if (!iserror && isStringEmpty(formObj.currencyType)) {
 				    iserror = true;
 				    this.errorMsg = "付款币种不能为空";
 			    }
-			    if (!iserror && isStringEmpty(formObj.payMethod)) {
-				    iserror = true;
-				    this.errorMsg = "付款方式不能为空";
-			    }
+                if (!iserror && formObj.contractShipDate == "") {
+                    iserror = true;
+                    this.errorMsg = "合同交货时间不能为空";
+                }
 			    return iserror;
 		    },
 
@@ -3216,10 +3215,7 @@
 				    iserror = true;
 				    this.errorMsg = "订单号不能为空";
 			    }
-			    if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
-				    iserror = true;
-				    this.errorMsg = "请选择包装方式";
-			    }
+
 
 			    if (!iserror && isStringEmpty(formObj.machineOrder.country)) {
 				    iserror = true;
@@ -3233,22 +3229,39 @@
 				    iserror = true;
 				    this.errorMsg = "请选择机型";
 			    }
-			    if (!iserror && formObj.machineOrder.contractShipDate == "") {
-				    iserror = true;
-				    this.errorMsg = "交货日期不能为空";
-			    }
-			    if (!iserror && isStringEmpty(formObj.machineOrder.maintainType)) {
-				    iserror = true;
-				    this.errorMsg = "保修方式不能为空";
-			    }
+                if (!iserror && isStringEmpty(formObj.machineOrder.needleNum)) {
+                    iserror = true;
+                    this.errorMsg = "请填写针数";
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.headNum)) {
+                    iserror = true;
+                    this.errorMsg = "请填写头数";
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.headDistance)) {
+                    iserror = true;
+                    this.errorMsg = "请填写头距";
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.xDistance)) {
+                    iserror = true;
+                    this.errorMsg = "请填写X行程";
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.yDistance)) {
+                    iserror = true;
+                    this.errorMsg = "请填写Y行程";
+                }
 
+
+                if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelColor)) {
+                    iserror = true;
+                    this.errorMsg = "色数不能为空";
+                }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelDaxle)) {
 				    iserror = true;
 				    this.errorMsg = "D轴上不能为空";
 			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelMotor)) {
+			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelHaxle)) {
 				    iserror = true;
-				    this.errorMsg = "主电机不能为空";
+				    this.errorMsg = "H轴下不能为空";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelMotor)) {
 				    iserror = true;
@@ -3262,6 +3275,8 @@
 				    iserror = true;
 				    this.errorMsg = "毛巾机针不能为空";
 			    }
+
+
 
 			    if (!iserror && isStringEmpty(formObj.orderDetail.electricPc)) {
 				    iserror = true;
@@ -3300,14 +3315,15 @@
 				    this.errorMsg = "请选择加油系统";
 			    }
 
+
 			    if (!iserror && isStringEmpty(formObj.orderDetail.axleSplit)) {
 				    iserror = true;
 				    this.errorMsg = "请选择夹线器";
 			    }
-			    if (!iserror && isStringEmpty(formObj.orderDetail.axlePanel)) {
-				    iserror = true;
-				    this.errorMsg = "请选择面板";
-			    }
+			    // if (!iserror && isStringEmpty(formObj.orderDetail.axlePanel)) {
+				 //    iserror = true;
+				 //    this.errorMsg = "请选择面板";
+			    // }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.axleNeedle)) {
 				    iserror = true;
 				    this.errorMsg = "请选择机针";
@@ -3337,29 +3353,30 @@
 				    this.errorMsg = "请选择面线夹持";
 			    }
 
+
 			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkColor)) {
 				    iserror = true;
 				    this.errorMsg = "请选择机架颜色";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPlaten)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 台板";
+				    this.errorMsg = "请选择台板";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPlatenColor)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 台板颜色";
+				    this.errorMsg = "请选择台板颜色";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkRing)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 吊环";
+				    this.errorMsg = "请选择吊环";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkBracket)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 电脑托架";
+				    this.errorMsg = "请选择电脑托架";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.frameworkStop)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 急停装置";
+				    this.errorMsg = "请选择急停装置";
 			    }
 //                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkLight)) {
 //                    iserror = true;
@@ -3368,21 +3385,57 @@
 
 			    if (!iserror && isStringEmpty(formObj.orderDetail.driverType)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 驱动类型";
+				    this.errorMsg = "请选择驱动类型";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.driverMethod)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 驱动方式";
+				    this.errorMsg = "请选择驱动方式";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.driverReelHole)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 绷架孔";
+				    this.errorMsg = "请选择绷架孔";
 			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.driverReel)) {
 				    iserror = true;
-				    this.errorMsg = "请选择 绷架";
+				    this.errorMsg = "请选择绷架";
 			    }
-			    return iserror;
+                if (!iserror && isStringEmpty(formObj.orderDetail.driverHorizonNum)) {
+                    iserror = true;
+                    this.errorMsg = "请选择横档数量";
+                }
+                if (!iserror && isStringEmpty(formObj.orderDetail.driverVerticalNum)) {
+                    iserror = true;
+                    this.errorMsg = "请选择直档数量";
+                }
+
+
+                if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
+                    iserror = true;
+                    this.errorMsg = "请选择包装方式";
+                }
+                if (!iserror && formObj.machineOrder.contractShipDate == null) {
+                    iserror = true;
+                    this.errorMsg = "交货日期不能为空";
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.machineNum)) {
+                    iserror = true;
+                    this.errorMsg = "机器数量能为空";
+                }
+                if (!iserror && isStringEmpty(formObj.machineOrder.maintainType)) {
+                    iserror = true;
+                    this.errorMsg = "保修方式不能为空";
+                }
+                if (!iserror && formObj.machineOrder.planShipDate == null) {
+                    iserror = true;
+                    this.errorMsg = "计划日期不能为空";
+                }
+
+                if (!iserror && isStringEmpty(formObj.machineOrder.machinePrice)) {
+                    iserror = true;
+                    this.errorMsg = "机器价格不能为空";
+                }
+
+                return iserror;
 		    },
 
 		    dialogCloseCallback() {

@@ -1946,7 +1946,7 @@ const AxleJumpList =
     	{
             value: 0,
             text: "无"
-        }
+        },
         {
             value: 1,
             text: "电磁铁跳跃"
