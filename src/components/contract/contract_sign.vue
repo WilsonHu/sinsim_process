@@ -1135,25 +1135,25 @@
                                                     </template >
                                                 </el-form-item >
                                             </el-col >
-                                            <!--<el-col :span="6" >-->
-                                                <!--<el-form-item label="面板：" :label-width="formLabelWidth"-->
-                                                              <!--:class="classWithDifferentValue(item, 'axlePanel', true)" >-->
-                                                    <!--<template scope="scope" >-->
-                                                        <!--<el-select v-model="item.orderDetail.axlePanel"-->
-                                                                   <!--clearable-->
-                                                                   <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
-                                                                   <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
-                                                                   <!--placeholder="请选择" >-->
-                                                            <!--<el-option-->
-		                                                            <!--v-for="item in axlePanelList"-->
-		                                                            <!--:key="item.text"-->
-		                                                            <!--:label="item.text"-->
-		                                                            <!--:value="item.text" >-->
-                                                            <!--</el-option >-->
-                                                        <!--</el-select >-->
-                                                    <!--</template >-->
-                                                <!--</el-form-item >-->
-                                            <!--</el-col >-->
+	                                        <!--<el-col :span="6" >-->
+	                                        <!--<el-form-item label="面板：" :label-width="formLabelWidth"-->
+	                                        <!--:class="classWithDifferentValue(item, 'axlePanel', true)" >-->
+	                                        <!--<template scope="scope" >-->
+	                                        <!--<el-select v-model="item.orderDetail.axlePanel"-->
+	                                        <!--clearable-->
+	                                        <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+	                                        <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+	                                        <!--placeholder="请选择" >-->
+	                                        <!--<el-option-->
+	                                        <!--v-for="item in axlePanelList"-->
+	                                        <!--:key="item.text"-->
+	                                        <!--:label="item.text"-->
+	                                        <!--:value="item.text" >-->
+	                                        <!--</el-option >-->
+	                                        <!--</el-select >-->
+	                                        <!--</template >-->
+	                                        <!--</el-form-item >-->
+	                                        <!--</el-col >-->
                                             <el-col :span="6" >
                                                 <el-form-item label="机针：" :label-width="formLabelWidth"
                                                               :class="classWithDifferentValue(item, 'axleNeedle', true)" >
@@ -2682,30 +2682,20 @@
 			    var newItem = {
 				    title: "需求单" + newTabName,
 				    name: newTabName,
-//				    machineOrder: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].machineOrder),
-//				    orderDetail: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderDetail),
-//				    orderSign: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign) != null
-//						    ? copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign): {}
-
-				    machineOrder: {
-					    machineType: '',
-					    country: CountryList[0].text,
-					    brand: "",
-					    createTime: new Date().format("yyyy-MM-dd"),
-					    equipment: [],
-					    status: ORDER_INITIAL,
-					    createUserId: JSON.parse(sessionStorage.getItem("user")).id
-				    },
-				    orderDetail: copyObjectByJSON(DefaultOrderDetail),
-				    orderSign: {}
+				    machineOrder: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].machineOrder),
+				    orderDetail: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderDetail),
+				    orderSign: copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign) != null
+						    ? copyObjectByJSON(this.requisitionForms[this.tabIndex - 2].orderSign) : {}
 			    };
+			    resetObject(newItem);
+			    newItem.title = "需求单" + newTabName;
+			    newItem.name = newTabName;
+			    newItem.machineOrder.equipment = [];
+			    newItem.machineOrder.createUserId = _this.userInfo.id
+			    newItem.machineOrder.sellman = this.contractForm.sellman;
+
 			    //设置时间
 			    newItem.machineOrder.createTime = new Date().format("yyyy-MM-dd");
-			    //清空订单号
-			    newItem.machineOrder.orderNum = "";
-			    newItem.machineOrder.originalOrderId = "";
-			    //清空之前的需求单中id(数据库对应)
-			    newItem.machineOrder.id = null;
 			    //为了清除前面订单签核的内容
 			    newItem.orderSign.signContent = _this.normalOrderSignArray;
 			    //清空之前的状态
@@ -3194,18 +3184,18 @@
 				    iserror = true;
 				    this.errorMsg = "销售人员不能为空";
 			    }
-                if (!iserror && isStringEmpty(formObj.payMethod)) {
-                    iserror = true;
-                    this.errorMsg = "付款方式不能为空";
-                }
+			    if (!iserror && isStringEmpty(formObj.payMethod)) {
+				    iserror = true;
+				    this.errorMsg = "付款方式不能为空";
+			    }
 			    if (!iserror && isStringEmpty(formObj.currencyType)) {
 				    iserror = true;
 				    this.errorMsg = "付款币种不能为空";
 			    }
-                if (!iserror && formObj.contractShipDate == "") {
-                    iserror = true;
-                    this.errorMsg = "合同交货时间不能为空";
-                }
+			    if (!iserror && formObj.contractShipDate == "") {
+				    iserror = true;
+				    this.errorMsg = "合同交货时间不能为空";
+			    }
 			    return iserror;
 		    },
 
@@ -3229,32 +3219,32 @@
 				    iserror = true;
 				    this.errorMsg = "请选择机型";
 			    }
-                if (!iserror && isStringEmpty(formObj.machineOrder.needleNum)) {
-                    iserror = true;
-                    this.errorMsg = "请填写针数";
-                }
-                if (!iserror && isStringEmpty(formObj.machineOrder.headNum)) {
-                    iserror = true;
-                    this.errorMsg = "请填写头数";
-                }
-                if (!iserror && isStringEmpty(formObj.machineOrder.headDistance)) {
-                    iserror = true;
-                    this.errorMsg = "请填写头距";
-                }
-                if (!iserror && isStringEmpty(formObj.machineOrder.xDistance)) {
-                    iserror = true;
-                    this.errorMsg = "请填写X行程";
-                }
-                if (!iserror && isStringEmpty(formObj.machineOrder.yDistance)) {
-                    iserror = true;
-                    this.errorMsg = "请填写Y行程";
-                }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.needleNum)) {
+				    iserror = true;
+				    this.errorMsg = "请填写针数";
+			    }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.headNum)) {
+				    iserror = true;
+				    this.errorMsg = "请填写头数";
+			    }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.headDistance)) {
+				    iserror = true;
+				    this.errorMsg = "请填写头距";
+			    }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.xDistance)) {
+				    iserror = true;
+				    this.errorMsg = "请填写X行程";
+			    }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.yDistance)) {
+				    iserror = true;
+				    this.errorMsg = "请填写Y行程";
+			    }
 
 
-                if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelColor)) {
-                    iserror = true;
-                    this.errorMsg = "色数不能为空";
-                }
+			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelColor)) {
+				    iserror = true;
+				    this.errorMsg = "色数不能为空";
+			    }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelDaxle)) {
 				    iserror = true;
 				    this.errorMsg = "D轴上不能为空";
@@ -3275,7 +3265,6 @@
 				    iserror = true;
 				    this.errorMsg = "毛巾机针不能为空";
 			    }
-
 
 
 			    if (!iserror && isStringEmpty(formObj.orderDetail.electricPc)) {
@@ -3321,8 +3310,8 @@
 				    this.errorMsg = "请选择夹线器";
 			    }
 			    // if (!iserror && isStringEmpty(formObj.orderDetail.axlePanel)) {
-				 //    iserror = true;
-				 //    this.errorMsg = "请选择面板";
+			    //    iserror = true;
+			    //    this.errorMsg = "请选择面板";
 			    // }
 			    if (!iserror && isStringEmpty(formObj.orderDetail.axleNeedle)) {
 				    iserror = true;
@@ -3399,43 +3388,43 @@
 				    iserror = true;
 				    this.errorMsg = "请选择绷架";
 			    }
-                if (!iserror && isStringEmpty(formObj.orderDetail.driverHorizonNum)) {
-                    iserror = true;
-                    this.errorMsg = "请选择横档数量";
-                }
-                if (!iserror && isStringEmpty(formObj.orderDetail.driverVerticalNum)) {
-                    iserror = true;
-                    this.errorMsg = "请选择直档数量";
-                }
+			    if (!iserror && isStringEmpty(formObj.orderDetail.driverHorizonNum)) {
+				    iserror = true;
+				    this.errorMsg = "请选择横档数量";
+			    }
+			    if (!iserror && isStringEmpty(formObj.orderDetail.driverVerticalNum)) {
+				    iserror = true;
+				    this.errorMsg = "请选择直档数量";
+			    }
 
 
-                if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
-                    iserror = true;
-                    this.errorMsg = "请选择包装方式";
-                }
-                if (!iserror && formObj.machineOrder.contractShipDate == null) {
-                    iserror = true;
-                    this.errorMsg = "交货日期不能为空";
-                }
-                if (!iserror && isStringEmpty(formObj.machineOrder.machineNum)) {
-                    iserror = true;
-                    this.errorMsg = "机器数量能为空";
-                }
-                if (!iserror && isStringEmpty(formObj.machineOrder.maintainType)) {
-                    iserror = true;
-                    this.errorMsg = "保修方式不能为空";
-                }
-                if (!iserror && formObj.machineOrder.planShipDate == null) {
-                    iserror = true;
-                    this.errorMsg = "计划日期不能为空";
-                }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
+				    iserror = true;
+				    this.errorMsg = "请选择包装方式";
+			    }
+			    if (!iserror && formObj.machineOrder.contractShipDate == null) {
+				    iserror = true;
+				    this.errorMsg = "交货日期不能为空";
+			    }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.machineNum)) {
+				    iserror = true;
+				    this.errorMsg = "机器数量能为空";
+			    }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.maintainType)) {
+				    iserror = true;
+				    this.errorMsg = "保修方式不能为空";
+			    }
+			    if (!iserror && formObj.machineOrder.planShipDate == null) {
+				    iserror = true;
+				    this.errorMsg = "计划日期不能为空";
+			    }
 
-                if (!iserror && isStringEmpty(formObj.machineOrder.machinePrice)) {
-                    iserror = true;
-                    this.errorMsg = "机器价格不能为空";
-                }
+			    if (!iserror && isStringEmpty(formObj.machineOrder.machinePrice)) {
+				    iserror = true;
+				    this.errorMsg = "机器价格不能为空";
+			    }
 
-                return iserror;
+			    return iserror;
 		    },
 
 		    dialogCloseCallback() {
@@ -3586,9 +3575,6 @@
 					    dataType: "json",
 					    data: {
 						    contract: JSON.stringify(_this.contractForm),
-						    contractSign: JSON.stringify(
-								    _this.contractSignForms[0].contractSignData
-						    ),
 						    requisitionForms: JSON.stringify(obj)
 					    },
 					    success: function (res) {
