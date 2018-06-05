@@ -129,6 +129,15 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
+                            label="审核阶段">
+                        <template scope="scope">
+                            <div >
+                                {{scope.row.orderSign.currentStep}}
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            align="center"
                             prop="customer"
                             sortable
                             label="客户">

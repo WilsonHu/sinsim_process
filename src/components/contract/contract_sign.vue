@@ -1285,17 +1285,6 @@
                                                     </el-select >
                                                 </el-form-item >
                                             </el-col >
-                                            <el-col :span="24" >
-                                                <el-form-item label="附加装置：" :label-width="formLabelWidth"
-                                                              :class="classWithDifferentValue(item, 'axleAddition', true)" >
-                                                    <el-input v-model="item.orderDetail.axleAddition"
-                                                              type="textarea"
-                                                              :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                              :readonly="changeOrderContentDisable(item.machineOrder)||userInfo.role.roleName.indexOf('销售') < 0"
-                                                              :autosize="{ minRows: 4, maxRows: 8}" >
-                                                    </el-input >
-                                                </el-form-item >
-                                            </el-col >
                                         </div >
                                     </div >
                                     <div class="panel panel-primary" >
@@ -1753,6 +1742,24 @@
                                                 </el-table-column >
                                             </el-table >
 
+                                            <el-col :span="24" style="margin-top: 10px">
+                                                <el-form-item label="附加装置：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'axleAddition', true)" >
+                                                    <!--<el-input v-model="item.orderDetail.axleAddition"-->
+                                                              <!--type="textarea"-->
+                                                              <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                                              <!--:readonly="changeOrderContentDisable(item.machineOrder)-->
+                                                                  <!--||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)"-->
+                                                              <!--:autosize="{ minRows: 4}" >-->
+                                                    <!--</el-input >-->
+                                                    <editor style="margin-top: 15px;margin-right: 15px"
+                                                            :editorContent="item.orderDetail.axleAddition"
+                                                            @editorChanged="value => { item.orderDetail.axleAddition = value }"
+                                                            :disabled="changeOrderContentDisable(item.machineOrder)
+                                                                       ||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)"
+                                                    ></editor>
+                                                </el-form-item >
+                                            </el-col >
                                         </el-row >
                                         <div class="panel-body" v-if="isFinanceVisible()" >
                                             <table border="1" width="100%" >
@@ -2058,6 +2065,7 @@
 <script >
     import Vue from "vue";
     import {Loading} from "element-ui";
+    import Editor from "../editor.vue"
     var _this;
     const DefaultOrderDetail = {
 	    specialTowelColor: "",
@@ -2071,7 +2079,9 @@
     };
     export default {
 	    name: "contract_sign",
-	    components: {},
+	    components: {
+            Editor
+        },
 	    data() {
 		    _this = this;
 		    return {
@@ -3575,6 +3585,9 @@
 					    dataType: "json",
 					    data: {
 						    contract: JSON.stringify(_this.contractForm),
+						    contractSign: JSON.stringify(
+								    _this.contractSignForms[0].contractSignData
+						    ),
 						    requisitionForms: JSON.stringify(obj)
 					    },
 					    success: function (res) {
