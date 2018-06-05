@@ -615,14 +615,15 @@
                                 </el-col>
                                 <el-col :span="6">
                                     <el-form-item label="语言：" :label-width="formLabelWidth">
-                                        <el-select v-model="form.orderDetail.PClanguage"
+                                        <el-select v-model="form.orderDetail.electricLanguage"
                                                    clearable
                                                    readonly
                                                    placeholder="请选择">
                                             <el-option
-                                                    v-for="item in countryList"
-                                                    v-bind:value="item.text"
-                                                    v-bind:label="item.text">
+                                                    v-for="item in pcLanguageList"
+                                                    :key="item.text"
+                                                    :value="item.text"
+                                                    :label="item.text" >
                                             </el-option>
                                         </el-select>
                                     </el-form-item>
@@ -757,22 +758,22 @@
                                         </template>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6" :offset="0">
-                                    <el-form-item label="面板：" :label-width="formLabelWidth">
-                                        <template scope="scope">
-                                            <el-select v-model="form.orderDetail.axlePanel"
-                                                       clearable
-                                                       readonly
-                                                       placeholder="请选择">
-                                                <el-option
-                                                        v-for="item in axlePanelList"
-                                                        :label="item.text"
-                                                        :value="item.text">
-                                                </el-option>
-                                            </el-select>
-                                        </template>
-                                    </el-form-item>
-                                </el-col>
+                                <!--<el-col :span="6" :offset="0">-->
+                                    <!--<el-form-item label="面板：" :label-width="formLabelWidth">-->
+                                        <!--<template scope="scope">-->
+                                            <!--<el-select v-model="form.orderDetail.axlePanel"-->
+                                                       <!--clearable-->
+                                                       <!--readonly-->
+                                                       <!--placeholder="请选择">-->
+                                                <!--<el-option-->
+                                                        <!--v-for="item in axlePanelList"-->
+                                                        <!--:label="item.text"-->
+                                                        <!--:value="item.text">-->
+                                                <!--</el-option>-->
+                                            <!--</el-select>-->
+                                        <!--</template>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="机针：" :label-width="formLabelWidth">
                                         <el-select v-model="form.orderDetail.axleNeedle"
@@ -877,16 +878,16 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="24">
-                                    <el-form-item label="附加装置：" :label-width="formLabelWidth">
-                                        <el-input
-                                                type="textarea"
-                                                readonly
-                                                v-model="form.orderDetail.axleAddition"
-                                                :autosize="{ minRows: 3, maxRows: 10}">
-                                        </el-input>
-                                    </el-form-item>
-                                </el-col>
+                                <!--<el-col :span="24">-->
+                                    <!--<el-form-item label="附加装置：" :label-width="formLabelWidth">-->
+                                        <!--<el-input-->
+                                                <!--type="textarea"-->
+                                                <!--readonly-->
+                                                <!--v-model="form.orderDetail.axleAddition"-->
+                                                <!--:autosize="{ minRows: 3, maxRows: 10}">-->
+                                        <!--</el-input>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
                             </div>
                         </div>
 
@@ -1110,6 +1111,21 @@
                                             align="center">
                                     </el-table-column>
                                 </el-table>
+                                <el-col :span="24" style="margin-top: 10px">
+                                    <el-form-item label="附加装置：" :label-width="formLabelWidth">
+                                        <!--<el-input v-model="item.orderDetail.axleAddition"-->
+                                        <!--type="textarea"-->
+                                        <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                                        <!--:readonly="changeOrderContentDisable(item.machineOrder)-->
+                                        <!--||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)"-->
+                                        <!--:autosize="{ minRows: 4}" >-->
+                                        <!--</el-input >-->
+                                        <editor style="margin-top: 15px"
+                                                :editorContent="form.orderDetail.axleAddition"
+                                                :disabled="true">
+                                        </editor>
+                                    </el-form-item >
+                                </el-col >
                             </div>
                         </div>
                     </el-form>
@@ -1126,10 +1142,14 @@
 <script>
     import Vue from 'vue'
     import {Loading} from 'element-ui';
+    //如果引用的是自定义组件，需要用双引号引用，node_modules中的组件的都可以
+    import Editor from "./editor.vue"
     var _this;
     export default {
         name: "order_manage",
-        components: {},
+        components: {
+            Editor
+        },
         data () {
             _this = this;
             return {
@@ -1146,9 +1166,10 @@
 
                 packageModeList: PackageModeList,
                 orderStatusList: OrderStatusList,
-                countryList: LanguageList,
+                countryList: CountryList,
                 allMachineType: [],
                 pcModeList: PCModeList,
+                pcLanguageList: LanguageList,
                 electricMotorList: ElectricMotorList,
                 xyMotorList: XYMotorList,
                 trimList: TrimList,
