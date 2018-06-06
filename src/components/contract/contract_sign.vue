@@ -473,7 +473,7 @@
                                     <el-form-item label="备注信息：" :label-width="formLabelWidth" >
                                         <el-input
 		                                        type="textarea"
-		                                        :autosize="{ minRows: 3, maxRows: 6}"
+		                                        :autosize="{ minRows: 3}"
 		                                        :readonly="changeContractContentDisable(contractForm)"
 		                                        v-model="contractForm.mark" >
                                         </el-input >
@@ -1653,7 +1653,7 @@
 		                                                    type="textarea"
 		                                                    :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
 		                                                    :readonly="changeOrderContentDisable(item.machineOrder)"
-		                                                    :autosize="{ minRows: 2, maxRows: 6}"
+		                                                    :autosize="{ minRows: 3}"
 		                                                    v-model="item.machineOrder.mark" >
                                                     </el-input >
                                                 </el-form-item >
