@@ -1113,15 +1113,8 @@
                                 </el-table>
                                 <el-col :span="24" style="margin-top: 10px">
                                     <el-form-item label="附加装置：" :label-width="formLabelWidth">
-                                        <el-input v-model="form.orderDetail.axleAddition"
-                                            type="textarea"
-                                            :readonly="true"
-                                            :autosize="{ minRows: 4}" >
-                                        </el-input >
-                                        <!--<editor style="margin-top: 15px"-->
-                                                <!--:editorContent="form.orderDetail.axleAddition"-->
-                                                <!--:disabled="true">-->
-                                        <!--</editor>-->
+                                        <tinymce style="margin-top: 10px" ref="editor" v-model="form.orderDetail.axleAddition" :readonly="true">
+                                        </tinymce>
                                     </el-form-item >
                                 </el-col >
                             </div>
@@ -1140,13 +1133,12 @@
 <script>
     import Vue from 'vue'
     import {Loading} from 'element-ui';
-    //如果引用的是自定义组件，需要用双引号引用，node_modules中的组件的都可以
-    import Editor from "./editor.vue"
+    import Tinymce from "./Tinymce/index.vue"
     var _this;
     export default {
         name: "order_manage",
         components: {
-            Editor
+            Tinymce
         },
         data () {
             _this = this;

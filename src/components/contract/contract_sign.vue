@@ -338,7 +338,7 @@
                             </el-table-column >
                             <el-table-column
 		                            align="center"
-		                            width="220"
+		                            width="265"
 		                            label="机器信息" >
                                 <template slot-scope="scope" >
                                     <span v-html="scope.row.machineInfo" ></span >
@@ -347,7 +347,7 @@
                             <el-table-column
 		                            align="center"
 		                            prop="machinePrice"
-		                            width="150px"
+		                            width="125px"
 		                            label="单价" >
                                 <template slot-scope="scope" >
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF" > {{scope.row.machinePrice}}</span >
@@ -396,7 +396,7 @@
                             <el-table-column
 		                            align="center"
 		                            prop="machinePrice"
-		                            width="150px"
+		                            width="125px"
 		                            label="机器总价" >
                                 <template slot-scope="scope" >
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF" > {{calculateMachineTotalPrice(scope.row.machineOrder)}}</span >
@@ -404,7 +404,7 @@
                             </el-table-column >
                             <el-table-column
 		                            align="center"
-		                            width="100px"
+		                            width="80px"
 		                            prop="machineNum"
 		                            label="数量" >
                                 <template slot-scope="scope" >
@@ -1745,13 +1745,6 @@
                                             <el-col :span="24" style="margin-top: 10px">
                                                 <el-form-item label="附加装置：" :label-width="formLabelWidth"
                                                               :class="classWithDifferentValue(item, 'axleAddition', true)" >
-                                                    <!--<el-input v-model="item.orderDetail.axleAddition"-->
-                                                              <!--type="textarea"-->
-                                                              <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
-                                                              <!--:readonly="changeOrderContentDisable(item.machineOrder)-->
-                                                                  <!--||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)"-->
-                                                              <!--:autosize="{ minRows: 4}" >-->
-                                                    <!--</el-input >-->
                                                     <div style="margin-top: 10px;margin-right: 10px">
                                                         <tinymce ref="editor" v-model="item.orderDetail.axleAddition" :readonly="changeOrderContentDisable(item.machineOrder)
                                                                   ||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)">

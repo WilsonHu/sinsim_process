@@ -36,7 +36,7 @@ export default {
     height: {
       type: Number,
       required: false,
-      default: 360
+      default: 250
     },
     readonly: {
       type: Boolean,
