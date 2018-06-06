@@ -66,6 +66,7 @@ const MachineEquipmentList = [
     {name: '冠炯珠子装置'},
     {name: '诺德珠子装置'},
     {name: '激光装置'},
+    {name: '铝合金框架花架'},
 ];
 
 //需求单状态

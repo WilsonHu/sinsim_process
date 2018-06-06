@@ -1113,17 +1113,15 @@
                                 </el-table>
                                 <el-col :span="24" style="margin-top: 10px">
                                     <el-form-item label="附加装置：" :label-width="formLabelWidth">
-                                        <!--<el-input v-model="item.orderDetail.axleAddition"-->
-                                        <!--type="textarea"-->
-                                        <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
-                                        <!--:readonly="changeOrderContentDisable(item.machineOrder)-->
-                                        <!--||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)"-->
-                                        <!--:autosize="{ minRows: 4}" >-->
-                                        <!--</el-input >-->
-                                        <editor style="margin-top: 15px"
-                                                :editorContent="form.orderDetail.axleAddition"
-                                                :disabled="true">
-                                        </editor>
+                                        <el-input v-model="form.orderDetail.axleAddition"
+                                            type="textarea"
+                                            :readonly="true"
+                                            :autosize="{ minRows: 4}" >
+                                        </el-input >
+                                        <!--<editor style="margin-top: 15px"-->
+                                                <!--:editorContent="form.orderDetail.axleAddition"-->
+                                                <!--:disabled="true">-->
+                                        <!--</editor>-->
                                     </el-form-item >
                                 </el-col >
                             </div>

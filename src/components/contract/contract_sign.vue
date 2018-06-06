@@ -1752,12 +1752,11 @@
                                                                   <!--||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)"-->
                                                               <!--:autosize="{ minRows: 4}" >-->
                                                     <!--</el-input >-->
-                                                    <editor style="margin-top: 15px;margin-right: 15px"
-                                                            :editorContent="item.orderDetail.axleAddition"
-                                                            @editorChanged="value => { item.orderDetail.axleAddition = value }"
-                                                            :disabled="changeOrderContentDisable(item.machineOrder)
-                                                                       ||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)"
-                                                    ></editor>
+                                                    <div style="margin-top: 10px;margin-right: 10px">
+                                                        <tinymce ref="editor" v-model="item.orderDetail.axleAddition" :readonly="changeOrderContentDisable(item.machineOrder)
+                                                                  ||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)">
+                                                        </tinymce>
+                                                    </div>
                                                 </el-form-item >
                                             </el-col >
                                         </el-row >
@@ -2065,7 +2064,7 @@
 <script >
     import Vue from "vue";
     import {Loading} from "element-ui";
-    import Editor from "../editor.vue"
+    import Tinymce from "../Tinymce/index.vue"
     var _this;
     const DefaultOrderDetail = {
 	    specialTowelColor: "",
@@ -2080,7 +2079,7 @@
     export default {
 	    name: "contract_sign",
 	    components: {
-            Editor
+            Tinymce
         },
 	    data() {
 		    _this = this;
