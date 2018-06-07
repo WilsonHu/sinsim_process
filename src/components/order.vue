@@ -431,7 +431,7 @@
                                         <el-select
                                                 readonly
                                                 style="width: 100%"
-                                                v-model="form.machineType"
+                                                v-model="form.machineType.id"
                                                 clearable
                                                 placeholder="请选择">
                                             <el-option
