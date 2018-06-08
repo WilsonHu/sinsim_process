@@ -31,7 +31,7 @@ export default {
       }
     },
     menubar: {
-      default: 'file edit insert view format table'
+      default: 'edit insert view format table'
     },
     height: {
       type: Number,
