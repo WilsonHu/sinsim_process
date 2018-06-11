@@ -137,6 +137,10 @@ const MaintainTypeList =
             value: 1,
             text: "代理商保修"
         },
+        {
+            value: 2,
+            text: "客户自理"
+        },
     ];
 
 const DefaultSelectedValue = "无";
@@ -294,6 +298,10 @@ const PCModeList =
         {
             value: 6,
             text: "A58"
+        },
+        {
+            value: 7,
+            text: "285"
         }
 
     ];
