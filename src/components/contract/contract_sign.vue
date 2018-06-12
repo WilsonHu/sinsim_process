@@ -403,6 +403,15 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
+                                    prop="machinePrice"
+                                    width="115px"
+                                    label="机器总价">
+                                <template slot-scope="scope">
+                                    <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{calculateMachineTotalPrice(scope.row.machineOrder)}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
                                     width="115px"
                                     label="居间费用 / 台">
                                 <template slot-scope="scope">
@@ -431,15 +440,6 @@
                                     label="优惠总价">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.discounts * scope.row.machineNum}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="machinePrice"
-                                    width="115px"
-                                    label="机器总价">
-                                <template slot-scope="scope">
-                                    <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{calculateMachineTotalPrice(scope.row.machineOrder)}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -2643,7 +2643,13 @@
             },
 
             calculateOrderTotalPrice(item) {
-                return this.calculateMachineTotalPrice(item) * parseInt(item.machineNum);
+                let discounts = 0;
+                if(item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
+                    discounts = 0;
+                } else {
+                    discounts = item.discounts;
+                }
+                return (this.calculateMachineTotalPrice(item) - discounts) * parseInt(item.machineNum);
             },
 
             calculateTotalPrice() {
