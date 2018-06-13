@@ -1764,6 +1764,10 @@ const AxleSplitList =
         {
             value: 4,
             text: "固定式"	    
+        },
+        {
+            value: 5,
+            text: "佳宇珠子绣款"	    
         }
     ];
 
