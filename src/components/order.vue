@@ -150,7 +150,6 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            sortable
                             label="创建日期">
                         <template slot-scope="scope">
                             <span>
@@ -160,7 +159,6 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            sortable
                             label="合同交货日期">
                         <template slot-scope="scope">
                             <span>
@@ -170,7 +168,6 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            sortable
                             label="计划交货日期">
                         <template slot-scope="scope">
                             <span>
