@@ -3249,6 +3249,7 @@
                         total = total + parseInt(machineOrder.equipment[i].number) * parseInt(machineOrder.equipment[i].price);
                     }
                 }
+                total = total - parseInt(machineOrder.discounts);
                 return parseInt(machineOrder.machineNum) * total;
             },
             caculateOrderEquipmentPrice(machineOrder) {
