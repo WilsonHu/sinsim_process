@@ -321,24 +321,24 @@
                                 :row-class-name="tableRowDisabledClassName">
                             <el-table-column
                                     align="center"
-                                    width="125"
+                                    width="120"
                                     label="订单名">
                                 <template scope="scope">
                                     <span>{{scope.row.title}}</span>
                                 </template>
                             </el-table-column>
+                            <!--<el-table-column-->
+                                    <!--align="center"-->
+                                    <!--width="125"-->
+                                    <!--prop="machineName"-->
+                                    <!--label="机器">-->
+                                <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span>{{scope.row.machineOrder.machineType | filterMachineTypeName}}</span>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</template>&ndash;&gt;-->
+                            <!--</el-table-column>-->
                             <el-table-column
                                     align="center"
-                                    width="125"
-                                    prop="machineName"
-                                    label="机器">
-                                <!--<template scope="scope">-->
-                                <!--<span>{{scope.row.machineOrder.machineType | filterMachineTypeName}}</span>-->
-                                <!--</template>-->
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    width="265"
+                                    width="250"
                                     label="机器信息">
                                 <template slot-scope="scope">
                                     <span v-html="scope.row.machineInfo"></span>
@@ -347,7 +347,7 @@
                             <el-table-column
                                     align="center"
                                     prop="machinePrice"
-                                    width="100px"
+                                    width="80px"
                                     label="单价">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machinePrice}}</span>
@@ -355,7 +355,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    min-width="300px"
+                                    min-width="380px"
                                     label="装置">
                                 <template slot-scope="item">
                                     <el-table border
@@ -394,7 +394,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="80px"
+                                    width="60px"
                                     prop="machineNum"
                                     label="数量">
                                 <template slot-scope="scope">
@@ -404,7 +404,7 @@
                             <el-table-column
                                     align="center"
                                     prop="machinePrice"
-                                    width="115px"
+                                    width="90px"
                                     label="机器总价">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{calculateMachineTotalPrice(scope.row.machineOrder)}}</span>
@@ -412,7 +412,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="115px"
+                                    width="70px"
                                     label="居间费用 / 台">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.intermediaryPrice}}</span>
@@ -420,7 +420,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="115px"
+                                    width="70px"
                                     label="居间费用总计">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.intermediaryPrice * scope.row.machineNum}}</span>
@@ -428,7 +428,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="115px"
+                                    width="70px"
                                     label="优惠价格 / 台">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.discounts}}</span>
@@ -436,7 +436,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="115px"
+                                    width="70px"
                                     label="优惠总价">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.discounts * scope.row.machineNum}}</span>
@@ -444,7 +444,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="140px"
+                                    width="100px"
                                     label="订单总价">
                                 <template slot-scope="scope">
                                     <span style="font-size:20px; font-weight: bold;color: #F56C6C">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
