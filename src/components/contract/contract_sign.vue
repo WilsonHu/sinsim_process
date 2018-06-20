@@ -3858,7 +3858,7 @@
             },
 
             onSubmitOrderSign(item, signObj) {
-                if (item.comment == null || item.comment == "") {
+                if (item.comment == null || item.comment == "" || allCharactersAreStr(item.comment)) {
                     showMessage(_this, "审核意见不能为空！", 0);
                 } else {
                     item.user = _this.userInfo.name;
@@ -4417,6 +4417,23 @@
         mounted: function () {
         }
     };
+    function allCharactersAreStr(strs) {
+        if(strs == null || strs == "" || strs.length == 0) {
+            return true;
+        } else {
+            let count = 0;
+            for(let i=0; i< strs.length; i++) {
+                if(strs[i] == " ") {
+                    count++;
+                }
+            }
+            if(count == strs.length) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 </script>
 <style>
     .scopeMachine {

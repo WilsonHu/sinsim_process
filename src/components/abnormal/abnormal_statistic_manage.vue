@@ -283,7 +283,7 @@
             </el-alert>
             <div slot="footer" class="dialog-footer" style="margin-bottom: 50px;">
                 <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
-                    <el-button type="primary" @click="onSubmit" icon="el-icon-check">确 定</el-button>
+                    <el-button v-show="addForm.solveTime == null || addForm.solveTime == '' " type="primary" @click="onSubmit" icon="el-icon-check">确 定</el-button>
                     <el-button type="danger" @click="addDialogVisible = false" icon="el-icon-close">取 消</el-button>
                 </el-col>
             </div>
@@ -291,6 +291,15 @@
                 <el-card style="margin: 2px">
                     <img style="width: 100%; height: 100%" :src="bigImgUrl">
                 </el-card>
+            </el-dialog>
+            <el-dialog :visible.sync="confirmSubmitVisible" width="20%" append-to-body>
+                <span style="font-size: 16px">确认提交解决方案？</span>
+                <div slot="footer" class="dialog-footer" style="margin-bottom: 50px;">
+                    <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
+                        <el-button type="primary" @click="onConfirmSubmit" icon="el-icon-check">确 定</el-button>
+                        <el-button type="danger" @click="confirmSubmitVisible = false" icon="el-icon-close">取 消</el-button>
+                    </el-col>
+                </div>
             </el-dialog>
         </el-dialog>
     </div>
@@ -329,7 +338,7 @@
                     }
                 },
                 dialogLoading: true,
-                deleteConfirmVisible: false,
+                confirmSubmitVisible: false,
                 errorMsg: '',
                 isError: false,
                 abnormalList: {},
@@ -488,7 +497,7 @@
                 _this.addDialogVisible = true;
 
             },
-            submit(){
+            onConfirmSubmit(){
                 if (_this.isError) {
                     return;
                 }
@@ -514,6 +523,7 @@
 
                     },
                 })
+                this.confirmSubmitVisible = false;
             },
 
             onSubmit()
@@ -529,7 +539,7 @@
                     _this.isError = true;
                     return;
                 }
-                _this.submit();
+                this.confirmSubmitVisible = true;
             },
 
             handleCurrentChange(val) {
