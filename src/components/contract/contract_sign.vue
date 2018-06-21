@@ -744,7 +744,8 @@
                                             </el-col>
                                             <el-col :span="6">
                                                 <el-form-item label="国家：" :label-width="formLabelWidth"
-                                                              clearable>
+                                                              clearable
+                                                              :class="classWithDifferentValue(item, 'country', false)">
                                                     <el-select
                                                             style="width: 100%"
                                                             v-model="item.machineOrder.country"
@@ -1599,7 +1600,8 @@
                                                 </el-form-item>
                                             </el-col>
                                             <el-col :span="6">
-                                                <el-form-item label="交货日期：" :label-width="formLabelWidth">
+                                                <el-form-item label="交货日期：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'contractShipDate', false)">
                                                     <el-date-picker
                                                             style="width: 100%"
                                                             v-model="item.machineOrder.contractShipDate"
@@ -1643,7 +1645,7 @@
                                             </el-col>
                                             <el-col :span="6">
                                                 <el-form-item label="保修方式：" :label-width="formLabelWidth"
-                                                              :class="classWithDifferentValue(item, 'sellman', false)">
+                                                              :class="classWithDifferentValue(item, 'maintainType', false)">
                                                     <el-select v-model="item.machineOrder.maintainType"
                                                                placeholder=""
                                                                clearable
@@ -1660,7 +1662,8 @@
                                             </el-col>
 
                                             <el-col :span="6">
-                                                <el-form-item label="计划日期：" :label-width="formLabelWidth">
+                                                <el-form-item label="计划日期：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'planShipDate', false)">
                                                     <el-date-picker
                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                             style="width: 100%"
@@ -1684,7 +1687,7 @@
 
                                             <el-col :span="24">
                                                 <el-form-item label="备注信息：" :label-width="formLabelWidth"
-                                                              :class="classWithDifferentValue(item, 'machineOrder', false)">
+                                                              :class="classWithDifferentValue(item, 'mark', false)">
                                                     <el-input
                                                             type="textarea"
                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
@@ -1796,7 +1799,8 @@
                                                     <td colspan="2" style="font-weight: bold; font-size: 14px">
                                                         机器价格（不含装置）
                                                     </td>
-                                                    <td>
+                                                    <td
+                                                            :class="classWithDifferentValue(item, 'machinePrice', false)">
                                                         <el-input-number
                                                                 style="margin: 10px;width: 95%"
                                                                 v-model="item.machineOrder.machinePrice"
@@ -1812,7 +1816,8 @@
                                                     <td colspan="2" style="font-weight: bold; font-size: 14px">
                                                         居间费用 / 台
                                                     </td>
-                                                    <td>
+                                                    <td
+                                                            :class="classWithDifferentValue(item, 'intermediaryPrice', false)">
                                                         <el-input-number
                                                                 style="margin: 10px;width: 95%"
                                                                 v-model="item.machineOrder.intermediaryPrice"
@@ -1828,7 +1833,8 @@
                                                     <td colspan="2" style="font-weight: bold; font-size: 14px">
                                                         价格优惠 / 台
                                                     </td>
-                                                    <td>
+                                                    <td
+                                                            :class="classWithDifferentValue(item, 'discounts', false)">
                                                         <el-input-number
                                                                 style="margin: 10px;width: 95%"
                                                                 v-model="item.machineOrder.discounts"
