@@ -1713,73 +1713,76 @@
                                                     装置
                                                 </el-button>
                                             </el-col>
-                                            <el-table
-                                                    border
-                                                    :data="item.machineOrder.equipment">
-                                                <el-table-column
-                                                        label="装置名称"
-                                                        align="center">
-                                                    <template slot-scope="scope">
-                                                        <el-select v-model="scope.row.name"
-                                                                   placeholder=""
-                                                                   clearable
-                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                   style="width: 95%">
-                                                            <el-option
-                                                                    v-for="item in machineEquipmentList"
-                                                                    :key="item.name"
-                                                                    :label="item.name"
-                                                                    :value="item.name">
-                                                            </el-option>
-                                                        </el-select>
-                                                    </template>
-                                                </el-table-column>
-                                                <el-table-column
-                                                        label="数量"
-                                                        width="200"
-                                                        align="center">
-                                                    <template slot-scope="scope">
-                                                        <el-input-number style="float: left"
-                                                                         v-model="scope.row.number"
-                                                                         :step="1"
-                                                                         :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                         :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                         controls-position="right"
-                                                                         :min="1">
-                                                        </el-input-number>
-                                                    </template>
-                                                </el-table-column>
-                                                <el-table-column
-                                                        label="单价"
-                                                        width="200"
-                                                        align="center"
-                                                        v-if="isFinanceVisible()">
-                                                    <template slot-scope="scope">
-                                                        <el-input v-model="scope.row.price"
-                                                                  placeholder="单价"
-                                                                  :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                                                                  :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                                  auto-complete="off">
-                                                        </el-input>
-                                                    </template>
-                                                </el-table-column>
-                                                <el-table-column
-                                                        label="操作"
-                                                        width="200"
-                                                        align="center">
-                                                    <template slot-scope="scope">
-                                                        <el-button
-                                                                size="mini"
-                                                                type="danger"
-                                                                icon="el-icon-delete"
-                                                                :disabled="changeOrderContentDisable(item.machineOrder)"
-                                                                @click="handleDeleteEquipment(item.machineOrder.equipment, scope.$index)">
-                                                            删除
-                                                        </el-button>
-                                                    </template>
-                                                </el-table-column>
-                                            </el-table>
+                                            <div :class="equipmentValueDifferentClass(item)">
+                                                <el-table
+                                                        border
+                                                        :data="item.machineOrder.equipment">
+                                                    <el-table-column
+                                                            label="装置名称"
+                                                            align="center">
+                                                        <template slot-scope="scope">
+                                                            <el-select v-model="scope.row.name"
+                                                                       placeholder=""
+                                                                       clearable
+                                                                       :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                       :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                       style="width: 95%">
+                                                                <el-option
+                                                                        v-for="item in machineEquipmentList"
+                                                                        :key="item.name"
+                                                                        :label="item.name"
+                                                                        :value="item.name">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                            label="数量"
+                                                            width="200"
+                                                            align="center">
+                                                        <template slot-scope="scope">
+                                                            <el-input-number style="float: left"
+                                                                             v-model="scope.row.number"
+                                                                             :step="1"
+                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                             controls-position="right"
+                                                                             :min="1">
+                                                            </el-input-number>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                            label="单价"
+                                                            width="200"
+                                                            align="center"
+                                                            v-if="isFinanceVisible()">
+                                                        <template slot-scope="scope">
+                                                            <el-input v-model="scope.row.price"
+                                                                      placeholder="单价"
+                                                                      :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                      :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                      auto-complete="off">
+                                                            </el-input>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                            label="操作"
+                                                            width="200"
+                                                            align="center">
+                                                        <template slot-scope="scope">
+                                                            <el-button
+                                                                    size="mini"
+                                                                    type="danger"
+                                                                    icon="el-icon-delete"
+                                                                    :disabled="changeOrderContentDisable(item.machineOrder)"
+                                                                    @click="handleDeleteEquipment(item.machineOrder.equipment, scope.$index)">
+                                                                删除
+                                                            </el-button>
+                                                        </template>
+                                                    </el-table-column>
+                                                </el-table>
+                                            </div>
+
 
                                             <el-col :span="24" style="margin-top: 10px">
                                                 <el-form-item label="附加装置：" :label-width="formLabelWidth"
@@ -2268,7 +2271,7 @@
                         machineOrder: {
                             machineType: '',
                             country: CountryList[0].text,
-                            brand: "SINSIM电脑绣花机",
+                            brand: "SINSIM",
                             createTime: new Date().format("yyyy-MM-dd"),
                             equipment: [],
                             status: ORDER_INITIAL,
@@ -2341,7 +2344,7 @@
                 customerTimeout: null,
                 currentCopyItem: {
                     machineOrder: {
-                        brand: "SINSIM电脑绣花机",
+                        brand: "SINSIM",
                         createTime: new Date().format("yyyy-MM-dd"),
                         equipment: [],
                         status: ORDER_INITIAL,
@@ -3144,7 +3147,7 @@
                     name: "1",
                     //保存需求单数据
                     machineOrder: {
-                        brand: "SINSIM电脑绣花机",
+                        brand: "SINSIM",
                         createTime: new Date().format("yyyy-MM-dd"),
                         orderTotalPrice: 0,
                         machineNum: 1,
@@ -4271,7 +4274,7 @@
 
             classWithDifferentValue(item, type, isDetail) {
                 let comparedItem = "";
-                if (item.machineOrder.originalOrderId != 0) {
+                if (!isUndefined(item.machineOrder.originalOrderId) && item.machineOrder.originalOrderId != 0) {
                     for (let i = 0; i < _this.requisitionForms.length; i++) {
                         if (
                             item.machineOrder.originalOrderId ==
@@ -4297,10 +4300,47 @@
                                 return "";
                             }
                         } else {
+                            //此处加判断是因为当改变时间后，绑定的是date对象，所以需要进行转换成时间戳后再进行比较，否则就算改回改单前的时间
+                            //相比较的话也是不一样（date对象和时间戳相比较）
+                            if(type == 'contractShipDate' || type == 'planShipDate') {
+                                if(item.machineOrder[type] instanceof Date) {
+                                    item.machineOrder[type] = Number(item.machineOrder[type]);
+                                }
+                            }
                             if (item.machineOrder[type] != comparedItem[type]) {
                                 return "different-value";
                             } else {
                                 return "";
+                            }
+                        }
+                    }
+                } else {
+                    return "";
+                }
+            },
+            equipmentValueDifferentClass(item) {
+                let comparedItem = "";
+                if (!isUndefined(item.machineOrder.originalOrderId) && item.machineOrder.originalOrderId != 0) {
+                    for (let i = 0; i < _this.requisitionForms.length; i++) {
+                        if (item.machineOrder.originalOrderId == _this.requisitionForms[i].machineOrder.id) {
+                            comparedItem = copyObjectByJSON(_this.requisitionForms[i].machineOrder);
+                            break;
+                        }
+                    }
+                    //有改单
+                    if(comparedItem != "") {
+                        if(isUndefined(item.machineOrder.equipment) && isUndefined(comparedItem.equipment)) {
+                            return "";
+                        } else {
+                            if(isUndefined(item.machineOrder.equipment) && !isUndefined(comparedItem.equipment) ||
+                                !isUndefined(item.machineOrder.equipment) && isUndefined(comparedItem.equipment)) {
+                                return "different-value"
+                            } else {
+                                if (JSON.stringify(item.machineOrder.equipment) != JSON.stringify(comparedItem.equipment)) {
+                                    return "different-value";
+                                } else {
+                                    return "";
+                                }
                             }
                         }
                     }
