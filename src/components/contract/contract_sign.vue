@@ -328,13 +328,13 @@
                                 </template>
                             </el-table-column>
                             <!--<el-table-column-->
-                                    <!--align="center"-->
-                                    <!--width="125"-->
-                                    <!--prop="machineName"-->
-                                    <!--label="机器">-->
-                                <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span>{{scope.row.machineOrder.machineType | filterMachineTypeName}}</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</template>&ndash;&gt;-->
+                            <!--align="center"-->
+                            <!--width="125"-->
+                            <!--prop="machineName"-->
+                            <!--label="机器">-->
+                            <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span>{{scope.row.machineOrder.machineType | filterMachineTypeName}}</span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</template>&ndash;&gt;-->
                             <!--</el-table-column>-->
                             <el-table-column
                                     align="center"
@@ -1959,14 +1959,13 @@
                 <el-button @click="addContractVisible = false" icon="el-icon-back" type="info">关 闭</el-button>
                 <el-button v-show="mode == EDIT_MODE && haveInitialMachineOrder() || contractHasRejectedOrder()"
                            type="primary"
-                           @click="onEdit" icon="el-icon-check">保 存
+                           @click="onEdit" icon="el-icon-check" :disabled="editButtonDisabled">保 存
                 </el-button>
-                <el-button v-show="mode == CHANGE_MODE" type="primary" @click="onSaveChange" icon="el-icon-check">保存改单
+                <el-button v-show="mode == CHANGE_MODE" type="primary" @click="onSaveChange" icon="el-icon-check" :disabled="changeButtonDisabled">保存改单
                 </el-button>
-                <el-button v-show="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check">保存拆单
+                <el-button v-show="mode == SPLIT_MODE" type="primary" @click="onSaveSplit" icon="el-icon-check" :disabled="splitButtonDisabled">保存拆单
                 </el-button>
-                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd"
-                           icon="el-icon-check">保 存
+                <el-button v-show="mode == ADD_MODE" type="primary" @click="onAdd" icon="el-icon-check" :disabled="addButtonDisabled">保 存
                 </el-button>
             </div>
             <el-dialog title="提示" :visible.sync="confirmPasteDialog" width="30%" append-to-body>
@@ -2260,6 +2259,11 @@
                     payMethod: "",
                     contractShipDate: ""
                 },
+
+                addButtonDisabled: false,
+                editButtonDisabled: false,
+                changeButtonDisabled: false,
+                splitButtonDisabled: false,
 
                 //多个需求单,一下是新创建合同时候的初始值，在编辑或者签核时需要从server端加载
                 editableTabsValue: "1",
@@ -2653,7 +2657,7 @@
 
             calculateOrderTotalPrice(item) {
                 let discounts = 0;
-                if(item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
+                if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
                     discounts = 0;
                 } else {
                     discounts = item.discounts;
@@ -3639,6 +3643,10 @@
                             _this.isError = true;
                         }
                     });
+                    _this.addButtonDisabled = true;
+                    setTimeout(() => {
+                        _this.addButtonDisabled = false;
+                    }, 2000)
                 }
             },
 
@@ -3703,6 +3711,10 @@
                             _this.isError = true;
                         }
                     });
+                    _this.editButtonDisabled = true;
+                    setTimeout(() => {
+                        _this.editButtonDisabled = false;
+                    }, 2000)
                 }
             },
 
@@ -3783,6 +3795,10 @@
                             _this.isError = true;
                         }
                     });
+                    _this.changeButtonDisabled = true;
+                    setTimeout(() => {
+                        _this.changeButtonDisabled = false;
+                    }, 2000)
                 }
             },
 
@@ -3863,6 +3879,10 @@
                             showMessage(_this, "服务器访问出错！", 0);
                         }
                     });
+                    _this.splitButtonDisabled = true;
+                    setTimeout(() => {
+                        _this.splitButtonDisabled = false;
+                    }, 2000)
                 }
             },
 
@@ -4302,8 +4322,8 @@
                         } else {
                             //此处加判断是因为当改变时间后，绑定的是date对象，所以需要进行转换成时间戳后再进行比较，否则就算改回改单前的时间
                             //相比较的话也是不一样（date对象和时间戳相比较）
-                            if(type == 'contractShipDate' || type == 'planShipDate') {
-                                if(item.machineOrder[type] instanceof Date) {
+                            if (type == 'contractShipDate' || type == 'planShipDate') {
+                                if (item.machineOrder[type] instanceof Date) {
                                     item.machineOrder[type] = Number(item.machineOrder[type]);
                                 }
                             }
@@ -4328,11 +4348,11 @@
                         }
                     }
                     //有改单
-                    if(comparedItem != "") {
-                        if(isUndefined(item.machineOrder.equipment) && isUndefined(comparedItem.equipment)) {
+                    if (comparedItem != "") {
+                        if (isUndefined(item.machineOrder.equipment) && isUndefined(comparedItem.equipment)) {
                             return "";
                         } else {
-                            if(isUndefined(item.machineOrder.equipment) && !isUndefined(comparedItem.equipment) ||
+                            if (isUndefined(item.machineOrder.equipment) && !isUndefined(comparedItem.equipment) ||
                                 !isUndefined(item.machineOrder.equipment) && isUndefined(comparedItem.equipment)) {
                                 return "different-value"
                             } else {
@@ -4463,17 +4483,18 @@
         mounted: function () {
         }
     };
+
     function allCharactersAreStr(strs) {
-        if(strs == null || strs == "" || strs.length == 0) {
+        if (strs == null || strs == "" || strs.length == 0) {
             return true;
         } else {
             let count = 0;
-            for(let i=0; i< strs.length; i++) {
-                if(strs[i] == " ") {
+            for (let i = 0; i < strs.length; i++) {
+                if (strs[i] == " ") {
                     count++;
                 }
             }
-            if(count == strs.length) {
+            if (count == strs.length) {
                 return true;
             } else {
                 return false;
