@@ -172,6 +172,11 @@
         },
         mounted: function () {
             window.addEventListener('keydown', _this.onkeydown);
+            let user = JSON.parse(sessionStorage.getItem('user'));
+            if(user != null) {
+                this.ruleForm2.account = user.account;
+            }
+
         },
         destroyed: function () {
             console.log("destroyed vue");

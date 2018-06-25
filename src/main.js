@@ -22,7 +22,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     //NProgress.start();
     if (to.path == '/login') {
-        sessionStorage.removeItem('user');
+        //sessionStorage.removeItem('user');
     }
     let user = JSON.parse(sessionStorage.getItem('user'));
 

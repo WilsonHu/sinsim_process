@@ -125,6 +125,18 @@ const PackageModeList =
             text: "叠机"
         },
     ];
+//绕线机配备
+const WrapMachineList =
+    [
+        {
+            value: 0,
+            text: "配普通绕线机"
+        },
+        {
+            value: 1,
+            text: "不配普通绕线机"
+        },
+    ];
 
 //保修方式
 const MaintainTypeList =

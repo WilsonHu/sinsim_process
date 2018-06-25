@@ -251,7 +251,7 @@
 
             },
             onConfirmLogOut: function () {
-                sessionStorage.removeItem('user');
+                //sessionStorage.removeItem('user');
                 _this.$router.push("/login");
             },
 

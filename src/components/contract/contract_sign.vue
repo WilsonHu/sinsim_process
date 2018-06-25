@@ -2,17 +2,34 @@
     <div>
         <div>
             <el-row>
-                <!--<el-col :span="3">-->
-                <!--<el-row type="flex" justify="center">-->
-                <!--<el-col :span="19">-->
-                <!--<div style="font-size: 20px;font-weight: bold; margin-top: 12px">签核中：</div>-->
-                <!--</el-col>-->
-                <!--<el-col :span="5">-->
-                <!--<div style="font-size: 36px; font-weight: bold;">12</div>-->
-                <!--</el-col>-->
-                <!--</el-row>-->
-                <!--</el-col>-->
-                <el-col :span="2" :offset="22"
+                <el-col :span="20" >
+                    <el-row type="flex" justify="left">
+                        <el-col :span="2">
+                            <div style="font-size: 14px;color: #909399">审核状态：</div>
+                        </el-col>
+                        <el-col style="text-align: left">
+                            <span v-for="(item, index) in orderStatusForFilterList">
+                                <el-button size="mini" :type="item.choosed ? 'primary': '' "
+                                           style="margin-left: 8px"
+                                           @click="chooseCurrentSignStep(index)">{{item.name}}</el-button>
+                            </span>
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" justify="left" style="margin-top: 10px">
+                        <el-col :span="2">
+                            <div style="font-size: 14px; color: #909399">审核部门：</div>
+                        </el-col>
+                        <el-col style="text-align: left">
+                            <span v-for="(item, index) in normalSignRoleList">
+                                <el-button size="mini" :type="item.choosed ? 'primary': '' "
+                                           style="margin-left: 8px"
+                                           :disabled="!filterIsSigning()"
+                                           @click="chooseCurrentSignDepartment(index)">{{item.name}}</el-button>
+                            </span>
+                        </el-col>
+                    </el-row>
+                </el-col>
+                <el-col :span="2" :offset="2"
                         v-if="userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1">
                     <el-button
                             icon="el-icon-plus"
@@ -34,30 +51,30 @@
                                                   auto-complete="off" clearable></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="4">
-                                    <el-form-item label="审核部门:">
-                                        <el-select v-model="filters.roleName" clearable>
-                                            <el-option
-                                                    v-for="item in allRoles"
-                                                    :key="item.id"
-                                                    :value="item.roleName"
-                                                    :label="item.roleName">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="4">
-                                    <el-form-item label="审核状态:">
-                                        <el-select v-model="filters.status" clearable>
-                                            <el-option
-                                                    v-for="item in orderStatusList"
-                                                    :key="item.value"
-                                                    :value="item.value"
-                                                    :label="item.name">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
+                                <!--<el-col :span="4">-->
+                                    <!--<el-form-item label="审核部门:">-->
+                                        <!--<el-select v-model="filters.roleName" clearable>-->
+                                            <!--<el-option-->
+                                                    <!--v-for="item in allRoles"-->
+                                                    <!--:key="item.id"-->
+                                                    <!--:value="item.roleName"-->
+                                                    <!--:label="item.roleName">-->
+                                            <!--</el-option>-->
+                                        <!--</el-select>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
+                                <!--<el-col :span="4">-->
+                                    <!--<el-form-item label="审核状态:">-->
+                                        <!--<el-select v-model="filters.status" clearable>-->
+                                            <!--<el-option-->
+                                                    <!--v-for="item in orderStatusList"-->
+                                                    <!--:key="item.value"-->
+                                                    <!--:value="item.value"-->
+                                                    <!--:label="item.name">-->
+                                            <!--</el-option>-->
+                                        <!--</el-select>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
                                 <el-col :span="4">
                                     <el-form-item label="销售人员:">
                                         <el-input v-model="filters.sellman"
@@ -74,17 +91,6 @@
                                                   clearable></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="2" :offset="2">
-                                    <el-button
-                                            icon="el-icon-search"
-                                            size="normal"
-                                            style="float: right; margin-right: -12px"
-                                            type="primary"
-                                            @click="search">查询
-                                    </el-button>
-                                </el-col>
-                            </el-row>
-                            <el-row>
                                 <el-col :span="4">
                                     <el-form-item label="创建日期:">
                                         <el-date-picker
@@ -98,6 +104,15 @@
                                                 :picker-options="pickerOptions">
                                         </el-date-picker>
                                     </el-form-item>
+                                </el-col>
+                                <el-col :span="2" :offset="5">
+                                    <el-button
+                                            icon="el-icon-search"
+                                            size="normal"
+                                            style="float: right; margin-right: -12px"
+                                            type="primary"
+                                            @click="search">查询
+                                    </el-button>
                                 </el-col>
                             </el-row>
                         </el-form>
@@ -129,7 +144,7 @@
                                     align="center"
                                     label="订单号" min-width="200">
                                 <template scope="scope">
-                                    <div v-on:click="onCourseDetail(scope.row)"
+                                    <div v-on:click="handleSign(scope.$index, scope.row)"
                                          style="font-weight: bold;"
                                          class="btn btn-link">
                                         {{scope.row.orderNum}}
@@ -189,7 +204,7 @@
                                     <el-tooltip placement="top">
                                         <div slot="content">审核</div>
                                         <el-button
-                                                v-show="userInfo.role.roleName !='销售员' && scope.row.status == 1"
+                                                v-show="userInfo.role.roleName !='销售员'"
                                                 size="mini"
                                                 type="success"
                                                 icon="el-icon-check"
@@ -1587,6 +1602,33 @@
                                                     </el-select>
                                                 </el-form-item>
                                             </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="绕线机配备：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'wrapMachine', false)">
+                                                    <el-select v-model="item.machineOrder.wrapMachine"
+                                                               clearable
+                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                               placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in wrapMachineList"
+                                                                :key="item.text"
+                                                                :label="item.text"
+                                                                :value="item.text">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="绕线机置换：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'wrapMachineChange', false)">
+                                                    <el-input
+                                                            :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                            v-model="item.machineOrder.wrapMachineChange">
+                                                    </el-input>
+                                                </el-form-item>
+                                            </el-col>
                                             <el-col :span="24">
                                                 <el-form-item label="包装备注：" :label-width="formLabelWidth"
                                                               :class="classWithDifferentValue(item, 'packageMark', false)">
@@ -1854,7 +1896,7 @@
                                                         订单总价（含装置）
                                                     </td>
                                                     <td style="height: 56px">
-                                                        <span style="margin-left: -35px;font-size: 16px; font-weight: bold; color: #409EFF">{{calculateOrderPrice(item.machineOrder)}}</span>
+                                                        <span style="margin-left: -20px;font-size: 16px; font-weight: bold; color: #409EFF">{{calculateOrderPrice(item.machineOrder)}}</span>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -1956,7 +1998,7 @@
                 </el-col>
             </el-row>
             <div slot="footer" class="dialog-footer" style="margin-top: -20px; margin-right:2%">
-                <el-button @click="addContractVisible = false" icon="el-icon-back" type="info">关 闭</el-button>
+                <el-button @click="dialogClose()" icon="el-icon-back" type="info">关 闭</el-button>
                 <el-button v-show="mode == EDIT_MODE && haveInitialMachineOrder() || contractHasRejectedOrder()"
                            type="primary"
                            @click="onEdit" icon="el-icon-check" :disabled="editButtonDisabled">保 存
@@ -2178,6 +2220,7 @@
                 currencyTypeList: CurrencyTypeList,
                 machineEquipmentList: MachineEquipmentList,
                 packageModeList: PackageModeList,
+                wrapMachineList: WrapMachineList,
                 maintainTypeList: MaintainTypeList,
                 orderStatusList: OrderStatusList,
                 countryList: CountryList,
@@ -2405,6 +2448,8 @@
                 },
                 contractExist: false,
                 contractErrorMsg: "",
+                normalSignRoleList:[],
+                orderStatusForFilterList: [],
             };
         },
         methods: {
@@ -3510,7 +3555,14 @@
                 if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
                     iserror = true;
                     this.errorMsg = "请选择包装方式";
+                } if (!iserror && isStringEmpty(formObj.machineOrder.wrapMachine)) {
+                    iserror = true;
+                    this.errorMsg = "请选择绕线机配置";
                 }
+//                if (!iserror && isStringEmpty(formObj.machineOrder.wrapMachineChange)) {
+//                    iserror = true;
+//                    this.errorMsg = "绕线机置换不能为空";
+//                }
                 if (!iserror && formObj.machineOrder.contractShipDate == null) {
                     iserror = true;
                     this.errorMsg = "交货日期不能为空";
@@ -3571,6 +3623,7 @@
                 // });
 
                 //this.tabIndex = 1;
+                _this.selectContracts();
             },
 
             onAdd() {
@@ -3904,8 +3957,7 @@
                         success: function (res) {
                             if (res.code == 200) {
                                 showMessage(_this, "提交审核成功", 1);
-                                _this.addContractVisible = false;
-                                _this.selectContracts();
+                                //_this.addContractVisible = false;
                             } else {
                                 showMessage(_this, res.message, 0);
                             }
@@ -3936,8 +3988,6 @@
                     success: function (res) {
                         if (res.code == 200) {
                             showMessage(_this, "驳回成功", 1);
-                            _this.addContractVisible = false;
-                            _this.selectContracts();
                         } else {
                             showMessage(_this, res.message, 0);
                         }
@@ -3964,8 +4014,7 @@
                         success: function (res) {
                             if (res.code == 200) {
                                 showMessage(_this, "提交审核成功", 1);
-                                _this.addContractVisible = false;
-                                _this.selectContracts();
+                                //_this.addContractVisible = false;
                             } else {
                                 showMessage(_this, res.message, 0);
                             }
@@ -3986,8 +4035,7 @@
                     success: function (res) {
                         if (res.code == 200) {
                             showMessage(_this, "驳回成功", 1);
-                            _this.addContractVisible = false;
-                            _this.selectContracts();
+                            //_this.addContractVisible = false;
                         } else {
                             showMessage(_this, res.message, 0);
                         }
@@ -4162,6 +4210,7 @@
                         if (res.code == 200) {
                             _this.allRoles = res.data.list;
                             _this.requestSalePersonList();
+                            _this.fetchSignProcesses();
                         }
                     }
                 });
@@ -4383,7 +4432,104 @@
                     }
                 }
                 return result;
+            },
+            //获取所有签核流程
+            fetchSignProcesses(){
+                $.ajax({
+                    url: HOST + "sign/process/list",
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == 200) {
+                            let tmpList = data.data.list;
+                            for(let i=0; i<tmpList.length; i++) {
+                                if(tmpList[i].processName != null && tmpList[i].processName.indexOf("正常") != -1) {
+                                    _this.normalSignRoleList.push({
+                                       roleId : "",
+                                       name : "全部",
+                                       choosed : _this.filters.roleName == "" ? true : false
+                                    });
+                                    var temp = JSON.parse(tmpList[i].processContent);
+                                    if(temp != null && temp.length > 0) {
+                                        for(let j=0; j<temp.length; j++) {
+                                          _this.normalSignRoleList.push({
+                                              roleId : temp[j].roleId,
+                                              name : _this.getRoleNameById(temp[j].roleId),
+                                              choosed : _this.filters.roleName == _this.getRoleNameById(temp[j].roleId) ? true : false
+                                          });
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        } else {
+                            showMessage(_this, data.message, 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '服务器访问出错', 0);
+                    }
+                })
+            },
+            getRoleNameById(id) {
+                let result = "";
+                for (let i = 0; i < _this.allRoles.length; i++) {
+                    if (_this.allRoles[i].id == id) {
+                        result = _this.allRoles[i].roleName;
+                        break;
+                    }
+                }
+                return result;
+            },
+            chooseCurrentSignDepartment(index) {
+                for(let i= 0; i<_this.normalSignRoleList.length; i++) {
+                    if(index == i) {
+                        _this.normalSignRoleList[i].choosed = true;
+                        _this.filters.roleName = _this.getRoleNameById(_this.normalSignRoleList[i].roleId);
+                    } else {
+                        _this.normalSignRoleList[i].choosed = false;
+                    }
+                }
+                _this.selectContracts();
+            },
+            chooseCurrentSignStep(index) {
+                for(let i= 0; i<_this.orderStatusForFilterList.length; i++) {
+                    if(index == i) {
+                        _this.orderStatusForFilterList[i].choosed = true;
+                        _this.filters.status = _this.orderStatusForFilterList[i].value;
+                    } else {
+                        _this.orderStatusForFilterList[i].choosed = false;
+                    }
+                }
+
+                if(_this.orderStatusForFilterList[index].value != 1) {
+                    for(let i= 0; i<_this.normalSignRoleList.length; i++) {
+                        if(0 == i) {
+                            _this.normalSignRoleList[i].choosed = true;
+                        } else {
+                            _this.normalSignRoleList[i].choosed = false;
+                        }
+                    }
+                    _this.filters.roleName = "";
+                }
+                _this.selectContracts();
+            },
+            filterIsSigning() {
+                let result = false;
+                for(let i= 0; i<_this.orderStatusForFilterList.length && !result; i++) {
+                    if(_this.orderStatusForFilterList[i].choosed) {
+                        if(_this.orderStatusForFilterList[i].value == 1) {
+                            result = true;
+                        }
+                    }
+                }
+                return result;
+            },
+            dialogClose() {
+                _this.addContractVisible = false;
+                _this.selectContracts();
             }
+
         },
         computed: {},
         filters: {
@@ -4471,8 +4617,23 @@
                 this.$router.push({path: "/login"});
                 return;
             }
-            if (this.userInfo.role.roleName != null && this.userInfo.role.roleName.indexOf("销售") == -1) {
+            //不是销售员，不是管理员
+            if (this.userInfo.role.roleName != null && this.userInfo.role.roleName.indexOf("销售员") == -1 && this.userInfo.role.id != 1) {
                 _this.filters.roleName = this.userInfo.role.roleName;
+            }
+
+            this.orderStatusForFilterList[0] = {
+                name : "全部",
+                value : "",
+                choosed : false
+            }
+
+            for(let i=0; i< _this.orderStatusList.length; i++) {
+                this.orderStatusForFilterList.push({
+                    name : this.orderStatusList[i].name,
+                    value : this.orderStatusList[i].value,
+                    choosed: this.orderStatusList[i].value == 1 ? true : false
+                });
             }
             _this.requestCustomerList();
             _this.initAllRoles();
