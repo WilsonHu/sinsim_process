@@ -2102,7 +2102,7 @@
             </el-dialog>
         </el-dialog>
 
-        <el-dialog title="删除" :visible.sync="deleteConfirmVisible" append-to-body>
+        <el-dialog title="删除" :visible.sync="deleteConfirmVisible" width="30%" append-to-body>
             <span style="font-size: 22px">确认要删除编号为[ <b style="color: #F56C6C;font-weight: bold">{{selectedItem.orderNum}}</b> ]的需求单吗？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
@@ -3274,7 +3274,7 @@
                     type: "POST",
                     dataType: "JSON",
                     data: {
-                        orderNum: _this.selectedItem.orderNum
+                        orderId:_this.selectedItem.orderId
                     },
                     success: function (res) {
                         if (res.code == 200) {
