@@ -67,6 +67,7 @@ const MachineEquipmentList = [
     {name: '诺德珠子装置'},
     {name: '激光装置'},
     {name: '铝合金框架花架'},
+    {name: '自动换底线'}
 ];
 
 //需求单状态
@@ -2134,7 +2135,7 @@ const DriverMethodList =
         },
         {
             value: 1,
-            text: "宽幅(中传动)"
+            text: "宽幅"
         },
     ];
 
