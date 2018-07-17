@@ -4078,7 +4078,7 @@
 
             changeContractContentDisable(item) {
                 return (
-                    (item.status != CONTRACT_INITIAL && item.status != CONTRACT_REJECTED) ||
+                    (item.status != CONTRACT_INITIAL && item.status != CONTRACT_REJECTED && item.status != CONTRACT_SPLITED) ||
                     this.mode == this.SIGN_MODE
                 );
             },
