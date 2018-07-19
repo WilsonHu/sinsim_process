@@ -271,7 +271,33 @@
         <el-dialog title="查看订单" :visible.sync="addDialogVisible" fullscreen>
             <el-row type="flex" class="row-bg" justify="center">
                 <el-col :span="20" :offset="1">
-                    <el-form :model="form">
+                    <el-form>
+                        <el-card v-if="orderChangeRecord != ''">
+                            <el-col>
+                                <el-form-item label="改单原因：" :label-width="formLabelWidth"
+                                              style="padding-bottom: 12px">
+                                    <el-input v-model="orderChangeRecord.changeReason"
+                                              type="textarea"
+                                              auto-complete="off"
+                                              readonly
+                                              :autosize="{ minRows: 3, maxRows: 3}"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-card>
+                        <el-card v-if="orderSplitRecord != ''">
+                            <el-col>
+                                <el-form-item label="拆单原因：" :label-width="formLabelWidth"
+                                              style="padding-bottom: 12px">
+                                    <el-input v-model="orderSplitRecord.splitReason"
+                                              type="textarea"
+                                              auto-complete="off"
+                                              readonly
+                                              :autosize="{ minRows: 3, maxRows: 3}"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-card>
+                    </el-form>
+                    <el-form :model="form" style="margin-top: 10px">
                         <div class="panel panel-primary">
                             <div class="panel-heading" style="text-align: left">
                                 <h3 class="panel-title">订单信息</h3>
@@ -1266,6 +1292,8 @@
                     selectDate: '',
                 },
                 allRoles: [],
+                orderChangeRecord: "",
+                orderSplitRecord: "" ,
                 loadingUI: false,
                 uploadDialogVisible: false,
                 fileLists: [
@@ -1506,6 +1534,9 @@
 
             onDetail(item) {
                 _this.selectedItem = copyObject(item);
+                //reset
+                this.orderChangeRecord = "";
+                this.orderSplitRecord = "";
                 this.form = copyObject(item);
                 try {
                     if (this.form.equipment != null && this.form.equipment.length > 0) {
@@ -1513,6 +1544,43 @@
                     }
                 } catch (ex) {
                     console.log(ex);
+                }
+                if(this.form.status == ORDER_CHANGED) {
+                    $.ajax({
+                        url: HOST + "order/change/record/getChangeRecordList",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            id: "",
+                            orderId:_this.form.id + ""
+                        },
+                        success: function (res) {
+                            if (res.code == 200) {
+                                let tmpList = res.data.list;
+                                if(tmpList.length == 1) {
+                                    _this.orderChangeRecord = tmpList[0];
+                                }
+                            }
+                        }
+                    })
+                } else if(this.form.status == ORDER_SPLITED){
+                    $.ajax({
+                        url: HOST + "order/split/record/getSplitRecordList",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            id: "",
+                            orderId:_this.form.id + ""
+                        },
+                        success: function (res) {
+                            if (res.code == 200) {
+                                let tmpList = res.data.list;
+                                if(tmpList.length == 1) {
+                                    _this.orderSplitRecord = tmpList[0];
+                                }
+                            }
+                        }
+                    })
                 }
                 this.addDialogVisible = true;
             },
