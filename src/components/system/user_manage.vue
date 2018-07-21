@@ -323,8 +323,6 @@
 </template >
 
 <script >
-    import Vue from 'vue'
-    import {Loading} from 'element-ui';
     var _this;
     export default {
 	    name: "part_manage",
