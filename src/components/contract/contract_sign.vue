@@ -133,16 +133,18 @@
                             <el-table-column
                                     align="center"
                                     prop="contractNum"
+                                    min-width="85"
                                     label="合同号">
                             </el-table-column>
                             <el-table-column
                                     align="center"
+                                    min-width="125"
                                     prop="customerName"
                                     label="客户">
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    label="订单号" min-width="200">
+                                    label="订单号" min-width="125">
                                 <template scope="scope">
                                     <div v-on:click="handleSign(scope.$index, scope.row)"
                                          style="font-weight: bold;"
@@ -1675,10 +1677,9 @@
                                                 </el-form-item>
                                             </el-col>
                                             <el-col :span="6">
-                                                <el-form-item label="销售人员：" :label-width="formLabelWidth"
+                                                <el-form-item label="保修人员：" :label-width="formLabelWidth"
                                                               :class="classWithDifferentValue(item, 'sellman', false)">
-                                                    <el-input v-model="contractForm.sellman"
-                                                              placeholder="销售人员"
+                                                    <el-input v-model="item.machineOrder.maintainPerson"
                                                               :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                               :readonly="changeOrderContentDisable(item.machineOrder)"
                                                               auto-complete="off">
