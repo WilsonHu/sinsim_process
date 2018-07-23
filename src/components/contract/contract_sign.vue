@@ -364,7 +364,7 @@
                             <el-table-column
                                     align="center"
                                     prop="machinePrice"
-                                    width="80px"
+                                    width="100px"
                                     label="单价">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machinePrice}}</span>
@@ -421,47 +421,47 @@
                             <el-table-column
                                     align="center"
                                     prop="machinePrice"
-                                    width="90px"
-                                    label="机器总价">
+                                    width="100px"
+                                    label="单台价格">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{calculateMachineTotalPrice(scope.row.machineOrder)}}</span>
                                 </template>
                             </el-table-column>
+                            <!--<el-table-column-->
+                                    <!--align="center"-->
+                                    <!--width="70px"-->
+                                    <!--label="居间费用 / 台">-->
+                                <!--<template slot-scope="scope">-->
+                                    <!--<span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.intermediaryPrice}}</span>-->
+                                <!--</template>-->
+                            <!--</el-table-column>-->
+                            <!--<el-table-column-->
+                                    <!--align="center"-->
+                                    <!--width="70px"-->
+                                    <!--label="居间费用总计">-->
+                                <!--<template slot-scope="scope">-->
+                                    <!--<span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.intermediaryPrice * scope.row.machineNum}}</span>-->
+                                <!--</template>-->
+                            <!--</el-table-column>-->
+                            <!--<el-table-column-->
+                                    <!--align="center"-->
+                                    <!--width="70px"-->
+                                    <!--label="优惠价格 / 台">-->
+                                <!--<template slot-scope="scope">-->
+                                    <!--<span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.discounts}}</span>-->
+                                <!--</template>-->
+                            <!--</el-table-column>-->
                             <el-table-column
                                     align="center"
-                                    width="70px"
-                                    label="居间费用 / 台">
-                                <template slot-scope="scope">
-                                    <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.intermediaryPrice}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    width="70px"
-                                    label="居间费用总计">
-                                <template slot-scope="scope">
-                                    <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.intermediaryPrice * scope.row.machineNum}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    width="70px"
-                                    label="优惠价格 / 台">
+                                    width="100px"
+                                    label="优惠总金额">
                                 <template slot-scope="scope">
                                     <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.discounts}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    width="70px"
-                                    label="优惠总价">
-                                <template slot-scope="scope">
-                                    <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.discounts * scope.row.machineNum}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    width="100px"
+                                    width="120px"
                                     label="订单总价">
                                 <template slot-scope="scope">
                                     <span style="font-size:20px; font-weight: bold;color: #F56C6C">{{calculateOrderTotalPrice(scope.row.machineOrder)}}</span>
@@ -1877,7 +1877,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2" style="font-weight: bold; font-size: 14px">
-                                                        价格优惠 / 台
+                                                        优惠金额
                                                     </td>
                                                     <td
                                                             :class="classWithDifferentValue(item, 'discounts', false)">
@@ -2705,10 +2705,10 @@
                 let discounts = 0;
                 if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
                     discounts = 0;
-                } else {
+                } else {    
                     discounts = item.discounts;
                 }
-                return (this.calculateMachineTotalPrice(item) - discounts) * parseInt(item.machineNum);
+                return this.calculateMachineTotalPrice(item) * parseInt(item.machineNum) - parseInt(discounts);
             },
 
             calculateTotalPrice() {
@@ -3308,8 +3308,9 @@
                         total = total + parseInt(machineOrder.equipment[i].number) * parseInt(machineOrder.equipment[i].price);
                     }
                 }
-                total = total - parseInt(machineOrder.discounts);
-                return parseInt(machineOrder.machineNum) * total;
+                //total = total - parseInt(machineOrder.discounts);
+                total = parseInt(machineOrder.machineNum)*total - parseInt(machineOrder.discounts);
+                return total;
             },
             caculateOrderEquipmentPrice(machineOrder) {
                 let total = 0;
