@@ -1752,6 +1752,10 @@ const ElectricOilList =
             value: 3,
             text: "上油盒下手压"
         },
+        {
+            value: 4,
+            text: "白油循环"
+        },
     ];
 
 //夹线器

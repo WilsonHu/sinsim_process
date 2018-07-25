@@ -454,9 +454,9 @@
                             <el-table-column
                                     align="center"
                                     width="100px"
-                                    label="优惠总金额">
+                                    label="优惠总额">
                                 <template slot-scope="scope">
-                                    <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.discounts}}</span>
+                                    <span style="font-size: 16px;font-weight: bold;color: #409EFF"> {{scope.row.machineOrder.discounts * scope.row.machineNum + scope.row.machineOrder.orderTotalDiscounts}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -1877,13 +1877,30 @@
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2" style="font-weight: bold; font-size: 14px">
-                                                        优惠金额
+                                                        优惠金额 / 台
                                                     </td>
                                                     <td
                                                             :class="classWithDifferentValue(item, 'discounts', false)">
                                                         <el-input-number
                                                                 style="margin: 10px;width: 95%"
                                                                 v-model="item.machineOrder.discounts"
+                                                                :step="1"
+                                                                :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                controls-position="right"
+                                                                :min="0">
+                                                        </el-input-number>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="font-weight: bold; font-size: 14px">
+                                                        优惠金额
+                                                    </td>
+                                                    <td
+                                                            :class="classWithDifferentValue(item, 'orderTotalDiscounts', false)">
+                                                        <el-input-number
+                                                                style="margin: 10px;width: 95%"
+                                                                v-model="item.machineOrder.orderTotalDiscounts"
                                                                 :step="1"
                                                                 :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                                 :readonly="changeOrderContentDisable(item.machineOrder)"
@@ -2705,8 +2722,8 @@
                 let discounts = 0;
                 if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
                     discounts = 0;
-                } else {    
-                    discounts = item.discounts;
+                } else {
+                    discounts = parseInt(item.discounts) * item.machineNum + parseInt(item.orderTotalDiscounts);
                 }
                 return this.calculateMachineTotalPrice(item) * parseInt(item.machineNum) - parseInt(discounts);
             },
@@ -3157,7 +3174,7 @@
                 //设置时间
                 newItem.machineOrder.createTime = new Date().format("yyyy-MM-dd");
                 //沿用老的需求单号，因为实际管理中是以需求单号来沟通，所以保证之前的需求单号有效
-                //newItem.machineOrder.orderNum = "";
+                newItem.machineOrder.orderNum = this.requisitionChangingItem.machineOrder.orderNum + "(改-" + new Date().format("yyyyMMdd") + ")";
                 //清空之前的需求单中id(数据库对应)
                 newItem.machineOrder.id = null;
                 //为了清除前面订单签核的内容,先设置改单的签核流程，后面还需要监控机器数是否改变
@@ -3170,7 +3187,7 @@
                 //原需求单状态需要设置成改单状态,“3”为改单状态
                 this.requisitionChangingItem.machineOrder.status = ORDER_CHANGED;
                 //更改被改需求单的单号（xxx-改-20180323）
-                this.requisitionChangingItem.machineOrder.orderNum = this.requisitionChangingItem.machineOrder.orderNum + "(改-" + new Date().format("yyyyMMdd") + ")";
+                this.requisitionChangingItem.machineOrder.orderNum = this.requisitionChangingItem.machineOrder.orderNum + "(已改单)";
                 if (this.requisitionChangingItem.title.indexOf("改单") == -1) {
                     this.requisitionChangingItem.title =
                         this.requisitionChangingItem.title + "（待改单）";
@@ -3309,7 +3326,7 @@
                     }
                 }
                 //total = total - parseInt(machineOrder.discounts);
-                total = parseInt(machineOrder.machineNum)*total - parseInt(machineOrder.discounts);
+                total = parseInt(machineOrder.machineNum)*total - parseInt(machineOrder.discounts) * machineOrder.machineNum - parseInt(machineOrder.orderTotalDiscounts);
                 return total;
             },
             caculateOrderEquipmentPrice(machineOrder) {
@@ -3557,10 +3574,11 @@
                 if (!iserror && isStringEmpty(formObj.machineOrder.packageMethod)) {
                     iserror = true;
                     this.errorMsg = "请选择包装方式";
-                } if (!iserror && isStringEmpty(formObj.machineOrder.wrapMachine)) {
-                    iserror = true;
-                    this.errorMsg = "请选择绕线机配置";
                 }
+//                if (!iserror && isStringEmpty(formObj.machineOrder.wrapMachine)) {
+//                    iserror = true;
+//                    this.errorMsg = "请选择绕线机配置";
+//                }
 //                if (!iserror && isStringEmpty(formObj.machineOrder.wrapMachineChange)) {
 //                    iserror = true;
 //                    this.errorMsg = "绕线机置换不能为空";
@@ -3808,6 +3826,7 @@
                 if (_this.isError) {
                     showMessage(_this, _this.errorMsg, 0);
                 } else {
+                    _this.changeButtonDisabled = true;
                     //由于signContent在DB中是以String方式存储的，防止Server端解析失败，需要在前端转成String形式，而不是array
                     let obj = copyObjectByJSON(_this.requisitionForms);
                     for (let i = 0; i < obj.length; i++) {
@@ -3850,7 +3869,6 @@
                             _this.isError = true;
                         }
                     });
-                    _this.changeButtonDisabled = true;
                     setTimeout(() => {
                         _this.changeButtonDisabled = false;
                     }, 2000)
@@ -4168,11 +4186,12 @@
                                     orderChangeRecord: orderChangeRecord,
                                     orderSplitRecord: orderSplitRecord
                                 };
-                                if (machineOrder.status == ORDER_CHANGED) {
-                                    newItem.title = newItem.title + "（已改单）";
-                                } else if (machineOrder.status == ORDER_SPLITED) {
-                                    newItem.title = newItem.title + "（已拆单）";
-                                } else if (machineOrder.status == ORDER_REJECTED) {
+//                                if (machineOrder.status == ORDER_CHANGED) {
+//                                    newItem.title = newItem.title + "（已改单）";
+//                                } else if (machineOrder.status == ORDER_SPLITED) {
+//                                    newItem.title = newItem.title + "（已拆单）";
+//                                } else
+                                if (machineOrder.status == ORDER_REJECTED) {
                                     newItem.title = newItem.title + "（已驳回）";
                                 } else if (machineOrder.status == ORDER_CANCELED) {
                                     newItem.title = newItem.title + "（已取消）";
