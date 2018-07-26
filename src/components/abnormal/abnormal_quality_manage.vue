@@ -343,7 +343,7 @@
                     // abnormalType: "",
                     orderNum: "",
                     taskName: "",
-                    finishStatus: "",
+                    finishStatus: 2,
                     selectDate: []
                 },
                 statusList: [

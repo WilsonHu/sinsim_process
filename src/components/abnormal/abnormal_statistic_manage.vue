@@ -190,8 +190,7 @@
                         <el-form-item label="异常类型：">
                             <el-select type="text"
                                        v-model="addForm.abnormalType"
-                                       style="width:100%"
-                                       disabled>
+                                       style="width:100%">
                                 <el-option
                                         v-for="item in abnormalList"
                                         :key="item.id"
@@ -348,7 +347,7 @@
                     orderNum: "",
                     abnormalType: "",
                     taskName: "",
-                    finishStatus: "",
+                    finishStatus: 2,
                     selectDate: []
                 },
                 statusList: [
@@ -503,6 +502,7 @@
                 }
                 let abnormalRecord = {
                     id: _this.addForm.id,
+                    abnormalType:_this.addForm.abnormalType,
                     solution: _this.addForm.solution,
                     solutionUser: _this.addForm.solutionUser
                 }
