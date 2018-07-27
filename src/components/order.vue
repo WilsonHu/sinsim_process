@@ -1563,7 +1563,7 @@
                             }
                         }
                     })
-                } else if(this.form.status == ORDER_SPLITED){
+                } else if(this.form.originalOrderId != null){
                     $.ajax({
                         url: HOST + "order/split/record/getSplitRecordList",
                         type: 'POST',
