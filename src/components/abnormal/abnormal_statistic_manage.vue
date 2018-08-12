@@ -282,7 +282,7 @@
             </el-alert>
             <div slot="footer" class="dialog-footer" style="margin-bottom: 50px;">
                 <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
-                    <el-button v-show="addForm.solveTime == null || addForm.solveTime == '' " type="primary" @click="onSubmit" icon="el-icon-check">确 定</el-button>
+                    <el-button v-show="addForm.solveTime == null || addForm.solveTime == '' " type="primary" @click="onSubmit" icon="el-icon-check" :disabled="!isAdmin">确 定</el-button>
                     <el-button type="danger" @click="addDialogVisible = false" icon="el-icon-close">取 消</el-button>
                 </el-col>
             </div>
@@ -393,6 +393,13 @@
 
         },
         methods: {
+            isAdmin(){
+                if(userInfo != null && userInfo.role != null) {
+                    return userInfo.role.roleName.indexOf('管理员') != -1;
+                } else {
+                    return false;
+                }
+            },
             showBigImg(src) {
                 this.showBigImgVisible = true;
                 this.bigImgUrl = src;
@@ -624,6 +631,11 @@
 
         computed: {},
         created: function () {
+            this.userinfo = JSON.parse(sessionStorage.getItem('user'));
+            if (isNull(this.userinfo)) {
+                this.$router.push({path: '/Login'});
+                return;
+            }
             _this.getUserList();
             _this.getStatisticsData();
             _this.getAbnormalList();

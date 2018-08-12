@@ -46,6 +46,19 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
+                        <el-form-item label="机型:">
+                            <el-select v-model="filters.machineType" clearable>
+                                <el-option
+                                        v-for="item in allMachineType"
+                                        :value="item.id"
+                                        :label="item.name">
+                                    <span style="float: left">{{ item.name }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.finished ? '成品机' : "" }}</span>
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
                         <el-form-item label="创建日期:">
                             <el-date-picker
                                     v-model="filters.selectDate"
@@ -218,7 +231,7 @@
                     <template scope="scope" style="text-align: center">
                         <!--非完成状态下，都可以更改具体的作业流程。
                         在改变工序时，已经做过的工序不可更改，但可以添加，这部分逻辑在图形界面去判断-->
-                        <el-tooltip placement="right">
+                        <el-tooltip placement="right" v-if="!isFinishedMachine(scope.row.machineType)">
                             <div slot="content">配置</div>
                             <el-button
                                     size="mini"
@@ -226,6 +239,16 @@
                                     icon="el-icon-setting"
                                     :disabled="scope.row.status == 4"
                                     @click="editWithItem(scope.$index, scope.row)">配置
+                            </el-button>
+                        </el-tooltip>
+                        <el-tooltip placement="right" v-if="isFinishedMachine(scope.row.machineType)">
+                            <div slot="content">设置</div>
+                            <el-button
+                                    size="mini"
+                                    type="primary"
+                                    icon="el-icon-setting"
+                                    :disabled="scope.row.status == 4"
+                                    @click="setMachineFinished(scope.row)">完成
                             </el-button>
                         </el-tooltip>
                     </template>
@@ -458,6 +481,7 @@
                     contract_num: '',
                     order_status: '',
                     orderNum: '',
+                    machineType: "",
                     configStatus: 1,
                     selectDate: '',
                 },
@@ -508,6 +532,17 @@
 
         },
         methods: {
+            isFinishedMachine(machineTypeId) {
+                let result = false;
+                for (let i = 0; i < this.allMachineType.length && !result; i++) {
+                    if(this.allMachineType[i].id == machineTypeId) {
+                        if(this.allMachineType[i].finished == 1) {
+                            result = true;
+                        }
+                    }
+                }
+                return result;
+            },
             basicDialogClose()
             {
                 _this.isError = false;
@@ -607,6 +642,7 @@
                 var condition = {
                     machine_strid: _this.filters.machine_strid.trim(),
                     nameplate: _this.filters.nameplate.trim(),
+                    machineType: _this.filters.machineType,
                     orderNum: _this.filters.orderNum.trim(),
                     contractNum: _this.filters.contract_num.trim(),
                     query_start_time: '',
@@ -659,6 +695,28 @@
                     _this.isError = false;
                     _this.addDialogVisible = true;
                 }
+            },
+
+            setMachineFinished(machine) {
+                let param = copyObjectByJSON(machine);
+                param.status = 4;//完成状态
+                $.ajax({
+                    url: HOST + "machine/update",
+                    type: 'POST',
+                    dataType: 'json',
+                    traditional: true,
+                    data: {machine:JSON.stringify(param)},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.onSearchDetailData();
+                            _this.addDialogVisible = false;
+                            showMessage(_this, "设置完成状态成功！", 1)
+                        } else {
+                            showMessage(_this, "设置完成状态失败!" + res.message, 0)
+                        }
+                    }
+                })
+
             },
 
             //配置或修改工序流程
