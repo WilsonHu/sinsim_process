@@ -105,19 +105,15 @@
                 <el-table-column label="机器编号" align="center">
                     <template scope="scope">{{ scope.row.machine.nameplate}}</template>
                 </el-table-column>
-                <!--<el-table-column label="异常类型" align="center">-->
-                <!--<template scope="scope" >-->
-                <!--<span style="color: #F56C6C">-->
-                <!--{{ scope.row.abnormalType | filterAbnormal }}-->
-                <!--</span>-->
-                <!--</template>-->
-                <!--</el-table-column>-->
                 <el-table-column label="工序" align="center">
                     <template scope="scope">
                         <span style="color: #409EFF">
                             {{ scope.row.taskRecord.taskName }}
                         </span>
                     </template>
+                </el-table-column>
+                <el-table-column label="异常描述" align="center" width="320px">
+                    <template scope="scope">{{ scope.row.comment}}</template>
                 </el-table-column>
                 <el-table-column label="提交者" align="center">
                     <template scope="scope">
