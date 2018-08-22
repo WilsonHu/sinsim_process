@@ -60,6 +60,7 @@ const MachineEquipmentList = [
     {name: '单金片'},
     {name: '2mm单金片'},
     {name: '单针双片'},
+    {name: '单针四片'},
     {name: '简易毛巾'},
     {name: '雕孔'},
     {name: '佳宇珠子装置'},
