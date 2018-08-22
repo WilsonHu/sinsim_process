@@ -469,7 +469,15 @@
                             </el-table-column>
                         </el-table>
 
-
+                        <el-row style="margin-top: 10px" v-show="isFinanceVisible()">
+                            <el-col :span="3" :offset="18"
+                                    style="font-size: 16px;font-weight: bold;text-align: right;">
+                                优惠总价({{contractForm.currencyType}})：
+                            </el-col>
+                            <el-col :span="2" :offset="1" style="font-size: 24px;font-weight: bold; color: #409EFF">
+                                {{calculateTotalDiscount()}}
+                            </el-col>
+                        </el-row>
                         <el-row style="margin-top: 10px" v-show="isFinanceVisible()">
                             <el-col :span="3" :offset="18"
                                     style="font-size: 16px;font-weight: bold;text-align: right;">
@@ -2732,6 +2740,21 @@
                 let total = 0;
                 for (let i = 0; i < this.requisitionForms.length; i++) {
                     total = total + this.calculateOrderTotalPrice(this.requisitionForms[i].machineOrder);
+                }
+                return total;
+            },
+
+            calculateTotalDiscount() {
+                let total = 0;
+                for (let i = 0; i < this.requisitionForms.length; i++) {
+                    let discounts = 0;
+                    var item = this.requisitionForms[i].machineOrder;
+                    if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
+                        discounts = 0;
+                    } else {
+                        discounts = parseInt(item.discounts) * item.machineNum + parseInt(item.orderTotalDiscounts);
+                    }
+                    total += discounts;
                 }
                 return total;
             },
