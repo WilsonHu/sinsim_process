@@ -682,7 +682,7 @@
                 ],
                 pickerOptions1: {
                     disabledDate(time) {
-                        return time.getTime() < Date.now();
+                        return time.getTime() < (new Date().getTime() - 24*60*60*1000);
                     }
                 },
 
