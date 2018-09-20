@@ -60,6 +60,7 @@ const MachineEquipmentList = [
     {name: '单金片'},
     {name: '2mm单金片'},
     {name: '单针双片'},
+    {name: '单针四片'},
     {name: '简易毛巾'},
     {name: '雕孔'},
     {name: '佳宇珠子装置'},
@@ -1908,62 +1909,58 @@ const AxleHookList =
         },
         {
             value: 3,
-            text: "佐伩12-R"
+            text: "佐伩粗线"
         },
         {
             value: 4,
-            text: "佐伩12-RP"
-        },
-        {
-            value: 5,
             text: "佐伩12-RY"
         },
         {
-            value: 6,
+            value: 5,
             text: "佐伩12RYP"
         },
         {
-            value: 7,
+            value: 6,
             text: "佐文"
         },
         {
-            value: 8,
+            value: 7,
             text: "韩大"
         },
         {
-            value: 9,
+            value: 8,
             text: "韩大黑芯"
         },
         {
-            value: 10,
+            value: 9,
             text: "广濑普通"
         },
         {
-            value: 11,
+            value: 10,
             text: "广濑高速"
         },
         {
-            value: 12,
+            value: 11,
             text: "SINSIM"
         },
         {
-            value: 13,
+            value: 12,
             text: "德盛精品"
         },
         {
-            value: 14,
+            value: 13,
             text: "广濑AO(MG1)"
         },
         {
-            value: 15,
+            value: 14,
             text: "广濑ATR(MG1)"
         },
         {
-            value: 16,
+            value: 15,
             text: "广濑ATR(MG1F)黑心"
         },
 	{
-            value: 17,
+            value: 16,
             text: "广濑ATR(MG1QF)黑心"
         },
     ];
