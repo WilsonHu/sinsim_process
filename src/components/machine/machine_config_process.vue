@@ -1056,7 +1056,7 @@
                                         var item = taskList.nodeDataArray[i];
                                         if (item.category != "Start" && item.category != "End") {//排除start,end
                                             //已经安装中的，将不能删除，但可以接着增加流程
-                                            if (item.taskStatus > 2) {
+                                            if (item.taskStatus >= 2) {
                                                 _this.isTaskOngoing = true;
                                                 item.category = ProcessCatergory.Working;
                                                 item.deletable = false;

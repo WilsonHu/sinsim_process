@@ -285,7 +285,9 @@
             </el-alert>
             <div slot="footer" class="dialog-footer" style="margin-bottom: 50px;">
                 <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
-                    <el-button v-show="addForm.solveTime == null || addForm.solveTime == '' " type="primary" @click="onSubmit" icon="el-icon-check" :disabled="!isAdmin()">确 定</el-button>
+                    <el-button v-show="addForm.solveTime == null || addForm.solveTime == '' " type="primary"
+                               @click="onSubmit" icon="el-icon-check" :disabled="!isAdmin()">确 定
+                    </el-button>
                     <el-button type="danger" @click="addDialogVisible = false" icon="el-icon-close">取 消</el-button>
                 </el-col>
             </div>
@@ -299,7 +301,8 @@
                 <div slot="footer" class="dialog-footer" style="margin-bottom: 50px;">
                     <el-col :span="24" style="margin-top: 10px;margin-bottom: 10px">
                         <el-button type="primary" @click="onConfirmSubmit" icon="el-icon-check">确 定</el-button>
-                        <el-button type="danger" @click="confirmSubmitVisible = false" icon="el-icon-close">取 消</el-button>
+                        <el-button type="danger" @click="confirmSubmitVisible = false" icon="el-icon-close">取 消
+                        </el-button>
                     </el-col>
                 </div>
             </el-dialog>
@@ -397,8 +400,22 @@
         },
         methods: {
             isAdmin(){
-                if(this.userInfo != null && this.userInfo.role != null) {
-                    return this.userInfo.role.roleName.indexOf('管理员') != -1;
+                if (_this.userInfo != null && _this.userInfo.role != null) {
+                    if (_this.userInfo.role.roleName.indexOf('管理员') != -1) {
+                        return true;
+                    } else {
+                        let abnormalName = "";
+                        for (let i = 0; i < _this.abnormalList.length && abnormalName == ""; i++) {
+                            if (_this.abnormalList[i].id == _this.addForm.abnormalType) {
+                                abnormalName = _this.abnormalList[i].abnormalName;
+                            }
+                        }
+                        if (abnormalName != "" && abnormalName.indexOf("仓库") != -1) {
+                            return _this.userInfo.role.roleName.indexOf('采购') != -1;
+                        } else {
+                            return false;
+                        }
+                    }
                 } else {
                     return false;
                 }

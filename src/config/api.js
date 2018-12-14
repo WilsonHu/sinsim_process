@@ -316,6 +316,10 @@ const PCModeList =
         {
             value: 7,
             text: "285"
+        },
+        {
+            value: 8,
+            text: "A15"
         }
 
     ];
@@ -1757,11 +1761,11 @@ const ElectricOilList =
             value: 4,
             text: "白油循环"
         },
-		{
+        {
             value: 5,
             text: "下手压"
         },
-		{
+        {
             value: 6,
             text: "下点动"
         }
@@ -1899,8 +1903,6 @@ const AxleDownCheckList =
     ];
 
 //旋梭
-//广濑1.6倍高速,广濑1.6倍,佐伩12-R,佐伩12-RP,佐伩12-RY,佐伩12RYP,佐文,韩大,韩大黑芯,广濑普通,广濑高速,SINSIM,
-// 德盛精品,广濑AO(MG1),广濑ATR(MG1),广濑ATR(MG1QF)黑心
 const AxleHookList =
     [
     	{
@@ -1909,68 +1911,48 @@ const AxleHookList =
         },
         {
             value: 1,
-            text: "广濑1.6倍高速"
+            text: "韩大黑心"
         },
         {
             value: 2,
-            text: "广濑1.6倍"
+            text: "韩大（白心）"
         },
         {
             value: 3,
-            text: "佐伩粗线"
+            text: "广濑ATR(MG1F)黑心"
         },
         {
             value: 4,
-            text: "佐伩12-RY"
+            text: "广濑ATR(MG1QF)黑心"
         },
         {
             value: 5,
-            text: "佐伩12RYP"
+            text: "广濑1.6倍"
         },
         {
             value: 6,
-            text: "佐文"
-        },
-        {
-            value: 7,
-            text: "韩大"
-        },
-        {
-            value: 8,
-            text: "韩大黑芯"
-        },
-        {
-            value: 9,
-            text: "广濑普通"
-        },
-        {
-            value: 10,
-            text: "广濑高速"
-        },
-        {
-            value: 11,
-            text: "SINSIM"
-        },
-        {
-            value: 12,
-            text: "德盛精品"
-        },
-        {
-            value: 13,
-            text: "广濑AO(MG1)"
-        },
-        {
-            value: 14,
             text: "广濑ATR(MG1)"
         },
         {
-            value: 15,
-            text: "广濑ATR(MG1F)黑心"
+            value: 7,
+            text: "广濑A(MG1)"
         },
-	{
-            value: 16,
-            text: "广濑ATR(MG1QF)黑心"
+        {
+            value: 8,
+            text: "佐文RYP"
         },
+        {
+            value: 9,
+            text: "佐文RY"
+        },
+        {
+            value: 10,
+            text: "佐文粗线"
+        },
+        {
+            value: 11,
+            text: "德盛精品"
+        }
     ];
 
 
