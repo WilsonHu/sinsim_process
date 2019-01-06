@@ -1788,6 +1788,19 @@
                                                         </template>
                                                     </el-table-column>
                                                     <el-table-column
+                                                            label="型号"
+                                                            width="200"
+                                                            align="center">
+                                                        <template slot-scope="scope">
+                                                            <el-input style="float: left"
+                                                                             v-model="scope.row.type"
+                                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                             controls-position="right">
+                                                            </el-input>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column
                                                             label="数量"
                                                             width="200"
                                                             align="center">
@@ -3333,7 +3346,7 @@
                 });
             },
             addEquipment(machineOrder) {
-                let equipment = {name: "", number: 1, price: 0};
+                let equipment = {name: "", type: "", number: 1, price: 0};
                 machineOrder.equipment.push(equipment);
             },
 
