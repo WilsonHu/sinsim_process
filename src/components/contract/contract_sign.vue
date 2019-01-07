@@ -1770,6 +1770,7 @@
                                                         :data="item.machineOrder.equipment">
                                                     <el-table-column
                                                             label="装置名称"
+                                                            width="300"
                                                             align="center">
                                                         <template slot-scope="scope">
                                                             <el-select v-model="scope.row.name"
@@ -1789,7 +1790,6 @@
                                                     </el-table-column>
                                                     <el-table-column
                                                             label="型号"
-                                                            width="200"
                                                             align="center">
                                                         <template slot-scope="scope">
                                                             <el-input style="float: left"

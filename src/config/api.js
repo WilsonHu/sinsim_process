@@ -68,7 +68,8 @@ const MachineEquipmentList = [
     {name: '诺德珠子装置'},
     {name: '激光装置'},
     {name: '铝合金框架花架'},
-    {name: '自动换底线'}
+    {name: '自动换底线'},
+    {name: '其他'}
 ];
 
 //需求单状态
@@ -1612,6 +1613,11 @@ const CountryList =
             en: "Zimbabwe ",
             cn: "津巴布韦"
         },
+        {
+            value: 182,
+            en: "Italia",
+            cn: "意大利"
+        }
     ];
 //币种
 const CurrencyTypeList =
@@ -1761,14 +1767,14 @@ const ElectricOilList =
             value: 4,
             text: "白油循环"
         },
-        {
-            value: 5,
+	{
+	    value: 5,
             text: "下手压"
-        },
-        {
-            value: 6,
-            text: "下点动"
-        }
+	},
+	{
+	    value: 6,
+	    text: "下点动"
+	}
     ];
 
 //夹线器
