@@ -17,8 +17,7 @@
     "vue-qart": "^2.1.1",
     "vue-quill-editor": "^2.3.3",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.0",
-    "wangeditor": "^3.1.1"
+    "vuex": "^3.0.0"
   },
   "devDependencies": {
     "axios": "^0.17.0",

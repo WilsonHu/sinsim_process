@@ -46,7 +46,7 @@
                         </el-form-item >
                     </el-col >
                     <el-col :span="6" >
-                        <el-form-item label="开始日期:" >
+                        <el-form-item label="完成日期:" >
                             <el-date-picker
                                     v-model="filters.selectDate"
                                     type="daterange"
