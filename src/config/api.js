@@ -2100,6 +2100,36 @@ const FrameworkStopList =
         },
     ];
 
+//立柱高度
+//310 400 500 600 800 特殊要求
+const FrameworkPoleHeightList =
+    [
+        {
+            value: 0,
+            text: "310"
+        },
+        {
+            value: 1,
+            text: "400"
+        },
+        {
+            value: 2,
+            text: "500"
+        },
+        {
+            value: 3,
+            text: "600"
+        },
+        {
+            value: 4,
+            text: "800"
+        },
+        {
+            value: 5,
+            text: "特殊要求"
+        },
+    ];
+
 //日光灯
 const FrameworkLightList =
     [

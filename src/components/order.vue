@@ -1016,6 +1016,22 @@
                                         </template>
                                     </el-form-item>
                                 </el-col>
+                                <el-col :span="6" :offset="0">
+                                    <el-form-item label="立柱高度：" :label-width="formLabelWidth">
+                                        <template scope="scope">
+                                            <el-select v-model="form.orderDetail.frameworkPoleHeight"
+                                                       clearable
+                                                       readonly
+                                                       placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in frameworkPoleHeightList"
+                                                        :label="item.text"
+                                                        :value="item.text">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-form-item>
+                                </el-col>
                                 <!--<el-col :span="6" :offset="0">-->
                                     <!--<el-form-item label="日光灯：" :label-width="formLabelWidth">-->
                                         <!--<el-select v-model="form.orderDetail.frameworkLight"-->
@@ -1204,6 +1220,7 @@
                 frameworkRingList: FrameworkRingList,
                 frameworkBracketList: FrameworkBracketList,
                 frameworkStopList: FrameworkStopList,
+                frameworkPoleHeightList: FrameworkPoleHeightList,
                 frameworkLightList: FrameworkLightList,
                 driverTypeList: DriverTypeList,
                 friverMethodList: DriverMethodList,
@@ -1272,6 +1289,7 @@
                         frameworkRing: '',
                         frameworkBracket: '',
                         frameworkStop: '',
+                        frameworkPoleHeight: '',
                         frameworkLight: '',
 
                         driverType: '',

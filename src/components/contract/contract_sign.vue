@@ -1469,6 +1469,25 @@
                                                     </template>
                                                 </el-form-item>
                                             </el-col>
+                                            <el-col :span="6">
+                                                <el-form-item label="立柱高度：" :label-width="formLabelWidth"
+                                                              :class="classWithDifferentValue(item, 'frameworkPoleHeight', true)">
+                                                    <template scope="scope">
+                                                        <el-select v-model="item.orderDetail.frameworkPoleHeight"
+                                                                   clearable
+                                                                   :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
+                                                                   :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                                   placeholder="请选择">
+                                                            <el-option
+                                                                    v-for="item in frameworkPoleHeightList"
+                                                                    :key="item.text"
+                                                                    :label="item.text"
+                                                                    :value="item.text">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </template>
+                                                </el-form-item>
+                                            </el-col>
                                             <!--<el-col :span="6">-->
                                             <!--<el-form-item label="日光灯：" :label-width="formLabelWidth"-->
                                             <!--:class="classWithDifferentValue(item, 'frameworkLight', true)">-->
@@ -2288,6 +2307,7 @@
                 frameworkRingList: FrameworkRingList,
                 frameworkBracketList: FrameworkBracketList,
                 frameworkStopList: FrameworkStopList,
+                frameworkPoleHeightList: FrameworkPoleHeightList,
                 frameworkLightList: FrameworkLightList,
                 driverTypeList: DriverTypeList,
                 driverMethodList: DriverMethodList,
