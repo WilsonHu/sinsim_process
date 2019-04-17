@@ -3596,6 +3596,10 @@
                     iserror = true;
                     this.errorMsg = "请选择急停装置";
                 }
+                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkPoleHeight)) {
+                    iserror = true;
+                    this.errorMsg = "请选择立柱高度";
+                }
 //                if (!iserror && isStringEmpty(formObj.orderDetail.frameworkLight)) {
 //                    iserror = true;
 //                    this.errorMsg = "请选择 日光灯";
