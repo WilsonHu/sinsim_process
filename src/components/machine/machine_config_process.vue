@@ -524,7 +524,9 @@
                 allProcessTemplate: [],
                 allProcessList: [],
 
-                machineForm: {},
+                machineForm: {
+                    nameplate : ''
+                },
                 machineDialog: false,
                 isShowGeneral: false,
                 isTaskOngoing:false
