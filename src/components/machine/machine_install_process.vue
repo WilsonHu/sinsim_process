@@ -717,6 +717,9 @@
                                         {
                                             itemObj.currentTaskList.push(item.text);
                                         }
+                                        else if (parseInt(item.taskStatus) == 2) {//待安装
+                                            itemObj.currentTaskList.push("待 " + item.text);
+                                        }
                                         if (parseInt(item.taskStatus) == 6) {//完成
                                             itemObj.finishedCount++;
                                         }
