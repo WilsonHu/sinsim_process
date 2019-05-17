@@ -98,7 +98,7 @@ export default
                 path: '/home/machine',
                 component: Machine,
                 name: 'Machine',
-                meta: "机器管理",
+                meta: "生产管理",
                 children: [
                     {
                         path: '/home/machine/machine_install_process',

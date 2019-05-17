@@ -124,7 +124,7 @@
                                         <el-checkbox style="margin-left: 20px"
                                                      v-model="machineAllChecked"
                                                      @change="handleMachineCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">机器管理</div>
+                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">生产管理</div>
                                     </div>
                                     <ul>
                                         <li v-for=" item in machineRoleList" style="list-style: none;">
@@ -283,7 +283,7 @@
                                         <el-checkbox style="margin-left: 20px"
                                                      v-model="machineAllChecked"
                                                      @change="handleMachineCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">机器管理</div>
+                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">生产管理</div>
                                     </div>
                                     <ul>
                                         <li v-for=" item in machineRoleList" style="list-style: none;">
