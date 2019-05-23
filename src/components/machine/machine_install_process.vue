@@ -185,11 +185,11 @@
                 <el-table-column
                         align="center"
                         prop="processEndTime"
-                        label="完成日期" >
+                        label="计划交货日期" >
                     <template slot-scope="scope" >
                         <span v-if="scope.row.processEndTime==null"
                               style="color: darkorange" >
-                            未完成
+                             {{(scope.row.planShipDate)|filterDateString}}
                         </span >
                         <span v-else >
                             {{(scope.row.processEndTime)|filterDateString}}
