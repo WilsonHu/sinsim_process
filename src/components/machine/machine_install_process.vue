@@ -89,6 +89,15 @@
                         align="center"
                         prop="nameplate"
                         label="机器编号" >
+                    <template scope = "scope">
+                        <div v-if="scope.row.isUrgent==1"
+                             style="color: darkorange">
+                            {{scope.row.nameplate}}
+                        </div>
+                        <div v-else >
+                            {{scope.row.nameplate}}
+                        </div>
+                    </template>
                 </el-table-column >
                 <el-table-column
                         align="center"
@@ -235,7 +244,7 @@
                             </el-button >
                         </el-tooltip >
 
-                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 && scope.row.isUrgent!='加急'
+                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 && scope.row.isUrgent!=1
                                     && (userinfo.role.roleName.indexOf('生产部')>-1
                                     || userinfo.role.roleName.indexOf('PMC')>-1
                                     || userinfo.role.roleName.indexOf('超级管理员')>-1) "
@@ -243,12 +252,12 @@
                             <div slot="content" >"设为加急"</div >
                             <el-button
                                     size="mini"
-                                    type="warning"
+                                    type="success"
                                     icon="el-icon-edit"
                                     @click="setMachineUrgent(scope.row)" >
                             </el-button >
                         </el-tooltip >
-                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 && scope.row.isUrgent=='加急'
+                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 && scope.row.isUrgent==1
                                     && (userinfo.role.roleName.indexOf('生产部')>-1
                                     || userinfo.role.roleName.indexOf('PMC')>-1
                                     || userinfo.role.roleName.indexOf('超级管理员')>-1) "
@@ -256,7 +265,7 @@
                             <div slot="content" >"取消加急"</div >
                             <el-button
                                     size="mini"
-                                    type="success"
+                                    type="warning"
                                     icon="el-icon-edit"
                                     @click="setMachineUnUrgent(scope.row)" >
                             </el-button >
@@ -850,7 +859,7 @@
 
             onConfirmSetMachineUrgent()
             {
-                var machineIsUrgent = "加急";
+                var machineIsUrgent = 1;//"加急";
                 $.ajax({
                     url: HOST + "machine/update",
                     type: 'POST',
@@ -934,7 +943,7 @@
 
             onConfirmSetMachineUnUrgent()
             {
-                var machineIsUrgent = "取消加急";/// 0;///
+                var machineIsUrgent =  0;///"取消加急";///
 
                 $.ajax({
                     url: HOST + "machine/update",
