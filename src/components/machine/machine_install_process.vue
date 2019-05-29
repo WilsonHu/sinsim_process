@@ -205,7 +205,7 @@
                                     size="mini"
                                     type="primary"
                                     icon="el-icon-view"
-                                    @click="editWithItem(scope.row)" >查看
+                                    @click="editWithItem(scope.row)" >
                             </el-button >
                         </el-tooltip >
                         <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4
@@ -218,7 +218,7 @@
                                     size="mini"
                                     type="danger"
                                     icon="el-icon-close"
-                                    @click="cancelMachine(scope.row)" >取消
+                                    @click="cancelMachine(scope.row)" >
                             </el-button >
                         </el-tooltip >
                         <el-tooltip v-show="scope.row.status==7
@@ -231,7 +231,34 @@
                                     size="mini"
                                     type="success"
                                     icon="el-icon-check"
-                                    @click="recoverMachine(scope.row)" >恢复
+                                    @click="recoverMachine(scope.row)" >
+                            </el-button >
+                        </el-tooltip >
+
+                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 && scope.row.isUrgent!='加急'
+                                    && (userinfo.role.roleName.indexOf('生产部')>-1
+                                    || userinfo.role.roleName.indexOf('PMC')>-1
+                                    || userinfo.role.roleName.indexOf('超级管理员')>-1) "
+                                    placement="right" >
+                            <div slot="content" >"设为加急"</div >
+                            <el-button
+                                    size="mini"
+                                    type="warning"
+                                    icon="el-icon-edit"
+                                    @click="setMachineUrgent(scope.row)" >
+                            </el-button >
+                        </el-tooltip >
+                        <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 && scope.row.isUrgent=='加急'
+                                    && (userinfo.role.roleName.indexOf('生产部')>-1
+                                    || userinfo.role.roleName.indexOf('PMC')>-1
+                                    || userinfo.role.roleName.indexOf('超级管理员')>-1) "
+                                    placement="right" >
+                            <div slot="content" >"取消加急"</div >
+                            <el-button
+                                    size="mini"
+                                    type="success"
+                                    icon="el-icon-edit"
+                                    @click="setMachineUnUrgent(scope.row)" >
                             </el-button >
                         </el-tooltip >
                     </template >
@@ -264,6 +291,27 @@
                                     <el-button @click="confirmRecoverMachineDialog = false"
                                                icon="el-icon-close" >取 消</el-button >
                                     <el-button type="primary" @click="onConfirmRecoverMachine"
+                                               icon="el-icon-check" >确 定</el-button >
+                                </span >
+            </el-dialog >
+
+            <el-dialog title="确认加急机器" :visible.sync="confirmSetMachineUrgentDialog" width="30%"
+                       :modal="false" >
+                <span >确定要加急编号为 [<b style="color: red;font-size: 18px" >{{selectedItem.nameplate}}</b >] 的机器吗？</span >
+                <span slot="footer" class="dialog-footer" >
+                                    <el-button @click="confirmSetMachineUrgentDialog = false"
+                                               icon="el-icon-close" >取 消</el-button >
+                                    <el-button type="primary" @click="onConfirmSetMachineUrgent"
+                                               icon="el-icon-check" >确 定</el-button >
+                                </span >
+            </el-dialog >
+            <el-dialog title="确认取消加急" :visible.sync="confirmSetMachineUnUrgentDialog" width="30%"
+                       :modal="false" >
+                <span >确定要对编号为 [<b style="color: red;font-size: 18px" >{{selectedItem.nameplate}}</b >]的机器取消加急吗？</span >
+                <span slot="footer" class="dialog-footer" >
+                                    <el-button @click="confirmSetMachineUnUrgentDialog = false"
+                                               icon="el-icon-close" >取 消</el-button >
+                                    <el-button type="primary" @click="onConfirmSetMachineUnUrgent"
                                                icon="el-icon-check" >确 定</el-button >
                                 </span >
             </el-dialog >
@@ -662,6 +710,9 @@
                 selectedTaskItem: {},
                 confirmCancelDialog: false,
                 confirmRecoverMachineDialog: false,
+
+                confirmSetMachineUrgentDialog: false,
+                confirmSetMachineUnUrgentDialog: false,
             }
 
         },
@@ -790,6 +841,44 @@
                     }
                 })
             },
+
+            setMachineUrgent(data)
+            {
+                _this.selectedItem = copyObject(data);
+                _this.confirmSetMachineUrgentDialog = true;
+            },
+
+            onConfirmSetMachineUrgent()
+            {
+                var machineIsUrgent = "加急";
+                $.ajax({
+                    url: HOST + "machine/update",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        machine: JSON.stringify({
+                            id: _this.selectedItem.id,
+                            isUrgent: machineIsUrgent,
+                        })
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            for (var i = 0; i < _this.tableData.length; i++) {
+                                ///更新最新状态
+                                if (_this.selectedItem.id == _this.tableData[i].id) {
+                                    _this.tableData[i].isUrgent = machineIsUrgent;
+                                    break;
+                                }
+                            }
+                            showMessage(_this, "机器加急成功！", 1);
+                        }
+                        else {
+                            showMessage(_this, "机器加急失败！", 0);
+                        }
+                        _this.confirmSetMachineUrgentDialog = false;
+                    }
+                })
+            },
             recoverMachine(data)
             {
                 _this.selectedItem = copyObject(data);
@@ -837,6 +926,43 @@
                 })
             },
 
+            setMachineUnUrgent(data)
+            {
+                _this.selectedItem = copyObject(data);
+                _this.confirmSetMachineUnUrgentDialog = true;
+            },
+
+            onConfirmSetMachineUnUrgent()
+            {
+                var machineIsUrgent = "取消加急";/// 0;///
+
+                $.ajax({
+                    url: HOST + "machine/update",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        machine: JSON.stringify({
+                            id: _this.selectedItem.id,
+                            isUrgent: machineIsUrgent,
+                        })
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            for (var i = 0; i < _this.tableData.length; i++) {
+                                if (_this.selectedItem.id == _this.tableData[i].id) {
+                                    _this.tableData[i].isUrgent = machineIsUrgent;
+                                    break;
+                                }
+                            }
+                            showMessage(_this, "取消加急成功！", 1);
+                        }
+                        else {
+                            showMessage(_this, "取消加急失败！", 0);
+                        }
+                        _this.confirmSetMachineUnUrgentDialog = false;
+                    }
+                })
+            },
             editWithItem(data){
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
