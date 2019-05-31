@@ -1739,6 +1739,7 @@
                                                             style="width: 100%"
                                                             v-model="item.machineOrder.planShipDate"
                                                             type="date"
+                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                             placeholder="合同计划日期">
                                                     </el-date-picker>
                                                 </el-form-item>
@@ -2849,7 +2850,9 @@
                 let result = false;
                 for (let i = 0; i < this.requisitionForms.length; i++) {
                     if (
-                        this.requisitionForms[i].machineOrder.status == ORDER_REJECTED
+                            (this.requisitionForms[i].machineOrder.status == ORDER_REJECTED)
+                            && (_this.contractForm.recordUser == _this.userInfo.account)
+                            ///驳回以后，只允许录单人自己才可以修改，才显示保存按钮。
                     ) {
                         result = true;
                         break;
