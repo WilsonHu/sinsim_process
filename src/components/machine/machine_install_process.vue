@@ -820,10 +820,13 @@
                                 try {
                                     if (itemObj.status > 2) { //开始安装
                                         //添加显示已安装时间
-                                        if (!isStringEmpty(itemObj.installBeginTime) && !isStringEmpty(itemObj.installEndTime)) {
-                                            var endDay = new Date(itemObj.installEndTime);
-                                            var beginDay = new Date(itemObj.installBeginTime);
-                                            var timespan = endDay.getTime() - beginDay.getTime();
+                                        if (!isStringEmpty(itemObj.installBeginTime)) {
+                                            let endDay = new Date();
+                                            if (!isStringEmpty(itemObj.installEndTime)) {
+                                                endDay = new Date(itemObj.installEndTime);
+                                            }
+                                            let beginDay = new Date(itemObj.installBeginTime);
+                                            let timespan = endDay.getTime() - beginDay.getTime();
                                             itemObj.costTime = timespan;
                                         }
                                     }
