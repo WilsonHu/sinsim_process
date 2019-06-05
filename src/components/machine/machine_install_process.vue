@@ -179,6 +179,14 @@
                              style="color: red">
                             {{scope.row.status|filterStatus}}
                         </div>
+                        <div v-if="scope.row.status==8"
+                             style="color: red" >
+                            {{scope.row.status|filterStatus}}
+                        </div >
+                        <div v-if="scope.row.status==9"
+                             style="color: green" >
+                            {{scope.row.status|filterStatus}}
+                        </div >
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -578,18 +586,16 @@
                                                 align="center"
                                                 label="操作" width="120">
                                             <template scope="scope">
-                                                <!--待安装或者安装中的工序可以跳过，方便流程在任何情况下都可以改变-->
-                                                <el-button v-if="scope.row.status == 2 || scope.row.status == 3"
+                                                <!--待安装或者安装中的工序，以及安装异常，质检异常，都可以跳过，方便流程在任何情况下都可以改变-->
+                                                <el-button v-if="scope.row.status == 2 || scope.row.status == 3 || scope.row.status == 7 || scope.row.status == 8"
                                                            size="small"
                                                            type="danger"
-                                                           :disabled="addForm.status==7"
                                                            icon="el-icon-tickets"
                                                            @click="showSkip(scope.row)">跳过
                                                 </el-button>
                                                 <el-button v-if="scope.row.status==9"
                                                            size="small"
                                                            type="primary"
-                                                           :disabled="addForm.status==7"
                                                            icon="el-icon-tickets"
                                                            @click="showRecover(scope.row)">恢复
                                                 </el-button>
@@ -987,6 +993,35 @@
                     }
                 })
             },
+            ///设置机器状态： 生产中且包含跳过工序 or 生产中
+            setMachineInInstallIncludeSkipTask(status) {
+                $.ajax({
+                    url: HOST + "machine/update",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        machine: JSON.stringify({
+                            id: _this.selectedItem.id,
+                            status: status,
+                        })
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            for (var i = 0; i < _this.tableData.length; i++) {
+                                if (_this.selectedItem.id == _this.tableData[i].id) {
+                                    _this.tableData[i].status = status;
+                                    break;
+                                }
+                            }
+                            showMessage(_this, "设置机器状态成功！", 1);
+                        }
+                        else {
+                            showMessage(_this, "设置机器状态失败！", 0);
+                        }
+                        _this.confirmSetMachineUnUrgentDialog = false;
+                    }
+                })
+            },
             editWithItem(data) {
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
@@ -1171,6 +1206,8 @@
                 var taskRecord = copyObjectByJSON(_this.selectedTaskItem);
                 taskRecord.status = TaskStatusList[9].value;
                 _this.onUpdateData(taskRecord);
+                /// 生产中 --> 改为 生产中且包含跳过工序;
+                _this.setMachineInInstallIncludeSkipTask(MachineStatusList[8].value);
                 _this.confirmSkipDialog = false;
             },
 
@@ -1184,6 +1221,8 @@
                 var taskRecord = copyObjectByJSON(_this.selectedTaskItem);
                 taskRecord.status = TaskStatusList[2].value;//工序从跳过恢复后，处于待安装状态
                 _this.onUpdateData(taskRecord);
+                ///"生产中且包含跳过工序" --> 改为 "生产中";
+                _this.setMachineInInstallIncludeSkipTask(MachineStatusList[3].value);
                 _this.confirmRecoverDialog = false;
             },
 
