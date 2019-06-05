@@ -94,7 +94,9 @@ const MachineStatusList = [
     {value: 4, name: '生产完成'},
     {value: 5, name: '已改单'},
     {value: 6, name: '已拆单'},
-    {value: 7, name: '已取消'}
+    {value: 7, name: '已取消'},
+    {value: 8, name: '生产中且包含跳过工序'},
+    {value: 9, name: '已发货'},
 ];
 
 //安装工序状态
