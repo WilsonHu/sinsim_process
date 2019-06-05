@@ -1,97 +1,67 @@
-<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div>
-        <el-col class="well well-lg" style="background-color: white;">
-            <el-form :model="filters" label-position="right" label-width="80px">
-                <el-row>
-                    <el-col :span="6">
-                        <el-form-item label="订单号:">
-                            <el-input v-model="filters.orderNum"
-                                      placeholder="订单号"
-                                      auto-complete="off"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <!--<el-col :span="6">-->
-                    <!--<el-form-item label="合同编号:">-->
-                    <!--<el-input v-model="filters.contract_num"-->
-                    <!--placeholder="合同编号"-->
-                    <!--auto-complete="off"></el-input>-->
-                    <!--</el-form-item>-->
-                    <!--</el-col>-->
-                    <el-col :span="6">
-                        <el-form-item label="完成状态:">
-                            <el-select v-model="filters.status" clearable>
-                                <el-option
-                                        v-for="item in statusList"
-                                        :value="item.value"
-                                        :label="item.name">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button
-                                icon="el-icon-search"
-                                size="normal"
-                                type="primary"
-                                @click="search">查询
-                        </el-button>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <el-form-item label="机器编号:">
-                            <el-input v-model="filters.nameplate"
-                                      placeholder="机器编号"
-                                      auto-complete="off"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="完成日期:">
-                            <el-date-picker
-                                    v-model="filters.selectDate"
-                                    type="daterange"
-                                    align="left"
-                                    unlink-panels
-                                    range-separator="—"
-                                    start-placeholder="开始日期"
-                                    end-placeholder="结束日期"
-                                    :picker-options="pickerOptions">
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
-            <el-table
-                    v-loading="loadingUI"
-                    element-loading-text="获取数据中..."
-                    :data="tableData"
-                    border
-                    empty-text="暂无数据..."
-                    ref="singleTable"
-                    highlight-current-row
-                    show-overflow-tooltip="true"
-                    style="width: 100%; ">
-                <el-table-column
-                        width="75"
-                        align="center"
-                        label="序号">
-                    <template scope="scope">
-                        {{scope.$index+startRow}}
-                    </template>
-                </el-table-column>
+<template>
+<div>
+    <el-col class="well well-lg" style="background-color: white;">
+        <el-form :model="filters" label-position="right" label-width="80px">
+            <el-row>
+                <el-col :span="6">
+                    <el-form-item label="订单号:">
+                        <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-col>
+              
+                <el-col :span="6">
+                    <el-form-item label="完成状态:">
+                        <el-select v-model="filters.status" clearable>
+                            <el-option v-for="item in statusList" :value="item.value" :label="item.name">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="完成日期:">
+                        <el-date-picker v-model="filters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4" offset="2">
+                    <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询
+                    </el-button>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="6">
+                    <el-form-item label="机器编号:">
+                        <el-input v-model="filters.nameplate" placeholder="机器编号" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-col>
+         
+                <el-col :span="12">
+                    <el-form-item label="工序:">
+                        <!-- <el-input v-model="filters.taskName" placeholder="工序" auto-complete="off">
+                        </el-input> -->
+                        <el-select v-model="filters.taskNameList" multiple placeholder="工序">
+                            <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+        <el-table v-loading="loadingUI" element-loading-text="获取数据中..." :data="tableData" border empty-text="暂无数据..." ref="singleTable" highlight-current-row show-overflow-tooltip="true" style="width: 100%; ">
+            <el-table-column width="75" align="center" label="序号">
+                <template scope="scope">
+                    {{scope.$index+startRow}}
+                </template>
+            </el-table-column>
 
-                <!-- <el-table-column
+            <!-- <el-table-column
                         align="center"
                         prop="machineStrId"
                         label="系统编号">
                 </el-table-column> -->
-                <el-table-column
-                        align="center"
-                        prop="nameplate"
-                        label="机器编号">
-                    <template scope="scope">
-                        <div v-if="scope.row.isUrgent==1"
-                             style="color: darkorange">
+            <el-table-column align="center" prop="nameplate" label="机器编号">
+                <template scope="scope">
+                    <div v-if="scope.row.isUrgent==1" style="color: darkorange">
                             {{scope.row.nameplate}}
                         </div>
                         <div v-else>
@@ -690,7 +660,7 @@
                     status: '',
                     selectDate: '',
                 },
-
+                workTaskList:[],
                 allMachineType: [],
                 allRoles: [],
                 loadingUI: false,
@@ -748,12 +718,14 @@
             search() {
                 this.onSearchDetailData();
             },
-            onSearchDetailData() {
+            onSearchDetailData()
+            {
                 var condition = {
                     machine_strid: _this.filters.machine_strid.trim(),
                     orderNum: _this.filters.orderNum.trim(),
                     nameplate: _this.filters.nameplate.trim(),
                     contractNum: _this.filters.contract_num.trim(),
+                    taskNameList: '', //array _this.filters.taskNameList
                     query_start_time: '',
                     query_finish_time: '',
                     status: _this.filters.status,
@@ -764,6 +736,14 @@
                 if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
                     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
                     condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
+                var nameList=[];
+                _this.filters.taskNameList.forEach(obj=>{
+                    nameList.push(`'${obj}'`);
+                });
+                if(_this.filters.taskNameList.length > 0)
+                {
+                   condition.taskNameList = nameList.join(",");
                 }
                 $.ajax({
                     url: _this.queryDataUrl,
@@ -1231,7 +1211,33 @@
                 _this.confirmRecoverDialog = true;
             },
 
-            onUpdateData(tRecord) {
+            getWorkTask()
+            {
+                $.ajax({
+                    url: HOST + "task/list",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            if(res.data.list.length>0)
+                            {
+                                _this.workTaskList=[];
+                                res.data.list.forEach(item=>{
+                                    _this.workTaskList.push({
+                                         id:item.id,
+                                         taskName:item.taskName,
+                                    })
+                                });
+                            }
+                        }
+                    }
+                })
+            },
+
+            onUpdateData(tRecord)
+            {
                 var pRecord = {
                     id: _this.selectedTaskItem.processRecordId,
                     nodeData: [],
@@ -1390,6 +1396,7 @@
                 return;
             }
             _this.initAllRoles();
+            _this.getWorkTask();
             //_this.getGroupData();
             _this.initMachineType();
         },
