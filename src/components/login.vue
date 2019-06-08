@@ -110,6 +110,9 @@
             },
 
             login: function () {
+                var loginUrl = window.location.host;
+                console.log("loginUrl:",loginUrl);
+                //TODO:判断外网登陆权限
                 this.isError = this.validateForm();
                 if (!_this.isError) {
                     $.ajax({

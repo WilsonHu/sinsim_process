@@ -211,20 +211,6 @@
                         </span>
                     </template>
                 </el-table-column>
-                <!--<el-table-column-->
-                        <!--align="center"-->
-                        <!--prop="shipTime"-->
-                        <!--label="发货时间">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<span v-if="scope.row.shipTime==null"-->
-                              <!--style="color: darkorange">-->
-                            <!--无-->
-                        <!--</span>-->
-                        <!--<span v-else>-->
-                            <!--{{(scope.row.shipTime)|filterDateString}}-->
-                        <!--</span>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
 
                 <el-table-column
                         label="操作" width="100" align="center">
@@ -364,33 +350,67 @@
                 <tr style="width: 100%;vertical-align: text-top;">
                     <td style="width: 20%; padding-right: 10px">
                         <el-row>
+                            <el-table ref="multipleTable"
+                                      :data="tableData"
+                                      tooltip-effect="dark"
+                                      style="width: 100%"
+                                      @selection-change="handleSelectionChange">
+                                <el-table-column type="selection"
+                                                 :selectable="selectable">
+                                </el-table-column>
+                                <el-table-column prop="nameplate"
+                                                 label="机器编号">
+                                    <template scope="scope">
+                                        <div style="font-weight: bold;">
+                                            <span style="color: red"
+                                                  v-if="scope.row.nameplate==''||scope.row.nameplate==null">
+                                                暂无
+                                            </span>
+                                            <span v-else>
+                                                {{scope.row.nameplate}}
+                                            </span>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="machineType"
+                                                 label="机型">
+                                    <template scope="scope">
+                                        <div>
+                                            {{scope.row.machineType|filterMachineType}}
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="订单号"
+                                                 prop="orderNum"
+                                                 width="120">
+                                    <template scope="scope">
+                                        <div>
+                                            {{scope.row.orderNum}}
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+
+
                             <el-form :model="addForm">
-                                <!-- <el-col :span="24">
-                                    <el-form-item label="系统编号：">
-                                        <el-input type="text"
-                                                  disabled
-                                                  v-model="addForm.machineStrId"
-                                                  style="width:100%"></el-input>
-                                    </el-form-item>
-                                </el-col> -->
-                                <el-col :span="24">
-                                    <el-form-item label="机器编号(铭牌号)：">
-                                        <el-input type="text"
-                                                  disabled
-                                                  v-model="addForm.nameplate"
-                                                  placeholder="无"
-                                                  style="width:100%"
-                                        ></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="24" :offset="0">
-                                    <el-form-item label="机型：">
-                                        <el-input type="text"
-                                                  disabled
-                                                  v-model="addForm.machineTypeName"
-                                                  style="width:100%"></el-input>
-                                    </el-form-item>
-                                </el-col>
+                                <!--<el-col :span="24">-->
+                                    <!--<el-form-item label="机器编号(铭牌号)：">-->
+                                        <!--<el-input type="text"-->
+                                                  <!--disabled-->
+                                                  <!--v-model="addForm.nameplate"-->
+                                                  <!--placeholder="无"-->
+                                                  <!--style="width:100%"-->
+                                        <!--&gt;</el-input>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
+                                <!--<el-col :span="24" :offset="0">-->
+                                    <!--<el-form-item label="机型：">-->
+                                        <!--<el-input type="text"-->
+                                                  <!--disabled-->
+                                                  <!--v-model="addForm.machineTypeName"-->
+                                                  <!--style="width:100%"></el-input>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
                                 <el-col :span="24" :offset="0">
                                     <el-form-item label="流程模板：">
                                         <el-select
@@ -427,7 +447,7 @@
                                     icon="el-icon-close"
                                     size="normal"
                                     type="danger"
-                                    @click="addDialogVisible = false">关闭
+                                    @click="addDialogVisible=false">关闭
                             </el-button>
                         </el-row>
                     </td>
@@ -533,6 +553,7 @@
             }
 
         },
+
         methods: {
             isFinishedMachine(machineTypeId) {
                 let result = false;
@@ -675,7 +696,7 @@
             },
 
             editWithItem(index, data){
-                _this.selectedItem = copyObject(data);
+                _this.selectedItem = data;
                 _this.isError = false;
                 _this.addForm = copyObject(_this.selectedItem);
                 _this.isTaskOngoing = false;
@@ -721,9 +742,19 @@
 
             },
 
+            handleSelectionChange(val) {
+                console.log("handleSelectionChange",val);
+            },
+
+            //批量配置只限未配置状态的机器
+            selectable(row,index) {
+                return row.processRecordId == "";
+            },
+
             //配置或修改工序流程
             onSubmit()
             {
+                //TODO: 批量上传配置状态
                 if (_this.addForm.processId == "") {
                     showMessage(_this, "作业流程不能为空", 0)
                     _this.isError = true;
@@ -950,6 +981,10 @@
                         _this.renderDiagramDataToUI();
                     }
                     _this.loadingInstance.close();
+                    //批量配置的默认选中
+                    _this.$refs.multipleTable.clearSelection();
+                    _this.$refs.multipleTable.toggleRowSelection(_this.selectedItem,true);
+
                 }, 200);
 
             },
