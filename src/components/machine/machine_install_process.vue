@@ -23,7 +23,7 @@
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4" offset="2">
+                <el-col :span="4" :offset="2">
                     <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询
                     </el-button>
                 </el-col>
@@ -713,9 +713,10 @@
         methods: {
             handleCurrentChange(val) {
                 this.currentPage = val;
-                _this.search();
+                this.onSearchDetailData();
             },
             search() {
+                _this.currentPage = 1;
                 this.onSearchDetailData();
             },
             onSearchDetailData()
