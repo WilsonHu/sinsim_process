@@ -727,6 +727,16 @@
                                                 ></el-input>
                                             </el-form-item>
                                         </el-col>
+                                        <el-col :span="2" style="margin-bottom: 10px;margin-top: 10px">
+                                            <el-form-item label="订单加急：" :label-width="formLabelWidth">
+                                                <el-checkbox style="margin-left: 1px"
+                                                             v-model="item.machineOrder.allUrgent"
+                                                             :readonly="changeOrderContentDisable(item.machineOrder)"
+                                                             :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0">
+                                                    <!--{{item.machineOrder.allUrgent}}-->
+                                                </el-checkbox>
+                                            </el-form-item>
+                                        </el-col>
                                         <el-col :span="1" :offset="2 ">
                                             <el-button type="success" size="small" style="margin-top: 15px"
                                                        @click="handleCopyOrder(item)">复制
@@ -4215,29 +4225,32 @@
                                 let orderDetail = copyObjectByJSON(tempList[i].orderDetail);
                                 let orderSign = copyObjectByJSON(tempList[i].orderSign);
                                 let orderChangeRecord = copyObjectByJSON(
-                                    tempList[i].orderChangeRecord
+                                        tempList[i].orderChangeRecord
                                 );
                                 let orderSplitRecord = copyObjectByJSON(
-                                    tempList[i].orderSplitRecord
+                                        tempList[i].orderSplitRecord
                                 );
                                 if (orderSign != null) {
                                     orderSign.signContent =
-                                        orderSign.signContent != null
-                                            ? JSON.parse(orderSign.signContent)
-                                            : [];
+                                            orderSign.signContent != null
+                                                    ? JSON.parse(orderSign.signContent)
+                                                    : [];
                                 }
                                 let machineOrder = copyObjectByJSON(tempList[i]);
                                 machineOrder.machineType = machineOrder.machineType.id;
                                 //由于装置中保存的是JSON字符串，需要转换成Object
                                 machineOrder.equipment =
-                                    machineOrder.equipment != null && machineOrder.equipment != ""
-                                        ? JSON.parse(machineOrder.equipment)
-                                        : [];
+                                        machineOrder.equipment != null && machineOrder.equipment != ""
+                                                ? JSON.parse(machineOrder.equipment)
+                                                : [];
                                 machineOrder.createTime = new Date(
-                                    machineOrder.createTime
+                                        machineOrder.createTime
                                 ).format("yyyy-MM-dd");
                                 machineOrder.orderDetail = null;
                                 machineOrder.orderSign = null;
+                                if (tempList[i].allUrgent == 1) {
+                                    machineOrder.allUrgent = true;
+                                }
 
                                 var newItem = {
                                     //title: "需求单" + newTabName,
