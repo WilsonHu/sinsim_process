@@ -371,6 +371,15 @@
                             align="center"
                             prop="nameplate"
                             label="机器编号">
+                        <template scope="scope"
+                                  prop="orderNum">
+                            <div v-if="scope.row.isUrgent==1" style="background-color: red">
+                                {{scope.row.nameplate}}
+                            </div>
+                            <div v-else>
+                                {{scope.row.nameplate}}
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             align="center"

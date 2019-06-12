@@ -1749,7 +1749,6 @@
                                                             style="width: 100%"
                                                             v-model="item.machineOrder.planShipDate"
                                                             type="date"
-                                                            :readonly="changeOrderContentDisable(item.machineOrder)"
                                                             placeholder="合同计划日期">
                                                     </el-date-picker>
                                                 </el-form-item>
