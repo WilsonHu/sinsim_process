@@ -140,6 +140,15 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
+                            label="计划工时">
+                        <template scope="scope">
+                            <div style="font-weight: bold;color: #409EFF">
+                                {{scope.row.planTimespan}}
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            align="center"
                             label="状态">
                         <template scope="scope">
                             <div :class="scope.row.status|filterTaskInstallStatusStyle">
@@ -604,10 +613,10 @@
                       <el-form :model="workForm" label-position="left" label-width="100px">
                         <el-row v-for="item in workForm.workList" style="margin:5px;">
                             <el-col :span="14"  style="margin-top:10px;margin-left:-10px;">
-                                <span v-html="item.name"></span>
+                                <span v-html="item.taskName"></span>
                             </el-col>
                             <el-col :span="10" >
-                                <el-input-number v-model="item.workTimespan" controls-position="right" :min="1" :max="1000"
+                                <el-input-number v-model="item.planTimespan" controls-position="right" :min="1" :max="1000"
                                         style="width:100px;"
                                         ></el-input-number>
                                 </el-form-item>
@@ -845,7 +854,7 @@
             return;
         }
         _this.workForm.workList.forEach(obj=>{
-            obj.workTimespan=_this.workForm.defaultTimespan
+            obj.planTimespan=_this.workForm.defaultTimespan
         })
     },
 
@@ -857,8 +866,8 @@
                     {
                         _this.workForm.workList.push({
                                             id:task.id,
-                                            name:task.taskName,
-                                            workTimespan:_this.workForm.checkDefault?_this.workForm.defaultTimespan:0,
+                                            taskName:task.taskName,
+                                            planTimespan:_this.workForm.checkDefault?_this.workForm.defaultTimespan:0,
                                         })
                     }
                        
@@ -868,8 +877,8 @@
                     {
                         _this.workForm.workList.push({
                                         id:task.id,
-                                        name:task.taskName,
-                                        workTimespan:_this.workForm.checkDefault?_this.workForm.defaultTimespan:0,
+                                        taskName:task.taskName,
+                                        planTimespan:_this.workForm.checkDefault?_this.workForm.defaultTimespan:0,
                                     })
                     }
                 })
@@ -986,6 +995,7 @@
                         traditional: true,
                         data: {
                             taskRecordIds: addedTasks,
+                            planTaskList:JSON.stringify(_this.workForm.workList),
                             planType: _this.planForm.planType,
                             machineStrId: _this.machineDoPlaning.machineStrId,
                             planDate: _this.planForm.planDate,
@@ -997,6 +1007,7 @@
                                 _this.doPlaningDialogVisible = false;
                                 _this.onSearchPlanningData();
                                 _this.onSearchPlanedData();
+                                _this.workForm.workList=[];
 
                             } else {
                                 showMessage(_this, data.message, 0);
