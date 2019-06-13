@@ -50,7 +50,9 @@
         <el-table v-loading="loadingUI" element-loading-text="获取数据中..." :data="tableData" border empty-text="暂无数据..." ref="singleTable" highlight-current-row show-overflow-tooltip="true" style="width: 100%; ">
             <el-table-column width="75" align="center" label="序号">
                 <template scope="scope">
-                    {{scope.$index+startRow}}
+                    <div :style="scope.row.warning|filterWaring">
+                        {{scope.$index+startRow}}
+                    </div>
                 </template>
             </el-table-column>
 
@@ -1490,6 +1492,20 @@
                     }
                 }
                 return result;
+            },
+            filterWaring(data)
+            {
+                let res="";
+                switch(data)
+                {
+                    case MaChineOrderWaringList[1].value:
+                    res=`background-color:orange;`
+                    break;
+                    case MaChineOrderWaringList[2].value:
+                    res=`background-color:red;`
+                    break;
+                }
+                return res
             },
 
             filterTimeSpan(timespan) {

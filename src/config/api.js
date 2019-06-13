@@ -113,6 +113,12 @@ let TaskStatusList = [
     {value: 9, name: '已跳过'},
 ];
 
+//机器安装延期状态
+let MaChineOrderWaringList = [
+    { value: 0, name: '正常' },
+    { value: 1, name: '近期' },
+    { value: 2, name: '延期' },
+];
 
 //查询日期类型
 const SearchDateType = [

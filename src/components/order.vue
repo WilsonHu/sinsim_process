@@ -1374,6 +1374,7 @@
                 this.onSearchDetailData();
             },
             search() {
+                this.currentPage = 1;
                 this.onSearchDetailData();
             },
             onSearchDetailData()

@@ -591,50 +591,14 @@
                                 </el-col>
                             </el-row>
                             <el-row>
-                <el-col :span="18">
-                  <el-transfer
-                    style="margin-left: 25px; margin-top: 10px"
-                    v-model="toPlanTasks"
-                    :titles="['未计划工序', '添加计划中']"
-                    :data="generateTasks()"
-                    @change="onTransferChanged"
-                  ></el-transfer>
-                </el-col>
-                <el-col :span="6">
-                  <div class="panel panel-default" style="min-height:460px;margin-top:12px;">
-                    <div class="panel-heading" style="text-align: left">
-                      <div class="panel-title">
-                        <el-form :model="workForm" label-position="right" label-width="100px">
-                            <el-row>
-                                <el-form-item label="工序计划工时"  style="margin-left:-4px;">
-                                    <el-input-number v-model="workForm.defaultTimespan" controls-position="right" :min="1" :max="1000"
-                                    style="width:100px;margin-left:10px;"
-                                    ></el-input-number>
-                                </el-form-item>
-                                
-                                 <el-checkbox v-model="workForm.checkDefault" @change="onCheckDefault">默认时间</el-checkbox>
-                                 <span>小时</span>
-                            </el-row>
-                        </el-form>
-                      </div>
-                    </div>
-                    <div class="panel-body">
-                      <el-form :model="workForm" label-position="left" label-width="100px">
-                        <el-row v-for="item in workForm.workList" style="margin:5px;">
-                            <el-col :span="14"  style="margin-top:10px;margin-left:-10px;">
-                                <span v-html="item.taskName"></span>
-                            </el-col>
-                            <el-col :span="10" >
-                                <el-input-number v-model="item.planTimespan" controls-position="right" :min="1" :max="1000"
-                                        style="width:100px;"
-                                        ></el-input-number>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                      </el-form>
-                    </div>
-                  </div>
-                </el-col>
+                    <el-col :span="18">
+                    <el-transfer
+                        style="margin-left: 25px; margin-top: 10px"
+                        v-model="toPlanTasks"
+                        :titles="['未计划工序', '添加计划中']"
+                        :data="generateTasks()"
+                    ></el-transfer>
+                    </el-col>
               </el-row>
             </el-row>
                         <el-row style="margin-top: 10px">
@@ -721,11 +685,7 @@
                     planType: 1,
                     planDate: new Date()
                 },
-      workForm: {
-        workList: [],
-        defaultTimespan:8,
-        checkDefault:true,
-      },
+
                 doPlaningDialogVisible: false,
                 deletePlanDialogVisible: false,
                 deleteData: "",
@@ -856,43 +816,6 @@
                 return data;
     },
 
-    onCheckDefault(val)
-    {
-        if(!val)
-        {
-            return;
-        }
-        _this.workForm.workList.forEach(obj=>{
-            obj.planTimespan=_this.workForm.defaultTimespan
-        })
-    },
-
-    onTransferChanged(keys,data) {
-        _this.workForm.workList=[];
-        keys.forEach(key=>{
-        _this.notPlanedTasks.forEach(task=>{
-                    if(task.id==key)
-                    {
-                        _this.workForm.workList.push({
-                                            id:task.id,
-                                            taskName:task.taskName,
-                                            planTimespan:_this.workForm.checkDefault?_this.workForm.defaultTimespan:0,
-                                        })
-                    }
-                       
-                })
-            _this.toPlanTasks.forEach(task=>{
-                if(task.id==key)
-                    {
-                        _this.workForm.workList.push({
-                                        id:task.id,
-                                        taskName:task.taskName,
-                                        planTimespan:_this.workForm.checkDefault?_this.workForm.defaultTimespan:0,
-                                    })
-                    }
-                })
-        })
-    },
 
             getProcessViewHeight() {
                 if (this.pageHeight == 0) {
@@ -1004,7 +927,6 @@
                         traditional: true,
                         data: {
                             taskRecordIds: addedTasks,
-                            planTaskList:JSON.stringify(_this.workForm.workList),
                             planType: _this.planForm.planType,
                             machineStrId: _this.machineDoPlaning.machineStrId,
                             planDate: _this.planForm.planDate,
@@ -1016,7 +938,6 @@
                                 _this.doPlaningDialogVisible = false;
                                 _this.onSearchPlanningData();
                                 _this.onSearchPlanedData();
-                                _this.workForm.workList=[];
 
                             } else {
                                 showMessage(_this, data.message, 0);
