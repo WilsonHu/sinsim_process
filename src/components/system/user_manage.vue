@@ -153,24 +153,29 @@
                 </el-col >
             </el-row >
         </el-col >
-        <el-dialog title="增加用户" :visible.sync="addDialogVisible" width="50%">
+        <el-dialog title="增加用户" :visible.sync="addDialogVisible" width="60%">
             <el-form :model="form" >
 
-                <el-col :span="8">
+                <el-col :span="6">
                     <el-form-item label="账号：" :label-width="formLabelWidth">
                         <el-input v-model="form.account" @change="onChange"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="6">
                     <el-form-item label="姓名：" :label-width="formLabelWidth">
                         <el-input v-model="form.name" @change="onChange"></el-input>
                     </el-form-item>
                 </el-col >
-				<el-col :span="8">
+				<el-col :span="6">
 				<el-form-item label="密码：" :label-width="formLabelWidth">
 				<el-input v-model="form.password" @change="onChange"></el-input>
 				</el-form-item>
 				</el-col>
+                <el-col :span="6">
+                    <el-form-item label="外网权限：" :label-width="formLabelWidth">
+                        <el-switch v-model="form.extranetPermit" :active-value="1" :inactive-value="0"></el-switch>
+                    </el-form-item >
+                </el-col>
 				<!--<el-col :span="12">-->
 				<!--<el-form-item label="确认密码：" :label-width="formLabelWidth">-->
 				<!--<el-input v-model="form.confirmpwd" @change="onChange"></el-input>-->
@@ -233,28 +238,28 @@
             </div >
         </el-dialog >
 
-        <el-dialog title="编辑用户" :visible.sync="modifyDialogVisible" width="50%">
+        <el-dialog title="编辑用户" :visible.sync="modifyDialogVisible" width="60%">
             <el-form :model="modifyForm" >
-                <el-col :span="8" >
+                <el-col :span="6" >
                     <el-form-item label="账号：" :label-width="formLabelWidth">
                         <el-input v-model="modifyForm.account" @change="onChange" :disabled="modifyForm.account == 'admin'" ></el-input >
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" >
+                <el-col :span="6" >
                     <el-form-item label="姓名：" :label-width="formLabelWidth" >
                         <el-input v-model="modifyForm.name" @change="onChange" ></el-input >
                     </el-form-item >
                 </el-col >
-				<el-col :span="8">
+				<el-col :span="6">
                     <el-form-item label="密码：" :label-width="formLabelWidth">
                         <el-input v-model="modifyForm.password" @change="onChange"></el-input>
                     </el-form-item>
 				</el-col>
-				<!--<el-col :span="12">-->
-				<!--<el-form-item label="确认密码：" :label-width="formLabelWidth">-->
-				    <!--<el-input v-model="modifyForm.confirmpwd" @change="onChange"></el-input>-->
-				<!--</el-form-item>-->
-				<!--</el-col>-->
+				<el-col :span="6">
+                    <el-form-item label="外网权限：" :label-width="formLabelWidth">
+                        <el-switch v-model="modifyForm.extranetPermit" :active-value="1" :inactive-value="0" ></el-switch>
+                    </el-form-item >
+                </el-col>
                 <el-col :span="6" >
                     <el-form-item label="角色：" :label-width="formLabelWidth" >
                          <el-select v-model="modifyForm.roleId" @change="onChange">
@@ -351,8 +356,9 @@
 				    roleId: "",
 					groupId: "",
                     marketGroupName:"",
-                    valid:1
-			    },
+                    valid:1,
+                    extranetPermit:0,
+                },
 			    formLabelWidth: '100px',
 
 			    //增加对话框
@@ -366,7 +372,8 @@
 				    roleId: "",
                     groupId: "",
                     marketGroupName:"",
-                    valid:""
+                    valid:"",
+                    extranetPermit:0
 			    },
 			    filters: {
 				    name: "",
@@ -455,6 +462,7 @@
                 this.modifyForm.password =  "";
                 this.modifyForm.confirmpwd =  "";
                 this.modifyForm.valid =  item.valid;
+                this.modifyForm.extranetPermit =  item.extranetPermit;
                 this.isError = this.validateForm(this.modifyForm, true);
 			    this.modifyDialogVisible = true;
 		    },

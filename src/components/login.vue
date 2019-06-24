@@ -110,9 +110,13 @@
             },
 
             login: function () {
-                var loginUrl = window.location.host;
+                let loginUrl = window.location.host;
+                //判断外网登陆权限
+                let isExtranet = false;
                 console.log("loginUrl:",loginUrl);
-                //TODO:判断外网登陆权限
+                if (loginUrl === WANIP) {
+                    isExtranet = true;
+                }
                 this.isError = this.validateForm();
                 if (!_this.isError) {
                     $.ajax({
@@ -122,6 +126,7 @@
                         data: {
                             "account": this.ruleForm2.account,
                             "password": this.ruleForm2.password,
+                            "isExtranet": isExtranet,
                         },
                         success: function (res) {
                             _this.isError = res.code != 200;
