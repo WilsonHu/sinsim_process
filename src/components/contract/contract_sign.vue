@@ -4293,7 +4293,6 @@
                                     _this.editableTabsValue = newTabName;
                                 }
                                 _this.tabIndex = i + 1;
-                                console.log(111111112222,_this.requisitionForms)
                             }
                         }
                     },

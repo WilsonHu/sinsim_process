@@ -350,67 +350,69 @@
                 <tr style="width: 100%;vertical-align: text-top;">
                     <td style="width: 20%; padding-right: 10px">
                         <el-row>
-                            <el-table ref="multipleTable"
-                                      :data="tableData"
-                                      tooltip-effect="dark"
-                                      style="width: 100%"
-                                      @selection-change="handleSelectionChange">
-                                <el-table-column type="selection"
-                                                 :selectable="selectable">
-                                </el-table-column>
-                                <el-table-column prop="nameplate"
-                                                 label="机器编号">
-                                    <template scope="scope">
-                                        <div style="font-weight: bold;">
-                                            <span style="color: red"
-                                                  v-if="scope.row.nameplate==''||scope.row.nameplate==null">
-                                                暂无
-                                            </span>
-                                            <span v-else>
-                                                {{scope.row.nameplate}}
-                                            </span>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="machineType"
-                                                 label="机型">
-                                    <template scope="scope">
-                                        <div>
-                                            {{scope.row.machineType|filterMachineType}}
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="订单号"
-                                                 prop="orderNum"
-                                                 width="120">
-                                    <template scope="scope">
-                                        <div>
-                                            {{scope.row.orderNum}}
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-
-
                             <el-form :model="addForm">
-                                <!--<el-col :span="24">-->
-                                    <!--<el-form-item label="机器编号(铭牌号)：">-->
-                                        <!--<el-input type="text"-->
-                                                  <!--disabled-->
-                                                  <!--v-model="addForm.nameplate"-->
-                                                  <!--placeholder="无"-->
-                                                  <!--style="width:100%"-->
-                                        <!--&gt;</el-input>-->
-                                    <!--</el-form-item>-->
-                                <!--</el-col>-->
-                                <!--<el-col :span="24" :offset="0">-->
-                                    <!--<el-form-item label="机型：">-->
-                                        <!--<el-input type="text"-->
-                                                  <!--disabled-->
-                                                  <!--v-model="addForm.machineTypeName"-->
-                                                  <!--style="width:100%"></el-input>-->
-                                    <!--</el-form-item>-->
-                                <!--</el-col>-->
+                                <span v-if="addForm.processRecordId==''">
+                                    <el-table ref="multipleTable"
+                                              :data="tableData"
+                                              tooltip-effect="dark"
+                                              style="width: 100%"
+                                              @selection-change="handleSelectionChange">
+                                        <el-table-column type="selection"
+                                                         :selectable="selectable">
+                                        </el-table-column>
+                                        <el-table-column prop="nameplate"
+                                                         label="机器编号">
+                                            <template scope="scope">
+                                                <div style="font-weight: bold;">
+                                                    <span style="color: red"
+                                                          v-if="scope.row.nameplate==''||scope.row.nameplate==null">
+                                                        暂无
+                                                    </span>
+                                                    <span v-else>
+                                                        {{scope.row.nameplate}}
+                                                    </span>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="machineType"
+                                                         label="机型">
+                                            <template scope="scope">
+                                                <div>
+                                                    {{scope.row.machineType|filterMachineType}}
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="订单号"
+                                                         prop="orderNum"
+                                                         width="120">
+                                            <template scope="scope">
+                                                <div>
+                                                    {{scope.row.orderNum}}
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </span>
+                                <span v-else>
+                                    <el-col :span="24">
+                                        <el-form-item label="机器编号(铭牌号)：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.nameplate"
+                                                      placeholder="无"
+                                                      style="width:100%"
+                                            ></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="24" :offset="0">
+                                        <el-form-item label="机型：">
+                                            <el-input type="text"
+                                                      disabled
+                                                      v-model="addForm.machineTypeName"
+                                                      style="width:100%"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </span>
                                 <el-col :span="24" :offset="0">
                                     <el-form-item label="流程模板：">
                                         <el-select
@@ -537,6 +539,7 @@
                     }]
                 },
                 addForm: {},
+                selectedItemList: [],
                 addDialogVisible: false,
                 isError: false,
 
@@ -718,6 +721,7 @@
                     _this.isError = false;
                     _this.addDialogVisible = true;
                 }
+                console.log(11111111111,_this.addForm)
             },
 
             setMachineFinished(machine) {
@@ -744,112 +748,215 @@
 
             handleSelectionChange(val) {
                 console.log("handleSelectionChange",val);
+                _this.selectedItemList = val;
             },
 
             //批量配置只限未配置状态的机器
             selectable(row,index) {
-                return row.processRecordId == "";
+                if (_this.selectedItem.processRecordId != ''){
+                    return false
+                } else {
+                    return row.processRecordId == "";
+                }
             },
 
             //配置或修改工序流程
             onSubmit()
             {
-                //TODO: 批量上传配置状态
-                if (_this.addForm.processId == "") {
-                    showMessage(_this, "作业流程不能为空", 0)
-                    _this.isError = true;
-                    return;
-                }
-                _this.addForm.taskList = myDiagram.model.toJson();
-                var taskList = JSON.parse(_this.addForm.taskList);
+                //非批量配置
+                if (!_this.selectedItemList) {
+                    if (_this.addForm.processId == "") {
+                        showMessage(_this, "作业流程不能为空", 0)
+                        _this.isError = true;
+                        return;
+                    }
+                    _this.addForm.taskList = myDiagram.model.toJson();
+                    var taskList = JSON.parse(_this.addForm.taskList);
 
-                if (taskList == null || taskList.nodeDataArray.length < 2) {
-                    showMessage(_this, "当前还没有可用流程，请添加后再保存", 0)
-                    return;
-                }
-                var trObjList = new Array();
-                var machineStatus = _this.addForm.status;
-                let highTaskStatus = 0;
-                let allFinished = true;
-                taskList.nodeDataArray.forEach(item=> {
-                    if (item.category != "Start" && item.category != "End") {//排除start,end
-                        if (isUndefined(item.taskStatus) || item.taskStatus == 0) {
-                            trObjList.push({
-                                taskName: item.text,
-                                nodeKey: item.key,
-                                status: 0,
-                                processRecordId: _this.addForm.processRecordId
-                            });
-                        }
-                        else if (machineStatus != MachineStatusList[3].value
+                    if (taskList == null || taskList.nodeDataArray.length < 2) {
+                        showMessage(_this, "当前还没有可用流程，请添加后再保存", 0)
+                        return;
+                    }
+                    var trObjList = new Array();
+                    var machineStatus = _this.addForm.status;
+                    let highTaskStatus = 0;
+                    let allFinished = true;
+                    taskList.nodeDataArray.forEach(item => {
+                        if (item.category != "Start" && item.category != "End") {//排除start,end
+                            if (isUndefined(item.taskStatus) || item.taskStatus == 0) {
+                                trObjList.push({
+                                    taskName: item.text,
+                                    nodeKey: item.key,
+                                    status: 0,
+                                    processRecordId: _this.addForm.processRecordId
+                                });
+                            } else if (machineStatus != MachineStatusList[3].value
                                 && parseInt(item.taskStatus) != TaskStatusList[6].value
                                 && parseInt(item.taskStatus) > TaskStatusList[1].value)//有一个是安装中
-                        {
-                            machineStatus = MachineStatusList[3].value//生产中
+                            {
+                                machineStatus = MachineStatusList[3].value//生产中
+                            }
+                            if (item.taskStatus > highTaskStatus) {
+                                highTaskStatus = parseInt(item.taskStatus);
+                            }
+                            if (parseInt(item.taskStatus) != TaskStatusList[6].value) {
+                                allFinished = false;
+                            }
+                            delete item["category"];
+                            delete item["deletable"];
+                            delete item["movable"];
                         }
-                        if(item.taskStatus > highTaskStatus) {
-                            highTaskStatus = parseInt(item.taskStatus);
-                        }
-                        if(parseInt(item.taskStatus) != TaskStatusList[6].value) {
-                            allFinished = false;
-                        }
-                        delete item["category"];
-                        delete item["deletable"];
-                        delete item["movable"];
+                    });
+                    //如果机器还处于初始化状态，则设置成已配置
+                    if (highTaskStatus == TaskStatusList[0].value) {
+                        machineStatus = MachineStatusList[1].value//已配置
                     }
-                });
-                //如果机器还处于初始化状态，则设置成已配置
-                if(highTaskStatus == TaskStatusList[0].value){
-                    machineStatus = MachineStatusList[1].value//已配置
-                }
-                //如果机器还处于已计划
-                if(highTaskStatus == TaskStatusList[1].value){
-                    machineStatus = MachineStatusList[2].value//已计划
-                }
-                //如果机器所有工序都完成
-                if(allFinished){
-                    machineStatus = MachineStatusList[4].value//已完成
-                }
-                //还处于初始化状态，则设置成已配置
-                if(machineStatus == 0) {
-                    machineStatus = MachineStatusList[1].value//已配置
-                }
+                    //如果机器还处于已计划
+                    if (highTaskStatus == TaskStatusList[1].value) {
+                        machineStatus = MachineStatusList[2].value//已计划
+                    }
+                    //如果机器所有工序都完成
+                    if (allFinished) {
+                        machineStatus = MachineStatusList[4].value//已完成
+                    }
+                    //还处于初始化状态，则设置成已配置
+                    if (machineStatus == 0) {
+                        machineStatus = MachineStatusList[1].value//已配置
+                    }
 
-                var prObj = {
-                    machineId: _this.addForm.id,
-                    processId: _this.addForm.processId,
-                    linkData: taskList.linkDataArray,
-                    nodeData: taskList.nodeDataArray
-                };
+                    var prObj = {
+                        machineId: _this.addForm.id,
+                        processId: _this.addForm.processId,
+                        linkData: taskList.linkDataArray,
+                        nodeData: taskList.nodeDataArray
+                    };
 
-                if (_this.addForm.processRecordId != ""
+                    if (_this.addForm.processRecordId != ""
                         && _this.addForm.processRecordId != 0) {
-                    prObj.id = parseInt(_this.addForm.processRecordId);
-                }
-                _this.addForm.status = machineStatus;
-                $.ajax({
-                    url: HOST + "process/record/addProcessForMachine",
-                    type: 'POST',
-                    dataType: 'json',
-                    traditional: true,
-                    data: {
-                        taskRecords: JSON.stringify(trObjList),
-                        processRecord: JSON.stringify(prObj),
-                        machine: JSON.stringify({
-                            id: _this.addForm.id,
-                            status: _this.addForm.status,
-                        }),
-                    },
-                    success: function (res) {
-                        if (res.code == 200) {
-                            _this.onSearchDetailData();
-                            _this.addDialogVisible = false;
-                            showMessage(_this, "保存成功! 请到安装进度页面或计划管理页面查看", 1)
-                        } else {
-                            showMessage(_this, "保存失败!" + res.message, 0)
-                        }
+                        prObj.id = parseInt(_this.addForm.processRecordId);
                     }
-                })
+                    _this.addForm.status = machineStatus;
+                    $.ajax({
+                        url: HOST + "process/record/addProcessForMachine",
+                        type: 'POST',
+                        dataType: 'json',
+                        traditional: true,
+                        data: {
+                            taskRecords: JSON.stringify(trObjList),
+                            processRecord: JSON.stringify(prObj),
+                            machine: JSON.stringify({
+                                id: _this.addForm.id,
+                                status: _this.addForm.status,
+                            }),
+                        },
+                        success: function (res) {
+                            if (res.code == 200) {
+                                _this.onSearchDetailData();
+                                _this.addDialogVisible = false;
+                                showMessage(_this, "保存成功! 请到安装进度页面或计划管理页面查看", 1)
+                            } else {
+                                showMessage(_this, "保存失败!" + res.message, 0)
+                            }
+                        }
+                    })
+                } else {//未配置机器批量配置
+                    _this.selectedItemList.forEach(listItem=>{
+                        if (_this.addForm.processId == "") {
+                            showMessage(_this, "作业流程不能为空", 0)
+                            _this.isError = true;
+                            return;
+                        }
+                        _this.addForm.taskList = myDiagram.model.toJson();
+                        var taskList = JSON.parse(_this.addForm.taskList);
+
+                        if (taskList == null || taskList.nodeDataArray.length < 2) {
+                            showMessage(_this, "当前还没有可用流程，请添加后再保存", 0)
+                            return;
+                        }
+                        var trObjList = new Array();
+                        var machineStatus = _this.addForm.status;
+                        let highTaskStatus = 0;
+                        let allFinished = true;
+                        taskList.nodeDataArray.forEach(item => {
+                            if (item.category != "Start" && item.category != "End") {//排除start,end
+                                if (isUndefined(item.taskStatus) || item.taskStatus == 0) {
+                                    trObjList.push({
+                                        taskName: item.text,
+                                        nodeKey: item.key,
+                                        status: 0,
+                                        processRecordId: _this.addForm.processRecordId
+                                    });
+                                } else if (machineStatus != MachineStatusList[3].value
+                                    && parseInt(item.taskStatus) != TaskStatusList[6].value
+                                    && parseInt(item.taskStatus) > TaskStatusList[1].value)//有一个是安装中
+                                {
+                                    machineStatus = MachineStatusList[3].value//生产中
+                                }
+                                if (item.taskStatus > highTaskStatus) {
+                                    highTaskStatus = parseInt(item.taskStatus);
+                                }
+                                if (parseInt(item.taskStatus) != TaskStatusList[6].value) {
+                                    allFinished = false;
+                                }
+                                delete item["category"];
+                                delete item["deletable"];
+                                delete item["movable"];
+                            }
+                        });
+                        //如果机器还处于初始化状态，则设置成已配置
+                        if (highTaskStatus == TaskStatusList[0].value) {
+                            machineStatus = MachineStatusList[1].value//已配置
+                        }
+                        //如果机器还处于已计划
+                        if (highTaskStatus == TaskStatusList[1].value) {
+                            machineStatus = MachineStatusList[2].value//已计划
+                        }
+                        //如果机器所有工序都完成
+                        if (allFinished) {
+                            machineStatus = MachineStatusList[4].value//已完成
+                        }
+                        //还处于初始化状态，则设置成已配置
+                        if (machineStatus == 0) {
+                            machineStatus = MachineStatusList[1].value//已配置
+                        }
+
+                        var prObj = {
+                            machineId: listItem.id,
+                            processId: _this.addForm.processId,
+                            linkData: taskList.linkDataArray,
+                            nodeData: taskList.nodeDataArray
+                        };
+
+                        if (_this.addForm.processRecordId != ""
+                            && _this.addForm.processRecordId != 0) {
+                            prObj.id = parseInt(_this.addForm.processRecordId);
+                        }
+                        _this.addForm.status = machineStatus;
+                        $.ajax({
+                            url: HOST + "process/record/addProcessForMachine",
+                            type: 'POST',
+                            dataType: 'json',
+                            traditional: true,
+                            data: {
+                                taskRecords: JSON.stringify(trObjList),
+                                processRecord: JSON.stringify(prObj),
+                                machine: JSON.stringify({
+                                    id: listItem.id,
+                                    status: _this.addForm.status,
+                                }),
+                            },
+                            success: function (res) {
+                                if (res.code == 200) {
+                                    _this.onSearchDetailData();
+                                    _this.addDialogVisible = false;
+                                    showMessage(_this, "保存成功! 请到安装进度页面或计划管理页面查看", 1)
+                                } else {
+                                    showMessage(_this, "保存失败!" + res.message, 0)
+                                }
+                            }
+                        })
+                    })
+                }
 
             },
             initAllRoles()
