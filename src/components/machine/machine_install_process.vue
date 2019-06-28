@@ -45,6 +45,15 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
+
+                <el-col :span="4" :offset="2">
+                    <el-button
+                            icon="el-icon-share"
+                            size="normal"
+                            type="danger"
+                            @click="processMachineExport">导出
+                    </el-button>
+                </el-col>
             </el-row>
         </el-form>
         <el-table v-loading="loadingUI" element-loading-text="获取数据中..." :data="tableData" border empty-text="暂无数据..." ref="singleTable" highlight-current-row show-overflow-tooltip="true" style="width: 100%; ">
@@ -176,12 +185,12 @@
                         prop="processEndTime"
                         label="计划交货日期">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.processEndTime==null"
+                        <span v-if="scope.row.processEndTime==null && scope.row.isUrgent==1"
                               style="color: darkorange">
                              {{(scope.row.planShipDate)|filterDateString}}
                         </span>
                         <span v-else>
-                            {{(scope.row.processEndTime)|filterDateString}}
+                            {{(scope.row.planShipDate)|filterDateString}}
                         </span>
                     </template>
                 </el-table-column>
@@ -837,6 +846,56 @@
                             });
                         }
                         _this.loadingUI = false;
+                    }
+                })
+            },
+
+            processMachineExport() {
+                var condition = {
+                    machine_strid: _this.filters.machine_strid.trim(),
+                    orderNum: _this.filters.orderNum.trim(),
+                    nameplate: _this.filters.nameplate.trim(),
+                    contractNum: _this.filters.contract_num.trim(),
+                    taskNameList: '', //array _this.filters.taskNameList
+                    query_start_time: '',
+                    query_finish_time: '',
+                    status: _this.filters.status,
+                    is_fuzzy: true,
+                    page: _this.currentPage,
+                    size: _this.pageSize
+                };
+                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
+                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
+                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
+                var nameList=[];
+                _this.filters.taskNameList.forEach(obj=>{
+                    nameList.push(`'${obj}'`);
+                });
+                if(_this.filters.taskNameList.length > 0)
+                {
+                    condition.taskNameList = nameList.join(",");
+                }
+                $.ajax({
+                    url: HOST + "machine/processMachineExport",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: condition,
+                    success: function (data) {
+                        if (data.code == 200) {
+//                            _this.tableDataPlaned = data.data.list;
+//                            _this.totalNumPlaned = data.data.total;
+//                            _this.startRowPlaned = data.data.startRow;
+//                            window.location.href = data.data;
+                            showMessage(_this, "计划导出excel成功！", 1);
+
+                        } else {
+                            showMessage(_this, "导出导出excel失败！", 0);
+                        }
+                        _this.loadingUI = false;
+                    },
+                    error: function (data) {
+                        showMessage(_this, data.message, 0);
                     }
                 })
             },
