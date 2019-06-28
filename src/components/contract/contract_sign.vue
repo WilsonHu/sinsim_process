@@ -2020,7 +2020,7 @@
                                                     label="意见">
                                                 <template slot-scope="scope">
                                                     <el-input
-                                                            :readonly="signDisable(scope.row.roleId,item.machineOrder.status)"
+                                                            :readonly="signDisable(item.orderSign.signContent,scope.row,item.machineOrder.status)"
                                                             type="textarea"
                                                             v-model="scope.row.comment"
                                                             auto-complete="off">
@@ -2035,13 +2035,13 @@
                                                     <el-button type="primary"
                                                                @click="onSubmitOrderSign(scope.row, item.orderSign)"
                                                                icon="el-icon-check" size="small"
-                                                               :disabled="signDisable(scope.row.roleId,item.machineOrder.status)">
+                                                               :disabled="signDisable(item.orderSign.signContent,scope.row,item.machineOrder.status)">
                                                         同意
                                                     </el-button>
                                                     <el-button type="danger"
                                                                @click="handleRejectOrderSign(scope.row, item.orderSign)"
                                                                icon="el-icon-close" size="small"
-                                                               :disabled="signDisable(scope.row.roleId,item.machineOrder.status)">
+                                                               :disabled="signDisable(item.orderSign.signContent,scope.row,item.machineOrder.status)">
                                                         驳回
                                                     </el-button>
                                                 </template>
@@ -2207,7 +2207,7 @@
                             label="签核人">
                         <template slot-scope="scope">
                             <el-input
-                                    :readonly="signDisable(scope.row.roleId,item.machineOrder.status)"
+                                    :readonly="signDisable(signItem.signContent,scope.row,item.machineOrder.status)"
                                     v-model="scope.row.user"
                                     auto-complete="off">
                             </el-input>
@@ -2227,7 +2227,7 @@
                             label="意见">
                         <template slot-scope="scope">
                             <el-input
-                                    :readonly="signDisable(scope.row.roleId,item.machineOrder.status)"
+                                    :readonly="signDisable(signItem.signContent,scope.row,item.machineOrder.status)"
                                     type="textarea"
                                     v-model="scope.row.comment"
                                     auto-complete="off">
@@ -4147,14 +4147,30 @@
                 }
             },
 
-            signDisable(roleId, status) {
+            signDisable(signContentList, row, status) {
                 //超级管理员可以操作，或者当前合同属于“签核状态”、登陆的用户有权限签核并且合同currentStep处于属于该角色签核
-                return !(
-                    (roleId == _this.userInfo.role.id &&
-                        status == 1 &&
-                        this.editContract.currentStep == _this.userInfo.role.roleName) ||
-                    _this.userInfo.role.id == 1
-                );
+                //修改：下一个签核人未签核的状态下，允许修改。
+                if (_this.userInfo.role.id == 1){
+                    return false;
+                }
+                if (row.roleId == _this.userInfo.role.id &&
+                    status == 1) {
+                    if (_this.editContract.currentStep == _this.userInfo.role.roleName) {
+                        return false;
+                    }else if (row.result > 0 && signContentList[row.number].result==0){
+                        return false;
+                    }else {
+                        return true;
+                    }
+                }else {
+                    return true;
+                }
+                // return !(
+                //     (roleId == _this.userInfo.role.id &&
+                //         status == 1 &&
+                //         this.editContract.currentStep == _this.userInfo.role.roleName) ||
+                //     _this.userInfo.role.id == 1
+                // );
             },
 
             changeOrderContentDisable(item) {
@@ -4277,6 +4293,7 @@
                                     _this.editableTabsValue = newTabName;
                                 }
                                 _this.tabIndex = i + 1;
+                                console.log(111111112222,_this.requisitionForms)
                             }
                         }
                     },
