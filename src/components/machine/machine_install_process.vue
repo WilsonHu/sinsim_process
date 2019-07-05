@@ -692,7 +692,7 @@
     var _this;
     var myDiagram;
     export default {
-        name: "machine_config_process",
+        name: "machine_install_process",
         components: {},
         data() {
             _this = this;

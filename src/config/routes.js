@@ -41,6 +41,7 @@ import Machine from "../components/machine.vue"
 import MachineConfigProcess from "../components/machine/machine_config_process.vue"
 import MachineInstallProcess from "../components/machine/machine_install_process.vue"
 import MachineProductionReport from "../components/machine/machine_production_report.vue"
+import MachineInstallWhole from "../components/machine/machine_install_whole.vue"
 
 export default
 [
@@ -112,6 +113,12 @@ export default
                         component: MachineConfigProcess,
                         name: 'machine_config_process',
                         meta: '配置流程'
+                    },
+                    {
+                        path: '/home/machine/machine_install_whole',
+                        component: MachineInstallWhole,
+                        name: 'machine_install_whole',
+                        meta: '整装管理'
                     },
                     {
                         path: '/home/machine/machine_production_report',
