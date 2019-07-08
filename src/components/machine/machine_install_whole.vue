@@ -18,7 +18,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="完成日期:">
+                        <el-form-item label="日期:">
                             <el-date-picker v-model="filters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
                             </el-date-picker>
                         </el-form-item>
@@ -48,10 +48,10 @@
 
                     <el-col :span="4" :offset="2">
                         <el-button
-                                icon="el-icon-share"
+                                icon="el-icon-plus"
                                 size="normal"
                                 type="danger"
-                                @click="processMachineExport">导出
+                                @click="addPlan">排产
                         </el-button>
                     </el-col>
                 </el-row>
@@ -80,16 +80,6 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column
-                            align="center"
-                            prop="machineType"
-                            label="机型">
-                        <template scope="scope">
-                            <div>
-                                {{scope.row.machineType|filterMachineType}}
-                            </div>
-                        </template>
-                    </el-table-column>
                     <el-table-column label="订单号"
                                     align="center"
                                     prop="orderNum">
@@ -102,129 +92,64 @@
                     <el-table-column
                             align="center"
                             prop="location"
-                            label="位置">
+                            label="机架位置">
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="当前工序">
+                            label="头数">
                         <template scope="scope">
-                            <el-tag size="small" style="margin-left: 3px;margin-top:3px;color: green;"
-                                    v-for="item in scope.row.currentTaskList">
-                                {{item}}
-                            </el-tag>
+                            <span>
+                                {{scope.row.headNum}}
+                            </span>
                         </template>
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="已完成/总工序">
+                            label="已完成头数">
                         <template scope="scope">
-                            <span style="color: limegreen;font-weight: bold;">{{scope.row.finishedCount}}</span>
-                            <span>/</span>
-                            <span style="color: darkslategrey;font-weight: bold;">{{scope.row.totalTaskCount}}</span>
+                            <span>{{scope.row.headNum}}</span>
                         </template>
                     </el-table-column>
 
                     <el-table-column
                             align="center"
                             prop="processCreateTime"
-                            label="开始日期">
+                            label="完成率">
                         <template slot-scope="scope">
                             <span>
-                                {{(scope.row.processCreateTime)|filterDateString}}
+                               
                             </span>
                         </template>
                     </el-table-column>
-                  
+                   <el-table-column
+                            align="center"
+                            prop="processCreateTime"
+                            label="备注">
+                        <template slot-scope="scope">
+                            <span>
+                               {{cmtSend}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                     <el-table-column
+                            align="center"
+                            prop="processCreateTime"
+                            label="反馈">
+                        <template slot-scope="scope">
+                            <span>
+                               
+                            </span>
+                        </template>
+                    </el-table-column>
                     <el-table-column width="200"
                                     label="操作" align="center">
                         <template scope="scope" style="text-align: center">
-                            <el-tooltip placement="left" content="查看机器">
+                            <el-tooltip placement="left" content="修改">
                                 <el-button
                                         size="mini"
                                         type="primary"
-                                        icon="el-icon-view"
+                                        icon="el-icon-edit"
                                         @click="editWithItem(scope.row)">
-                                </el-button>
-                            </el-tooltip>
-                            <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 &&  scope.row.status!=9
-                                        && (userinfo.role.roleName.indexOf('生产部')>-1
-                                        || userinfo.role.roleName.indexOf('PMC')>-1
-                                        || userinfo.role.roleName.indexOf('超级管理员')>-1) "
-                                        placement="right">
-                                <div slot="content">取消机器</div>
-                                <el-button
-                                        size="mini"
-                                        type="danger"
-                                        icon="el-icon-close"
-                                        @click="cancelMachine(scope.row)">
-                                </el-button>
-                            </el-tooltip>
-                            <el-tooltip v-show="scope.row.status==7
-                                        && (userinfo.role.roleName.indexOf('生产部')>-1
-                                            || userinfo.role.roleName.indexOf('PMC')>-1
-                                            || userinfo.role.roleName.indexOf('超级管理员')>-1)"
-                                        placement="right">
-                                <div slot="content">恢复安装</div>
-                                <el-button
-                                        size="mini"
-                                        type="success"
-                                        icon="el-icon-check"
-                                        @click="recoverMachine(scope.row)">
-                                </el-button>
-                            </el-tooltip>
-
-                            <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 && scope.row.isUrgent!=1 &&  scope.row.status!=9
-                                        && (userinfo.role.roleName.indexOf('生产部')>-1
-                                        || userinfo.role.roleName.indexOf('PMC')>-1
-                                        || userinfo.role.roleName.indexOf('超级管理员')>-1) "
-                                        placement="right">
-                                <div slot="content">"设为加急"</div>
-                                <el-button
-                                        size="mini"
-                                        type="success"
-                                        icon="el-icon-edit"
-                                        @click="setMachineUrgent(scope.row)">
-                                </el-button>
-                            </el-tooltip>
-                            <el-tooltip v-show="scope.row.status!=7 && scope.row.status!=4 && scope.row.isUrgent==1
-                                        && (userinfo.role.roleName.indexOf('生产部')>-1
-                                        || userinfo.role.roleName.indexOf('PMC')>-1
-                                        || userinfo.role.roleName.indexOf('超级管理员')>-1) "
-                                        placement="right">
-                                <div slot="content">"取消加急"</div>
-                                <el-button
-                                        size="mini"
-                                        type="warning"
-                                        icon="el-icon-edit"
-                                        @click="setMachineUnUrgent(scope.row)">
-                                </el-button>
-                            </el-tooltip>
-
-                            <!-- todo: 发货权限-->
-                            <el-tooltip v-show="scope.row.status==4
-                                        && (userinfo.role.roleName.indexOf('生产部')>-1
-                                        || userinfo.role.roleName.indexOf('PMC')>-1
-                                        || userinfo.role.roleName.indexOf('超级管理员')>-1) "
-                                        placement="right">
-                                <div slot="content">"发货"</div>
-                                <el-button
-                                        size="mini"
-                                        type="success"
-                                        icon="el-icon-edit"
-                                        @click="setMachineShipped(scope.row)">
-                                </el-button>
-                            </el-tooltip>
-                            <el-tooltip v-show="scope.row.status==9
-                                        && (userinfo.role.roleName.indexOf('生产部')>-1
-                                        || userinfo.role.roleName.indexOf('PMC')>-1
-                                        || userinfo.role.roleName.indexOf('超级管理员')>-1) "
-                                        placement="right">
-                                <div slot="content">"取消发货"</div>
-                                <el-button
-                                        size="mini"
-                                        type="primary"
-                                        icon="el-icon-edit"
-                                        @click="setMachineUnShipped(scope.row)">
                                 </el-button>
                             </el-tooltip>
                         </template>
@@ -241,6 +166,67 @@
                     </el-pagination>
                 </div>
             </el-col>
+        <el-dialog title="新增总装排产" :visible.sync="addDialogVisible" append-to-body width="70%">
+            
+            <el-form :model="addForm" >
+                <el-row>
+                <el-col :span="8">
+                    <el-form-item label="日期：" :label-width="formLabelWidth">
+                    <el-date-picker
+                            v-model="addForm.createDate"
+                            type="date"
+                            placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8" >
+                    <el-form-item label="订单号：" :label-width="formLabelWidth">
+                        <el-input v-model="addForm.orderId" @change="onChange"></el-input>
+                    </el-form-item>
+                </el-col >
+                <el-col :span="8">
+                <el-form-item label="机器号：" :label-width="formLabelWidth">
+                    <el-input v-model="addForm.machineId" @change="onChange"></el-input>
+                </el-form-item>
+                </el-col>
+                <el-col :span="8" >
+                    <el-form-item label="工序："  :label-width="formLabelWidth">
+                        <el-select v-model="addForm.taskName" placeholder="工序">
+                            <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
+                            </el-option>
+                        </el-select>
+                    </el-form-item >
+                </el-col >
+                <el-col :span="8" >
+                    <el-form-item label="头数："  :label-width="formLabelWidth">
+                        <el-input v-model="addForm.headCount" @change="onChange"></el-input>
+                    </el-form-item >
+                </el-col >
+                <el-col :span="8" >
+                    <el-form-item label="机架位置："  :label-width="formLabelWidth">
+                        <el-input v-model="addForm.orderId" @change="onChange"></el-input>
+                    </el-form-item >
+                </el-col >
+                 <el-col :span="23" offset="1">
+                    <el-form-item label="备注信息：" prop="desc">
+                        <el-input type="textarea" v-model="addForm.cmtSend" :rows="4"></el-input>
+                    </el-form-item>
+                 </el-col>
+                </el-row>
+             
+            </el-form >
+            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
+                :title="errorMsg"
+                type="error"
+                :closable="false"
+                show-icon >
+            </el-alert > 
+            <span  slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
+                <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
+                <el-button type="primary" @click="onAdd" icon="el-icon-check">确 定</el-button >
+            </span  >
+            
+        </el-dialog >
     </div>
 </template>
 
@@ -255,8 +241,7 @@
         data() {
             _this = this;
             return {
-                queryDataUrl: HOST + "machine/selectProcessMachine",
-                taskContentNameUrl: HOST + "task/list",
+                queryDataUrl: HOST + "/whole/install/acutual/selectWholeInstallDetails",
                 errorMsg: '',
                 selectedItem: {},
                 queryUserRoleUrl: HOST + "role/list",
@@ -271,7 +256,6 @@
                 filters: {
                     machine_strid: '',
                     nameplate: '',
-                    contract_num: '',
                     order_status: '',
                     orderNum: '',
                     status: '',
@@ -312,10 +296,20 @@
                 addDialogVisible: false,
                 isError: false,
                 loading: false,
+                formLabelWidth: '120px',
             }
 
         },
         methods: {
+            onChange()
+            {
+                // if (_this.addDialogVisible) {
+				//     _this.isError = _this.validateForm(_this.form, false);
+			    // }
+			    // else {
+				//     _this.isError = _this.validateForm(_this.modifyForm, true);
+			    // }
+            },
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.onSearchDetailData();
@@ -327,15 +321,13 @@
             onSearchDetailData()
             {
                 var condition = {
-                    machine_strid: _this.filters.machine_strid.trim(),
                     orderNum: _this.filters.orderNum.trim(),
                     nameplate: _this.filters.nameplate.trim(),
-                    contractNum: _this.filters.contract_num.trim(),
                     taskNameList: '', //array _this.filters.taskNameList
                     query_start_time: '',
                     query_finish_time: '',
                     status: _this.filters.status,
-                    is_fuzzy: true,
+                    installGroupName: '',
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
@@ -361,127 +353,21 @@
                             _this.totalRecords = res.data.total;
                             _this.tableData = res.data.list;
                             _this.startRow = res.data.startRow;
-                            _this.tableData.forEach(itemObj => {
-                                itemObj.finishedCount = 0;
-                                itemObj.totalTaskCount = 0;
-                                itemObj.currentTaskList = [];//当前的工序名
-                                try {
-                                    var nodeDataArray = JSON.parse(itemObj.nodeData);
-                                } catch (ex) {
-                                    console.log(ex.toString());
-                                }
-                                if (nodeDataArray != null && nodeDataArray.length > 0) {
-                                    itemObj.totalTaskCount = nodeDataArray.length - 2;//去掉开始，结束.
-                                    nodeDataArray.forEach(item => {
-                                        if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
-                                        {
-                                            itemObj.currentTaskList.push(item.text);
-                                        }
-                                        else if (parseInt(item.taskStatus) == 2) {//待安装
-                                            itemObj.currentTaskList.push("待 " + item.text);
-                                        }
-                                        if (parseInt(item.taskStatus) == 6) {//完成
-                                            itemObj.finishedCount++;
-                                        }
-                                    });
-                                }
-                                itemObj.currentTaskName = itemObj.currentTaskList.join(",");
-                            });
                         }
                         _this.loadingUI = false;
                     }
                 })
             },
 
-            processMachineExport() {
-                var condition = {
-                    machine_strid: _this.filters.machine_strid.trim(),
-                    orderNum: _this.filters.orderNum.trim(),
-                    nameplate: _this.filters.nameplate.trim(),
-                    contractNum: _this.filters.contract_num.trim(),
-                    taskNameList: '', //array _this.filters.taskNameList
-                    query_start_time: '',
-                    query_finish_time: '',
-                    status: _this.filters.status,
-                    is_fuzzy: true,
-                    page: _this.currentPage,
-                    size: _this.pageSize
-                };
-                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
-                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
-                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
-                }
-                var nameList=[];
-                _this.filters.taskNameList.forEach(obj=>{
-                    nameList.push(`'${obj}'`);
-                });
-                if(_this.filters.taskNameList.length > 0)
-                {
-                    condition.taskNameList = nameList.join(",");
-                }
-                $.ajax({
-                    url: HOST + "machine/processMachineExport",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: condition,
-                    success: function (data) {
-                        if (data.code == 200) {
-//                            _this.tableDataPlaned = data.data.list;
-//                            _this.totalNumPlaned = data.data.total;
-//                            _this.startRowPlaned = data.data.startRow;
-//                            window.location.href = data.data;
-                            showMessage(_this, "计划导出excel成功！", 1);
-
-                        } else {
-                            showMessage(_this, "导出导出excel失败！", 0);
-                        }
-                        _this.loadingUI = false;
-                    },
-                    error: function (data) {
-                        showMessage(_this, data.message, 0);
-                    }
-                })
+            addPlan() {
+                _this.addDialogVisible=true;
             },
 
-            getTaskRecordDetail() {
+            onAdd()
+            {
 
-                if (_this.addForm.processRecordId == "") {
-                    console.log("数据异常，还没有配置过对应的安装流程");
-                    return;
-                }
-                $.ajax({
-                    url: HOST + "task/record/getTaskRecordData",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {processRecordId: _this.addForm.processRecordId},
-                    success: function (res) {
-                        if (res.code == 200) {
-                            _this.taskDataList = res.data.list;
-                            _this.taskDataList.forEach(itemObj => {
-                                itemObj.costTime = 0;
-                                try {
-                                    if (itemObj.status > 2) { //开始安装
-                                        //添加显示已安装时间
-                                        if (!isStringEmpty(itemObj.installBeginTime)) {
-                                            let endDay = new Date();
-                                            if (!isStringEmpty(itemObj.installEndTime)) {
-                                                endDay = new Date(itemObj.installEndTime);
-                                            }
-                                            let beginDay = new Date(itemObj.installBeginTime);
-                                            let timespan = endDay.getTime() - beginDay.getTime();
-                                            itemObj.costTime = timespan;
-                                        }
-                                    }
-                                } catch (e) {
-                                    console.log(e);
-                                }
-                            });
-                        }
-
-                    }
-                })
             },
-       
+
             editWithItem(data) {
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
@@ -496,64 +382,7 @@
                 if (_this.addForm.contractShipDate != null) {
                     _this.addForm.contractShipDate = _this.filterDateString(_this.addForm.contractShipDate)
                 }
-                if (_this.addForm.processRecordId != '') {
-                    /*
-                     已配置显示当前数据
-                     */
-                    _this.getTaskRecordDetail();
-                    var taskList = copyObject(DefaultTaskList);
-                    try {
-                        taskList.linkDataArray = JSON.parse(_this.addForm.linkData);
-                        taskList.nodeDataArray = JSON.parse(_this.addForm.nodeData);
-                        _this.addForm.progressStatus = PROGRESSTYPE.NORMAL;
-                        _this.addForm.finishedCount = 0;
-                        _this.addForm.abnormalCount = 0;
-                        _this.addForm.skipCount = 0;
-                        _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
-                        taskList.nodeDataArray.forEach(item => {
-                            if (item.category != "Start" && item.category != "End") {
-                                if (parseInt(item.taskStatus) == 2)//待安装
-                                {
-                                    item.category = ProcessCatergory.Waiting;
-                                }
-                                else if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
-                                {
-                                    item.category = ProcessCatergory.Working;
-                                }
-                                else if (parseInt(item.taskStatus) == 6) {//完成
-                                    item.category = ProcessCatergory.Finished;
-                                    _this.addForm.finishedCount++;
-                                }
-                                else if (parseInt(item.taskStatus) > 6 && parseInt(item.taskStatus) < 9)//异常
-                                {
-                                    item.category = ProcessCatergory.Abnormal;
-                                    _this.addForm.abnormalCount++;
-                                }
-                                else if (parseInt(item.taskStatus) == 9)//已跳过
-                                {
-                                    item.category = ProcessCatergory.Skip;
-                                    _this.addForm.skipCount++;
-                                }
-                            }
-                        });
-                        _this.addForm.currentProgress = (_this.addForm.finishedCount / _this.addForm.totalTaskCount) * 100;
-                        _this.addForm.currentProgress = parseInt(_this.addForm.currentProgress);
-                        if (_this.addForm.finishedCount == _this.addForm.totalTaskCount) {
-                            _this.addForm.progressStatus = PROGRESSTYPE.SUCCESS
-                        }
-                        _this.addForm.taskList = JSON.stringify(taskList);
-                    } catch (ex) {
-                        showMessage(_this, "图形流程JSON数据解析失败！", 0)
-                        console.log(ex.toString());
-                        return;
-                    }
-                    _this.addDialogVisible = true;
-                }
-                else {
-                    _this.addForm.taskList = '';
-                    _this.isError = false;
-                    _this.addDialogVisible = true;
-                }
+                
             },
 
             initAllRoles() {
@@ -611,6 +440,31 @@
                         }
                         else {
 
+                        }
+                    }
+                })
+            },
+
+            getWorkTask()
+            {
+                $.ajax({
+                    url: HOST + "task/list",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            if(res.data.list.length>0)
+                            {
+                                _this.workTaskList=[];
+                                res.data.list.forEach(item=>{
+                                    _this.workTaskList.push({
+                                         id:item.id,
+                                         taskName:item.taskName,
+                                    })
+                                });
+                            }
                         }
                     }
                 })
@@ -697,6 +551,7 @@
                 this.$router.push({path: '/Login'});
                 return;
             }
+             _this.getWorkTask();
             _this.initAllRoles();
             _this.initMachineType();
         },
