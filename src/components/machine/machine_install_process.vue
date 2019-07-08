@@ -25,7 +25,7 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="12">
+                <el-col :span="18">
                     <el-form-item label="完成状态:">
                         <el-select v-model="filters.status"  multiple clearable>
                             <el-option v-for="item in statusList" :value="item.value" :label="item.name">
