@@ -8,13 +8,9 @@
                         <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off"></el-input>
                     </el-form-item>
                 </el-col>
-              
                 <el-col :span="6">
-                    <el-form-item label="完成状态:">
-                        <el-select v-model="filters.status" clearable>
-                            <el-option v-for="item in statusList" :value="item.value" :label="item.name">
-                            </el-option>
-                        </el-select>
+                    <el-form-item label="机器编号:">
+                        <el-input v-model="filters.nameplate" placeholder="机器编号" auto-complete="off"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -29,22 +25,24 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="6">
-                    <el-form-item label="机器编号:">
-                        <el-input v-model="filters.nameplate" placeholder="机器编号" auto-complete="off"></el-input>
-                    </el-form-item>
-                </el-col>
-         
                 <el-col :span="12">
-                    <el-form-item label="工序:">
-                        <!-- <el-input v-model="filters.taskName" placeholder="工序" auto-complete="off">
-                        </el-input> -->
-                        <el-select v-model="filters.taskNameList" multiple placeholder="工序">
-                            <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
+                    <el-form-item label="完成状态:">
+                        <el-select v-model="filters.status"  multiple clearable>
+                            <el-option v-for="item in statusList" :value="item.value" :label="item.name">
                             </el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
+<!--                <el-col :span="10">暂时不启用根据工序查询-->
+<!--                    <el-form-item label="工序:">-->
+<!--                        &lt;!&ndash; <el-input v-model="filters.taskName" placeholder="工序" auto-complete="off">-->
+<!--                        </el-input> &ndash;&gt;-->
+<!--                        <el-select v-model="filters.taskNameList" multiple placeholder="工序">-->
+<!--                            <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">-->
+<!--                            </el-option>-->
+<!--                        </el-select>-->
+<!--                    </el-form-item>-->
+<!--                </el-col>-->
 
                 <el-col :span="4" :offset="2">
                     <el-button
@@ -716,7 +714,8 @@
                     contract_num: '',
                     order_status: '',
                     orderNum: '',
-                    status: '',
+                    status: [],
+                    taskNameList: [],
                     selectDate: '',
                 },
                 workTaskList:[],
@@ -791,7 +790,7 @@
                     taskNameList: '', //array _this.filters.taskNameList
                     query_start_time: '',
                     query_finish_time: '',
-                    status: _this.filters.status,
+                    status: '',
                     is_fuzzy: true,
                     page: _this.currentPage,
                     size: _this.pageSize
@@ -800,13 +799,21 @@
                     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
                     condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
                 }
-                var nameList=[];
+                let nameList=[];
                 _this.filters.taskNameList.forEach(obj=>{
                     nameList.push(`'${obj}'`);
                 });
                 if(_this.filters.taskNameList.length > 0)
                 {
                    condition.taskNameList = nameList.join(",");
+                }
+                let taskStatusList=[];
+                _this.filters.status.forEach(obj=>{
+                    taskStatusList.push(obj);
+                });
+                if(_this.filters.status.length > 0)
+                {
+                    condition.status = taskStatusList.join(",");
                 }
                 $.ajax({
                     url: _this.queryDataUrl,
@@ -1599,7 +1606,7 @@
             _this.initMachineType();
         },
         mounted: function () {
-            _this.filters.status = "";
+            _this.filters.status = [2,3];
             _this.search();
         },
     }
