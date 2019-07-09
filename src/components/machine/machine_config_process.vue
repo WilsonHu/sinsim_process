@@ -721,7 +721,6 @@
                     _this.isError = false;
                     _this.addDialogVisible = true;
                 }
-                console.log(11111111111,_this.addForm)
             },
 
             setMachineFinished(machine) {

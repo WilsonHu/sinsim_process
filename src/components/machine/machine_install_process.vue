@@ -537,7 +537,7 @@
                                             show-overflow-tooltip="true"
                                     >
                                         <el-table-column
-                                                width="75"
+                                                width="55"
                                                 align="center"
                                                 label="序号">
                                             <template scope="scope">
@@ -545,7 +545,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column
-                                                width="120"
+                                                width="100"
                                                 align="center"
                                                 label="工序名">
                                             <template scope="scope">
@@ -553,7 +553,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column
-                                                width="120"
+                                                width="100"
                                                 align="center"
                                                 label="时长">
                                             <template scope="scope">
@@ -893,11 +893,11 @@
 //                            _this.tableDataPlaned = data.data.list;
 //                            _this.totalNumPlaned = data.data.total;
 //                            _this.startRowPlaned = data.data.startRow;
-//                            window.location.href = data.data;
-                            showMessage(_this, "计划导出excel成功！", 1);
+                            window.location.href = data.data;
+                            showMessage(_this, "安装进度导出excel成功！", 1);
 
                         } else {
-                            showMessage(_this, "导出导出excel失败！", 0);
+                            showMessage(_this, "安装进度导出excel失败！", 0);
                         }
                         _this.loadingUI = false;
                     },
