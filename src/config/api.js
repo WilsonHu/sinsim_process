@@ -1939,32 +1939,36 @@ const AxleHookList =
         },
         {
             value: 5,
-            text: "广濑1.6倍"
+            text: "广濑ATR(MG1LF) 加油"
         },
         {
             value: 6,
-            text: "广濑ATR(MG1)"
+            text: "广濑1.6倍"
         },
         {
             value: 7,
-            text: "广濑A(MG1)"
+            text: "广濑ATR(MG1)"
         },
         {
             value: 8,
-            text: "佐文RYP"
+            text: "广濑A(MG1)"
         },
         {
             value: 9,
-            text: "佐文RY"
+            text: "佐文RYP"
         },
         {
             value: 10,
-            text: "佐文粗线"
+            text: "佐文RY"
         },
         {
             value: 11,
+            text: "佐文粗线"
+        },
+        {
+            value: 12,
             text: "德盛精品"
-        }
+        },
     ];
 
 
