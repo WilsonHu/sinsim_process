@@ -748,7 +748,7 @@
                                                        @click="handlePasteOrder(item)">粘贴
                                             </el-button>
                                         </el-col>
-                                        <el-col :span="1" :offset="4">
+                                        <el-col :span="1" :offset="2">
                                             <el-button type="danger" size="small" style="margin-top: 15px"
                                                        v-if="canSplitOrChangeOrder(item.machineOrder.status)"
                                                        :disabled="item.machineOrder.machineNum <= 1"
