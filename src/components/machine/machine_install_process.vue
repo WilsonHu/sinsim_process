@@ -1581,6 +1581,8 @@
                 }
                 let time = timespan / 1000 / 60 / 60;
                 if (parseInt(time) == 0) {
+                    let strRes = time.toFixed(2).toString().split(".");
+                    res = `${Math.round(strRes[1] * 60 / 100)}分钟`;
                     return res;
                 }
                 let strRes = time.toFixed(2).toString().split(".");
