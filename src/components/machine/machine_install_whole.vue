@@ -36,16 +36,13 @@
                     </el-col>
             
                     <el-col :span="12">
-                        <el-form-item label="工序:">
-                            <!-- <el-input v-model="filters.taskName" placeholder="工序" auto-complete="off">
-                            </el-input> -->
-                            <el-select v-model="filters.taskNameList" multiple placeholder="工序">
-                                <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
+                        <el-form-item label="安装组：">
+                            <el-select v-model="filters.groupId" clearable>
+                                <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
                                 </el-option>
                             </el-select>
-                        </el-form-item>
+                        </el-form-item >
                     </el-col>
-
                     <el-col :span="4" :offset="2">
                         <el-button
                                 icon="el-icon-plus"
@@ -190,9 +187,9 @@
                 </el-form-item>
                 </el-col>
                 <el-col :span="8" >
-                    <el-form-item label="工序："  :label-width="formLabelWidth">
-                        <el-select v-model="addForm.taskName" placeholder="工序">
-                            <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
+                    <el-form-item label="安装组："  :label-width="formLabelWidth">
+                        <el-select v-model="addForm.groupId" placeholder="安装组">
+                            <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item >
@@ -241,11 +238,12 @@
         data() {
             _this = this;
             return {
-                queryDataUrl: HOST + "/whole/install/acutual/selectWholeInstallDetails",
+                queryDataUrl: HOST + "/install/plan/actual/selectInstallPlanActualDetails",
                 errorMsg: '',
                 selectedItem: {},
                 queryUserRoleUrl: HOST + "role/list",
                 queryMachineTypeURL: HOST + "machine/type/list",
+                groupList:[],
                 tableData: [],
                 //分页
                 pageSize: EveryPageNum,//每一页的num
@@ -258,6 +256,7 @@
                     nameplate: '',
                     order_status: '',
                     orderNum: '',
+                    groupId:'',
                     status: '',
                     selectDate: '',
                 },
@@ -551,7 +550,7 @@
                 this.$router.push({path: '/Login'});
                 return;
             }
-             _this.getWorkTask();
+             _this.getGroupData();
             _this.initAllRoles();
             _this.initMachineType();
         },
