@@ -296,6 +296,17 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="5">
+                            <el-form-item label="国内区域：" :label-width="formLabelWidth">
+                                <el-autocomplete
+                                        :readonly="changeContractContentDisable(contractForm)"
+                                        v-model="contractForm.domesticTradeZone"
+                                        :fetch-suggestions="queryDomesticTradeZone"
+                                        placeholder="国外不填"
+                                >
+                                </el-autocomplete>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="4">
                             <el-form-item label="销售员：" :label-width="formLabelWidth">
                                 <!-- <el-input v-model="contractForm.sellman"
                                           :readonly="changeContractContentDisable(contractForm)"
@@ -2457,7 +2468,9 @@
                 salePersonList: [],
                 timeout: null,
                 customerList: [],
+                domesticTradeZoneList: [],
                 customerTimeout: null,
+                domesticTradeZoneTimeout: null,
                 currentCopyItem: {
                     machineOrder: {
                         brand: "SINSIM",
@@ -2628,6 +2641,40 @@
 //                });
             },
 
+            requesDomesticTradeZoneList() {
+                $.ajax({
+                    url: HOST + "domestic/trade/zone/list/",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        name: '',
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.domesticTradeZoneList = [];
+                            res.data.forEach(item => {
+                                _this.domesticTradeZoneList.push({
+                                    value: item.zoneName
+                                });
+                            });
+                        }
+                    }
+                });
+            },
+            queryDomesticTradeZone(queryString, check) {
+                //缓存加载
+                var results = _this.domesticTradeZoneList;
+                if (queryString) {
+                    results = _this.domesticTradeZoneList.filter(
+                            this.createStateFilter(queryString)
+                    );
+                }
+                clearTimeout(_this.domesticTradeZoneTimeout);
+                _this.domesticTradeZoneTimeout = setTimeout(() => {
+                    check(results);
+                }, 800 * Math.random());
+
+            },
             requestSalePersonList() {
                 var roleId = 0;
                 for (var i = 0; i < _this.allRoles.length; i++) {
@@ -4752,6 +4799,7 @@
             _this.initMachineType();
             _this.selectContracts();
             _this.initSignProcesses();
+            _this.requesDomesticTradeZoneList();
         },
         mounted: function () {
         }
