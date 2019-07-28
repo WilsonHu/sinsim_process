@@ -56,19 +56,39 @@
                 </el-row>
             </el-form>
             <el-table v-loading="loadingUI" element-loading-text="获取数据中..." :data="tableData" border empty-text="暂无数据..." ref="singleTable" highlight-current-row show-overflow-tooltip="true" style="width: 100%; ">
-                <el-table-column width="75" align="center" label="序号">
+                <el-table-column width="55" align="center" label="序号">
                     <template scope="scope">
                         <div >
                             {{scope.$index+startRow}}
                         </div>
                     </template>
                 </el-table-column>
-
                 <!-- <el-table-column
                             align="center"
                             prop="machineStrId"
                             label="系统编号">
                     </el-table-column> -->
+
+                <el-table-column label="安装组"
+                                 align="center"
+                                 prop="orderNum"
+                                 span="2">
+                    <template scope="scope">
+                        <div>
+                            {{scope.row.groupName}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单号"
+                                 align="center"
+                                 prop="orderNum"
+                                 span="2">
+                    <template scope="scope">
+                        <div>
+                            {{scope.row.orderNum}}
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" prop="nameplate" label="机器编号">
                     <template scope="scope">
                         <div v-if="scope.row.isUrgent==1" style="color: darkorange">
@@ -76,15 +96,6 @@
                             </div>
                             <div v-else>
                                 {{scope.row.nameplate}}
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="订单号"
-                                    align="center"
-                                    prop="orderNum">
-                        <template scope="scope">
-                            <div>
-                                {{scope.row.orderNum}}
                             </div>
                         </template>
                     </el-table-column>
@@ -112,17 +123,15 @@
 
                     <el-table-column
                             align="center"
-                            prop="processCreateTime"
                             label="完成率">
                         <template slot-scope="scope">
                             <span>
-                               {{scope.row.headCountDone/scope.row.headNum *100 }}%
+                               {{(scope.row.headCountDone) |filterCompletionRate(scope.row.headNum) }}%
                             </span>
                         </template>
                     </el-table-column>
                    <el-table-column
                             align="center"
-                            prop="processCreateTime"
                             label="备注">
                         <template slot-scope="scope">
                             <span>
@@ -132,7 +141,6 @@
                     </el-table-column>
                      <el-table-column
                             align="center"
-                            prop="processCreateTime"
                             label="反馈">
                         <template slot-scope="scope">
                             <span>
@@ -140,7 +148,7 @@
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column width="200"
+                    <el-table-column
                                     label="操作" align="center">
                         <template scope="scope" style="text-align: center">
                             <el-tooltip placement="left" content="修改">
@@ -589,6 +597,11 @@
                 }
                 return result;
             },
+            filterCompletionRate(headCountDone,headNum) {
+                let rate = (headCountDone/headNum)*100;
+                let res = rate.toFixed(0);
+                return res;
+            }
         },
         created: function () {
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
