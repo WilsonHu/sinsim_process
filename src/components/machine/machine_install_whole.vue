@@ -36,12 +36,14 @@
                     </el-col>
             
                     <el-col :span="12">
-                        <el-form-item label="安装组：">
-                            <el-select v-model="filters.groupId" clearable>
-                                <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
+                        <el-form-item label="工序:">
+                            <!-- <el-input v-model="filters.taskName" placeholder="工序" auto-complete="off">
+                            </el-input> -->
+                            <el-select v-model="filters.taskNameList" multiple placeholder="工序">
+                                <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
                                 </el-option>
                             </el-select>
-                        </el-form-item >
+                        </el-form-item>
                     </el-col>
                     <el-col :span="4" :offset="2">
                         <el-button
@@ -56,7 +58,7 @@
             <el-table v-loading="loadingUI" element-loading-text="获取数据中..." :data="tableData" border empty-text="暂无数据..." ref="singleTable" highlight-current-row show-overflow-tooltip="true" style="width: 100%; ">
                 <el-table-column width="75" align="center" label="序号">
                     <template scope="scope">
-                        <div :style="scope.row.warning|filterWaring">
+                        <div >
                             {{scope.$index+startRow}}
                         </div>
                     </template>
@@ -104,7 +106,7 @@
                             align="center"
                             label="已完成头数">
                         <template scope="scope">
-                            <span>{{scope.row.headNum}}</span>
+                            <span>{{scope.row.headCountDone}}</span>
                         </template>
                     </el-table-column>
 
@@ -114,7 +116,7 @@
                             label="完成率">
                         <template slot-scope="scope">
                             <span>
-                               
+                               {{scope.row.headCountDone/scope.row.headNum *100 }}%
                             </span>
                         </template>
                     </el-table-column>
@@ -124,7 +126,7 @@
                             label="备注">
                         <template slot-scope="scope">
                             <span>
-                               {{cmtSend}}
+                               {{scope.row.cmtSend}}
                             </span>
                         </template>
                     </el-table-column>
@@ -134,7 +136,7 @@
                             label="反馈">
                         <template slot-scope="scope">
                             <span>
-                               
+                               {{scope.row.cmtFeedback}}
                             </span>
                         </template>
                     </el-table-column>
@@ -182,8 +184,13 @@
                     </el-form-item>
                 </el-col >
                 <el-col :span="8">
-                <el-form-item label="机器号：" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.machineId" @change="onChange"></el-input>
+                <el-form-item label="机器编号：" :label-width="formLabelWidth">
+                    <el-autocomplete
+                            v-model="addForm.machine"
+                            :fetch-suggestions="queryMachine(queryString, check)"
+                            placeholder="根据订单号自动提供选择（todo）"
+                    >
+                    </el-autocomplete>
                 </el-form-item>
                 </el-col>
                 <el-col :span="8" >
@@ -296,6 +303,8 @@
                 isError: false,
                 loading: false,
                 formLabelWidth: '120px',
+                machineListByOrderNum:[],
+                machineListByOrderNumTimeout: null,
             }
 
         },
@@ -513,6 +522,43 @@
             filterDateString(strDate) {
                 var resDate = new Date(strDate);
                 return resDate.format("yyyy-MM-dd");
+            },
+
+
+            requestMachineListByOrderNum(orderId) {
+                $.ajax({
+                    url: HOST + "machine/selectMachines",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        order_id: orderId
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.machineListByOrderNum = [];
+                            res.data.forEach(item => {
+                                _this.machineListByOrderNum.push({
+                                    value: item.nameplate
+                                });
+                            });
+                        }
+                    }
+                });
+            },
+            queryMachine(queryString, check) {
+                //缓存加载
+                var results = _this.machineListByOrderNum;
+                if (queryString) {
+                    results = _this.machineListByOrderNum.filter(
+                            this.createStateFilter(queryString)
+                    );
+                }
+//                clearTimeout(_this.machineListByOrderNumTimeout);
+//                _this.machineListByOrderNumTimeout = setTimeout(() => {
+//                    check(results);
+//                }, 800 * Math.random());
+
+
             },
         },
 
