@@ -9,18 +9,17 @@
                         </el-form-item>
                     </el-col>
                 
-                    <el-col :span="6">
-                        <el-form-item label="完成状态:">
-                            <el-select v-model="filters.status" clearable>
-                                <el-option v-for="item in statusList" :value="item.value" :label="item.name">
-                                </el-option>
-                            </el-select>
+                   <el-col :span="6">
+                        <el-form-item label="机器编号:">
+                            <el-input v-model="filters.nameplate" placeholder="机器编号" auto-complete="off" ></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="日期:">
-                            <el-date-picker v-model="filters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
-                            </el-date-picker>
+                        <el-form-item label="安装组：">
+                            <el-select v-model="filters.groupName" clearable>
+                                <el-option v-for="item in groupList" :key="item.groupName" :label="item.groupName" :value="item.groupName">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4" :offset="2">
@@ -30,22 +29,13 @@
                 </el-row>
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="机器编号:">
-                            <el-input v-model="filters.nameplate" placeholder="机器编号" auto-complete="off"></el-input>
+                        <el-form-item label="日期:">
+                            <el-date-picker v-model="filters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+                            </el-date-picker>
                         </el-form-item>
                     </el-col>
-            
-                    <el-col :span="12">
-                        <el-form-item label="工序:">
-                            <!-- <el-input v-model="filters.taskName" placeholder="工序" auto-complete="off">
-                            </el-input> -->
-                            <el-select v-model="filters.taskNameList" multiple placeholder="工序">
-                                <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4" :offset="2">
+                   
+                    <el-col :span="4" :offset="14">
                         <el-button
                                 icon="el-icon-plus"
                                 size="normal"
@@ -63,12 +53,6 @@
                         </div>
                     </template>
                 </el-table-column>
-                <!-- <el-table-column
-                            align="center"
-                            prop="machineStrId"
-                            label="系统编号">
-                    </el-table-column> -->
-
                 <el-table-column label="安装组"
                                  align="center"
                                  prop="orderNum"
@@ -187,41 +171,39 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" >
-                    <el-form-item label="订单号：" :label-width="formLabelWidth">
-                        <el-input v-model="addForm.orderId" @change="onChange"></el-input>
+                    <el-form-item label="订单号：" :label-width="formLabelWidth"> 
+                        <el-input v-model="addForm.orderId" @change="onOrderChanged" clearable></el-input>
                     </el-form-item>
                 </el-col >
                 <el-col :span="8">
-                <el-form-item label="机器编号：" :label-width="formLabelWidth">
-                    <el-autocomplete
-                            v-model="addForm.machine"
-                            :fetch-suggestions="queryMachine(queryString, check)"
-                            placeholder="根据订单号自动提供选择（todo）"
-                    >
-                    </el-autocomplete>
+                <el-form-item label="机器号：" :label-width="formLabelWidth">
+                    <el-select v-model="addForm.machineId" placeholder="根据订单号自动提供选择" clearable>
+                        <el-option v-for="item in machineList" :key="item.id" :label="item.machineStrId" :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 </el-col>
                 <el-col :span="8" >
                     <el-form-item label="安装组："  :label-width="formLabelWidth">
-                        <el-select v-model="addForm.groupId" placeholder="安装组">
-                            <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
+                        <el-select v-model="addForm.groupId" placeholder="安装组" clearable>
+                            <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.groupName">
                             </el-option>
                         </el-select>
                     </el-form-item >
                 </el-col >
                 <el-col :span="8" >
                     <el-form-item label="头数："  :label-width="formLabelWidth">
-                        <el-input v-model="addForm.headCount" @change="onChange"></el-input>
+                        <el-input v-model="addForm.headCount" @change="onChange" clearable></el-input>
                     </el-form-item >
                 </el-col >
                 <el-col :span="8" >
-                    <el-form-item label="机架位置："  :label-width="formLabelWidth">
-                        <el-input v-model="addForm.orderId" @change="onChange"></el-input>
+                    <el-form-item label="针数："  :label-width="formLabelWidth">
+                        <el-input v-model="addForm.location" @change="onChange" clearable></el-input>
                     </el-form-item >
                 </el-col >
-                 <el-col :span="23" offset="1">
+                 <el-col :span="23" :offset="1">
                     <el-form-item label="备注信息：" prop="desc">
-                        <el-input type="textarea" v-model="addForm.cmtSend" :rows="4"></el-input>
+                        <el-input type="textarea" v-model="addForm.cmtSend" :rows="5"></el-input>
                     </el-form-item>
                  </el-col>
                 </el-row>
@@ -267,12 +249,8 @@
                 totalRecords: 0,
                 statusList: MachineStatusList,
                 filters: {
-                    machine_strid: '',
                     nameplate: '',
-                    order_status: '',
                     orderNum: '',
-                    groupId:'',
-                    status: '',
                     selectDate: '',
                 },
                 workTaskList:[],
@@ -313,10 +291,38 @@
                 formLabelWidth: '120px',
                 machineListByOrderNum:[],
                 machineListByOrderNumTimeout: null,
+                machineList:[],
             }
 
         },
         methods: {
+            onOrderChanged(orderId)
+            {
+                 _this.machineList=[];
+                if(isStringEmpty(orderId))
+                {
+                    _this.addForm.machineId='';
+                    return;
+                }
+                $.ajax({
+                    url: HOST + "machine/selectMachines",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        order_id:orderId,
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                           _this.machineList=res.data.list;
+                           if(_this.machineList.length==1)
+                           {
+                               _this.addForm.machineId= _this.machineList[0].id
+                           }
+                        }
+                    }
+                })  
+            },
+
             onChange()
             {
                 // if (_this.addDialogVisible) {
@@ -339,26 +345,18 @@
                 var condition = {
                     orderNum: _this.filters.orderNum.trim(),
                     nameplate: _this.filters.nameplate.trim(),
-                    taskNameList: '', //array _this.filters.taskNameList
-                    query_start_time: '',
-                    query_finish_time: '',
-                    status: _this.filters.status,
-                    installGroupName: '',
+                    type:INSTALLTYPE.ALL,
+                    installGroupName: _this.filters.groupName,
+                    // query_start_time: '',
+                    // query_finish_time: '',
+                    //status: _this.filters.status,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
-                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
-                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
-                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
-                }
-                var nameList=[];
-                _this.filters.taskNameList.forEach(obj=>{
-                    nameList.push(`'${obj}'`);
-                });
-                if(_this.filters.taskNameList.length > 0)
-                {
-                   condition.taskNameList = nameList.join(",");
-                }
+                // if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
+                //     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
+                //     condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                // }
                 $.ajax({
                     url: _this.queryDataUrl,
                     type: 'POST',
@@ -623,7 +621,9 @@
     .el-select {
         width: 100%;
     }
-
+    .el-input{
+         width: 100%;
+    }
     .el-input-number {
         width: 100%;
         float: left;

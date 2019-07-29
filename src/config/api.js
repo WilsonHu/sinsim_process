@@ -14,6 +14,14 @@ var ScrollTimerInterval = 5000;
 var DisableScroll = 1;
 var COM_CMD_INTERVAL = 5000;
 
+
+//总装，部装
+const INSTALLTYPE = {
+    ALL: '总装', //总装
+    PART: '部装', //部装
+}
+
+
 const STATISTICS_DATE_MODE = {
     YEAR: 0,
     MONTH: 1,
