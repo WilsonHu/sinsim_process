@@ -164,7 +164,7 @@
                 <el-col :span="8">
                     <el-form-item label="日期：" :label-width="formLabelWidth">
                     <el-date-picker
-                            v-model="addForm.createDate"
+                            v-model="addForm.installDatePlan"
                             type="date"
                             placeholder="选择日期">
                         </el-date-picker>
@@ -185,8 +185,8 @@
                 </el-col>
                 <el-col :span="8" >
                     <el-form-item label="安装组："  :label-width="formLabelWidth">
-                        <el-select v-model="addForm.groupId" placeholder="安装组" clearable>
-                            <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.groupName">
+                        <el-select v-model="addForm.installGroupId" placeholder="安装组" clearable>
+                            <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item >
@@ -284,7 +284,9 @@
                         }
                     }]
                 },
-                addForm: {},
+                addForm: {
+                    type:INSTALLTYPE.ALL,
+                },
                 addDialogVisible: false,
                 isError: false,
                 loading: false,
@@ -314,10 +316,10 @@
                     success: function (res) {
                         if (res.code == 200) {
                            _this.machineList=res.data.list;
-                           if(_this.machineList.length==1)
-                           {
-                               _this.addForm.machineId= _this.machineList[0].id
-                           }
+                        //    if(_this.machineList.length==1)
+                        //    {
+                        //        _this.addForm.machineId= _this.machineList[0].id
+                        //    }
                         }
                     }
                 })  
@@ -374,12 +376,34 @@
             },
 
             addPlan() {
+                _this.isError = false;
+			    _this.errorMsg = '';
                 _this.addDialogVisible=true;
             },
 
             onAdd()
             {
-
+                $.ajax({
+					    url: HOST + "install/plan/add",
+					    type: 'POST',
+					    dataType: 'json',
+					    data: {
+                            "installPlan": JSON.stringify(this.addForm)
+                            },
+					    success: function (data) {
+						    if (data.code == 200) {
+							    _this.search();
+                                _this.addDialogVisible = false;
+							    showMessage(_this, '添加成功', 1);
+						    } else {
+                                _this.isError = true;
+                                _this.errorMsg = data.message;
+						    }
+					    },
+					    error: function (data) {
+						    _this.errorMsg = '服务器访问出错！';
+					    }
+				})
             },
 
             editWithItem(data) {
