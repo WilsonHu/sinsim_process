@@ -118,7 +118,7 @@ export default
                         path: '/home/machine/machine_install_whole',
                         component: MachineInstallWhole,
                         name: 'machine_install_whole',
-                        meta: '整装管理'
+                        meta: '总装管理'
                     },
                     {
                         path: '/home/machine/machine_production_report',

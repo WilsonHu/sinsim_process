@@ -172,13 +172,13 @@
                 </el-col>
                 <el-col :span="8" >
                     <el-form-item label="订单号：" :label-width="formLabelWidth"> 
-                        <el-input v-model="addForm.orderId" @change="onOrderChanged" clearable></el-input>
+                        <el-input v-model="addForm.orderNum" @change="onOrderChanged(addForm.orderNum)" clearable></el-input>
                     </el-form-item>
                 </el-col >
                 <el-col :span="8">
-                <el-form-item label="机器号：" :label-width="formLabelWidth">
-                    <el-select v-model="addForm.machineId" placeholder="根据订单号自动提供选择" clearable>
-                        <el-option v-for="item in machineList" :key="item.id" :label="item.machineStrId" :value="item.id">
+                <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
+                    <el-select v-model="addForm.nameplate" placeholder="根据订单号自动提供选择" clearable>
+                        <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -193,12 +193,13 @@
                 </el-col >
                 <el-col :span="8" >
                     <el-form-item label="头数："  :label-width="formLabelWidth">
-                        <el-input v-model="addForm.headCount" @change="onChange" clearable></el-input>
+                        <el-input v-model="addForm.headNum"  clearable>
+                        </el-input>
                     </el-form-item >
                 </el-col >
                 <el-col :span="8" >
                     <el-form-item label="针数："  :label-width="formLabelWidth">
-                        <el-input v-model="addForm.location" @change="onChange" clearable></el-input>
+                        <el-input v-model="addForm.needleNum" @change="onChange" clearable></el-input>
                     </el-form-item >
                 </el-col >
                  <el-col :span="23" :offset="1">
@@ -298,12 +299,30 @@
 
         },
         methods: {
-            onOrderChanged(orderId)
+            onOrderChanged(orderNum)
             {
+
+                //获取针数 头数
+                $.ajax({
+                    url: HOST + "machine/order/getMachineOrder",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        orderNum:orderNum,
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.addForm.headNum = res.data.headNum;
+                            _this.addForm.needleNum = res.data.needleNum;
+                        }
+                    }
+                })
+
+                // 获取订单的机器铭牌号
                  _this.machineList=[];
-                if(isStringEmpty(orderId))
+                if(isStringEmpty(orderNum))
                 {
-                    _this.addForm.machineId='';
+                    _this.addForm.nameplate='';
                     return;
                 }
                 $.ajax({
@@ -311,18 +330,14 @@
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        order_id:orderId,
+                        orderNum:orderNum,
                     },
                     success: function (res) {
                         if (res.code == 200) {
-                           _this.machineList=res.data.list;
-                        //    if(_this.machineList.length==1)
-                        //    {
-                        //        _this.addForm.machineId= _this.machineList[0].id
-                        //    }
+                           _this.machineList=res.data.list; 
                         }
                     }
-                })  
+                })
             },
 
             onChange()
