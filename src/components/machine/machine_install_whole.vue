@@ -176,9 +176,10 @@
                     </el-form-item>
                 </el-col >
                 <el-col :span="8">
+
                 <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                    <el-select v-model="addForm.nameplate" placeholder="根据订单号自动提供选择" clearable>
-                        <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.id">
+                    <el-select v-model="addForm.nameplate" placeholder="根据订单号自动提供选择" clearable >
+                        <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -302,7 +303,7 @@
             onOrderChanged(orderNum)
             {
 
-                //获取针数 头数
+                //获取针数, 头数, 订单ID
                 $.ajax({
                     url: HOST + "machine/order/getMachineOrder",
                     type: 'POST',
@@ -314,11 +315,12 @@
                         if (res.code == 200) {
                             _this.addForm.headNum = res.data.headNum;
                             _this.addForm.needleNum = res.data.needleNum;
+                            _this.addForm.orderId = res.data.id;
                         }
                     }
-                })
+                });
 
-                // 获取订单的机器铭牌号
+                // 获取订单的机器(包含铭牌号）
                  _this.machineList=[];
                 if(isStringEmpty(orderNum))
                 {
@@ -334,7 +336,7 @@
                     },
                     success: function (res) {
                         if (res.code == 200) {
-                           _this.machineList=res.data.list; 
+                           _this.machineList=res.data.list;
                         }
                     }
                 })
@@ -398,27 +400,54 @@
 
             onAdd()
             {
+                _this.addForm.machineId = null;
+                //step1. 根据nameplate获取机器machineId，
                 $.ajax({
-					    url: HOST + "install/plan/add",
-					    type: 'POST',
-					    dataType: 'json',
-					    data: {
-                            "installPlan": JSON.stringify(this.addForm)
-                            },
-					    success: function (data) {
-						    if (data.code == 200) {
-							    _this.search();
-                                _this.addDialogVisible = false;
-							    showMessage(_this, '添加成功', 1);
-						    } else {
-                                _this.isError = true;
-                                _this.errorMsg = data.message;
-						    }
-					    },
-					    error: function (data) {
-						    _this.errorMsg = '服务器访问出错！';
-					    }
-				})
+                    url: HOST + "machine/selectMachinesByNameplate",
+                    type: 'POST',
+                    dataType: 'json',
+                    async: false,
+                    data: {
+                        nameplate:_this.addForm.nameplate,
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.addForm.machineId=res.data.id;
+
+                            // step2 再添加计划
+                            $.ajax({
+                                url: HOST + "install/plan/add",
+                                type: 'POST',
+                                dataType: 'json',
+                                data: {
+                                    "installPlan": JSON.stringify(_this.addForm)
+                                },
+                                success: function (data) {
+                                    if (data.code == 200) {
+                                        _this.search();
+                                        _this.addDialogVisible = false;
+                                        showMessage(_this, '添加成功', 1);
+                                    } else {
+                                        _this.isError = true;
+                                        _this.errorMsg = data.message;
+                                    }
+                                },
+                                error: function (data) {
+                                    _this.errorMsg = '服务器访问出错！';
+                                }
+                            })
+                        } else {
+                            _this.isError = true;
+                            _this.errorMsg = data.message;
+                            console.log("fail");
+                        }
+                    },
+                    error: function (data) {
+                        _this.errorMsg = '服务器访问出错！';
+                    }
+                });
+
+
             },
 
             editWithItem(data) {
