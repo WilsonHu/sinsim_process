@@ -321,6 +321,7 @@
                 });
 
                 // 获取订单的机器(包含铭牌号）
+                //机器未设置铭牌号的情况下，获取的铭牌号为空。
                  _this.machineList=[];
                 if(isStringEmpty(orderNum))
                 {
@@ -552,16 +553,19 @@
                 })
             },
 
-            getGroupData() {
+            //总装各组
+            getInstallWholeGroupData() {
                 //_this.groupList = JSON.parse(sessionStorage.getItem('groupList'));
                 if (_this.groupList != null && _this.groupList.length > 0) {
                     return;
                 }
                 $.ajax({
-                    url: HOST + "/install/group/list",
+                    url: HOST + "/install/group/getInstallGroupByType",
                     type: 'POST',
                     dataType: 'JSON',
-                    data: {},
+                    data: {
+                        type:INSTALLTYPE.ALL,
+                    },
                     success: function (res) {
                         if (res.code == 200) {
                             _this.groupList = res.data.list;
@@ -599,26 +603,26 @@
             },
 
 
-            requestMachineListByOrderNum(orderId) {
-                $.ajax({
-                    url: HOST + "machine/selectMachines",
-                    type: "POST",
-                    dataType: "JSON",
-                    data: {
-                        order_id: orderId
-                    },
-                    success: function (res) {
-                        if (res.code == 200) {
-                            _this.machineListByOrderNum = [];
-                            res.data.forEach(item => {
-                                _this.machineListByOrderNum.push({
-                                    value: item.nameplate
-                                });
-                            });
-                        }
-                    }
-                });
-            },
+//            requestMachineListByOrderNum(orderId) {
+//                $.ajax({
+//                    url: HOST + "machine/selectMachines",
+//                    type: "POST",
+//                    dataType: "JSON",
+//                    data: {
+//                        order_id: orderId
+//                    },
+//                    success: function (res) {
+//                        if (res.code == 200) {
+//                            _this.machineListByOrderNum = [];
+//                            res.data.forEach(item => {
+//                                _this.machineListByOrderNum.push({
+//                                    value: item.nameplate
+//                                });
+//                            });
+//                        }
+//                    }
+//                });
+//            },
             queryMachine(queryString, check) {
                 //缓存加载
                 var results = _this.machineListByOrderNum;
@@ -664,7 +668,19 @@
                 return result;
             },
             filterCompletionRate(headCountDone,headNum) {
-                let rate = (headCountDone/headNum)*100;
+                /**
+                 * 有部分headNum形式为11+2，需要先计算
+                 */
+                //去空格
+                let a = headNum.replace(/\s*/g,"");
+                let b = a.split("+");
+                let c = 0;
+                if( b.length == 1){
+                    c = b;
+                } else {
+                    c = parseInt(b[0]) + parseInt(b[1]);
+                }
+                let rate = (headCountDone/c)*100;
                 let res = rate.toFixed(0);
                 return res;
             }
@@ -675,7 +691,7 @@
                 this.$router.push({path: '/Login'});
                 return;
             }
-             _this.getGroupData();
+            _this.getInstallWholeGroupData();
             _this.initAllRoles();
             _this.initMachineType();
         },
