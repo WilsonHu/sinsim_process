@@ -4247,6 +4247,10 @@
                     success: function (res) {
                         if (res.code == 200) {
                             _this.contractForm = res.data;
+                            //对于旧的合同，没有DomesticTradeZone,默认为null
+                            if(_this.contractForm.domesticTradeZone == 0){
+                                _this.contractForm.domesticTradeZone = null;
+                            }
                         } else {
                             showMessage(_this, res.message, 0);
                         }

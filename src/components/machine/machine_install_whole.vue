@@ -53,9 +53,19 @@
                         </div>
                     </template>
                 </el-table-column>
+                <el-table-column label="计划日期"
+                                 align="center"
+                                 prop="installDatePlan"
+                                 span="2">
+                    <template scope="scope">
+                        <div>
+                            {{formatDate(scope.row.installDatePlan)}}
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column label="安装组"
                                  align="center"
-                                 prop="orderNum"
+                                 prop="groupName"
                                  span="2">
                     <template scope="scope">
                         <div>
@@ -194,7 +204,7 @@
                 </el-col >
                 <el-col :span="8" >
                     <el-form-item label="头数："  :label-width="formLabelWidth">
-                        <el-input v-model="addForm.headNum"  clearable>
+                        <el-input v-model="addForm.headNum" clearable>
                         </el-input>
                     </el-form-item >
                 </el-col >
@@ -223,6 +233,73 @@
             </span  >
             
         </el-dialog >
+
+        <el-dialog title="修改总装排产" :visible.sync="modifyDialogVisible" append-to-body width="70%">
+
+            <el-form :model="modifyForm" >
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="日期：" :label-width="formLabelWidth">
+                            <el-date-picker
+                                    v-model="modifyForm.installDatePlan"
+                                    type="date"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" >
+                        <el-form-item label="订单号：" :label-width="formLabelWidth">
+                            <el-input v-model="modifyForm.orderNum" @change="onOrderChanged(addForm.orderNum)" clearable></el-input>
+                        </el-form-item>
+                    </el-col >
+                    <el-col :span="8">
+
+                        <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
+                            <el-select v-model="modifyForm.nameplate" placeholder="根据订单号自动提供选择" clearable >
+                                <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" >
+                        <el-form-item label="安装组："  :label-width="formLabelWidth">
+                            <el-select v-model="modifyForm.installGroupId" placeholder="安装组" clearable>
+                                <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="8" >
+                        <el-form-item label="头数："  :label-width="formLabelWidth">
+                            <el-input v-model="modifyForm.headNum" clearable>
+                            </el-input>
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="23" :offset="1">
+                        <el-form-item label="备注信息：" prop="desc">
+                            <el-input type="textarea" v-model="modifyForm.cmtSend" :rows="5"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="23" :offset="1">
+                        <el-form-item label="反馈信息：" prop="desc">
+                            <el-input type="textarea" v-model="modifyForm.cmtFeedback" :rows="5"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+            </el-form >
+            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
+                      :title="errorMsg"
+                      type="error"
+                      :closable="false"
+                      show-icon >
+            </el-alert >
+            <span  slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
+                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
+                <el-button type="primary" @click="onAdd" icon="el-icon-check">确 定</el-button >
+            </span  >
+
+        </el-dialog >
     </div>
 </template>
 
@@ -242,7 +319,7 @@
                 selectedItem: {},
                 queryUserRoleUrl: HOST + "role/list",
                 queryMachineTypeURL: HOST + "machine/type/list",
-                groupList:[],
+                groupList: [],
                 tableData: [],
                 //分页
                 pageSize: EveryPageNum,//每一页的num
@@ -255,7 +332,7 @@
                     orderNum: '',
                     selectDate: '',
                 },
-                workTaskList:[],
+                workTaskList: [],
                 allMachineType: [],
                 allRoles: [],
                 loadingUI: false,
@@ -287,15 +364,19 @@
                     }]
                 },
                 addForm: {
-                    type:INSTALLTYPE.ALL,
+                    type: INSTALLTYPE.ALL,
                 },
                 addDialogVisible: false,
                 isError: false,
                 loading: false,
                 formLabelWidth: '120px',
-                machineListByOrderNum:[],
+                machineListByOrderNum: [],
                 machineListByOrderNumTimeout: null,
-                machineList:[],
+                machineList: [],
+
+                //修改
+                modifyDialogVisible: false,
+                modifyForm: {},
             }
 
         },
@@ -309,7 +390,7 @@
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        orderNum:orderNum,
+                        orderNum: orderNum,
                     },
                     success: function (res) {
                         if (res.code == 200) {
@@ -322,10 +403,9 @@
 
                 // 获取订单的机器(包含铭牌号）
                 //机器未设置铭牌号的情况下，获取的铭牌号为空。
-                 _this.machineList=[];
-                if(isStringEmpty(orderNum))
-                {
-                    _this.addForm.nameplate='';
+                _this.machineList = [];
+                if (isStringEmpty(orderNum)) {
+                    _this.addForm.nameplate = '';
                     return;
                 }
                 $.ajax({
@@ -333,11 +413,11 @@
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        orderNum:orderNum,
+                        orderNum: orderNum,
                     },
                     success: function (res) {
                         if (res.code == 200) {
-                           _this.machineList=res.data.list;
+                            _this.machineList = res.data.list;
                         }
                     }
                 })
@@ -346,11 +426,11 @@
             onChange()
             {
                 // if (_this.addDialogVisible) {
-				//     _this.isError = _this.validateForm(_this.form, false);
-			    // }
-			    // else {
-				//     _this.isError = _this.validateForm(_this.modifyForm, true);
-			    // }
+                //     _this.isError = _this.validateForm(_this.form, false);
+                // }
+                // else {
+                //     _this.isError = _this.validateForm(_this.modifyForm, true);
+                // }
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
@@ -365,7 +445,7 @@
                 var condition = {
                     orderNum: _this.filters.orderNum.trim(),
                     nameplate: _this.filters.nameplate.trim(),
-                    type:INSTALLTYPE.ALL,
+                    type: INSTALLTYPE.ALL,
                     installGroupName: _this.filters.groupName,
                     // query_start_time: '',
                     // query_finish_time: '',
@@ -395,8 +475,8 @@
 
             addPlan() {
                 _this.isError = false;
-			    _this.errorMsg = '';
-                _this.addDialogVisible=true;
+                _this.errorMsg = '';
+                _this.addDialogVisible = true;
             },
 
             onAdd()
@@ -409,11 +489,11 @@
                     dataType: 'json',
                     async: false,
                     data: {
-                        nameplate:_this.addForm.nameplate,
+                        nameplate: _this.addForm.nameplate,
                     },
                     success: function (res) {
                         if (res.code == 200) {
-                            _this.addForm.machineId=res.data.id;
+                            _this.addForm.machineId = res.data.id;
 
                             // step2 再添加计划
                             $.ajax({
@@ -452,20 +532,12 @@
             },
 
             editWithItem(data) {
+                _this.modifyDialogVisible = true;
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
-                _this.addForm = copyObject(_this.selectedItem);
-                _this.addForm.machineTypeName = _this.filterMachineType(_this.addForm.machineType);
-                if (_this.addForm.processCreateTime != null) {
-                    _this.addForm.processCreateTime = _this.filterDateString(_this.addForm.processCreateTime)
-                }
-                if (_this.addForm.processEndTime != null) {
-                    _this.addForm.processEndTime = _this.filterDateString(_this.addForm.processEndTime)
-                }
-                if (_this.addForm.contractShipDate != null) {
-                    _this.addForm.contractShipDate = _this.filterDateString(_this.addForm.contractShipDate)
-                }
-                
+                _this.modifyForm = copyObject(_this.selectedItem);
+
+
             },
 
             initAllRoles() {
@@ -534,17 +606,15 @@
                     url: HOST + "task/list",
                     type: 'POST',
                     dataType: 'json',
-                    data: {
-                    },
+                    data: {},
                     success: function (res) {
                         if (res.code == 200) {
-                            if(res.data.list.length>0)
-                            {
-                                _this.workTaskList=[];
-                                res.data.list.forEach(item=>{
+                            if (res.data.list.length > 0) {
+                                _this.workTaskList = [];
+                                res.data.list.forEach(item=> {
                                     _this.workTaskList.push({
-                                         id:item.id,
-                                         taskName:item.taskName,
+                                        id: item.id,
+                                        taskName: item.taskName,
                                     })
                                 });
                             }
@@ -564,7 +634,7 @@
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
-                        type:INSTALLTYPE.ALL,
+                        type: INSTALLTYPE.ALL,
                     },
                     success: function (res) {
                         if (res.code == 200) {
@@ -574,7 +644,7 @@
                     },
                 })
             },
-         
+
             filterGroup(id) {
                 let result = "";
                 for (let i = 0; i < _this.groupList.length; i++) {
@@ -638,6 +708,9 @@
 
 
             },
+            formatDate(timeStamp) {
+                return new Date(timeStamp).format("yyyy-MM-dd");
+            },
         },
 
         computed: {},
@@ -667,7 +740,7 @@
                 }
                 return result;
             },
-            filterCompletionRate(headCountDone,headNum) {
+            filterCompletionRate(headCountDone, headNum) {
                 /**
                  * 有部分headNum形式为11+2，需要先计算
                  */
@@ -675,12 +748,12 @@
                 let a = headNum.replace(/\s*/g,"");
                 let b = a.split("+");
                 let c = 0;
-                if( b.length == 1){
+                if (b.length == 1) {
                     c = b;
                 } else {
                     c = parseInt(b[0]) + parseInt(b[1]);
                 }
-                let rate = (headCountDone/c)*100;
+                let rate = (headCountDone / c) * 100;
                 let res = rate.toFixed(0);
                 return res;
             }
