@@ -249,13 +249,13 @@
                     </el-col>
                     <el-col :span="8" >
                         <el-form-item label="订单号：" :label-width="formLabelWidth">
-                            <el-input v-model="modifyForm.orderNum" @change="onOrderChanged(addForm.orderNum)" clearable></el-input>
+                            <el-input v-model="modifyForm.orderNum" @change="onOrderChanged(addForm.orderNum)"  disabled></el-input>
                         </el-form-item>
                     </el-col >
                     <el-col :span="8">
 
                         <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                            <el-select v-model="modifyForm.nameplate" placeholder="根据订单号自动提供选择" clearable >
+                            <el-select v-model="modifyForm.nameplate" placeholder="根据订单号自动提供选择" disabled >
                                 <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
                                 </el-option>
                             </el-select>
@@ -263,7 +263,7 @@
                     </el-col>
                     <el-col :span="8" >
                         <el-form-item label="安装组："  :label-width="formLabelWidth">
-                            <el-select v-model="modifyForm.installGroupId" placeholder="安装组" clearable>
+                            <el-select v-model="modifyForm.groupName" placeholder="安装组" disabled>
                                 <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
                                 </el-option>
                             </el-select>
@@ -271,7 +271,7 @@
                     </el-col >
                     <el-col :span="8" >
                         <el-form-item label="头数："  :label-width="formLabelWidth">
-                            <el-input v-model="modifyForm.headNum" clearable>
+                            <el-input v-model="modifyForm.headNum" disabled>
                             </el-input>
                         </el-form-item >
                     </el-col >
@@ -282,7 +282,7 @@
                     </el-col>
                     <el-col :span="23" :offset="1">
                         <el-form-item label="反馈信息：" prop="desc">
-                            <el-input type="textarea" v-model="modifyForm.cmtFeedback" :rows="5"></el-input>
+                            <el-input type="textarea" v-model="modifyForm.cmtFeedback" :rows="5" disabled></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -296,7 +296,7 @@
             </el-alert >
             <span  slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
                 <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
-                <el-button type="primary" @click="onAdd" icon="el-icon-check">确 定</el-button >
+                <el-button type="primary" @click="onModify" icon="el-icon-check">保 存</el-button >
             </span  >
 
         </el-dialog >
@@ -531,6 +531,47 @@
 
             },
 
+            onModify() {
+                this.isError = this.validateForm(this.modifyForm);
+                if (!_this.isError) {
+                    $.ajax({
+                        url: HOST + "install/plan/update",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            "installPlan": JSON.stringify(_this.modifyForm)
+                        },
+                        success: function (data) {
+                            if (data.code == 200) {
+                                _this.search();
+                                _this.modifyDialogVisible = false;
+                                showMessage(_this, '修改成功', 1);
+                            } else {
+                                _this.isError = true;
+                                _this.errorMsg = data.message;
+                            }
+                        },
+                        error: function (data) {
+                            _this.errorMsg = '服务器访问出错！';
+                        }
+                    })
+                }
+            },
+            validateForm(formObj)
+            {
+                var iserror = false;
+
+                if (!iserror && isStringEmpty(formObj.installDatePlan)) {
+                    iserror = true;
+                    this.errorMsg = '排产日期不能为空';
+                }
+
+                if(!iserror) {
+                    this.errorMsg = ""
+                }
+
+                return iserror;
+            },
             editWithItem(data) {
                 _this.modifyDialogVisible = true;
                 _this.selectedItem = copyObject(data);

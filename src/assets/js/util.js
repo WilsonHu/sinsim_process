@@ -298,7 +298,7 @@ function isStringEmpty(data) {
 	if (typeof(data) == "number") {
 		data = data.toString();
 	}
-	return data.replace(/(^s*)|(s*$)/g, "").length == 0;
+	return data.toString().replace(/(^s*)|(s*$)/g, "").length == 0;
 }
 
 //验证Email是否正确
