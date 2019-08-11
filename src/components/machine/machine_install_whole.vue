@@ -4,7 +4,7 @@
             <el-form :model="filters" label-position="right" label-width="80px">
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="订单号:">
+                        <el-form-item label="订 单 号 :">
                             <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off"></el-input>
                         </el-form-item>
                     </el-col>
@@ -29,7 +29,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="日期:">
+                        <el-form-item label="计划日期:">
                             <el-date-picker v-model="filters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
                             </el-date-picker>
                         </el-form-item>
@@ -447,16 +447,16 @@
                     nameplate: _this.filters.nameplate.trim(),
                     type: INSTALLTYPE.ALL,
                     installGroupName: _this.filters.groupName,
-                    // query_start_time: '',
-                    // query_finish_time: '',
+                    queryStartTime: '',
+                    queryFinishTime: '',
                     //status: _this.filters.status,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
-                // if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
-                //     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
-                //     condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
-                // }
+                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
+                    condition.queryStartTime = _this.filters.selectDate[0].format("yyyy-MM-dd");
+                    condition.queryFinishTime = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
                 $.ajax({
                     url: _this.queryDataUrl,
                     type: 'POST',

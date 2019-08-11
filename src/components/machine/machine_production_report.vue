@@ -94,11 +94,13 @@
 <!--                        prop="standardTime"-->
 <!--                        label="标准时间">-->
 <!--                </el-table-column>-->
-                <el-table-column
-                        align="center"
-                        prop="productivity"
-                        label="效率">
-                </el-table-column>
+                <!-- 效率目前没有方法计算-->
+                <!-- 因为工序没法确定一个标准时间，因为时间和工序，机型，头数，长度（比如台板）等等都有关，目前只能先记录下所有耗时时间。后面再考虑设计如何反映效率。-->
+                <!--<el-table-column-->
+                        <!--align="center"-->
+                        <!--prop="productivity"-->
+                        <!--label="效率">-->
+                <!--</el-table-column>-->
             </el-table>
             <div class="block" style="text-align: center; margin-top: 20px">
                 <el-pagination
@@ -211,7 +213,7 @@
                 const sums = [];
                 sums[0]='合计';
                 sums[1]='总台数：';
-                sums[2]=_this.totalRecords + '台';
+                sums[2]=_this.totalRecords + '台'; //todo: 这里要动态统计，即根据查询条件统计数量。
                 return sums;
             },
             handleCurrentChange(val) {
