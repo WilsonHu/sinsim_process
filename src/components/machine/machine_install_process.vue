@@ -837,12 +837,29 @@
                                 if (nodeDataArray != null && nodeDataArray.length > 0) {
                                     itemObj.totalTaskCount = nodeDataArray.length - 2;//去掉开始，结束.
                                     nodeDataArray.forEach(item => {
+                                        let timespan=0;
+                                        if (!isStringEmpty(item.beginTime)) {
+                                            let endDay = new Date();
+                                            if (!isStringEmpty(item.endTime)) {
+                                                endDay = new Date(item.endTime);
+                                            }
+                                            let beginDay = new Date(item.beginTime);
+                                            timespan = endDay.getTime() - beginDay.getTime();
+                                            timespan =Math.round( timespan/(1000*60*60).toFixed(2));
+                                        }
                                         if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                         {
-                                            itemObj.currentTaskList.push(item.text);
+                                            itemObj.currentTaskList.push(`${item.text} (${timespan}小时)`);
                                         }
                                         else if (parseInt(item.taskStatus) == 2) {//待安装
-                                            itemObj.currentTaskList.push("待 " + item.text);
+                                            if(isUndefined(item.waitTimespan))
+                                            {
+                                                itemObj.currentTaskList.push(`待 ${item.text} (0小时)`);
+                                            }
+                                            else{
+
+                                                itemObj.currentTaskList.push(`待 ${item.text} (${item.waitTimespan}小时)`);
+                                            }
                                         }
                                         if (parseInt(item.taskStatus) == 6) {//完成
                                             itemObj.finishedCount++;
