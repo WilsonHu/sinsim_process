@@ -103,10 +103,11 @@
                         label="位置">
                 </el-table-column>
                 <el-table-column
+                        width="200"
                         align="center"
                         label="当前工序">
                     <template scope="scope">
-                        <el-tag size="small" style="margin-left: 3px;margin-top:3px;color: green;"
+                        <el-tag size="small" style="margin-left: 1px;margin-top:3px;color: green;"
                                 v-for="item in scope.row.currentTaskList">
                             {{item}}
                         </el-tag>

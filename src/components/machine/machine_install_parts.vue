@@ -120,6 +120,7 @@
                         </template>
                     </el-table-column>
                    <el-table-column
+                           width="200"
                             align="center"
                             label="备注">
                         <template slot-scope="scope">
@@ -129,6 +130,7 @@
                         </template>
                     </el-table-column>
                      <el-table-column
+                             width="200"
                             align="center"
                             label="反馈">
                         <template slot-scope="scope">
@@ -137,10 +139,10 @@
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column
+                    <el-table-column width="130"
                                     label="操作" align="center">
                         <template scope="scope" style="text-align: center">
-                            <el-tooltip placement="left" content="修改">
+                            <el-tooltip placement="top" content="修改">
                                 <el-button
                                         size="mini"
                                         type="primary"
@@ -148,6 +150,17 @@
                                         @click="editWithItem(scope.row)">
                                 </el-button>
                             </el-tooltip>
+                            <el-tooltip
+                                        v-show = "scope.row.groupName=='焊线组'"
+                                        placement="top" content="详情">
+                                    <el-button
+                                            size="mini"
+                                            type="primary"
+                                            icon="el-icon-view"
+                                            @click="showDetailItem(scope.row)">
+                                    </el-button>
+                            </el-tooltip>
+
                         </template>
                     </el-table-column>
                 </el-table>
@@ -289,10 +302,101 @@
                       :closable="false"
                       show-icon >
             </el-alert >
-            <span  slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
+            <span slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
                 <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
                 <el-button type="primary" @click="onModify" icon="el-icon-check">保 存</el-button >
-            </span  >
+            </span >
+
+        </el-dialog >
+
+        <el-dialog title="焊线部装详情" :visible.sync="itemDetailsDialogVisible" append-to-body width="70%">
+
+            <el-form :model="itemDetailForm" >
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="计划日期：" :label-width="formLabelWidth">
+                            <el-date-picker
+                                    v-model="itemDetailForm.installDatePlan"
+                                    type="date" readonly>
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" >
+                        <el-form-item label="订单号：" :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.orderNum"  readonly></el-input>
+                        </el-form-item>
+                    </el-col >
+                    <el-col :span="8" >
+                        <el-form-item label="头数：" :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.headNum"  readonly></el-input>
+                        </el-form-item>
+                    </el-col >
+                    <el-col :span="8">
+                        <el-form-item label="电脑线：" :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.pcWireNum"  readonly >
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" >
+                        <el-form-item label="扣线："  :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.kouxianNum"  readonly>
+                            </el-input>
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="8" >
+                        <el-form-item label="灯线："  :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.lightWireNum" readonly>
+                            </el-input>
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="8" >
+                        <el-form-item label="报警信号："  :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.warnSignalNum" readonly>
+                            </el-input>
+                        </el-form-item >
+                    </el-col >
+                        <el-col :span="8" >
+                            <el-form-item label="装置信号："  :label-width="formLabelWidth">
+                                <el-input v-model="itemDetailForm.deviceSignalNum" readonly>
+                                </el-input>
+                            </el-form-item >
+                        </el-col >
+                        <el-col :span="8" >
+                            <el-form-item label="报警电源："  :label-width="formLabelWidth">
+                                <el-input v-model="itemDetailForm.warnPowerNum" readonly>
+                                </el-input>
+                            </el-form-item >
+                        </el-col >
+                    <el-col :span="8" >
+                        <el-form-item label="装置电源："  :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.devicePowerNum" readonly>
+                            </el-input>
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="8" >
+                        <el-form-item label="装置补绣："  :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.deviceBuxiuNum" readonly>
+                            </el-input>
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="8" >
+                        <el-form-item label="装置开关："  :label-width="formLabelWidth">
+                            <el-input v-model="itemDetailForm.deviceSwitchNum" readonly>
+                            </el-input>
+                        </el-form-item >
+                    </el-col >
+                </el-row>
+
+            </el-form >
+            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
+                      :title="errorMsg"
+                      type="error"
+                      :closable="false"
+                      show-icon >
+            </el-alert >
+            <span slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
+                <el-button @click="itemDetailsDialogVisible = false" icon="el-icon-close" type="danger">关 闭</el-button >
+            </span >
 
         </el-dialog >
     </div>
@@ -372,6 +476,9 @@
                 //修改
                 modifyDialogVisible: false,
                 modifyForm: {},
+
+                itemDetailsDialogVisible: false,
+                itemDetailForm: {},
             }
 
         },
@@ -572,8 +679,13 @@
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
                 _this.modifyForm = copyObject(_this.selectedItem);
+            },
 
-
+            showDetailItem(data){
+                _this.itemDetailsDialogVisible = true;
+                _this.selectedItem = copyObject(data);
+                _this.isError = false;
+                _this.itemDetailForm = copyObject(_this.selectedItem);
             },
 
             initAllRoles() {
