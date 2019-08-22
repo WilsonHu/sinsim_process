@@ -34,8 +34,14 @@
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
-                   
-                    <el-col :span="4" :offset="14">
+
+                    <el-col :span="2" :offset="2" align="center"  >
+                        <el-form-item label="合计:">
+                            {{getSummaries()}}
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="4" :offset="10">
                         <el-button
                                 icon="el-icon-plus"
                                 size="normal"
@@ -483,6 +489,10 @@
 
         },
         methods: {
+
+            getSummaries() {
+                return _this.totalRecords;
+            },
             onOrderChanged(orderNum)
             {
 

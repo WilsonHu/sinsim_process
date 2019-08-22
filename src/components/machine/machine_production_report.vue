@@ -213,7 +213,7 @@
                 const sums = [];
                 sums[0]='合计';
                 sums[1]='总台数：';
-                sums[2]=_this.totalRecords + '台'; //todo: 这里要动态统计，即根据查询条件统计数量。
+                sums[2]=_this.totalRecords + '台';
                 return sums;
             },
             handleCurrentChange(val) {

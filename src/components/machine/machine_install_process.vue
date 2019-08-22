@@ -25,13 +25,18 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="18">
+                <el-col :span="16">
                     <el-form-item label="完成状态:">
                         <el-select v-model="filters.status"  multiple clearable>
                             <el-option v-for="item in statusList" :value="item.value" :label="item.name">
                             </el-option>
                         </el-select>
                     </el-form-item>
+                </el-col>
+                <el-col :span="2" align="center"  >
+                    <el-form-item label="合计:">
+                        {{getSummaries()}}
+                        </el-form-item>
                 </el-col>
 <!--                <el-col :span="10">暂时不启用根据工序查询-->
 <!--                    <el-form-item label="工序:">-->
@@ -773,6 +778,10 @@
 
         },
         methods: {
+
+            getSummaries() {
+                return _this.totalRecords;
+            },
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.onSearchDetailData();

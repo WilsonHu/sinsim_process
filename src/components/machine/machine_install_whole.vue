@@ -34,8 +34,13 @@
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
-                   
-                    <el-col :span="4" :offset="14">
+
+                    <el-col :span="2" :offset="2" align="center"  >
+                        <el-form-item label="合计:">
+                            {{getSummaries()}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4" :offset="10">
                         <el-button
                                 icon="el-icon-plus"
                                 size="normal"
@@ -226,11 +231,11 @@
                 type="error"
                 :closable="false"
                 show-icon >
-            </el-alert > 
+            </el-alert >
             <span  slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
                 <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
                 <el-button type="primary" @click="onAdd" icon="el-icon-check">确 定</el-button >
-            </span  >
+            </span >
             
         </el-dialog >
 
@@ -381,6 +386,10 @@
 
         },
         methods: {
+
+            getSummaries() {
+                return _this.totalRecords;
+            },
             onOrderChanged(orderNum)
             {
 
