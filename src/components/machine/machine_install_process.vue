@@ -38,16 +38,7 @@
                         {{getSummaries()}}
                         </el-form-item>
                 </el-col>
-<!--                <el-col :span="10">暂时不启用根据工序查询-->
-<!--                    <el-form-item label="工序:">-->
-<!--                        &lt;!&ndash; <el-input v-model="filters.taskName" placeholder="工序" auto-complete="off">-->
-<!--                        </el-input> &ndash;&gt;-->
-<!--                        <el-select v-model="filters.taskNameList" multiple placeholder="工序">-->
-<!--                            <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">-->
-<!--                            </el-option>-->
-<!--                        </el-select>-->
-<!--                    </el-form-item>-->
-<!--                </el-col>-->
+
 
                 <el-col :span="4" :offset="2">
                     <el-button
@@ -56,6 +47,14 @@
                             type="danger"
                             @click="processMachineExport">导出
                     </el-button>
+                </el-col>
+ 		<el-col :span="18">
+                   <el-form-item label="工序:">
+                       <el-select v-model="filters.taskNameList" multiple placeholder="工序" clearable>
+                           <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
+                           </el-option>
+                       </el-select>
+                   </el-form-item>
                 </el-col>
             </el-row>
         </el-form>
@@ -855,11 +854,11 @@
                                             }
                                             let beginDay = new Date(item.beginTime);
                                             timespan = endDay.getTime() - beginDay.getTime();
-                                            timespan =Math.round( timespan/(1000*60*60).toFixed(2));
+                                            timespan =_this.filterTimeSpanByHours(timespan/(1000*60*60));
                                         }
                                         if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
                                         {
-                                            itemObj.currentTaskList.push(`${item.text} (${timespan}小时)`);
+                                            itemObj.currentTaskList.push(`${item.text} (${timespan})`);
                                         }
                                         else if (parseInt(item.taskStatus) == 2) {//待安装
                                             if(isUndefined(item.waitTimespan))
@@ -867,8 +866,8 @@
                                                 itemObj.currentTaskList.push(`待 ${item.text} (0小时)`);
                                             }
                                             else{
-
-                                                itemObj.currentTaskList.push(`待 ${item.text} (${item.waitTimespan}小时)`);
+                                                let tsStr= _this.filterTimeSpanByHours(item.waitTimespan);
+                                                itemObj.currentTaskList.push(`待 ${item.text} (${tsStr})`);
                                             }
                                         }
                                         if (parseInt(item.taskStatus) == 6) {//完成
@@ -1546,6 +1545,28 @@
                 var resDate = new Date(strDate);
                 return resDate.format("yyyy-MM-dd");
             },
+
+            filterTimeSpanByHours(timespan) {
+                let res = `0小时`;
+                if (timespan <= 0) {
+                    return res;
+                }
+                if (parseInt(timespan) == 0) {
+                    let strRes = timespan.toFixed(2).toString().split(".");
+                    res = `${Math.round(strRes[1] * 60 / 100)}分钟`;
+                    return res;
+                }
+
+                let strRes = timespan.toFixed(2).toString().split(".");
+                if (strRes.length > 1) {
+                    res = `${strRes[0]}小时${Math.round(strRes[1] * 60 / 100)}分钟`;
+                }
+                else {
+                    res = `${strRes[0]}小时`;
+                }
+                console.log(`time span ${strRes},res:${res}`);
+                return res;
+            }
         },
 
         computed: {},
