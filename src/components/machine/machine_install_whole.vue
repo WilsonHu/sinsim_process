@@ -194,12 +194,6 @@
                         </el-form-item >
                     </el-col >
 
-                    <el-col :span="4" :offset ="2">
-                        <el-button
-                                type="primary"
-                                class="el-icon-plus"
-                                @click="handleAddInstallPlanWhole">增加机器工序 </el-button>
-                    </el-col>
                 </el-row>
 
                 <el-row>
@@ -217,14 +211,14 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8" >
-                        <el-form-item label="头数："  :label-width="formLabelWidth">
+                    <el-col :span="4" >
+                        <el-form-item label="头数："  :label-width="formLabelWidthSmall">
                             <el-input v-model="addForm.headNum" clearable>
                             </el-input>
                         </el-form-item >
                     </el-col >
-                    <el-col :span="8" >
-                        <el-form-item label="针数："  :label-width="formLabelWidth">
+                    <el-col :span="4" >
+                        <el-form-item label="针数："  :label-width="formLabelWidthSmall">
                             <el-input v-model="addForm.needleNum" @change="onChange" clearable></el-input>
                         </el-form-item >
                     </el-col >
@@ -235,6 +229,12 @@
                     </el-col>
                 </el-row>
 
+                <el-col :span="4" :offset ="21">
+                    <el-button
+                            type="primary"
+                            class="el-icon-plus"
+                            @click="handleAddInstallPlanWhole">增加排产 </el-button>
+                </el-col>
                 <el-col :span="24">
                     <el-col :span="23">
                         <el-table
@@ -427,6 +427,7 @@
                 isError: false,
                 loading: false,
                 formLabelWidth: '120px',
+                formLabelWidthSmall: '60px',
                 machineListByOrderNum: [],
                 machineListByOrderNumTimeout: null,
                 machineList: [],
@@ -439,14 +440,104 @@
         },
         methods: {
 
+            //在添加排产时，先查是否已经排过了。
+            checkTheInstallPlanIsSet() {
+                _this.isError = this.validInstallPlanInfo(_this.addForm, false);
+                if (_this.isError) {
+//                    showMessage(_this, _this.errorMsg, 0);
+                } else {
+                    _this.addForm.machineId = null;
+                    //step1. 根据nameplate获取机器machineId，
+                    $.ajax({
+                        url: HOST + "machine/selectMachinesByNameplate",
+                        type: 'POST',
+                        dataType: 'json',
+                        async: false,
+                        data: {
+                            nameplate: _this.addForm.nameplate,
+                        },
+                        success: function (res) {
+                            if (res.code == 200) {
+                                _this.addForm.machineId = res.data.id;
+
+                                // step2 再添加计划
+                                $.ajax({
+                                    url: HOST + "install/plan/checkTheInstallPlanIsSet",
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    data: {
+                                        "installPlan": JSON.stringify(_this.addForm)
+                                    },
+                                    success: function (data) {
+                                        if (data.code == 200) {
+                                            _this.search();
+                                            _this.addDialogVisible = false;///
+                                        } else {
+                                            _this.isError = true;
+                                            _this.errorMsg = data.message;
+                                        }
+                                    },
+                                    error: function (data) {
+                                        _this.errorMsg = '服务器访问出错！';
+                                    }
+                                })
+                            } else {
+                                _this.isError = true;
+                                _this.errorMsg = data.message;
+                                console.log("fail");
+                            }
+                        },
+                        error: function (data) {
+                            _this.errorMsg = '服务器访问出错！';
+                        }
+                    });
+                }
+                return _this.isError;
+
+            },
+
+            validInstallPlanInfo(formObj, isEdit) {
+                var iserror = false;
+
+                if (!iserror && isStringEmpty(formObj.installDatePlan)) {
+                    iserror = true;
+                    this.errorMsg = "安装日期不能为空";
+                }
+                if (!iserror && isStringEmpty(formObj.installGroupId)) {
+                    iserror = true;
+                    this.errorMsg = "安装组不能为空";
+                }
+                if (!iserror && isStringEmpty(formObj.orderNum)) {
+                    iserror = true;
+                    this.errorMsg = "订单号不能为空";
+                }
+                if (!iserror && isStringEmpty(formObj.nameplate)) {
+                    iserror = true;
+                    this.errorMsg = "铭牌号不能为空";
+                }
+
+                if (!iserror && isStringEmpty(formObj.needleNum)) {
+                    iserror = true;
+                    this.errorMsg = "针数不能为空";
+                }
+                if (!iserror && formObj.headNum == "") {
+                    iserror = true;
+                    this.errorMsg = "头数不能为空";
+                }
+                //todo: 还要检查当前已加到表格（未保存到数据库）的数据是否重复。
+                return iserror;
+            },
             handleAddInstallPlanWhole(){
-                this.addForm.installPlanWholeContent.push({
-                    orderNumber:this.addForm.orderNum,
-                    nameplate:this.addForm.nameplate,
-                    needleNum:this.addForm.needleNum,
-                    headNum:this.addForm.headNum,
-                    cmtSend:this.addForm.cmtSend
-                });
+                _this.isError = this.checkTheInstallPlanIsSet();
+                if ( ! _this.isError) {
+                    this.addForm.installPlanWholeContent.push({
+                        orderNum: this.addForm.orderNum,
+                        nameplate: this.addForm.nameplate,
+                        needleNum: this.addForm.needleNum,
+                        headNum: this.addForm.headNum,
+                        cmtSend: this.addForm.cmtSend
+                    });
+                }
             },
 
             getSummaries() {
@@ -454,7 +545,6 @@
             },
             onOrderChanged(orderNum)
             {
-
                 //获取针数, 头数, 订单ID
                 $.ajax({
                     url: HOST + "machine/order/getMachineOrder",
@@ -485,6 +575,7 @@
                     dataType: 'json',
                     data: {
                         orderNum: orderNum,
+                        is_fuzzy: "false",
                     },
                     success: function (res) {
                         if (res.code == 200) {
