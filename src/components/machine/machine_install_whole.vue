@@ -173,70 +173,121 @@
                 </div>
             </el-col>
         <el-dialog title="新增总装排产" :visible.sync="addDialogVisible" append-to-body width="70%">
-            
             <el-form :model="addForm" >
-                <el-row>
-                <el-col :span="8">
-                    <el-form-item label="日期：" :label-width="formLabelWidth">
-                    <el-date-picker
-                            v-model="addForm.installDatePlan"
-                            type="date"
-                            placeholder="选择日期">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8" >
-                    <el-form-item label="订单号：" :label-width="formLabelWidth"> 
-                        <el-input v-model="addForm.orderNum" @change="onOrderChanged(addForm.orderNum)" clearable></el-input>
-                    </el-form-item>
-                </el-col >
-                <el-col :span="8">
+                <el-row >
+                    <el-col :span="8">
+                        <el-form-item label="日期：" :label-width="formLabelWidth">
+                            <el-date-picker
+                                    v-model="addForm.installDatePlan"
+                                    type="date"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
 
-                <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                    <el-select v-model="addForm.nameplate" placeholder="根据订单号自动提供选择" clearable >
-                        <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                </el-col>
-                <el-col :span="8" >
-                    <el-form-item label="安装组："  :label-width="formLabelWidth">
-                        <el-select v-model="addForm.installGroupId" placeholder="安装组" clearable>
-                            <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item >
-                </el-col >
-                <el-col :span="8" >
-                    <el-form-item label="头数："  :label-width="formLabelWidth">
-                        <el-input v-model="addForm.headNum" clearable>
-                        </el-input>
-                    </el-form-item >
-                </el-col >
-                <el-col :span="8" >
-                    <el-form-item label="针数："  :label-width="formLabelWidth">
-                        <el-input v-model="addForm.needleNum" @change="onChange" clearable></el-input>
-                    </el-form-item >
-                </el-col >
-                 <el-col :span="23" :offset="1">
-                    <el-form-item label="备注信息：" prop="desc">
-                        <el-input type="textarea" v-model="addForm.cmtSend" :rows="5"></el-input>
-                    </el-form-item>
-                 </el-col>
+                    <el-col :span="8" >
+                        <el-form-item label="安装组："  :label-width="formLabelWidth">
+                            <el-select v-model="addForm.installGroupId" placeholder="安装组" clearable>
+                                <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item >
+                    </el-col >
+
+                    <el-col :span="4" :offset ="2">
+                        <el-button
+                                type="primary"
+                                class="el-icon-plus"
+                                @click="handleAddInstallPlanWhole">增加机器工序 </el-button>
+                    </el-col>
                 </el-row>
-             
+
+                <el-row>
+                    <el-col :span="8" >
+                        <el-form-item label="订单号：" :label-width="formLabelWidth">
+                            <el-input v-model="addForm.orderNum" @change="onOrderChanged(addForm.orderNum)" clearable></el-input>
+                        </el-form-item>
+                    </el-col >
+                    <el-col :span="8">
+
+                        <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
+                            <el-select v-model="addForm.nameplate" placeholder="根据订单号自动提供选择" clearable >
+                                <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" >
+                        <el-form-item label="头数："  :label-width="formLabelWidth">
+                            <el-input v-model="addForm.headNum" clearable>
+                            </el-input>
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="8" >
+                        <el-form-item label="针数："  :label-width="formLabelWidth">
+                            <el-input v-model="addForm.needleNum" @change="onChange" clearable></el-input>
+                        </el-form-item >
+                    </el-col >
+                    <el-col :span="23" :offset="1">
+                        <el-form-item label="备注信息：" prop="desc">
+                            <el-input type="textarea" v-model="addForm.cmtSend" :rows="5"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-col :span="24">
+                    <el-col :span="23">
+                        <el-table
+                                border
+                                :data="addForm.installPlanWholeContent"
+                                style="margin-left: 30px;margin-bottom: 30px">
+                            <el-table-column
+                                    label="订单号"
+                                    width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.orderNum}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="机器铭牌号"
+                                    width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.nameplate}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="针数" width="60">
+                                <template slot-scope="scope">
+                                    {{ scope.row.needleNum}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="头数" width="60">
+                                <template slot-scope="scope">
+                                    {{ scope.row.headNum}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="备注" width="500">
+                                <template slot-scope="scope">
+                                    {{ scope.row.cmtSend}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-col>
+                </el-col>
+
             </el-form >
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
-                :title="errorMsg"
-                type="error"
-                :closable="false"
-                show-icon >
+                      :title="errorMsg"
+                      type="error"
+                      :closable="false"
+                      show-icon >
             </el-alert >
             <span  slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
                 <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
                 <el-button type="primary" @click="onAdd" icon="el-icon-check">确 定</el-button >
             </span >
-            
+
         </el-dialog >
 
         <el-dialog title="修改总装排产" :visible.sync="modifyDialogVisible" append-to-body width="70%">
@@ -370,6 +421,7 @@
                 },
                 addForm: {
                     type: INSTALLTYPE.ALL,
+                    installPlanWholeContent:[{orderNum:"", nameplate:"", needleNum:"", headNum:"",cmtSend:""}]
                 },
                 addDialogVisible: false,
                 isError: false,
@@ -386,6 +438,16 @@
 
         },
         methods: {
+
+            handleAddInstallPlanWhole(){
+                this.addForm.installPlanWholeContent.push({
+                    orderNumber:this.addForm.orderNum,
+                    nameplate:this.addForm.nameplate,
+                    needleNum:this.addForm.needleNum,
+                    headNum:this.addForm.headNum,
+                    cmtSend:this.addForm.cmtSend
+                });
+            },
 
             getSummaries() {
                 return _this.totalRecords;
