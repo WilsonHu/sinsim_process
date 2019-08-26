@@ -25,21 +25,15 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="16">
-                    <el-form-item label="完成状态:">
-                        <el-select v-model="filters.status"  multiple clearable>
-                            <el-option v-for="item in statusList" :value="item.value" :label="item.name">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
+                <el-col :span="18">
+                   <el-form-item label="工序:">
+                       <el-select v-model="filters.taskNameList" multiple placeholder="工序" clearable>
+                           <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
+                           </el-option>
+                       </el-select>
+                   </el-form-item>
                 </el-col>
-                <el-col :span="2" align="center"  >
-                    <el-form-item label="合计:">
-                        {{getSummaries()}}
-                        </el-form-item>
-                </el-col>
-
-
+                
                 <el-col :span="4" :offset="2">
                     <el-button
                             icon="el-icon-share"
@@ -48,14 +42,23 @@
                             @click="processMachineExport">导出
                     </el-button>
                 </el-col>
- 		<el-col :span="18">
-                   <el-form-item label="工序:">
-                       <el-select v-model="filters.taskNameList" multiple placeholder="工序" clearable>
-                           <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
-                           </el-option>
-                       </el-select>
-                   </el-form-item>
+
+                <el-col :span="18">
+                    <el-form-item label="完成状态:">
+                        <el-select v-model="filters.status"  multiple clearable>
+                            <el-option v-for="item in statusList" :value="item.value" :label="item.name">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                 </el-col>
+                <el-col :span="4" align="center"  >
+                    <el-form-item label="合计:">
+                       <span style="float:left;font-size:20px;color:red">{{getSummaries()}}</span> 
+                    </el-form-item>
+                </el-col>
+
+
+ 		       
             </el-row>
         </el-form>
         <el-table v-loading="loadingUI" element-loading-text="获取数据中..." :data="tableData" border empty-text="暂无数据..." ref="singleTable" highlight-current-row show-overflow-tooltip="true" style="width: 100%; ">
@@ -555,6 +558,22 @@
                                                 label="工序名">
                                             <template scope="scope">
                                                 {{scope.row.taskName}}
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                width="100"
+                                                align="center"
+                                                label="开始时间">
+                                            <template scope="scope">
+                                                {{scope.row.installBeginTime|filterDateTimeString}}
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                width="100"
+                                                align="center"
+                                                label="结束时间">
+                                            <template scope="scope">
+                                                {{scope.row.installEndTime|filterDateTimeString}}
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -1571,6 +1590,11 @@
 
         computed: {},
         filters: {
+            filterDateTimeString(strDate) {
+                var resDate = new Date(strDate);
+                return resDate.format("yyyy-MM-dd hh:mm:ss");
+            },
+
             filterDateString(strDate) {
                 var resDate = new Date(strDate);
                 return resDate.format("yyyy-MM-dd");
