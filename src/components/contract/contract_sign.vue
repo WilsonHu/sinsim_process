@@ -1821,9 +1821,9 @@
                                                                        style="width: 95%">
                                                                 <el-option
                                                                         v-for="item in machineEquipmentList"
-                                                                        :key="item.name"
-                                                                        :label="item.name"
-                                                                        :value="item.name">
+                                                                        :key="item.text"
+                                                                        :label="item.text"
+                                                                        :value="item.text">
                                                                 </el-option>
                                                             </el-select>
                                                         </template>

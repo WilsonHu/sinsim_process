@@ -11,6 +11,7 @@ import MarketGroupManage from '../components/system/market_group_manage.vue'
 import RoleManage from '../components/system/role_manage.vue'
 import DeviceManager from '../components/system/device_manage.vue'
 import MachineTypeManager from '../components/system/machine_type_manage.vue'
+import ConfigManage from '../components/system/config_manage.vue'
 
 //abnormal
 import Abnormal from "../components/abnormal.vue"
@@ -43,10 +44,8 @@ import MachineInstallProcess from "../components/machine/machine_install_process
 import MachineProductionReport from "../components/machine/machine_production_report.vue"
 import MachineInstallWhole from "../components/machine/machine_install_whole.vue"
 import MachineInstallParts from "../components/machine/machine_install_parts.vue"
-import produceStaffAttendance from "../components/machine/produce_staff_attendance.vue"
-export default
-[
-    {
+
+export default [{
         path: '/login',
         component: Login,
         name: 'Login',
@@ -62,8 +61,7 @@ export default
         path: '/home',
         component: Home,
         redirect: '/home/show',
-        children: [
-            {
+        children: [{
                 path: '/home/show',
                 component: HomeShow,
                 name: 'HomeShow',
@@ -75,8 +73,7 @@ export default
                 component: Contract,
                 name: 'Contract',
                 meta: "签核管理",
-                children: [
-                    {
+                children: [{
                         path: '/home/contract/contract_sign',
                         component: ContractSign,
                         name: 'contract_sign',
@@ -102,8 +99,7 @@ export default
                 component: Machine,
                 name: 'Machine',
                 meta: "生产管理",
-                children: [
-                    {
+                children: [{
                         path: '/home/machine/machine_install_process',
                         component: MachineInstallProcess,
                         name: 'machine_install_process',
@@ -132,12 +128,6 @@ export default
                         component: MachineProductionReport,
                         name: 'machine_production_report',
                         meta: '生产报表'
-                    },
-                    {
-                        path: '/home/machine/produce_staff_attendance',
-                        component: produceStaffAttendance,
-                        name: 'produce_staff_attendance',
-                        meta: '人员考勤'
                     }
                 ]
             },
@@ -155,8 +145,7 @@ export default
                 component: Abnormal,
                 name: 'Abnormal',
                 meta: "异常管理",
-                children: [
-                    {
+                children: [{
                         path: '/home/abnormal/abnormal_statistic_manage',
                         component: AbnormalStatisticManage,
                         name: 'abnormal_statistic_manage',
@@ -183,8 +172,7 @@ export default
                 component: Task,
                 name: 'Task',
                 meta: "流程管理",
-                children: [
-                    {
+                children: [{
                         path: '/home/task/process_manage',
                         component: ProcessManage,
                         name: 'process_manage',
@@ -204,8 +192,7 @@ export default
                 component: System,
                 name: 'System',
                 meta: "系统管理",
-                children: [
-                    {
+                children: [{
                         path: '/home/system/user_manage',
                         component: UserManage,
                         name: 'user_manage',
@@ -240,6 +227,12 @@ export default
                         component: MachineTypeManager,
                         name: 'machine_type_manager',
                         meta: '机型管理'
+                    },
+                    {
+                        path: '/home/system/config_manage',
+                        component: ConfigManage,
+                        name: 'config_manage',
+                        meta: '配置管理'
                     },
                 ]
             },

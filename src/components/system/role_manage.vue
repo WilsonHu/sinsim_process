@@ -360,6 +360,7 @@
                                     <ul>
                                         <li v-for=" item in systemRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
+                                                         v-show="item.enabled"
                                                          v-model="item.checked"
                                                          @change="handleCheckedSystemChange">{{item.name}}
                                             </el-checkbox>
@@ -515,7 +516,7 @@
                 this.modifyForm.roleDes = item.roleDes;
                 this.modifyForm.valid = item.valid;
                 //解析scope
-                this.prepareScopeJsonToObject(item.roleScope);
+                this.prepareScopeJsonToObject(item.roleScope,item.roleName);
                 _this.modifyDialogVisible = true;
             },
 
@@ -801,7 +802,7 @@
                 return result
             },
 
-            prepareScopeJsonToObject(scopeStr) {
+            prepareScopeJsonToObject(scopeStr,role) {
                 if (scopeStr == null || scopeStr == "") return;
                 let all;
                 try {
@@ -902,7 +903,15 @@
                 count = 0;
                 if (all.system != null) {
                     for (let i = 0; i < this.systemRoleList.length; i++) {
+                        if(this.systemRoleList[i].path.indexOf("config_manage")>=0)
+                        {
+                            if(role=="超级管理员")
+                            {
+                                this.systemRoleList[i].enabled=role=="超级管理员"?1:0;
+                            }
+                        }
                         for (let j = 0; j < all.system.length; j++) {
+                           
                             if (this.systemRoleList[i].path == all.system[j]) {
                                 this.systemRoleList[i].checked = true;
                                 count++
@@ -996,7 +1005,8 @@
                                         _this.contractRoleList.push({
                                             "path": routes[i].children[j].children[k].path,
                                             "name": routes[i].children[j].children[k].meta,
-                                            "checked": 0
+                                            "checked": 0,
+                                            "enabled": 1,
                                         })
                                     }
                                     break;
@@ -1005,7 +1015,8 @@
                                         _this.orderRoleList.push({
                                             "path": routes[i].children[j].children[k].path,
                                             "name": routes[i].children[j].children[k].meta,
-                                            "checked": 0
+                                            "checked": 0,
+                                            "enabled": 1,
                                         })
                                     }
                                     break;
@@ -1014,7 +1025,8 @@
                                         _this.machineRoleList.push({
                                             "path": routes[i].children[j].children[k].path,
                                             "name": routes[i].children[j].children[k].meta,
-                                            "checked": 0
+                                            "checked": 0,
+                                            "enabled": 1,
                                         })
                                     }
                                     break;
@@ -1023,7 +1035,8 @@
                                         _this.planRoleList.push({
                                             "path": routes[i].children[j].children[k].path,
                                             "name": routes[i].children[j].children[k].meta,
-                                            "checked": 0
+                                            "checked": 0,
+                                            "enabled": 1,
                                         })
                                     }
                                     break;
@@ -1032,7 +1045,8 @@
                                         _this.abnormalRoleList.push({
                                             "path": routes[i].children[j].children[k].path,
                                             "name": routes[i].children[j].children[k].meta,
-                                            "checked": 0
+                                            "checked": 0,
+                                            "enabled": 1,
                                         })
                                     }
                                     break;
@@ -1041,7 +1055,8 @@
                                         _this.taskRoleList.push({
                                             "path": routes[i].children[j].children[k].path,
                                             "name": routes[i].children[j].children[k].meta,
-                                            "checked": 0
+                                            "checked": 0,
+                                            "enabled": 1,
                                         })//checked状态用于存储是否被选中的状态
                                     }
                                     break;
@@ -1050,7 +1065,8 @@
                                         _this.systemRoleList.push({
                                             "path": routes[i].children[j].children[k].path,
                                             "name": routes[i].children[j].children[k].meta,
-                                            "checked": 0
+                                            "checked": 0,
+                                            "enabled": 1,
                                         })//checked状态用于存储是否被选中的状态
                                     }
                                     break;

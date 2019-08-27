@@ -67,20 +67,20 @@ const ConfigStatusList = [
 
 //机器装置
 const MachineEquipmentList = [
-    {name: '简易绳绣'},
-    {name: '单金片'},
-    {name: '2mm单金片'},
-    {name: '单针双片'},
-    {name: '单针四片'},
-    {name: '简易毛巾'},
-    {name: '雕孔'},
-    {name: '佳宇珠子装置'},
-    {name: '冠炯珠子装置'},
-    {name: '诺德珠子装置'},
-    {name: '激光装置'},
-    {name: '铝合金框架花架'},
-    {name: '自动换底线'},
-    {name: '其他'}
+    {text: '简易绳绣'},
+    {text: '单金片'},
+    {text: '2mm单金片'},
+    {text: '单针双片'},
+    {text: '单针四片'},
+    {text: '简易毛巾'},
+    {text: '雕孔'},
+    {text: '佳宇珠子装置'},
+    {text: '冠炯珠子装置'},
+    {text: '诺德珠子装置'},
+    {text: '激光装置'},
+    {text: '铝合金框架花架'},
+    {text: '自动换底线'},
+    {text: '其他'}
 ];
 
 //需求单状态
