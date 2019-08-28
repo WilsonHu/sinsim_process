@@ -1,0 +1,275 @@
+/**
+ * Created by PC-LHF on 2017-11-30.
+ */
+// //订单状态
+export const ConfigData = [{
+    "item": "contract",
+    "text": "合同",
+    "visible": "true",
+    "data": [{
+        "item": "MachineEquipmentList",
+        "text": "机器装置",
+        "visible": "true",
+        "data": [{
+            "text": "简易绳绣"
+        }, {
+            "text": "单金片"
+        }, {
+            "text": "2mm单金片"
+        }, {
+            "text": "单针双片"
+        }, {
+            "text": "单针四片"
+        }, {
+            "text": "简易毛巾"
+        }, {
+            "text": "雕孔"
+        }, {
+            "text": "佳宇珠子装置"
+        }, {
+            "text": "冠炯珠子装置"
+        }, {
+            "text": "诺德珠子装置"
+        }, {
+            "text": "激光装置"
+        }, {
+            "text": "铝合金框架花架"
+        }, {
+            "text": "自动换底线"
+        }, {
+            "text": "其他"
+        }]
+    }, {
+        "item": "PackageModeList",
+        "text": "包装方式",
+        "visible": "true",
+        "data": [{
+            "text": "单机"
+        }, {
+            "text": "叠机"
+        }]
+    }, {
+        "item": "WrapMachineList",
+        "text": "绕线机配备",
+        "visible": "true",
+        "data": [{
+            "text": "配普通绕线机"
+        }, {
+            "text": "不配普通绕线机"
+        }]
+    }, {
+        "item": "MaintainTypeList",
+        "text": "保修方式",
+        "visible": "true",
+        "data": [{
+            "text": "SinSim保修"
+        }, {
+            "text": "代理商保修"
+        }, {
+            "text": "客户自理"
+        }]
+    }, {
+        "item": "ColorChangeModeList",
+        "text": "电气换色方式",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "凸轮换色"
+        }, {
+            "text": "丝杆换色"
+        }]
+    }, {
+        "item": "SpecialTowelColorList",
+        "text": "特种绣色数",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "4色"
+        }, {
+            "text": "6色"
+        }, {
+            "text": "9色"
+        }]
+    }, {
+        "item": "SpecialTapingHeadList",
+        "text": "盘带头",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "冠军独立"
+        }, {
+            "text": "普通全独立"
+        }, {
+            "text": "普通半独立"
+        }]
+    }, {
+        "item": "SpecialTowelDaxleList",
+        "text": "D轴上",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "独立"
+        }, {
+            "text": "集中"
+        }]
+    }, {
+        "item": "SpecialTowelHaxleList",
+        "text": "H轴下",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "独立"
+        }, {
+            "text": "集中"
+        }]
+    }, {
+        "item": "SpecialTowelMotorList",
+        "text": "主电机",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "大豪"
+        }, {
+            "text": "松下"
+        }, {
+            "text": "儒竞"
+        }]
+    }, {
+        "item": "SpecialTowelNeedleList",
+        "text": "毛巾机针",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "16"
+        }, {
+            "text": "18"
+        }]
+    }, {
+        "item": "PCModeList",
+        "text": "电脑型号",
+        "visible": "true",
+        "data": [{
+            "text": "528"
+        }, {
+            "text": "M98"
+        }, {
+            "text": "D16"
+        }, {
+            "text": "D56"
+        }, {
+            "text": "D19"
+        }, {
+            "text": "A18"
+        }, {
+            "text": "A58"
+        }, {
+            "text": "285"
+        }, {
+            "text": "A15"
+        }]
+    }, {
+        "item": "LanguageList",
+        "text": "语言",
+        "visible": "true",
+        "data": [{
+            "text": "英语"
+        }, {
+            "text": "中文"
+        }, {
+            "text": "西班牙"
+        }, {
+            "text": "法语"
+        }, {
+            "text": "葡萄牙"
+        }, {
+            "text": "土耳其"
+        }, {
+            "text": "韩语"
+        }, {
+            "text": "俄语"
+        }, {
+            "text": "阿拉伯语"
+        }]
+    }, {
+        "item": "CurrencyTypeList",
+        "text": "币种",
+        "visible": "true",
+        "data": [{
+            "text": "人民币"
+        }, {
+            "text": "美元"
+        }, {
+            "text": "欧元"
+        }]
+    }, {
+        "item": "ElectricMotorList",
+        "text": "电气主电机",
+        "visible": "true",
+        "data": [{
+            "text": "大豪"
+        }, {
+            "text": "松下"
+        }, {
+            "text": "儒竞"
+        }]
+    }, {
+        "item": "XYMotorList",
+        "text": "XY主电机",
+        "visible": "true",
+        "data": [{
+            "text": "三相步进"
+        }, {
+            "text": "五相步进"
+        }, {
+            "text": "伺服"
+        }]
+    }, {
+        "item": "TrimList",
+        "text": "剪线方式",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "电机剪线"
+        }, {
+            "text": "普通剪线"
+        }, {
+            "text": "不剪线"
+        }, {
+            "text": "电机静态剪线"
+        }]
+    }, {
+        "item": "ElectricPowerList",
+        "text": "电源",
+        "visible": "true",
+        "data": [{
+            "text": "220V"
+        }, {
+            "text": "380V"
+        }]
+    }, {
+        "item": "ElectricSwitchList",
+        "text": "按钮开关",
+        "visible": "true",
+        "data": [{
+            "text": "无"
+        }, {
+            "text": "1个"
+        }, {
+            "text": "2个"
+        }, {
+            "text": "3个"
+        }, {
+            "text": "Y驱动数"
+        }, {
+            "text": "Y驱动数+1"
+        }]
+    }]
+}]
