@@ -179,6 +179,7 @@ const MaintainTypeList =
 
 const DefaultSelectedValue = "无";
 
+///电气换色方式
 const ColorChangeModeList = [
     {
         value: 0,
@@ -192,7 +193,7 @@ const ColorChangeModeList = [
     }
 ];
 
-//色数
+//特种绣色数
 const SpecialTowelColorList = [
     {
         value: 0,
