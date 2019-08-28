@@ -53,21 +53,21 @@
                 </el-table-column>
                 <el-table-column label="安装组"
                                  align="center"
-                                 prop="groupName"
+                                 prop="installGroupName"
                                  span="2">
                     <template scope="scope">
                         <div>
-                            {{scope.row.groupName}}
+                            {{scope.row.installGroupName}}
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="组长"
                                  align="center"
-                                 prop="installGroupLeader"
+                                 prop="userAccount"
                                  span="2">
                     <template scope="scope">
                         <div>
-                            {{formatDate(scope.row.installGroupLeader)}}
+                            {{scope.row.userAccount}}
                         </div>
                     </template>
                 </el-table-column>
@@ -77,31 +77,31 @@
                                  span="2">
                     <template scope="scope">
                         <div>
-                            {{scope.row.date}}
+                            {{formatDate(scope.row.date)}}
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="计划上班人数"
-                                 align="center"
-                                 prop="planAttendance"
-                                 span="2">
-                    <template scope="scope">
-                        <div>
-                            {{scope.row.planAttendance}}
-                        </div>
-                    </template>
-                </el-table-column>
+                <!--<el-table-column label="计划上班人数"-->
+                                 <!--align="center"-->
+                                 <!--prop="attendanceMember"-->
+                                 <!--span="2">-->
+                    <!--<template scope="scope">-->
+                        <!--<div>-->
+                            <!--{{scope.row.attendanceMember}}-->
+                        <!--</div>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
                 <el-table-column align="center" prop="nameplate" label="实际上班人数">
                     <template scope="scope">
                         <div>
-                            {{scope.row.actualAttendance}}
+                            {{scope.row.attendanceMember}}
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" prop="nameplate" label="请假人数">
                     <template scope="scope">
                         <div >
-                            {{scope.row.noAttendance}}
+                            {{scope.row.absenceMember}}
                         </div>
                     </template>
                 </el-table-column>
@@ -110,11 +110,20 @@
                             label="加班人数">
                         <template scope="scope">
                             <span>
-                                {{scope.row.overtimeHeads}}
+                                {{scope.row.overtimeMember}}
                             </span>
                         </template>
                     </el-table-column>
-
+                <el-table-column label="下个工作日上班人数"
+                                 align="center"
+                                 prop="attendanceTomorrow"
+                                 span="2">
+                    <template scope="scope">
+                        <div>
+                            {{scope.row.attendanceTomorrow}}
+                        </div>
+                    </template>
+                </el-table-column>
                 </el-table>
                 <div class="block" style="text-align: center; margin-top: 20px">
                     <el-pagination
@@ -202,6 +211,16 @@
         },
         methods: {
 
+            filterGroup(id) {
+                let result = "";
+                for (let i = 0; i < _this.groupList.length; i++) {
+                    if (_this.groupList[i].id == id) {
+                        result = _this.groupList[i].groupName;
+                        break;
+                    }
+                }
+                return result;
+            },
             getSummaries() {
                 return _this.totalRecords;
             },
@@ -254,7 +273,28 @@
                 var resDate = new Date(strDate);
                 return resDate.format("yyyy-MM-dd");
             },
-
+            formatDate(timeStamp) {
+                return new Date(timeStamp).format("yyyy-MM-dd");
+            },
+            //总装各组
+            getInstallGroupData() {
+                if (_this.groupList != null && _this.groupList.length > 0) {
+                    return;
+                }
+                $.ajax({
+                    url: HOST + "/install/group/list",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.groupList = res.data.list;
+                            //sessionStorage.setItem('groupList', JSON.stringify(_this.groupList));
+                        }
+                    },
+                })
+            },
         },
 
         computed: {},
@@ -281,6 +321,7 @@
                 this.$router.push({path: '/Login'});
                 return;
             }
+            _this.getInstallGroupData();
         },
         mounted: function () {
             _this.filters.status = "";
