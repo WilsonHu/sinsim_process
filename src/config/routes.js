@@ -44,6 +44,7 @@ import MachineInstallProcess from "../components/machine/machine_install_process
 import MachineProductionReport from "../components/machine/machine_production_report.vue"
 import MachineInstallWhole from "../components/machine/machine_install_whole.vue"
 import MachineInstallParts from "../components/machine/machine_install_parts.vue"
+import produceStaffAttendance from "../components/machine/produce_staff_attendance.vue"
 
 export default [{
         path: '/login',
@@ -128,6 +129,12 @@ export default [{
                         component: MachineProductionReport,
                         name: 'machine_production_report',
                         meta: '生产报表'
+                    },
+                    {
+                        path: '/home/machine/produce_staff_attendance',
+                        component: produceStaffAttendance,
+                        name: 'produce_staff_attendance',
+                        meta: '人员考勤'
                     }
                 ]
             },
