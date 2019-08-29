@@ -126,7 +126,12 @@ export default {
                 _this.rootData.data = JSON.stringify(list);
               } else {
                 _this.rootData = data.data.list[0]; //数据库的数据
-                list = JSON.parse(_this.rootData.data); //取数据库data字段为JSON字符,再转为对象数组
+                try {
+                  list = JSON.parse(_this.rootData.data); //取数据库data字段为JSON字符,再转为对象数组
+                } catch (ex) {
+                  list = ConfigData;
+                  _this.rootData.data = JSON.stringify(list);
+                }
                 _this.isSaveNew = false;
               }
               if (list != null && list.length > 0) {
@@ -155,14 +160,14 @@ export default {
       if (activeItem.length > 0) {
         for (let i = 0; i < _this.configList.length; i++) {
           if (_this.configList[i].item == activeItem) {
-            //activeList.length - 1最后一次激活选中的面板数据
+            //activeItem.length - 1最后一次激活选中的面板数据
             _this.selectedItem = _this.configList[i].data;
             break;
           }
         }
       }
 
-      console.log(activeList);
+      console.log(activeItem);
     },
     handleAdd() {
       _this.errorMsg = '';

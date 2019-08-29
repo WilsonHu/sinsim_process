@@ -1,13 +1,12 @@
 /**
  * Created by PC-LHF on 2017-11-30.
  */
-// //订单状态
 export const ConfigData = [{
     "item": "contract",
     "text": "合同",
     "visible": "true",
     "data": [{
-        "item": "MachineEquipmentList",
+        "item": "machineEquipmentList",
         "text": "机器装置",
         "visible": "true",
         "data": [{
@@ -40,7 +39,7 @@ export const ConfigData = [{
             "text": "其他"
         }]
     }, {
-        "item": "PackageModeList",
+        "item": "packageModeList",
         "text": "包装方式",
         "visible": "true",
         "data": [{
@@ -49,7 +48,7 @@ export const ConfigData = [{
             "text": "叠机"
         }]
     }, {
-        "item": "WrapMachineList",
+        "item": "wrapMachineList",
         "text": "绕线机配备",
         "visible": "true",
         "data": [{
@@ -58,7 +57,7 @@ export const ConfigData = [{
             "text": "不配普通绕线机"
         }]
     }, {
-        "item": "MaintainTypeList",
+        "item": "maintainTypeList",
         "text": "保修方式",
         "visible": "true",
         "data": [{
@@ -69,7 +68,7 @@ export const ConfigData = [{
             "text": "客户自理"
         }]
     }, {
-        "item": "ColorChangeModeList",
+        "item": "colorChangeModeList",
         "text": "电气换色方式",
         "visible": "true",
         "data": [{
@@ -80,7 +79,7 @@ export const ConfigData = [{
             "text": "丝杆换色"
         }]
     }, {
-        "item": "SpecialTowelColorList",
+        "item": "specialTowelColorList",
         "text": "特种绣色数",
         "visible": "true",
         "data": [{
@@ -93,7 +92,7 @@ export const ConfigData = [{
             "text": "9色"
         }]
     }, {
-        "item": "SpecialTapingHeadList",
+        "item": "specialTapingHeadList",
         "text": "盘带头",
         "visible": "true",
         "data": [{
@@ -106,7 +105,7 @@ export const ConfigData = [{
             "text": "普通半独立"
         }]
     }, {
-        "item": "SpecialTowelDaxleList",
+        "item": "specialTowelDaxleList",
         "text": "D轴上",
         "visible": "true",
         "data": [{
@@ -117,7 +116,7 @@ export const ConfigData = [{
             "text": "集中"
         }]
     }, {
-        "item": "SpecialTowelHaxleList",
+        "item": "specialTowelHaxleList",
         "text": "H轴下",
         "visible": "true",
         "data": [{
@@ -128,7 +127,7 @@ export const ConfigData = [{
             "text": "集中"
         }]
     }, {
-        "item": "SpecialTowelMotorList",
+        "item": "specialTowelMotorList",
         "text": "主电机",
         "visible": "true",
         "data": [{
@@ -141,7 +140,7 @@ export const ConfigData = [{
             "text": "儒竞"
         }]
     }, {
-        "item": "SpecialTowelNeedleList",
+        "item": "specialTowelNeedleList",
         "text": "毛巾机针",
         "visible": "true",
         "data": [{
@@ -152,7 +151,7 @@ export const ConfigData = [{
             "text": "18"
         }]
     }, {
-        "item": "PCModeList",
+        "item": "pcModeList",
         "text": "电脑型号",
         "visible": "true",
         "data": [{
@@ -175,7 +174,7 @@ export const ConfigData = [{
             "text": "A15"
         }]
     }, {
-        "item": "LanguageList",
+        "item": "languageList",
         "text": "语言",
         "visible": "true",
         "data": [{
@@ -198,7 +197,7 @@ export const ConfigData = [{
             "text": "阿拉伯语"
         }]
     }, {
-        "item": "CurrencyTypeList",
+        "item": "currencyTypeList",
         "text": "币种",
         "visible": "true",
         "data": [{
@@ -209,7 +208,7 @@ export const ConfigData = [{
             "text": "欧元"
         }]
     }, {
-        "item": "ElectricMotorList",
+        "item": "electricMotorList",
         "text": "电气主电机",
         "visible": "true",
         "data": [{
@@ -220,7 +219,7 @@ export const ConfigData = [{
             "text": "儒竞"
         }]
     }, {
-        "item": "XYMotorList",
+        "item": "xyMotorList",
         "text": "XY主电机",
         "visible": "true",
         "data": [{
@@ -231,7 +230,7 @@ export const ConfigData = [{
             "text": "伺服"
         }]
     }, {
-        "item": "TrimList",
+        "item": "trimList",
         "text": "剪线方式",
         "visible": "true",
         "data": [{
@@ -246,7 +245,7 @@ export const ConfigData = [{
             "text": "电机静态剪线"
         }]
     }, {
-        "item": "ElectricPowerList",
+        "item": "electricPowerList",
         "text": "电源",
         "visible": "true",
         "data": [{
@@ -255,7 +254,7 @@ export const ConfigData = [{
             "text": "380V"
         }]
     }, {
-        "item": "ElectricSwitchList",
+        "item": "electricSwitchList",
         "text": "按钮开关",
         "visible": "true",
         "data": [{
