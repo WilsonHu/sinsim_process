@@ -1173,15 +1173,18 @@
     import Vue from 'vue'
     import {Loading} from 'element-ui';
     import Tinymce from "./Tinymce/index.vue"
+    import { ConfigData } from '../config/dataconfig';
     var _this;
     export default {
         name: "order_manage",
         components: {
-            Tinymce
+            Tinymce,
+            ConfigData
         },
         data () {
             _this = this;
             return {
+                configList: [],
                 errorMsg: '',
                 selectedItem: {},
                 queryUserRoleUrl: HOST + "role/list",
@@ -1637,6 +1640,59 @@
                     })
                 }
             },
+
+            initConfigData() {
+                let configstring = sessionStorage.getItem('contract_config');
+                if (configstring != null && configstring.length > 0) {
+                    _this.configList = JSON.parse(configstring);
+                    for (let i = 0; i < _this.configList.length; i++) {
+                    _this[_this.configList[i].item] = _this.configList[i].data;
+                    }
+                } else {
+                    $.ajax({
+                    url: HOST + 'data/config/list',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function(data) {
+                        if (data.code == 200) {
+                        try {
+                            let list = [];
+                            if (data.data.list.length == 0) {
+                            list = ConfigData;
+                            } else {
+                            try {
+                                list = JSON.parse(data.data.list[0].data); //取数据库data字段为JSON字符,再转为对象数组
+                            } catch (ex) {
+                                list = ConfigData;
+                            }
+                            }
+                            if (list != null && list.length > 0) {
+                            for (let i = 0; i < list.length; i++) {
+                                if (list[i].item == 'contract') {
+                                //目前只支持合同页面数据配置
+                                _this.configList = list[i].data;
+                                break;
+                                }
+                            }
+                            sessionStorage.setItem("contract_config",JSON.stringify(_this.configList))
+                            for (let i = 0; i < _this.configList.length; i++) {
+                                _this[_this.configList[i].item] = _this.configList[i].data;
+                            }
+                            }
+                        } catch (ex) {
+                            console.log(ex);
+                        }
+                        } else {
+                        showMessage(_this, data.message, 0);
+                        }
+                    },
+                    error: function(data) {
+                        showMessage(_this, '服务器访问出错', 0);
+                    }
+                    });
+                }
+            },
         },
         computed: {},
         filters: {
@@ -1693,6 +1749,7 @@
             }
         },
         created: function () {
+            _this.initConfigData();
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
             if (isNull(this.userinfo)) {
                 this.$router.push({path: '/Login'});
