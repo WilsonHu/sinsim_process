@@ -500,6 +500,9 @@
                 return iserror;
             },
 
+            hhh(){
+
+            },
             //在添加排产时，先查询本地列表，再向服务器查, 这个排产，是否已经排过了。
             checkTheInstallPlanIsSet() {
                 _this.isError = this.validInstallPlanInfo(_this.addForm, false);
@@ -537,6 +540,9 @@
                                         if (data.code == 200) {
                                             _this.search();
                                             //_this.addDialogVisible = false;///
+                                            ///todo:  为啥这里提示 hhh未定义？
+                                            // hhh();
+
                                         } else {
                                             _this.isError = true;
                                             _this.errorMsg = data.message;
@@ -562,18 +568,19 @@
             },
             handleAddInstallPlanWhole(){
                 _this.isError = this.checkTheInstallPlanIsSet();
-                if ( ! _this.isError) {
-                    this.addFormList.installPlanWholeContent.push({
-                        orderNum: this.addForm.orderNum,
-                        nameplate: this.addForm.nameplate,
-                        installGroupId: this.addForm.installGroupId,
-                        needleNum: this.addForm.needleNum,
-                        headNum: this.addForm.headNum,
-                        cmtSend: this.addForm.cmtSend
-                    });
-
-                }
+                _this.addFormList.installPlanWholeContent.push({
+                    orderNum: this.addForm.orderNum,
+                    orderId: this.addForm.orderId,
+                    nameplate: this.addForm.nameplate,
+                    machineId: this.addForm.machineId,
+                    installGroupId: this.addForm.installGroupId,
+                    needleNum: this.addForm.needleNum,
+                    headNum: this.addForm.headNum,
+                    cmtSend: this.addForm.cmtSend,
+                    installDatePlan: this.addForm.installDatePlan
+                });
             },
+
 
             getSummaries() {
                 return _this.totalRecords;
@@ -678,12 +685,12 @@
                 _this.isError = false;
                 _this.errorMsg = '';
                 _this.addDialogVisible = true;
+                _this.addFormList.installPlanWholeContent = [];
             },
 
             //添加一系列排产,todo
             onAdd()
             {
-
                 _this.addForm.machineId = null;
                 //step1. 根据nameplate获取机器machineId，
                 $.ajax({
@@ -698,28 +705,35 @@
                         if (res.code == 200) {
                             _this.addForm.machineId = res.data.id;
 
-                            // step2 再添加计划
-                            $.ajax({
-                                url: HOST + "install/plan/add",
-                                type: 'POST',
-                                dataType: 'json',
-                                data: {
-                                    "installPlan": JSON.stringify(_this.addForm)
-                                },
-                                success: function (data) {
-                                    if (data.code == 200) {
-                                        _this.search();
-                                        _this.addDialogVisible = false;
-                                        showMessage(_this, '添加成功', 1);
-                                    } else {
-                                        _this.isError = true;
-                                        _this.errorMsg = data.message;
+                            // step2 再逐一添加计划
+                            for(var k = 0; k< _this.addFormList.installPlanWholeContent.length; k++){
+                                $.ajax({
+//                                    url: HOST + "install/plan/addInstallPlanList",
+                                    url: HOST + "install/plan/add",
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    data: {
+//                                    "installPlanList": JSON.stringify(_this.addFormList.installPlanWholeContent)
+                                        "installPlan": JSON.stringify(_this.addFormList.installPlanWholeContent[k])
+                                    },
+                                    success: function (data) {
+                                        if (data.code == 200) {
+                                            _this.search();
+                                            _this.addDialogVisible = false;
+                                            showMessage(_this, '添加成功', 1);
+                                        } else {
+                                            _this.isError = true;
+                                            _this.errorMsg = data.message;
+
+                                            _this.addForm.installPlanWholeContent = [];
+                                        }
+                                    },
+                                    error: function (data) {
+                                        _this.errorMsg = '服务器访问出错！';
                                     }
-                                },
-                                error: function (data) {
-                                    _this.errorMsg = '服务器访问出错！';
-                                }
-                            })
+                                })
+                            }
+
                         } else {
                             _this.isError = true;
                             _this.errorMsg = data.message;
