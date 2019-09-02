@@ -190,6 +190,7 @@
                             <el-date-picker
                                     v-model="addForm.installDatePlan"
                                     type="date"
+
                                     placeholder="选择日期">
                             </el-date-picker>
                         </el-form-item>
@@ -500,8 +501,18 @@
                 return iserror;
             },
 
-            hhh(){
-
+            expanddFormList(){
+                _this.addFormList.installPlanWholeContent.push({
+                    orderNum: this.addForm.orderNum,
+                    orderId: this.addForm.orderId,
+                    nameplate: this.addForm.nameplate,
+                    machineId: this.addForm.machineId,
+                    installGroupId: this.addForm.installGroupId,
+                    needleNum: this.addForm.needleNum,
+                    headNum: this.addForm.headNum,
+                    cmtSend: this.addForm.cmtSend,
+                    installDatePlan: this.addForm.installDatePlan
+                });
             },
             //在添加排产时，先查询本地列表，再向服务器查, 这个排产，是否已经排过了。
             checkTheInstallPlanIsSet() {
@@ -510,7 +521,7 @@
 //                    showMessage(_this, _this.errorMsg, 0);
                 } else {
                     _this.isError = this.checkIsExistInCurrentList(_this.addForm.nameplate, _this.addForm.installGroupId);
-                    if(_this.iserror){
+                    if(_this.isError){
                         console.log("===" +  this.errorMsg );
                         return _this.isError;
                     }
@@ -539,9 +550,7 @@
                                     success: function (data) {
                                         if (data.code == 200) {
                                             _this.search();
-                                            //_this.addDialogVisible = false;///
-                                            ///todo:  为啥这里提示 hhh未定义？
-                                            // hhh();
+                                             _this.expanddFormList();
 
                                         } else {
                                             _this.isError = true;
@@ -568,17 +577,7 @@
             },
             handleAddInstallPlanWhole(){
                 _this.isError = this.checkTheInstallPlanIsSet();
-                _this.addFormList.installPlanWholeContent.push({
-                    orderNum: this.addForm.orderNum,
-                    orderId: this.addForm.orderId,
-                    nameplate: this.addForm.nameplate,
-                    machineId: this.addForm.machineId,
-                    installGroupId: this.addForm.installGroupId,
-                    needleNum: this.addForm.needleNum,
-                    headNum: this.addForm.headNum,
-                    cmtSend: this.addForm.cmtSend,
-                    installDatePlan: this.addForm.installDatePlan
-                });
+
             },
 
 
