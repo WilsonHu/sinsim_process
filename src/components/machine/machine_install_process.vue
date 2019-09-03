@@ -26,7 +26,7 @@
             </el-row>
             <el-row>
                 <el-col :span="18">
-                   <el-form-item label="工序:">
+                   <el-form-item label="包含工序:">
                        <el-select v-model="filters.taskNameList" multiple placeholder="工序" clearable>
                            <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
                            </el-option>

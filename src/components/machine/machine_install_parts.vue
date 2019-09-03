@@ -40,7 +40,6 @@
                             {{getSummaries()}}
                         </el-form-item>
                     </el-col>
-
                     <el-col :span="4" :offset="10">
                         <el-button
                                 icon="el-icon-plus"
@@ -59,16 +58,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="计划日期"
-                                 align="center"
-                                 prop="installDatePlan"
-                                 span="2">
-                    <template scope="scope">
-                        <div>
-                            {{formatDate(scope.row.installDatePlan)}}
-                        </div>
-                    </template>
-                </el-table-column>
+
                 <el-table-column label="安装组"
                                  align="center"
                                  prop="groupName"
@@ -76,6 +66,16 @@
                     <template scope="scope">
                         <div>
                             {{scope.row.groupName}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="计划日期"
+                                 align="center"
+                                 prop="installDatePlan"
+                                 span="2">
+                    <template scope="scope">
+                        <div>
+                            {{formatDate(scope.row.installDatePlan)}}
                         </div>
                     </template>
                 </el-table-column>
@@ -185,6 +185,14 @@
             
             <el-form :model="addForm" >
                 <el-row>
+                    <el-col :span="8" >
+                        <el-form-item label="安装组："  :label-width="formLabelWidth">
+                            <el-select v-model="addForm.installGroupId" placeholder="安装组" clearable>
+                                <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item >
+                    </el-col >
                 <el-col :span="8">
                     <el-form-item label="日期：" :label-width="formLabelWidth">
                     <el-date-picker
@@ -209,14 +217,6 @@
                 </el-form-item>
                 </el-col>
                 <el-col :span="8" >
-                    <el-form-item label="安装组："  :label-width="formLabelWidth">
-                        <el-select v-model="addForm.installGroupId" placeholder="安装组" clearable>
-                            <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item >
-                </el-col >
-                <el-col :span="8" >
                     <el-form-item label="头数："  :label-width="formLabelWidth">
                         <el-input v-model="addForm.headNum" clearable>
                         </el-input>
@@ -234,6 +234,73 @@
                  </el-col>
                 </el-row>
              
+                <el-col :span="4" :offset ="21">
+                    <el-button
+                            type="primary"
+                            class="el-icon-plus"
+                            @click="handleAddInstallPlanWhole">增加排产 </el-button>
+                </el-col>
+                <el-col :span="24">
+                    <el-col :span="23">
+                        <el-table
+                                border
+                                :data="addFormList.installPlanWholeContent"
+                                style="margin-left: 30px;margin-bottom: 30px">
+                            <el-table-column
+                                    label="订单号"
+                                    width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.orderNum}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="机器铭牌号"
+                                    width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.nameplate}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="安装组"
+                                    width="100">
+                                <template slot-scope="scope">
+                                    {{ filterGroup( scope.row.installGroupId )}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="针数" width="60">
+                                <template slot-scope="scope">
+                                    {{ scope.row.needleNum}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="头数" width="60">
+                                <template slot-scope="scope">
+                                    {{ scope.row.headNum}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="备注" width="400">
+                                <template slot-scope="scope">
+                                    {{ scope.row.cmtSend}}
+                                </template>
+                            </el-table-column>
+
+                            <!--<el-table-column-->
+                                    <!--label="操作" align="center">-->
+                                <!--<template scope="scope" style="text-align: center">-->
+                                    <!--<el-tooltip placement="left" content="删除">-->
+                                        <!--<el-button-->
+                                                <!--size="mini"-->
+                                                <!--type="primary"-->
+                                                <!--icon="el-icon-edit"-->
+                                                <!--@click="deleteWithItem(scope.row)">-->
+                                        <!--</el-button>-->
+                                    <!--</el-tooltip>-->
+                                <!--</template>-->
+                            <!--</el-table-column>-->
+                        </el-table>
+                    </el-col>
+                </el-col>
             </el-form >
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                 :title="errorMsg"
@@ -471,6 +538,12 @@
                 addForm: {
                     type: INSTALLTYPE.PART,
                 },
+                //新增的还没有保存的列表
+                addFormList: {
+                    type: INSTALLTYPE.ALL,
+//                    installPlanWholeContent:[{orderNum:"", nameplate:"", needleNum:"", headNum:"",cmtSend:""}]
+                    installPlanWholeContent:[ ]
+                },
                 addDialogVisible: false,
                 isError: false,
                 loading: false,
@@ -489,6 +562,133 @@
 
         },
         methods: {
+
+            //检查 该机器的该安装组 是否已经存在于当前列表（只在web页上，没到后端）
+            checkIsExistInCurrentList(nameplate, installGroup){
+                for ( var i = _this.addFormList.installPlanWholeContent.length - 1; i >= 0; i-- ){
+                    console.log("===" +_this.addFormList.installPlanWholeContent.indexOf(i).nameplate)
+                    if ( _this.addFormList.installPlanWholeContent[i].nameplate == nameplate){
+                        if (_this.addFormList.installPlanWholeContent[i].installGroupId == installGroup ){
+
+                            this.errorMsg = "该机器的该安装组 已经在列表中";
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            },
+
+            validInstallPlanInfo(formObj, isEdit) {
+                var iserror = false;
+
+                if (!iserror && isStringEmpty(formObj.installDatePlan)) {
+                    iserror = true;
+                    this.errorMsg = "安装日期不能为空";
+                }
+                if (!iserror && isStringEmpty(formObj.installGroupId)) {
+                    iserror = true;
+                    this.errorMsg = "安装组不能为空";
+                }
+                if (!iserror && isStringEmpty(formObj.orderNum)) {
+                    iserror = true;
+                    this.errorMsg = "订单号不能为空";
+                }
+                if (!iserror && isStringEmpty(formObj.nameplate)) {
+                    iserror = true;
+                    this.errorMsg = "铭牌号不能为空";
+                }
+
+                if (!iserror && isStringEmpty(formObj.needleNum)) {
+                    iserror = true;
+                    this.errorMsg = "针数不能为空";
+                }
+                if (!iserror && formObj.headNum == "") {
+                    iserror = true;
+                    this.errorMsg = "头数不能为空";
+                }
+                //todo: 还要检查当前已加到表格（未保存到数据库）的数据是否重复。
+                return iserror;
+            },
+
+            expanddFormList(){
+                _this.addFormList.installPlanWholeContent.push({
+                    orderNum: this.addForm.orderNum,
+                    orderId: this.addForm.orderId,
+                    nameplate: this.addForm.nameplate,
+                    machineId: this.addForm.machineId,
+                    installGroupId: this.addForm.installGroupId,
+                    needleNum: this.addForm.needleNum,
+                    headNum: this.addForm.headNum,
+                    cmtSend: this.addForm.cmtSend,
+                    installDatePlan: this.addForm.installDatePlan
+                });
+            },
+            //在添加排产时，先查询本地列表，再向服务器查, 这个排产，是否已经排过了。
+            checkTheInstallPlanIsSet() {
+                _this.isError = this.validInstallPlanInfo(_this.addForm, false);
+                if (_this.isError) {
+//                    showMessage(_this, _this.errorMsg, 0);
+                } else {
+                    _this.isError = this.checkIsExistInCurrentList(_this.addForm.nameplate, _this.addForm.installGroupId);
+                    if(_this.isError){
+                        console.log("===" +  this.errorMsg );
+                        return _this.isError;
+                    }
+                    _this.addForm.machineId = null;
+                    //step1. 根据nameplate获取机器machineId，
+                    $.ajax({
+                        url: HOST + "machine/selectMachinesByNameplate",
+                        type: 'POST',
+                        dataType: 'json',
+                        async: false,
+                        data: {
+                            nameplate: _this.addForm.nameplate,
+                        },
+                        success: function (res) {
+                            if (res.code == 200) {
+                                _this.addForm.machineId = res.data.id;
+
+                                // step2 再向服务器查询
+                                $.ajax({
+                                    url: HOST + "install/plan/checkTheInstallPlanIsSet",
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    data: {
+                                        "installPlan": JSON.stringify(_this.addForm)
+                                    },
+                                    success: function (data) {
+                                        if (data.code == 200) {
+                                            _this.search();
+                                             _this.expanddFormList();
+
+                                        } else {
+                                            _this.isError = true;
+                                            _this.errorMsg = data.message;
+                                        }
+                                    },
+                                    error: function (data) {
+                                        _this.errorMsg = '服务器访问出错！';
+                                    }
+                                })
+                            } else {
+                                _this.isError = true;
+                                _this.errorMsg = data.message;
+                                console.log("fail");
+                            }
+                        },
+                        error: function (data) {
+                            _this.errorMsg = '服务器访问出错！';
+                        }
+                    });
+                }
+                return _this.isError;
+
+            },
+            handleAddInstallPlanWhole(){
+                _this.isError = this.checkTheInstallPlanIsSet();
+
+            },
+
 
             getSummaries() {
                 return _this.totalRecords;
@@ -526,6 +726,7 @@
                     dataType: 'json',
                     data: {
                         orderNum: orderNum,
+                        is_fuzzy: "false",
                     },
                     success: function (res) {
                         if (res.code == 200) {
@@ -589,6 +790,7 @@
                 _this.isError = false;
                 _this.errorMsg = '';
                 _this.addDialogVisible = true;
+                _this.addFormList.installPlanWholeContent = [];
             },
 
             onAdd()
@@ -607,28 +809,35 @@
                         if (res.code == 200) {
                             _this.addForm.machineId = res.data.id;
 
-                            // step2 再添加计划
-                            $.ajax({
-                                url: HOST + "install/plan/add",
-                                type: 'POST',
-                                dataType: 'json',
-                                data: {
-                                    "installPlan": JSON.stringify(_this.addForm)
-                                },
-                                success: function (data) {
-                                    if (data.code == 200) {
-                                        _this.search();
-                                        _this.addDialogVisible = false;
-                                        showMessage(_this, '添加成功', 1);
-                                    } else {
-                                        _this.isError = true;
-                                        _this.errorMsg = data.message;
+                            // step2 再逐一添加计划
+                            for(var k = 0; k< _this.addFormList.installPlanWholeContent.length; k++){
+                                $.ajax({
+//                                    url: HOST + "install/plan/addInstallPlanList",
+                                    url: HOST + "install/plan/add",
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    data: {
+//                                    "installPlanList": JSON.stringify(_this.addFormList.installPlanWholeContent)
+                                        "installPlan": JSON.stringify(_this.addFormList.installPlanWholeContent[k])
+                                    },
+                                    success: function (data) {
+                                        if (data.code == 200) {
+                                            _this.search();
+                                            _this.addDialogVisible = false;
+                                            showMessage(_this, '添加成功', 1);
+                                        } else {
+                                            _this.isError = true;
+                                            _this.errorMsg = data.message;
+
+                                            _this.addForm.installPlanWholeContent = [];
+                                        }
+                                    },
+                                    error: function (data) {
+                                        _this.errorMsg = '服务器访问出错！';
                                     }
-                                },
-                                error: function (data) {
-                                    _this.errorMsg = '服务器访问出错！';
-                                }
-                            })
+                                })
+                            }
+
                         } else {
                             _this.isError = true;
                             _this.errorMsg = data.message;

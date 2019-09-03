@@ -276,7 +276,7 @@
             formatDate(timeStamp) {
                 return new Date(timeStamp).format("yyyy-MM-dd");
             },
-            //总装各组
+            //安装各组
             getInstallGroupData() {
                 if (_this.groupList != null && _this.groupList.length > 0) {
                     return;

@@ -173,12 +173,12 @@
                     </el-pagination>
                 </div>
             </el-col>
-        <el-dialog title="新增总装排产(以安装组和日期为依据进行排产)" :visible.sync="addDialogVisible" append-to-body width="70%">
+        <el-dialog title="新增总装排产" :visible.sync="addDialogVisible" append-to-body width="70%">
             <el-form :model="addForm" >
                 <el-row >
                     <el-col :span="8" >
                         <el-form-item label="安装组："  :label-width="formLabelWidth">
-                            <el-select v-model="addForm.installGroupId" placeholder="安装切换后重新排产" clearable>
+                            <el-select v-model="addForm.installGroupId" placeholder="安装组" clearable>
                                 <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id"
                                            @change="onInstallGroupChanged()">
                                 </el-option>
@@ -713,7 +713,6 @@
                 _this.addFormList.installPlanWholeContent = [];
             },
 
-            //添加一系列排产,todo
             onAdd()
             {
                 _this.addForm.machineId = null;
@@ -816,6 +815,7 @@
             },
 
             editWithItem(data) {
+                _this.modifyDialogVisible = true;
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
                 _this.modifyForm = copyObject(_this.selectedItem);
