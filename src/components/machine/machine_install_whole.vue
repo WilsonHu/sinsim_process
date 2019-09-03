@@ -275,11 +275,25 @@
                                     {{ scope.row.headNum}}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="备注" width="500">
+                            <el-table-column label="备注" width="400">
                                 <template slot-scope="scope">
                                     {{ scope.row.cmtSend}}
                                 </template>
                             </el-table-column>
+
+                            <!--<el-table-column-->
+                                    <!--label="操作" align="center">-->
+                                <!--<template scope="scope" style="text-align: center">-->
+                                    <!--<el-tooltip placement="left" content="删除">-->
+                                        <!--<el-button-->
+                                                <!--size="mini"-->
+                                                <!--type="primary"-->
+                                                <!--icon="el-icon-edit"-->
+                                                <!--@click="deleteWithItem(scope.row)">-->
+                                        <!--</el-button>-->
+                                    <!--</el-tooltip>-->
+                                <!--</template>-->
+                            <!--</el-table-column>-->
                         </el-table>
                     </el-col>
                 </el-col>
@@ -364,6 +378,17 @@
             </span  >
 
         </el-dialog >
+
+        <el-dialog title="提示" :visible.sync="deleteConfirmVisible" width="30%"
+                   append-to-body>
+            <span>确认要删除[ </span>
+            <span style="color: red; font-size: 20px; font-weight: bold">{{selectedItem.nameplate}}</span>
+            <span> ]的排产吗？</span>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="deleteConfirmVisible = false" icon="el-icon-close">取 消</el-button>
+              <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -449,6 +474,7 @@
                 //修改
                 modifyDialogVisible: false,
                 modifyForm: {},
+                deleteConfirmVisible: false,
             }
 
         },
@@ -628,7 +654,7 @@
 
             onInstallGroupChanged(){
                 _this.addForm.installPlanWholeContent = [];
-                //todo 页面上也要清空
+
             },
             onChange()
             {
@@ -788,13 +814,27 @@
 
                 return iserror;
             },
+
             editWithItem(data) {
-                _this.modifyDialogVisible = true;
                 _this.selectedItem = copyObject(data);
                 _this.isError = false;
                 _this.modifyForm = copyObject(_this.selectedItem);
 
 
+            },
+
+            //删除列表中的一行
+            deleteWithItem(data) {
+                _this.deleteConfirmVisible = true;
+                _this.selectedItem = copyObject(data);
+                _this.isError = false;
+                _this.modifyForm = copyObject(_this.selectedItem);
+
+
+            },
+            onConfirmDelete(){
+                _this.deleteConfirmVisible = false;
+                //todo
             },
 
             initAllRoles() {

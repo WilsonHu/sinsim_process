@@ -545,7 +545,7 @@
                                             show-overflow-tooltip="true"
                                     >
                                         <el-table-column
-                                                width="55"
+                                                width="45"
                                                 align="center"
                                                 label="序号">
                                             <template scope="scope">
@@ -553,7 +553,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column
-                                                width="100"
+                                                width="80"
                                                 align="center"
                                                 label="工序名">
                                             <template scope="scope">
@@ -577,7 +577,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column
-                                                width="100"
+                                                width="80"
                                                 align="center"
                                                 label="时长">
                                             <template scope="scope">
@@ -585,7 +585,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column
-                                                width="120"
+                                                width="100"
                                                 align="center"
                                                 label="组长">
                                             <template scope="scope">
@@ -607,7 +607,15 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column
-                                                width="120"
+                                                width="100"
+                                                align="center"
+                                                label="反馈">
+                                            <template scope="scope">
+                                                <span style="font-size: small">{{scope.row.cmtFeedback}}</span>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                width="100"
                                                 align="center"
                                                 label="状态">
                                             <template scope="scope">
