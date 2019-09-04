@@ -11,7 +11,19 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="6">
+                        <el-form-item label="订单号:">
+                            <el-input  v-model="filters.orderNum" placeholder="订单号" auto-complete="off" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                    </el-row>
+                <el-row>
+                    <el-col :span="6">
+                        <el-form-item label="机器编号:">
+                            <el-input  v-model="filters.nameplate" placeholder="机器编号" auto-complete="off" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
                         <el-form-item label="生产日期:">
                             <el-date-picker
                                     v-model="filters.selectDate"
@@ -25,12 +37,7 @@
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="订单号:">
-                            <el-input  v-model="filters.orderNum" placeholder="订单号" auto-complete="off" clearable></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="2">
+                    <el-col :span="2" :offset="8">
                         <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询
                         </el-button>
                     </el-col>
@@ -150,6 +157,7 @@
                     taskName: '',
                     orderNum: '',
                     selectDate: '',
+                    nameplate:'',
                 },
                 tableData: [],
                 pageSize: EveryPageNum,//每一页的num
@@ -232,8 +240,8 @@
                 const { columns, data } = param;
                 const sums = [];
                 sums[0]='合计';
-                sums[1]='总台数：';
-                sums[2]=_this.totalRecords + '台';
+                sums[1]='总数：';
+                sums[2]=_this.totalRecords;
                 return sums;
             },
             handleCurrentChange(val) {
@@ -251,6 +259,7 @@
                     queryStartTime: '',
                     queryFinishTime: '',
                     is_fuzzy: true,
+                    nameplate:_this.filters.nameplate.trim(),
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
