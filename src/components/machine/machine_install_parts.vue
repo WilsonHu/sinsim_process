@@ -158,7 +158,7 @@
                             </el-tooltip>
                             <el-tooltip
                                         v-show = "scope.row.groupName=='焊线组'"
-                                        placement="top" content="详情">
+                                        placement="top" content="焊线详情">
                                     <el-button
                                             size="mini"
                                             type="primary"

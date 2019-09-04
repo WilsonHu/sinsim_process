@@ -5,7 +5,7 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="工序:">
-                            <el-select v-model="filters.taskName" placeholder="工序">
+                            <el-select v-model="filters.taskName" placeholder="工序" clearable>
                                 <el-option v-for="item in workTaskList" :key="item.id" :label="item.taskName" :value="item.taskName">
                                 </el-option>
                             </el-select>
@@ -27,7 +27,7 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="订单号:">
-                            <el-input  v-model="filters.orderNum" placeholder="订单号" auto-complete="off"></el-input>
+                            <el-input  v-model="filters.orderNum" placeholder="订单号" auto-complete="off" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2">
@@ -86,20 +86,39 @@
                 </el-table-column>
                 <el-table-column
                         align="center"
+                        prop="installBeginTime"
+                        label="开始时间">
+                    <template slot-scope="scope">
+                <span>
+                {{(scope.row.installBeginTime)|filterDateString}}
+                </span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        label="结束时间">
+                    <template slot-scope="scope">
+                <span>
+                {{(scope.row.installBeginTime)|filterDateString}}
+                </span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
                         prop="spendTime"
                         label="耗时">
                 </el-table-column>
-<!--                <el-table-column-->
-<!--                        align="center"-->
-<!--                        prop="standardTime"-->
-<!--                        label="标准时间">-->
-<!--                </el-table-column>-->
+                <!--                <el-table-column-->
+                <!--                        align="center"-->
+                <!--                        prop="standardTime"-->
+                <!--                        label="标准时间">-->
+                <!--                </el-table-column>-->
                 <!-- 效率目前没有方法计算-->
                 <!-- 因为工序没法确定一个标准时间，因为时间和工序，机型，头数，长度（比如台板）等等都有关，目前只能先记录下所有耗时时间。后面再考虑设计如何反映效率。-->
                 <!--<el-table-column-->
-                        <!--align="center"-->
-                        <!--prop="productivity"-->
-                        <!--label="效率">-->
+                <!--align="center"-->
+                <!--prop="productivity"-->
+                <!--label="效率">-->
                 <!--</el-table-column>-->
             </el-table>
             <div class="block" style="text-align: center; margin-top: 20px">
@@ -185,6 +204,7 @@
             }
         },
         methods: {
+
             getWorkTask() {
                 $.ajax({
                     url: _this.getWorkTaskUrl,
@@ -273,6 +293,14 @@
                 })
             },
             processMachineExport() {
+            },
+        },
+
+        filters: {
+
+            filterDateString(strDate) {
+                var resDate = new Date(strDate);
+                return resDate.format("yyyy-MM-dd hh:mm:ss");
             },
         },
         created: function () {
