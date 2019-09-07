@@ -234,6 +234,7 @@
             style="text-align: center; font-weight: bold; font-size: 28px; font-family: 'Microsoft YaHei UI';padding-bottom: 20px"
           >{{dialogTitle}}</div>
           <el-form class="panel-body">
+            <el-row>
             <el-col :span="5">
               <el-form-item label="合同号：" :label-width="formLabelWidth">
                 <el-input
@@ -291,9 +292,12 @@
                 <el-input v-model="contractForm.recordUser" disabled></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="2" :offset="1" v-if="haveInitialMachineOrder() && mode == EDIT_MODE">
+            </el-row>
+            <el-row>
+            <el-col :span="2" :offset="21" v-if="haveInitialMachineOrder() && mode == EDIT_MODE">
               <el-button size="normal" type="danger" icon="el-icon-check" @click="startToSign">提交审核</el-button>
             </el-col>
+            </el-row>
           </el-form>
 
           <el-card class="box-card" style="margin: 25px" v-if="isFinanceVisible()">

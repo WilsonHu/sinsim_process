@@ -307,7 +307,8 @@
             </el-alert >
             <span  slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
                 <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
-                <el-button type="primary" @click="onAdd" icon="el-icon-check">确 定</el-button >
+                <el-button type="primary" @click="onAdd('TRUE')" icon="el-icon-check">立刻排产</el-button >
+                <el-button type="primary" @click="onAdd()" icon="el-icon-check">确定排产</el-button >
             </span >
 
         </el-dialog >
@@ -537,7 +538,8 @@
                     needleNum: this.addForm.needleNum,
                     headNum: this.addForm.headNum,
                     cmtSend: this.addForm.cmtSend,
-                    installDatePlan: this.addForm.installDatePlan
+                    installDatePlan: this.addForm.installDatePlan,
+                    type:INSTALLTYPE.ALL,
                 });
             },
             //在添加排产时，先查询本地列表，再向服务器查, 这个排产，是否已经排过了。
@@ -713,7 +715,8 @@
                 _this.addFormList.installPlanWholeContent = [];
             },
 
-            onAdd()
+
+            onAdd(sendNow)
             {
                 _this.addForm.machineId = null;
                 //step1. 根据nameplate获取机器machineId，
@@ -729,15 +732,20 @@
                         if (res.code == 200) {
                             _this.addForm.machineId = res.data.id;
 
+                            var urlInstallPlanAdd;
+                            if(sendNow){
+                                urlInstallPlanAdd = "install/plan/addAndsendInstallPlanNow";
+                            } else {
+                                urlInstallPlanAdd = "install/plan/add";
+                            }
                             // step2 再逐一添加计划
                             for(var k = 0; k< _this.addFormList.installPlanWholeContent.length; k++){
                                 $.ajax({
 //                                    url: HOST + "install/plan/addInstallPlanList",
-                                    url: HOST + "install/plan/add",
+                                    url: HOST + urlInstallPlanAdd,
                                     type: 'POST',
                                     dataType: 'json',
                                     data: {
-//                                    "installPlanList": JSON.stringify(_this.addFormList.installPlanWholeContent)
                                         "installPlan": JSON.stringify(_this.addFormList.installPlanWholeContent[k])
                                     },
                                     success: function (data) {
