@@ -2834,7 +2834,7 @@ export default {
       //                });
     },
 
-    requesDomesticTradeZoneList() {
+    requestDomesticTradeZoneList() {
       $.ajax({
         url: HOST + 'domestic/trade/zone/list/',
         type: 'POST',
@@ -3297,6 +3297,34 @@ export default {
       this.selectContracts();
     },
 
+    //根据登录者的账号，得到对应的内贸区域
+    //如果是内贸经理，则有对应的内贸区域(可多个)
+    //其他的账号（比如外贸经理等），则为空
+
+    getUserDomesticTradeZoneList(){
+      if (_this.userInfo.marketGroupName == '内贸部') {
+        //根据账号返回内贸区域
+        $.ajax({
+          url: HOST + 'domestic/trade/zone/getDomesticTradeZone',
+          type: 'POST',
+          dataType: 'json',
+          data: {account: _this.userInfo.account},
+          success: function (data) {
+            if (data.code == 200) {
+              _this.userDomesticTradeZoneList = data.data.list;
+              return _this.domesticTradeZoneList;
+            }
+          },
+          error: function (data) {
+            showMessage(_this, '服务器访问失败！', 0);
+          }
+        });
+        return '';
+
+      } else {
+        return '';
+      }
+    },
     selectContracts() {
       var condition = {
         id: _this.filters.id,
@@ -3308,6 +3336,8 @@ export default {
         recordUser: _this.filters.recordUser,
         query_start_time: '',
         query_finish_time: '',
+      //确定是哪个内贸区域
+        userDomesticTradeZoneList: _this.userDomesticTradeZoneList,
         page: _this.currentPage,
         size: _this.pageSize
       };
@@ -4067,6 +4097,7 @@ export default {
           }
         }
         //设置合同属于哪一个销售组
+        //（销售员和国内销售区域不绑定，所以不根据销售员来定内贸区域）
         if (_this.userInfo != null) {
           _this.contractForm.marketGroupName =
             _this.userInfo.marketGroupName != ''
@@ -5187,6 +5218,8 @@ export default {
     ) {
       _this.filters.roleName = this.userInfo.role.roleName;
     }
+    //该用户的审批区域，只有国内 销售经理才有。
+    _this.userDomesticTradeZoneList = _this.getUserDomesticTradeZoneList();
 
     this.orderStatusForFilterList[0] = {
       name: '全部',
@@ -5206,7 +5239,7 @@ export default {
     _this.initMachineType();
     _this.selectContracts();
     _this.initSignProcesses();
-    _this.requesDomesticTradeZoneList();
+    _this.requestDomesticTradeZoneList();
   },
   mounted: function() {}
 };
