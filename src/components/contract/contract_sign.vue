@@ -2725,7 +2725,8 @@ export default {
       contractErrorMsg: '',
       normalSignRoleList: [],
       orderStatusForFilterList: [],
-      configList: []
+      configList: [],
+      userDomesticTradeZoneListStr:'',
     };
   },
   methods: {
@@ -3301,7 +3302,7 @@ export default {
     //如果是内贸经理，则有对应的内贸区域(可多个)
     //其他的账号（比如外贸经理等），则为空
 
-    getUserDomesticTradeZoneList(){
+    getUserDomesticTradeZoneListStr(){
       if (_this.userInfo.marketGroupName == '内贸部') {
         //根据账号返回内贸区域
         $.ajax({
@@ -3311,8 +3312,15 @@ export default {
           data: {account: _this.userInfo.account},
           success: function (data) {
             if (data.code == 200) {
-              _this.userDomesticTradeZoneList = data.data.list;
-              return _this.domesticTradeZoneList;
+              for(let k=0; k<data.data.size; k++) {
+                if (_this.userDomesticTradeZoneListStr == '') {
+                  _this.userDomesticTradeZoneListStr = data.data.list[k].zoneName;
+                } else {
+                  _this.userDomesticTradeZoneListStr = _this.userDomesticTradeZoneListStr + ";" + data.data.list[k].zoneName;
+                }
+              }
+              _this.selectContracts();
+              return _this.userDomesticTradeZoneListStr;
             }
           },
           error: function (data) {
@@ -3336,8 +3344,9 @@ export default {
         recordUser: _this.filters.recordUser,
         query_start_time: '',
         query_finish_time: '',
-      //确定是哪个内贸区域
-        userDomesticTradeZoneList: _this.userDomesticTradeZoneList,
+      //确定是哪个内贸区域,格式：用分号隔开的字符串
+        userDomesticTradeZoneListStr: _this.userDomesticTradeZoneListStr,
+
         page: _this.currentPage,
         size: _this.pageSize
       };
@@ -5218,8 +5227,6 @@ export default {
     ) {
       _this.filters.roleName = this.userInfo.role.roleName;
     }
-    //该用户的审批区域，只有国内 销售经理才有。
-    _this.userDomesticTradeZoneList = _this.getUserDomesticTradeZoneList();
 
     this.orderStatusForFilterList[0] = {
       name: '全部',
@@ -5237,7 +5244,16 @@ export default {
     _this.requestCustomerList();
     _this.initAllRoles();
     _this.initMachineType();
-    _this.selectContracts();
+    /**
+     * 如果是内贸部的销售经理，需要确保在获取销售经理的区域之后再查询
+     * 在getUserDomesticTradeZoneListStr内部 selectContracts
+     */
+    if ( this.userInfo.role.roleName == '销售部经理' && this.userInfo.marketGroupName == '内贸部') {
+      //该用户的审批区域，只有国内 销售经理才有。
+      _this.userDomesticTradeZoneListStr = _this.getUserDomesticTradeZoneListStr();
+    } else{
+      this.selectContracts();
+    } 
     _this.initSignProcesses();
     _this.requestDomesticTradeZoneList();
   },
