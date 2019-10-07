@@ -811,7 +811,6 @@
                             _this.addForm.machineId = res.data.id;
 
                             // step2 再逐一添加计划
-                            for(var k = 0; k< _this.addFormList.installPlanWholeContent.length; k++){
                             for(var k = 0; k< _this.addFormList.installPlanPartsContent.length; k++){
                                 $.ajax({
 //                                    url: HOST + "install/plan/addInstallPlanList",
@@ -820,7 +819,6 @@
                                     dataType: 'json',
                                     data: {
 //                                    "installPlanList": JSON.stringify(_this.addFormList.installPlanWholeContent)
-                                        "installPlan": JSON.stringify(_this.addFormList.installPlanWholeContent[k])
                                         "installPlan": JSON.stringify(_this.addFormList.installPlanPartsContent[k])
                                     },
                                     success: function (data) {
@@ -832,7 +830,7 @@
                                             _this.isError = true;
                                             _this.errorMsg = data.message;
 
-                                            _this.addForm.installPlanWholeContent = [];
+                                            _this.addForm.installPlanPartsContent = [];
                                         }
                                     },
                                     error: function (data) {
