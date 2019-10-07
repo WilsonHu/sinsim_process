@@ -238,13 +238,13 @@
                     <el-button
                             type="primary"
                             class="el-icon-plus"
-                            @click="handleAddInstallPlanWhole">增加排产 </el-button>
+                            @click="handleAddInstallPlanParts">增加排产 </el-button>
                 </el-col>
                 <el-col :span="24">
                     <el-col :span="23">
                         <el-table
                                 border
-                                :data="addFormList.installPlanWholeContent"
+                                :data="addFormList.installPlanPartsContent"
                                 style="margin-left: 30px;margin-bottom: 30px">
                             <el-table-column
                                     label="订单号"
@@ -542,7 +542,7 @@
                 addFormList: {
                     type: INSTALLTYPE.ALL,
 //                    installPlanWholeContent:[{orderNum:"", nameplate:"", needleNum:"", headNum:"",cmtSend:""}]
-                    installPlanWholeContent:[ ]
+                    installPlanPartsContent:[ ]
                 },
                 addDialogVisible: false,
                 isError: false,
@@ -565,10 +565,10 @@
 
             //检查 该机器的该安装组 是否已经存在于当前列表（只在web页上，没到后端）
             checkIsExistInCurrentList(nameplate, installGroup){
-                for ( var i = _this.addFormList.installPlanWholeContent.length - 1; i >= 0; i-- ){
-                    console.log("===" +_this.addFormList.installPlanWholeContent.indexOf(i).nameplate)
-                    if ( _this.addFormList.installPlanWholeContent[i].nameplate == nameplate){
-                        if (_this.addFormList.installPlanWholeContent[i].installGroupId == installGroup ){
+                for ( var i = _this.addFormList.installPlanPartsContent.length - 1; i >= 0; i-- ){
+                    console.log("===" +_this.addFormList.installPlanPartsContent.indexOf(i).nameplate)
+                    if ( _this.addFormList.installPlanPartsContent[i].nameplate == nameplate){
+                        if (_this.addFormList.installPlanPartsContent[i].installGroupId == installGroup ){
 
                             this.errorMsg = "该机器的该安装组 已经在列表中";
                             return true;
@@ -611,7 +611,7 @@
             },
 
             expanddFormList(){
-                _this.addFormList.installPlanWholeContent.push({
+                _this.addFormList.installPlanPartsContent.push({
                     orderNum: this.addForm.orderNum,
                     orderId: this.addForm.orderId,
                     nameplate: this.addForm.nameplate,
@@ -620,7 +620,8 @@
                     needleNum: this.addForm.needleNum,
                     headNum: this.addForm.headNum,
                     cmtSend: this.addForm.cmtSend,
-                    installDatePlan: this.addForm.installDatePlan
+                    installDatePlan: this.addForm.installDatePlan,
+                    type:INSTALLTYPE.PART,
                 });
             },
             //在添加排产时，先查询本地列表，再向服务器查, 这个排产，是否已经排过了。
@@ -684,7 +685,7 @@
                 return _this.isError;
 
             },
-            handleAddInstallPlanWhole(){
+            handleAddInstallPlanParts(){
                 _this.isError = this.checkTheInstallPlanIsSet();
 
             },
@@ -790,7 +791,7 @@
                 _this.isError = false;
                 _this.errorMsg = '';
                 _this.addDialogVisible = true;
-                _this.addFormList.installPlanWholeContent = [];
+                _this.addFormList.installPlanPartsContent = [];
             },
 
             onAdd()
@@ -811,6 +812,7 @@
 
                             // step2 再逐一添加计划
                             for(var k = 0; k< _this.addFormList.installPlanWholeContent.length; k++){
+                            for(var k = 0; k< _this.addFormList.installPlanPartsContent.length; k++){
                                 $.ajax({
 //                                    url: HOST + "install/plan/addInstallPlanList",
                                     url: HOST + "install/plan/add",
@@ -819,6 +821,7 @@
                                     data: {
 //                                    "installPlanList": JSON.stringify(_this.addFormList.installPlanWholeContent)
                                         "installPlan": JSON.stringify(_this.addFormList.installPlanWholeContent[k])
+                                        "installPlan": JSON.stringify(_this.addFormList.installPlanPartsContent[k])
                                     },
                                     success: function (data) {
                                         if (data.code == 200) {
