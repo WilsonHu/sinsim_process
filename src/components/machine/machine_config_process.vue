@@ -351,9 +351,32 @@
                     <td style="width: 20%; padding-right: 10px">
                         <el-row>
                             <el-form :model="addForm">
+                                <el-col :span="24" :offset="0">
+                                    <el-form-item label="流程模板：">
+                                        <el-select
+                                                :disabled="isTaskOngoing"
+                                                v-model="addForm.processId"
+                                                @change="onSelectedChange"
+                                                clearable
+                                                filterable
+                                                remote
+                                                reserve-keyword
+                                                placeholder="请输入关键词"
+                                                :remote-method="remoteMethod"
+                                                :loading="loading">
+                                            <el-option
+                                                    v-for="item in allProcessList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <br>
                                 <span v-if="addForm.processRecordId==''">
                                     <el-table ref="multipleTable"
-                                              :data="tableData"
+                                              :data="tableDataByOrder"
                                               tooltip-effect="dark"
                                               style="width: 100%"
                                               @selection-change="handleSelectionChange">
@@ -413,28 +436,6 @@
                                         </el-form-item>
                                     </el-col>
                                 </span>
-                                <el-col :span="24" :offset="0">
-                                    <el-form-item label="流程模板：">
-                                        <el-select
-                                                :disabled="isTaskOngoing"
-                                                v-model="addForm.processId"
-                                                @change="onSelectedChange"
-                                                clearable
-                                                filterable
-                                                remote
-                                                reserve-keyword
-                                                placeholder="请输入关键词"
-                                                :remote-method="remoteMethod"
-                                                :loading="loading">
-                                            <el-option
-                                                    v-for="item in allProcessList"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
                             </el-form>
                         </el-row>
                         <br>
@@ -490,6 +491,7 @@
                 queryUserRoleUrl: HOST + "role/list",
                 queryMachineTypeURL: HOST + "machine/type/list",
                 tableData: [],
+                tableDataByOrder: [],
                 //分页
                 pageSize: EveryPageNum,//每一页的num
                 currentPage: 1,
@@ -716,11 +718,35 @@
                     _this.addDialogVisible = true;
                 }
                 else {
+                    /*
+                     未配置，获取当前订单所有未配置机器
+                     */
                     _this.addForm.processId = '';
                     _this.addForm.taskList = '';
                     _this.isError = false;
                     _this.addDialogVisible = true;
+                    this.onSearchByOrder();
                 }
+            },
+            onSearchByOrder()
+            {
+                var condition = {
+                    orderNum: _this.addForm.orderNum,
+                    configStatus: 1,
+                    is_fuzzy: true,
+                };
+                $.ajax({
+                    url: _this.queryDataUrl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: condition,
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.tableDataByOrder = res.data.list;
+                        }
+                        _this.loadingUI = false;
+                    }
+                })
             },
 
             setMachineFinished(machine) {
