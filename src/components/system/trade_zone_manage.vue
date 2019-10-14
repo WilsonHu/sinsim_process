@@ -147,7 +147,8 @@ export default {
         url: HOST + '/user/selectUsers',
         type: 'POST',
         dataType: 'json',
-        data: {},
+        //限定是销售经理
+        data: {roleId: '7'},
         success: function(data) {
           if (data.code == 200) {
             _this.userList = [];

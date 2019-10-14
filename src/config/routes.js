@@ -246,7 +246,7 @@ export default [{
                         path: '/home/system/trade_zone_manage',
                         component: TradeZoneManage,
                         name: 'trade_zone_manage',
-                        meta: '区域管理'
+                        meta: '内贸区域管理'
                     },
                 ]
             },
