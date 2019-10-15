@@ -275,7 +275,7 @@
                                     {{ scope.row.headNum}}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="备注" width="400">
+                            <el-table-column label="备注" >
                                 <template slot-scope="scope">
                                     {{ scope.row.cmtSend}}
                                 </template>
