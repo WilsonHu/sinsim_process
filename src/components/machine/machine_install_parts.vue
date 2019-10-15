@@ -153,6 +153,7 @@
                                         size="mini"
                                         type="primary"
                                         icon="el-icon-edit"
+                                        :disabled="scope.row.headCountDone == scope.row.headNum"
                                         @click="editWithItem(scope.row)">
                                 </el-button>
                             </el-tooltip>
