@@ -381,8 +381,7 @@
                                               style="width: 100%"
                                               @selection-change="handleSelectionChange">
                                         <el-table-column type="selection"
-                                                         :selectable="selectable">
-                                        </el-table-column>
+                                                         />
                                         <el-table-column prop="nameplate"
                                                          label="机器编号">
                                             <template scope="scope">
@@ -776,20 +775,11 @@
                 _this.selectedItemList = val;
             },
 
-            //批量配置只限未配置状态的机器
-            selectable(row,index) {
-                if (_this.selectedItem.processRecordId != ''){
-                    return false
-                } else {
-                    return row.processRecordId == "";
-                }
-            },
-
             //配置或修改工序流程
             onSubmit()
             {
                 //非批量配置
-                if (!_this.selectedItemList) {
+                if (_this.selectedItemList.length < 1) {
                     if (_this.addForm.processId == "") {
                         showMessage(_this, "作业流程不能为空", 0)
                         _this.isError = true;
@@ -1113,9 +1103,6 @@
                         _this.renderDiagramDataToUI();
                     }
                     _this.loadingInstance.close();
-                    //批量配置的默认选中
-                    _this.$refs.multipleTable.clearSelection();
-                    _this.$refs.multipleTable.toggleRowSelection(_this.selectedItem,true);
 
                 }, 200);
 
