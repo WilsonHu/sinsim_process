@@ -235,68 +235,76 @@
           >{{dialogTitle}}</div>
           <el-form class="panel-body">
             <el-row>
-            <el-col :span="5">
-              <el-form-item label="合同号：" :label-width="formLabelWidth">
-                <el-input
-                  v-model="contractForm.contractNum"
-                  :readonly="changeContractContentDisable(contractForm)"
-                  placeholder="合同号"
-                  @blur="onContractInputUnfocus(contractForm.contractNum)"
-                ></el-input>
-              </el-form-item>
-              <div style="margin-top: -15px">
-                <span v-if="contractExist" style="color: red; font-size: 12px;">{{contractErrorMsg}}</span>
-              </div>
-            </el-col>
-            <el-col :span="5">
-              <el-form-item label="客户：" :label-width="formLabelWidth">
-                <!-- <el-input v-model="contractForm.customerName"
+              <el-col :span="5">
+                <el-form-item label="合同号：" :label-width="formLabelWidth">
+                  <el-input
+                    v-model="contractForm.contractNum"
+                    :readonly="changeContractContentDisable(contractForm)"
+                    placeholder="合同号"
+                    @blur="onContractInputUnfocus(contractForm.contractNum)"
+                  ></el-input>
+                </el-form-item>
+                <div style="margin-top: -15px">
+                  <span
+                    v-if="contractExist"
+                    style="color: red; font-size: 12px;"
+                  >{{contractErrorMsg}}</span>
+                </div>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="客户：" :label-width="formLabelWidth">
+                  <!-- <el-input v-model="contractForm.customerName"
                                           :readonly="changeContractContentDisable(contractForm)"
                                           placeholder="客户"
-                ></el-input>-->
-                <el-autocomplete
-                  :readonly="changeContractContentDisable(contractForm)"
-                  v-model="contractForm.customerName"
-                  :fetch-suggestions="queryCustomer"
-                  placeholder="客户"
-                ></el-autocomplete>
-              </el-form-item>
-            </el-col>
-            <el-col :span="5">
-              <el-form-item label="国内区域：" :label-width="formLabelWidth">
-                <el-autocomplete
-                  :readonly="changeContractContentDisable(contractForm)"
-                  v-model="contractForm.domesticTradeZone"
-                  :fetch-suggestions="queryDomesticTradeZone"
-                  placeholder="国外不填"
-                ></el-autocomplete>
-              </el-form-item>
-            </el-col>
-            <el-col :span="4">
-              <el-form-item label="销售员：" :label-width="formLabelWidth">
-                <!-- <el-input v-model="contractForm.sellman"
+                  ></el-input>-->
+                  <el-autocomplete
+                    :readonly="changeContractContentDisable(contractForm)"
+                    v-model="contractForm.customerName"
+                    :fetch-suggestions="queryCustomer"
+                    placeholder="客户"
+                  ></el-autocomplete>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="国内区域：" :label-width="formLabelWidth">
+                  <el-autocomplete
+                    :readonly="changeContractContentDisable(contractForm)"
+                    v-model="contractForm.domesticTradeZone"
+                    :fetch-suggestions="queryDomesticTradeZone"
+                    placeholder="国外不填"
+                  ></el-autocomplete>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="销售员：" :label-width="formLabelWidth">
+                  <!-- <el-input v-model="contractForm.sellman"
                                           :readonly="changeContractContentDisable(contractForm)"
                                           placeholder="销售员"
-                ></el-input>-->
-                <el-autocomplete
-                  :readonly="changeContractContentDisable(contractForm)"
-                  v-model="contractForm.sellman"
-                  :fetch-suggestions="querySearchAsync"
-                  placeholder="销售员"
-                  @select="handleSelect"
-                ></el-autocomplete>
-              </el-form-item>
-            </el-col>
-            <el-col :span="4">
-              <el-form-item label="录单人：" :label-width="formLabelWidth">
-                <el-input v-model="contractForm.recordUser" disabled></el-input>
-              </el-form-item>
-            </el-col>
+                  ></el-input>-->
+                  <el-autocomplete
+                    :readonly="changeContractContentDisable(contractForm)"
+                    v-model="contractForm.sellman"
+                    :fetch-suggestions="querySearchAsync"
+                    placeholder="销售员"
+                    @select="handleSelect"
+                  ></el-autocomplete>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="录单人：" :label-width="formLabelWidth">
+                  <el-input v-model="contractForm.recordUser" disabled></el-input>
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-row>
-            <el-col :span="2" :offset="21" v-if="haveInitialMachineOrder() && mode == EDIT_MODE">
-              <el-button size="normal" type="danger" icon="el-icon-check" @click="startToSign">提交审核</el-button>
-            </el-col>
+              <el-col :span="2" :offset="21" v-if="haveInitialMachineOrder() && mode == EDIT_MODE">
+                <el-button
+                  size="normal"
+                  type="danger"
+                  icon="el-icon-check"
+                  @click="startToSign"
+                >提交审核</el-button>
+              </el-col>
             </el-row>
           </el-form>
 
@@ -2596,7 +2604,8 @@ export default {
             createTime: new Date().format('yyyy-MM-dd'),
             equipment: [],
             status: ORDER_INITIAL,
-            createUserId: JSON.parse(sessionStorage.getItem('user')).id
+            createUserId: JSON.parse(sessionStorage.getItem('user')).id,
+            packageMark: ''
           },
           orderDetail: copyObjectByJSON(DefaultOrderDetail),
           //每个需求单中的签核记录
@@ -2670,7 +2679,8 @@ export default {
           createTime: new Date().format('yyyy-MM-dd'),
           equipment: [],
           status: ORDER_INITIAL,
-          createUserId: JSON.parse(sessionStorage.getItem('user')).id
+          createUserId: JSON.parse(sessionStorage.getItem('user')).id,
+          packageMark: ''
         },
         orderDetail: copyObjectByJSON(DefaultOrderDetail)
       },
@@ -2726,7 +2736,7 @@ export default {
       normalSignRoleList: [],
       orderStatusForFilterList: [],
       configList: [],
-      userDomesticTradeZoneListStr:'',
+      userDomesticTradeZoneListStr: ''
     };
   },
   methods: {
@@ -3172,7 +3182,7 @@ export default {
       newItem.machineOrder.equipment = [];
       newItem.machineOrder.createUserId = _this.userInfo.id;
       newItem.machineOrder.sellman = this.contractForm.sellman;
-
+      newItem.machineOrder.packageMark = '';
       //设置时间
       newItem.machineOrder.createTime = new Date().format('yyyy-MM-dd');
       //为了清除前面订单签核的内容
@@ -3302,33 +3312,36 @@ export default {
     //如果是内贸经理，则有对应的内贸区域(可多个)
     //其他的账号（比如外贸经理等），则为空
 
-    getUserDomesticTradeZoneListStr(){
+    getUserDomesticTradeZoneListStr() {
       if (_this.userInfo.marketGroupName == '内贸部') {
         //根据账号返回内贸区域
         $.ajax({
           url: HOST + 'domestic/trade/zone/getDomesticTradeZone',
           type: 'POST',
           dataType: 'json',
-          data: {account: _this.userInfo.account},
-          success: function (data) {
+          data: { account: _this.userInfo.account },
+          success: function(data) {
             if (data.code == 200) {
-              for(let k=0; k<data.data.size; k++) {
+              for (let k = 0; k < data.data.size; k++) {
                 if (_this.userDomesticTradeZoneListStr == '') {
-                  _this.userDomesticTradeZoneListStr = data.data.list[k].zoneName;
+                  _this.userDomesticTradeZoneListStr =
+                    data.data.list[k].zoneName;
                 } else {
-                  _this.userDomesticTradeZoneListStr = _this.userDomesticTradeZoneListStr + ";" + data.data.list[k].zoneName;
+                  _this.userDomesticTradeZoneListStr =
+                    _this.userDomesticTradeZoneListStr +
+                    ';' +
+                    data.data.list[k].zoneName;
                 }
               }
               _this.selectContracts();
               return _this.userDomesticTradeZoneListStr;
             }
           },
-          error: function (data) {
+          error: function(data) {
             showMessage(_this, '服务器访问失败！', 0);
           }
         });
         return '';
-
       } else {
         return '';
       }
@@ -3344,7 +3357,7 @@ export default {
         recordUser: _this.filters.recordUser,
         query_start_time: '',
         query_finish_time: '',
-      //确定是哪个内贸区域,格式：用分号隔开的字符串
+        //确定是哪个内贸区域,格式：用分号隔开的字符串
         userDomesticTradeZoneListStr: _this.userDomesticTradeZoneListStr,
 
         page: _this.currentPage,
@@ -3422,8 +3435,6 @@ export default {
         _this.currentCopyItem.machineOrder.yDistance;
       _this.currentSelectOrder.machineOrder.packageMethod =
         _this.currentCopyItem.machineOrder.packageMethod;
-      _this.currentSelectOrder.machineOrder.packageMark =
-        _this.currentCopyItem.machineOrder.packageMark;
       _this.currentSelectOrder.machineOrder.maintainType =
         _this.currentCopyItem.machineOrder.maintainType;
       _this.currentSelectOrder.machineOrder.mark =
@@ -3432,6 +3443,8 @@ export default {
         _this.currentCopyItem.machineOrder.equipment;
       _this.currentSelectOrder.machineOrder.machinePrice =
         _this.currentCopyItem.machineOrder.machinePrice;
+      _this.currentSelectOrder.machineOrder.packageMark =
+        _this.currentCopyItem.machineOrder.packageMark;
       _this.confirmPasteDialog = false;
       showMessage(_this, _this.currentSelectOrder.title + '粘贴成功！', 1);
     },
@@ -3613,7 +3626,8 @@ export default {
           machineNum: 1,
           equipment: [],
           status: ORDER_INITIAL,
-          createUserId: JSON.parse(sessionStorage.getItem('user')).id
+          createUserId: JSON.parse(sessionStorage.getItem('user')).id,
+          packageMark: ''
         },
         orderDetail: copyObjectByJSON(DefaultOrderDetail),
         //每个需求单中的签核记录
@@ -5248,12 +5262,15 @@ export default {
      * 如果是内贸部的销售经理，需要确保在获取销售经理的区域之后再查询
      * 在getUserDomesticTradeZoneListStr内部 selectContracts
      */
-    if ( this.userInfo.role.roleName == '销售部经理' && this.userInfo.marketGroupName == '内贸部') {
+    if (
+      this.userInfo.role.roleName == '销售部经理' &&
+      this.userInfo.marketGroupName == '内贸部'
+    ) {
       //该用户的审批区域，只有国内 销售经理才有。
       _this.userDomesticTradeZoneListStr = _this.getUserDomesticTradeZoneListStr();
-    } else{
+    } else {
       this.selectContracts();
-    } 
+    }
     _this.initSignProcesses();
     _this.requestDomesticTradeZoneList();
   },
