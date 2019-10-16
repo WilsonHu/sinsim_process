@@ -77,7 +77,7 @@
                 </el-table-column> -->
             <el-table-column align="center" prop="nameplate" label="机器编号">
                 <template scope="scope">
-                    <div v-if="scope.row.isUrgent==1" style="color: darkorange">
+                    <div v-if="scope.row.isUrgent==1 && scope.row.status!=4" style="color: darkorange">
                             {{scope.row.nameplate}}
                         </div>
                         <div v-else>
@@ -151,7 +151,7 @@
                             {{scope.row.status|filterStatus}}
                         </div>
                         <div v-if="scope.row.status==4"
-                             style="color: darkred">
+                             style="color: green">
                             {{scope.row.status|filterStatus}}
                         </div>
                         <div v-if="scope.row.status==5"
