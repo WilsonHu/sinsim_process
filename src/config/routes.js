@@ -12,6 +12,7 @@ import RoleManage from '../components/system/role_manage.vue'
 import DeviceManager from '../components/system/device_manage.vue'
 import MachineTypeManager from '../components/system/machine_type_manage.vue'
 import ConfigManage from '../components/system/config_manage.vue'
+import TradeZoneManage from '../components/system/trade_zone_manage.vue'
 
 //abnormal
 import Abnormal from "../components/abnormal.vue"
@@ -240,6 +241,12 @@ export default [{
                         component: ConfigManage,
                         name: 'config_manage',
                         meta: '配置管理'
+                    },
+                    {
+                        path: '/home/system/trade_zone_manage',
+                        component: TradeZoneManage,
+                        name: 'trade_zone_manage',
+                        meta: '内贸区域管理'
                     },
                 ]
             },

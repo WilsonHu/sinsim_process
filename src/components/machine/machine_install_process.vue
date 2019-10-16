@@ -936,6 +936,15 @@
                 {
                     condition.taskNameList = nameList.join(",");
                 }
+
+                let taskStatusList=[];
+                _this.filters.status.forEach(obj=>{
+                    taskStatusList.push(obj);
+                });
+                if(_this.filters.status.length > 0)
+                {
+                    condition.status = taskStatusList.join(",");
+                }
                 $.ajax({
                     url: HOST + "machine/processMachineExport",
                     type: 'POST',
@@ -1599,6 +1608,10 @@
         computed: {},
         filters: {
             filterDateTimeString(strDate) {
+                //为空的时间不要显示为1970xxxx，而是显示横杠就好
+                if(strDate == null){
+                    return "-";
+                }
                 var resDate = new Date(strDate);
                 return resDate.format("yyyy-MM-dd hh:mm:ss");
             },
