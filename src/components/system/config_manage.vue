@@ -221,6 +221,7 @@ export default {
           break;
         }
       }
+      _this.submitData(); //提交整个JSON数据到数据库
       _this.addDialogVisible = false;
     },
 
@@ -267,8 +268,10 @@ export default {
           success: function(data) {
             if (data.code == 200) {
               console.log('修改成功');
+              //showMessage(_this, '提交成功', 1);
             } else {
               console.log(`${data.message}`);
+              showMessage(_this, '提交失败', 1);
             }
           },
           error: function(data) {
@@ -337,7 +340,7 @@ export default {
     _this.fetchConfigData();
   },
   destroyed: function() {
-    _this.submitData(); //提交整个JSON数据到数据库
+    //_this.submitData(); //提交整个JSON数据到数据库
   }
 };
 </script>
