@@ -971,6 +971,7 @@
                             }
                         })
                     })
+                    _this.selectedItemList=[];
                 }
 
             },
