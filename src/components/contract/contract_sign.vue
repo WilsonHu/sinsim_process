@@ -4017,6 +4017,21 @@ export default {
         this.errorMsg = '机器价格不能为空';
       }
 
+      if (!iserror && isStringEmpty(formObj.machineOrder.intermediaryPrice)) {
+        iserror = true;
+        this.errorMsg = '居间费用/台 不能为空';
+      }
+
+      if (!iserror && isStringEmpty(formObj.machineOrder.discounts)) {
+        iserror = true;
+        this.errorMsg = '优惠金额/台 不能为空';
+      }
+
+      if (!iserror && isStringEmpty(formObj.machineOrder.orderTotalDiscounts)) {
+        iserror = true;
+        this.errorMsg = '优惠金额 不能为空';
+      }
+      
       return iserror;
     },
 
