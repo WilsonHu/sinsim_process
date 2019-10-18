@@ -106,7 +106,7 @@
                         label="结束时间">
                     <template slot-scope="scope">
                 <span>
-                {{(scope.row.installBeginTime)|filterDateString}}
+                {{(scope.row.installEndTime)|filterDateString}}
                 </span>
                     </template>
                 </el-table-column>
