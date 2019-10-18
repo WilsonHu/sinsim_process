@@ -280,19 +280,23 @@
                         }
                         for (let i=0;i<_this.tableData.length;i++){
                             if (_this.tableData[i].installEndTime) {
-                                let st = _this.tableData[i].installEndTime - _this.tableData[i].installBeginTime;
-                                let time = parseFloat(st) / 1000;
-                                if (time) {
-                                    if (time > 60 && time < 60 * 60) {
-                                        _this.tableData[i].spendTime = parseInt(time / 60.0) + "分钟" + parseInt((parseFloat(time / 60.0) -
-                                            parseInt(time / 60.0)) * 60) + "秒";
-                                    } else if (time >= 60 * 60) {
-                                        _this.tableData[i].spendTime = parseInt(time / 3600.0) + "小时" + parseInt((parseFloat(time / 3600.0) -
-                                            parseInt(time / 3600.0)) * 60) + "分钟" +
-                                            parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
-                                                parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒";
-                                    } else {
-                                        _this.tableData[i].spendTime = parseInt(time) + "秒";
+                                if(_this.tableData[i].installBeginTime == null){
+                                    _this.tableData[i].spendTime = "-"
+                                } else {
+                                    let st = _this.tableData[i].installEndTime - _this.tableData[i].installBeginTime;
+                                    let time = parseFloat(st) / 1000;
+                                    if (time) {
+                                        if (time > 60 && time < 60 * 60) {
+                                            _this.tableData[i].spendTime = parseInt(time / 60.0) + "分钟" + parseInt((parseFloat(time / 60.0) -
+                                                            parseInt(time / 60.0)) * 60) + "秒";
+                                        } else if (time >= 60 * 60) {
+                                            _this.tableData[i].spendTime = parseInt(time / 3600.0) + "小时" + parseInt((parseFloat(time / 3600.0) -
+                                                            parseInt(time / 3600.0)) * 60) + "分钟" +
+                                                    parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
+                                                            parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒";
+                                        } else {
+                                            _this.tableData[i].spendTime = parseInt(time) + "秒";
+                                        }
                                     }
                                 }
                             }
