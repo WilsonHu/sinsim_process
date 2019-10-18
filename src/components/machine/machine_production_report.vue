@@ -46,7 +46,7 @@
                                 icon="el-icon-share"
                                 size="normal"
                                 type="danger"
-                                @click="processMachineExport">导出
+                                @click="exportToExcel">导出
                         </el-button>
                     </el-col>
                 </el-row>
@@ -305,7 +305,46 @@
                     }
                 })
             },
-            processMachineExport() {
+	    
+            exportToExcel() {
+
+                var condition = {
+                    taskName: _this.filters.taskName.trim(),
+                    machineOrderNumber: _this.filters.orderNum.trim(),
+                    queryStartTime: '',
+                    queryFinishTime: '',
+                    is_fuzzy: true,
+                    nameplate:_this.filters.nameplate.trim(),
+                    page: _this.currentPage,
+                    size: _this.pageSize
+                };
+                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
+                    condition.queryStartTime = _this.filters.selectDate[0].format("yyyy-MM-dd");
+                    condition.queryFinishTime = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
+                if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
+                    condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
+                    condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
+                $.ajax({
+                    url: HOST + "task/record/exportToExcel",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: condition,
+                    success: function (data) {
+                        if (data.code == 200) {
+                            window.location.href = data.data;
+                            showMessage(_this, "工序报表导出excel成功！", 1);
+
+                        } else {
+                            showMessage(_this, "工序报表导出excel失败！", 0);
+                        }
+                        _this.loadingUI = false;
+                    },
+                    error: function (data) {
+                        showMessage(_this, data.message, 0);
+                    }
+                })
             },
         },
 
