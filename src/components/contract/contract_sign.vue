@@ -4690,9 +4690,9 @@ export default {
               ).format('yyyy-MM-dd');
               machineOrder.orderDetail = null;
               machineOrder.orderSign = null;
-              if (tempList[i].allUrgent == 1) {
-                machineOrder.allUrgent = true;
-              }
+//              if (tempList[i].allUrgent == 1) {
+//                machineOrder.allUrgent = true;
+//              }
 
               var newItem = {
                 //title: "需求单" + newTabName,

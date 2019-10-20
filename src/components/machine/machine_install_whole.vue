@@ -265,6 +265,13 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
+                                    label="安装日期"
+                                    width="100">
+                                <template slot-scope="scope">
+                                    {{ formatDate(scope.row.installDatePlan) }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
                                     label="针数" width="60">
                                 <template slot-scope="scope">
                                     {{ scope.row.needleNum}}
