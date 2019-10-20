@@ -852,7 +852,7 @@
                     condition.status = taskStatusList.join(",");
                 }
                 $.ajax({
-                    url: _this.queryDataUrl,
+                    url:HOST + "machine/selectProcessMachine",
                     type: 'POST',
                     dataType: 'json',
                     data: condition,

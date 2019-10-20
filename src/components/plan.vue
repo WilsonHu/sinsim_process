@@ -370,7 +370,7 @@
                     <el-table-column
                             align="center"
                             prop="nameplate"
-                            label="机器编号">
+                            label="机器号(标红加急)">
                         <template scope="scope"
                                   prop="orderNum">
                             <div v-if="scope.row.isUrgent==1" style="background-color: red">

@@ -705,16 +705,16 @@
                       </el-form-item>
                     </el-col>
                     <el-col :span="2" style="margin-bottom: 10px;margin-top: 10px">
-                      <el-form-item label="订单加急：" :label-width="formLabelWidth">
-                        <el-checkbox
-                          style="margin-left: 1px"
-                          v-model="item.machineOrder.allUrgent"
-                          :readonly="changeOrderContentDisable(item.machineOrder)"
-                          :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                        >
-                          <!--{{item.machineOrder.allUrgent}}-->
-                        </el-checkbox>
-                      </el-form-item>
+                      <!--<el-form-item label="订单加急：" :label-width="formLabelWidth">-->
+                        <!--<el-checkbox-->
+                          <!--style="margin-left: 1px"-->
+                          <!--v-model="item.machineOrder.allUrgent"-->
+                          <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                          <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                        <!--&gt;-->
+                          <!--&lt;!&ndash;{{item.machineOrder.allUrgent}}&ndash;&gt;-->
+                        <!--</el-checkbox>-->
+                      <!--</el-form-item>-->
                     </el-col>
                     <el-col :span="1" :offset="2 ">
                       <el-button
