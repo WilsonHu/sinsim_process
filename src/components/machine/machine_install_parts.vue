@@ -252,64 +252,64 @@
                                 :data="addFormList.installPlanPartsContent"
                                 style="margin-left: 30px;margin-bottom: 30px">
                             <el-table-column
-                                    label="订单号"
-                                    width="120">
+                                    label="订单号" align="center"
+                                    width="180">
                                 <template slot-scope="scope">
                                     {{ scope.row.orderNum}}
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                    label="机器铭牌号"
+                                    label="机器铭牌号" align="center"
                                     width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.nameplate}}
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                    label="安装组"
+                                    label="安装组" align="center"
                                     width="100">
                                 <template slot-scope="scope">
                                     {{ filterGroup( scope.row.installGroupId )}}
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                    label="安装日期"
+                                    label="安装日期" align="center"
                                     width="100">
                                 <template slot-scope="scope">
                                     {{ formatDate(scope.row.installDatePlan) }}
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                    label="针数" width="60">
+                                    label="针数" align="center" width="60">
                                 <template slot-scope="scope">
                                     {{ scope.row.needleNum}}
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                    label="头数" width="60">
+                                    label="头数" align="center" width="60">
                                 <template slot-scope="scope">
                                     {{ scope.row.headNum}}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="备注">
+                            <el-table-column label="备注" align="center" >
                                 <template slot-scope="scope">
                                     {{ scope.row.cmtSend}}
                                 </template>
                             </el-table-column>
 
-                            <!--<el-table-column-->
-                            <!--label="操作" align="center">-->
-                            <!--<template scope="scope" style="text-align: center">-->
-                            <!--<el-tooltip placement="left" content="删除">-->
-                            <!--<el-button-->
-                            <!--size="mini"-->
-                            <!--type="primary"-->
-                            <!--icon="el-icon-edit"-->
-                            <!--@click="deleteWithItem(scope.row)">-->
-                            <!--</el-button>-->
-                            <!--</el-tooltip>-->
-                            <!--</template>-->
-                            <!--</el-table-column>-->
+                            <el-table-column
+                                    label="操作" align="center" width = "100">
+                                <template scope="scope" style="text-align: center">
+                                    <el-tooltip placement="left" content="删除">
+                                        <el-button
+                                                size="mini"
+                                                type="primary"
+                                                icon="el-icon-delete"
+                                                @click="deleteWithItem(scope.$index)">
+                                        </el-button>
+                                    </el-tooltip>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </el-col>
                 </el-col>
@@ -555,6 +555,7 @@
                 addFormList: {
                     type: INSTALLTYPE.ALL,
 //                    installPlanWholeContent:[{orderNum:"", nameplate:"", needleNum:"", headNum:"",cmtSend:""}]
+                    // 即使需要有“删除”功能，可以使用数组的splice功能，所以不需要改为列表。
                     installPlanPartsContent:[ ]
                 },
                 addDialogVisible: false,
@@ -576,6 +577,16 @@
 
         },
         methods: {
+
+            /**
+             * 删除选中的条目，这些条目都是在本地，没有传到服务器。
+             */
+            deleteWithItem(index){
+                console.log('ori length: ' + _this.addFormList.installPlanPartsContent.length);
+                //删除数组的第index个元素
+                _this.addFormList.installPlanPartsContent.splice(index,1);
+                console.log('_==> length: ' + _this.addFormList.installPlanPartsContent.length);
+            },
 
             onInstallGroupChanged(){
                 _this.addForm.installPlanPartsContent = [];
@@ -728,7 +739,14 @@
                             _this.addForm.headNum = res.data.headNum;
                             _this.addForm.needleNum = res.data.needleNum;
                             _this.addForm.orderId = res.data.id;
+                            console.log(' 200, 获取针数, 头数, 订单ID OK');
+                        } else {
+                            console.error('获取针数, 头数, 订单ID失败，res.code: ' + res.code);
                         }
+                    },
+                    error: function (data) {
+                        console.error('服务器访问出错');
+                        _this.errorMsg = '服务器访问出错！';
                     }
                 });
 
