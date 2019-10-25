@@ -890,7 +890,7 @@
                                         else if (parseInt(item.taskStatus) == 2) {//待安装
                                             if(isUndefined(item.waitTimespan))
                                             {
-                                                itemObj.currentTaskList.push(`待 ${item.text} (0小时)`);
+                                                itemObj.currentTaskList.push(`待 ${item.text} (${timespan})`);
                                             }
                                             else{
                                                 let tsStr= _this.filterTimeSpanByHours(item.waitTimespan);
