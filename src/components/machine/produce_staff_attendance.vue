@@ -237,12 +237,13 @@
             onSearchDetailData()
             {
                 var condition = {
-                    orderNum: _this.filters.orderNum.trim(),
-                    nameplate: _this.filters.nameplate.trim(),
-                    type: INSTALLTYPE.ALL,
+//                    orderNum: _this.filters.orderNum.trim(),
+//                    nameplate: _this.filters.nameplate.trim(),
+//                    type: INSTALLTYPE.ALL,
                     installGroupName: _this.filters.groupName,
                     queryStartTime: '',
                     queryFinishTime: '',
+                    userAccount:_this.filters.installGroupLeader,
                     //status: _this.filters.status,
                     page: _this.currentPage,
                     size: _this.pageSize

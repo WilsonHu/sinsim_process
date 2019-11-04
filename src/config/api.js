@@ -1,12 +1,15 @@
 //Server root address
 //var IP = "http://127.0.0.1";
-var IP = "http://115.231.6.43";
+//var IP = "http://115.231.6.43";
+ var IP = "http://47.101.141.182";
 //var HOST = IP + ":8080/";
 var HOST = IP + ":8111/";
 var DOWNLOADPATH = IP + "/oll/";
 var SOCKECT_ADDR = "ws://127.0.0.1:9998";//CRHService IP address(Windows service)
 var SYSTEMNAME = "SinSim流程管理系统";
-var WANIP = '115.231.6.43/eservice'//外网ip
+//var WANIP = '115.231.6.43/eservice'//外网ip
+// var WANIP = '47.101.141.182/eservice';//外网ip
+var WANIP = '47.101.141.182:88';//外网ip
 
 var EveryPageNum = 10;
 var MaxUpDownItems = 4;
