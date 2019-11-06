@@ -47,6 +47,9 @@ import MachineInstallWhole from "../components/machine/machine_install_whole.vue
 import MachineInstallParts from "../components/machine/machine_install_parts.vue"
 import produceStaffAttendance from "../components/machine/produce_staff_attendance.vue"
 
+//contact 联系单
+import ContactSign from "../components/contract/lxd_contact_sign.vue"
+
 export default [{
         path: '/login',
         component: Login,
@@ -86,6 +89,12 @@ export default [{
                         component: SignProcess,
                         name: 'sign_process',
                         meta: '签核流程'
+                    },
+                    {
+                        path: '/home/contract/contact_sign',
+                        component: ContactSign,
+                        name: 'contact_sign',
+                        meta: '联系单签核'
                     },
                 ]
             },

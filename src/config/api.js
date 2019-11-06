@@ -96,7 +96,14 @@ const OrderStatusList = [
     {value: 5, name: '已驳回'},
     {value: 6, name: '已取消'}
 ];
-
+//联系单状态
+const LxdStatusList = [
+    {value: 0, name: '未提交审核'},
+    {value: 1, name: '审核中'},
+    {value: 2, name: '审核完成'},
+    {value: 3, name: '已驳回'},
+    {value: 4, name: '已取消'}
+];
 //机器状态
 const MachineStatusList = [
     {value: 0, name: '初始化'},

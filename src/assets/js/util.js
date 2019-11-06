@@ -51,6 +51,23 @@ let CONTRACT_REJECTED = 5;
 let CONTRACT_CANCELED = 6;
 
 /**
+ * 联系单状态
+ */
+	// 创建完成，未提交审核
+let LXD_INITIAL = 0;
+//审核中
+let LXD_CHECKING = 1;
+//审核完成
+let LXD_CHECKING_FINISHED = 2;
+
+//已驳回
+let LXD_REJECTED = 3;
+//已取消
+let LXD_CANCELED = 4;
+
+
+
+/**
  * 签核结果：“0”-->初始化；“1”-->接受； “2”-->驳回
  */
 let SIGN_INITIAL = 0;
