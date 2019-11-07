@@ -23,7 +23,7 @@
               <div style="font-size: 14px; color: #909399">审核部门：</div>
             </el-col>
             <el-col style="text-align: left">
-              <span v-for="(item, index) in normalSignRoleList">
+              <span v-for="(item, index) in lxdSignRoleList">
                 <el-button
                         size="mini"
                         :type="item.choosed ? 'primary': '' "
@@ -38,7 +38,7 @@
         <el-col
                 :span="2"
                 :offset="2"
-                v-if="userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1"
+
         >
           <el-button icon="el-icon-plus" size="normal" type="danger" @click="handleAdd">联系单</el-button>
         </el-col>
@@ -48,6 +48,16 @@
           <el-col>
             <el-form :model="filters" label-position="right" label-width="80px">
               <el-row>
+                <el-col :span="4">
+                  <el-form-item label="类型:">
+                    <el-input
+                            v-model="filters.contractNum"
+                            placeholder="类型"
+                            auto-complete="off"
+                            clearable
+                    ></el-input>
+                  </el-form-item>
+                </el-col>
                 <el-col :span="4">
                   <el-form-item label="合同号:">
                     <el-input
@@ -70,14 +80,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="4">
-                  <el-form-item label="发起人:">
-                    <el-input
-                            v-model="filters.applicantPerson"
-                            placeholder="发起人"
-                            auto-complete="off"
-                            clearable
-                    ></el-input>
-                  </el-form-item>
+
                 </el-col>
                 <el-col :span="4">
                   <el-form-item label="创建日期:">
@@ -129,7 +132,7 @@
               <el-table-column align="center" prop="status" label="审核状态">
                 <template scope="scope">
                   <div
-                          :class="scope.row.status|filterOrderStatusStyle"
+                          :class="scope.row.status|filterStatusStyle"
                   >{{filterContactStatus(scope.row.status)}}</div>
                 </template>
               </el-table-column>
@@ -203,10 +206,33 @@
           <el-form class="panel-body">
             <el-row>
               <el-col :span="5">
+                <el-form-item label="联系单类型：" :label-width="formLabelWidth">
+                  <el-select v-model="lxdForm.contactType" placeholder="请选择">
+                    <el-option
+                            v-for="item in lxdTypes"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="提出部门：" :label-width="formLabelWidth">
+                  <el-input v-model="lxdForm.applicantDepartment" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="提出人：" :label-width="formLabelWidth">
+                  <el-input v-model="lxdForm.applicantPerson" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="申请日期：" :label-width="longFormLabelWidth">
+                  <el-date-picker
+                          type="date"
+                          placeholder="申请日期"
+                          v-model="lxdForm.createDate"
+                  ></el-date-picker>
+                </el-form-item>
                 <el-form-item label="合同号：" :label-width="formLabelWidth">
                   <el-input
-                          v-model="contractForm.contractNum"
-                          :readonly="changeLxdContentDisable(contractForm)"
+                          v-model="lxdForm.contractNum"
+                          :readonly="changeLxdContentDisable(lxdForm)"
                           placeholder="合同号"
                   ></el-input>
                 </el-form-item>
@@ -289,16 +315,14 @@
         normalSignProcess: {},
         userInfo: '',
 
-        //用于保存合同内容
-        contractForm: {
+        //联系单内容
+        lxdForm: {
+          contactType:'',
           contractNum: '',
-          customerName: '',
-          sellman: '',
-          recordUser: '',
-          mark: '',
-          status: CONTRACT_INITIAL,
-          payMethod: '',
-          contractShipDate: ''
+          applicantDepartment: '',
+          applicantPerson: '',
+          status: LXD_INITIAL,
+
         },
 
         addButtonDisabled: false,
@@ -447,7 +471,7 @@
         },
         contractExist: false,
         contractErrorMsg: '',
-        normalSignRoleList: [],
+        lxdSignRoleList: [],
         lxdStatusForFilterList: [],
         configList: [],
         userDomesticTradeZoneListStr: '',
@@ -456,6 +480,7 @@
         LxdStatusList: LxdStatusList,
         lxdStatusList: LxdStatusList,
 
+        lxdTypes:["变更联系单", "工作联系单"]
       };
 
     },
@@ -489,6 +514,21 @@
           }
         });
       },
+
+      queryDomesticTradeZone(queryString, check) {
+        //缓存加载
+        var results = _this.domesticTradeZoneList;
+        if (queryString) {
+          results = _this.domesticTradeZoneList.filter(
+                  this.createStateFilter(queryString)
+          );
+        }
+        clearTimeout(_this.domesticTradeZoneTimeout);
+        _this.domesticTradeZoneTimeout = setTimeout(() => {
+          check(results);
+        }, 800 * Math.random());
+      },
+
       changeLxdContentDisable(item) {
         return (
                 (item.status != LXD_INITIAL &&
@@ -564,7 +604,10 @@
 
 
       handleAdd() {
-
+        this.addLxdVisible = true;
+        this.dialogTitle = '新增联系单';
+        _this.lxdForm.applicantDepartment = this.userInfo.role.roleName;
+        _this.lxdForm.createDate = [new Date()];
       },
 
       handleSign(index, item) {
@@ -575,7 +618,6 @@
         this.editContract = item;
         _this.fetchLxdData(item.id);
         _this.fetchLxdSignData(item.id);
-        //                _this.contractForm.recordUser = _this.userInfo.account;
         this.addLxdVisible = true;
       },
 
@@ -588,7 +630,6 @@
         this.editContract = item;
         _this.fetchLxdData(item.id);
         _this.fetchLxdSignData(item.id);
-        //                _this.contractForm.recordUser = _this.userInfo.account;
         this.addLxdVisible = true;
       },
 
@@ -643,7 +684,7 @@
             type: 'POST',
             dataType: 'json',
             data: {
-              contract: JSON.stringify(_this.contractForm),
+              contract: JSON.stringify(_this.lxdForm),
               contractSign: JSON.stringify(
                       _this.contractSignForms[0].contractSignData
               ),
@@ -710,7 +751,7 @@
           data: { id: contractId },
           success: function(res) {
             if (res.code == 200) {
-              _this.contractForm = res.data;
+              _this.lxdForm = res.data;
 
             } else {
               showMessage(_this, res.message, 0);
@@ -763,9 +804,9 @@
               for (let i = 0; i < tmpList.length; i++) {
                 if (
                         tmpList[i].processName != null &&
-                        tmpList[i].processName.indexOf('正常') != -1
+                        tmpList[i].processName.indexOf('联系单') != -1
                 ) {
-                  _this.normalSignRoleList.push({
+                  _this.lxdSignRoleList.push({
                     roleId: '',
                     name: '全部',
                     choosed: _this.filters.roleName == '' ? true : false
@@ -773,7 +814,7 @@
                   var temp = JSON.parse(tmpList[i].processContent);
                   if (temp != null && temp.length > 0) {
                     for (let j = 0; j < temp.length; j++) {
-                      _this.normalSignRoleList.push({
+                      _this.lxdSignRoleList.push({
                         roleId: temp[j].roleId,
                         name: _this.getRoleNameById(temp[j].roleId),
                         choosed:
@@ -797,14 +838,14 @@
         });
       },
       chooseCurrentSignDepartment(index) {
-        for (let i = 0; i < _this.normalSignRoleList.length; i++) {
+        for (let i = 0; i < _this.lxdSignRoleList.length; i++) {
           if (index == i) {
-            _this.normalSignRoleList[i].choosed = true;
+            _this.lxdSignRoleList[i].choosed = true;
             _this.filters.roleName = _this.getRoleNameById(
-                    _this.normalSignRoleList[i].roleId
+                    _this.lxdSignRoleList[i].roleId
             );
           } else {
-            _this.normalSignRoleList[i].choosed = false;
+            _this.lxdSignRoleList[i].choosed = false;
           }
         }
         _this.selectContacts();
@@ -820,11 +861,11 @@
         }
 
         if (_this.lxdStatusForFilterList[index].value != 1) {
-          for (let i = 0; i < _this.normalSignRoleList.length; i++) {
+          for (let i = 0; i < _this.lxdSignRoleList.length; i++) {
             if (0 == i) {
-              _this.normalSignRoleList[i].choosed = true;
+              _this.lxdSignRoleList[i].choosed = true;
             } else {
-              _this.normalSignRoleList[i].choosed = false;
+              _this.lxdSignRoleList[i].choosed = false;
             }
           }
           _this.filters.roleName = '';
@@ -862,7 +903,21 @@
           }
         }
         return result;
-      }
+      },
+
+      filterStatusStyle(id) {
+        var result = 'divStatusUnChecked';
+
+        if (id == 0 || id == 5 || id == 6) {
+          result = 'divStatusUnChecked';
+        } else if (id == 2) {
+          result = 'divOrderStatusFinished';
+        } else if (id == 1 || id == 3 || id == 4) {
+          result = 'divOrderStatusChecking';
+        }
+        return result;
+      },
+
     },
     created: function() {
       _this.userInfo = JSON.parse(sessionStorage.getItem('user'));
@@ -878,6 +933,13 @@
       ) {
         _this.filters.roleName = this.userInfo.role.roleName;
       }
+
+      //获取用户所在部门
+
+      _this.lxdForm.applicantDepartment = this.userInfo.role.roleName;
+      _this.lxdForm.applicantPerson = this.userInfo.account;
+
+
 
       this.lxdStatusForFilterList[0] = {
         name: '全部',
@@ -949,7 +1011,7 @@
     color: darkorange;
   }
 
-  .divOrderStatusUnChecked {
+  .divStatusUnChecked {
     color: red;
   }
 

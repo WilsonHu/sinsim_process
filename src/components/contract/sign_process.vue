@@ -263,7 +263,7 @@
                 //所有角色
                 allRoles:"",
                 //签核类型
-                signTypes:["需求单签核"]
+                signTypes:["需求单签核", "联系单签核"]
             }
         },
         methods: {
