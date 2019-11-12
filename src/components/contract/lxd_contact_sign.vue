@@ -247,8 +247,6 @@
                       </el-date-picker>
                     </el-form-item>
                   </el-col>
-                </el-row>
-                <el-row>
                   <el-col :span="4" >
                     <el-form-item label="ECO希望日期："
                                   :label-width="longFormLabelWidth"
@@ -261,8 +259,6 @@
                     </el-form-item>
                   </el-col>
 
-                </el-row>
-                <el-row>
                   <el-col :span="6" >
                     <el-form-item label="合同号：" :label-width="longFormLabelWidth">
                       <el-input
@@ -275,25 +271,68 @@
                 </el-row>
 
                 <el-row>
-                  <el-col :span="20" >
+                  <el-col  >
                     <el-form-item label="变更主题：" :label-width="longFormLabelWidth">
-                      <el-input type="textarea" v-model="lxdForm.contactTitle" :rows="5"></el-input>
+                      <el-input type="textarea" v-model="lxdForm.contactTitle" :rows="1"></el-input>
                     </el-form-item>
                   </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="8" >
+                    <el-form-item label="变更内容：" :label-width="longFormLabelWidth">
+                      <el-select v-model="lxdForm.contactContent" placeholder="选择变更内容子类型" clearable
+                                 @change="handleChangeContentSelect(lxdForm.contactContent)">
+                        <el-option
+                                v-for="item in lxdChangeTypes"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :offset = 1 :span="4">
+                    <el-input v-model="lxdForm.contactContentByInput"
+                              placeholder="请输入"
+                              v-show="isShowContactContentInput"></el-input>
+                  </el-col>
+                </el-row>
+
+                <el-row>
+                  <el-col :span="8" >
+                    <el-form-item label="旧状态：" :label-width="longFormLabelWidth"
+                    >
+                      <el-input v-model="lxdForm.orderNum" @change="onOrderChanged(addForm.orderNum)"  placeholder="输入变更前的状态"></el-input>
+                    </el-form-item>
+                  </el-col >
+                  <el-col :span="8" >
+                    <el-form-item label="新状态：" :label-width="longFormLabelWidth">
+                      <el-input  v-model="lxdForm.orderNum" @change="onOrderChanged(addForm.orderNum)"   placeholder="输入变更后的状态"></el-input>
+                    </el-form-item>
+                  </el-col >
+                  <el-col :span="8" >
+                    <el-form-item label="备注：" :label-width="longFormLabelWidth">
+                      <el-input  v-model="lxdForm.orderNum" @change="onOrderChanged(addForm.orderNum)" ></el-input>
+                    </el-form-item>
+                  </el-col >
+
+                  <el-col :span="4" :offset ="20">
+                    <el-button
+                            type="primary"
+                            class="el-icon-plus"
+                            @click="addChangeItem()">增加变更条目 </el-button>
+                  </el-col>
+                </el-row>
+
+                <el-row>
                 </el-row>
               </el-form>
             </el-card>
 
           </el-form>
           <el-form>
-            <div  >
-              <el-button @click="dialogClose()" icon="el-icon-back" type="info">关 闭</el-button>
-              <el-button
-                      type="primary"
-                      @click="onEdit"
-                      icon="el-icon-check"
-                      :disabled="editButtonDisabled"
-              >保 存</el-button>
+            <div >
+              <el-button @click="dialogClose()" icon="el-icon-back" type="info" offset ="120">关 闭</el-button>
               <el-button
                       v-show="mode == ADD_MODE"
                       type="primary"
@@ -307,8 +346,6 @@
       </el-row>
     </el-dialog>
   </div>
-
-
 
 </template>
 
@@ -445,6 +482,9 @@
         allRoles: [],
         isShowConfirmPlanDate: false,
 
+        // 变更联系单里，“变更内容”下拉选择了“其他，需说明”时 为true.
+        isShowContactContentInput:false,
+
         salePersonList: [],
         timeout: null,
         customerList: [],
@@ -520,12 +560,21 @@
         lxdStatusList: LxdStatusList,
 
         lxdTypes:["变更联系单", "工作联系单"],
+        //todo? 可以定制,
+        lxdChangeTypes:["设计变更", "材料变更", "工艺变更", "模具设备", "工艺夹具", "制造场所", "新供应商", "包装运输", "检验方法", "其他变更，需说明"  ],
 
         isShowHopeDate: false,
+
+        changeItems: [],
       };
 
     },
     methods: {
+
+
+      addChangeItem(){
+
+      },
 
       checkShow()
       {
@@ -543,6 +592,20 @@
         }
         else
           console.log("没有选对");
+      },
+
+      // 变更联系单里的变更内容
+      handleChangeContentSelect(val)
+      {
+        if(_this.lxdForm.contactContent == "其他变更，需说明")
+        {
+          _this.isShowContactContentInput = true;
+        }
+        else
+        {
+          _this.isShowContactContentInput = false;
+        }
+
       },
 
       requestSalePersonList() {
