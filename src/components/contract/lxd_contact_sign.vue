@@ -200,14 +200,16 @@
     <el-dialog :visible.sync="addLxdVisible" fullscreen @close="dialogCloseCallback()">
       <el-row type="flex" class="row-bg" justify="center">
         <el-col :span="24">
-          <div
-                  style="text-align: center; font-weight: bold; font-size: 28px; font-family: 'Microsoft YaHei UI';padding-bottom: 20px"
-          >{{dialogTitle}}</div>
-          <el-form class="panel-body">
+          <div  style="text-align: center; font-weight: bold; font-size: 28px; font-family: 'Microsoft YaHei UI';padding-bottom: 20px">
+            {{dialogTitle}}
+          </div>
+
+          <el-form   >
             <el-row>
-              <el-col :span="5">
+              <el-col :span="6">
                 <el-form-item label="联系单类型：" :label-width="formLabelWidth">
-                  <el-select v-model="lxdForm.contactType" placeholder="请选择">
+                  <el-select v-model="lxdForm.contactType" placeholder="选择不同类型，会有不同的内容" clearable
+                             @change="handleTypeSelect(lxdForm.contactType)">
                     <el-option
                             v-for="item in lxdTypes"
                             :key="item"
@@ -216,54 +218,91 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="提出部门：" :label-width="formLabelWidth">
-                  <el-input v-model="lxdForm.applicantDepartment" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="提出人：" :label-width="formLabelWidth">
-                  <el-input v-model="lxdForm.applicantPerson" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="申请日期：" :label-width="longFormLabelWidth">
-                  <el-date-picker
-                          type="date"
-                          placeholder="申请日期"
-                          v-model="lxdForm.createDate"
-                  ></el-date-picker>
-                </el-form-item>
-                <el-form-item label="合同号：" :label-width="formLabelWidth">
-                  <el-input
-                          v-model="lxdForm.contractNum"
-                          :readonly="changeLxdContentDisable(lxdForm)"
-                          placeholder="合同号"
-                  ></el-input>
-                </el-form-item>
-                <div style="margin-top: -15px">
-                  <span
-                          v-if="contractExist"
-                          style="color: red; font-size: 12px;"
-                  >{{contractErrorMsg}}</span>
-                </div>
               </el-col>
             </el-row>
+
+
+            <el-card class="box-card" style="margin: 25px">
+              <el-form :model="addForm" >
+                <el-row>
+                  <el-col :span="4" >
+                    <el-form-item label="提出部门：" :label-width="longFormLabelWidth">
+                      <el-input v-model="lxdForm.applicantDepartment" disabled></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="4" >
+                    <el-form-item label="提出人：" :label-width="formLabelWidth">
+                      <el-input v-model="lxdForm.applicantPerson" disabled></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="4" >
+                    <el-form-item label="申请日期："
+                                  :label-width="longFormLabelWidth" >
+                      <el-date-picker
+                              type="date"
+                              placeholder="申请日期"
+                              v-model="lxdForm.createDate">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="4" >
+                    <el-form-item label="ECO希望日期："
+                                  :label-width="longFormLabelWidth"
+                                  v-show="isShowHopeDate">
+                      <el-date-picker
+                              type="date"
+                              placeholder="ECO希望完成日期"
+                              v-model="lxdForm.hopeDate">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+
+                </el-row>
+                <el-row>
+                  <el-col :span="6" >
+                    <el-form-item label="合同号：" :label-width="longFormLabelWidth">
+                      <el-input
+                              v-model="lxdForm.contractNum"
+                              :readonly="changeLxdContentDisable(lxdForm)"
+                              placeholder="合同号"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+
+                <el-row>
+                  <el-col :span="20" >
+                    <el-form-item label="变更主题：" :label-width="longFormLabelWidth">
+                      <el-input type="textarea" v-model="lxdForm.contactTitle" :rows="5"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </el-card>
+
           </el-form>
-
-          <div slot="footer" class="dialog-footer" style="margin-top: -20px; margin-right:2%">
-            <el-button @click="dialogClose()" icon="el-icon-back" type="info">关 闭</el-button>
-            <el-button
-                    v-show="mode == EDIT_MODE "
-                    type="primary"
-                    @click="onEdit"
-                    icon="el-icon-check"
-                    :disabled="editButtonDisabled"
-            >保 存</el-button>
-            <el-button
-                    v-show="mode == ADD_MODE"
-                    type="primary"
-                    @click="onAdd"
-                    icon="el-icon-check"
-                    :disabled="addButtonDisabled"
-            >保 存</el-button>
-          </div>
-
+          <el-form>
+            <div  >
+              <el-button @click="dialogClose()" icon="el-icon-back" type="info">关 闭</el-button>
+              <el-button
+                      type="primary"
+                      @click="onEdit"
+                      icon="el-icon-check"
+                      :disabled="editButtonDisabled"
+              >保 存</el-button>
+              <el-button
+                      v-show="mode == ADD_MODE"
+                      type="primary"
+                      @click="onAdd"
+                      icon="el-icon-check"
+                      :disabled="addButtonDisabled"
+              >保 存</el-button>
+            </div>
+          </el-form>
         </el-col>
       </el-row>
     </el-dialog>
@@ -480,11 +519,31 @@
         LxdStatusList: LxdStatusList,
         lxdStatusList: LxdStatusList,
 
-        lxdTypes:["变更联系单", "工作联系单"]
+        lxdTypes:["变更联系单", "工作联系单"],
+
+        isShowHopeDate: false,
       };
 
     },
     methods: {
+
+      checkShow()
+      {
+        return false;
+      },
+
+      handleTypeSelect(val)
+      {
+        if(_this.lxdForm.contactType == "变更联系单")
+        {
+          _this.isShowHopeDate = true;
+        } else if(_this.lxdForm.contactType == "工作联系单")
+        {
+          _this.isShowHopeDate = false;
+        }
+        else
+          console.log("没有选对");
+      },
 
       requestSalePersonList() {
         var roleId = 0;
@@ -608,6 +667,9 @@
         this.dialogTitle = '新增联系单';
         _this.lxdForm.applicantDepartment = this.userInfo.role.roleName;
         _this.lxdForm.createDate = [new Date()];
+        _this.isShowHopeDate = true;
+        _this.mode = _this.ADD_MODE;
+
       },
 
       handleSign(index, item) {
@@ -665,13 +727,13 @@
         });
       },
       validContractInfo(formObj, isEdit) {
-     //todo
+        //todo
         return iserror;
       },
 
       dialogCloseCallback() {
         //reset after dialog closed
-       //todo
+        //todo
         _this.selectContacts();
       },
 
@@ -679,38 +741,38 @@
         //先校验联系单是否正常
         //todo
 
-          $.ajax({
-            url: HOST + 'contact/form/add',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-              contract: JSON.stringify(_this.lxdForm),
-              contractSign: JSON.stringify(
-                      _this.contractSignForms[0].contractSignData
-              ),
-              requisitionForms: JSON.stringify(obj)
-            },
-            success: function(res) {
-              _this.isError = res.code != 200;
-              if (!_this.isError) {
-                _this.addLxdVisible = false;
-                _this.editContract = '';
-                showMessage(_this, '添加成功', 1);
-                _this.selectContacts();
-              } else {
-                _this.errorMsg = res.message;
-                showMessage(_this, _this.errorMsg, 0);
-              }
-            },
-            error: function(info) {
-              _this.errorMsg = '服务器访问出错！';
-              _this.isError = true;
+        $.ajax({
+          url: HOST + 'contact/form/add',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            contract: JSON.stringify(_this.lxdForm),
+            contractSign: JSON.stringify(
+                    _this.contractSignForms[0].contractSignData
+            ),
+            requisitionForms: JSON.stringify(obj)
+          },
+          success: function(res) {
+            _this.isError = res.code != 200;
+            if (!_this.isError) {
+              _this.addLxdVisible = false;
+              _this.editContract = '';
+              showMessage(_this, '添加成功', 1);
+              _this.selectContacts();
+            } else {
+              _this.errorMsg = res.message;
+              showMessage(_this, _this.errorMsg, 0);
             }
-          });
-          _this.addButtonDisabled = true;
-          setTimeout(() => {
-            _this.addButtonDisabled = false;
-          }, 2000);
+          },
+          error: function(info) {
+            _this.errorMsg = '服务器访问出错！';
+            _this.isError = true;
+          }
+        });
+        _this.addButtonDisabled = true;
+        setTimeout(() => {
+          _this.addButtonDisabled = false;
+        }, 2000);
 
       },
 
@@ -956,7 +1018,6 @@
       }
       _this.initAllRoles();
 
-      _this.initSignProcesses();
     },
     mounted: function() {}
   };
