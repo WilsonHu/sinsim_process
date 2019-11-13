@@ -4247,7 +4247,7 @@ export default {
           success: function(res) {
             _this.isError = res.code != 200;
             if (!_this.isError) {
-              _this.addContractVisible = false;
+              //_this.addContractVisible = false;
               _this.editContract = '';
               showMessage(_this, '保存成功', 1);
               _this.selectContracts();
@@ -4338,7 +4338,7 @@ export default {
           success: function(res) {
             _this.isError = res.code != 200;
             if (!_this.isError) {
-              _this.addContractVisible = false;
+              //_this.addContractVisible = false;
               _this.editContract = '';
               showMessage(_this, '保存成功', 1);
               _this.selectContracts();
@@ -4428,7 +4428,7 @@ export default {
           success: function(res) {
             _this.isError = res.code != 200;
             if (!_this.isError) {
-              _this.addContractVisible = false;
+              //_this.addContractVisible = false;
               _this.editContract = '';
               showMessage(_this, '保存成功', 1);
               _this.selectContracts();
