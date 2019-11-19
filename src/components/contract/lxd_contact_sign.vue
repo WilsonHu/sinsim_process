@@ -170,7 +170,7 @@
                             <el-col :span="6">
                                 <el-form-item label="联系单类型：" :label-width="formLabelWidth">
                                     <el-select v-model="lxdForm.contactType" placeholder="选择不同类型，会有不同的内容" clearable
-                                               @change="handleTypeSelect(lxdForm.contactType)">
+                                                >
                                         <el-option
                                                 v-for="item in lxdTypes"
                                                 :key="item"
@@ -198,7 +198,7 @@
                                     </el-col>
                                 </el-row>
                                 <el-row>
-                                    <el-col :span="4">
+                                    <el-col :span="5">
                                         <el-form-item label="申请日期："
                                                       :label-width="longFormLabelWidth">
                                             <el-date-picker
@@ -208,10 +208,8 @@
                                             </el-date-picker>
                                         </el-form-item>
                                     </el-col>
-                                    <el-col :span="4">
-                                        <el-form-item label="ECO希望日期："
-                                                      :label-width="longFormLabelWidth"
-                                                      v-show="isShowHopeDate">
+                                    <el-col :span="6" :offset="2" v-show="isShowChangeContactForm">
+                                        <el-form-item label="ECO希望日期：" >
                                             <el-date-picker
                                                     type="date"
                                                     placeholder="ECO希望完成日期"
@@ -220,7 +218,7 @@
                                         </el-form-item>
                                     </el-col>
 
-                                    <el-col :span="6">
+                                    <el-col :span="6" style="margin-left:20px;">
                                         <el-form-item label="合同号：" :label-width="longFormLabelWidth">
                                             <el-input
                                                     v-model="lxdForm.contractNum"
@@ -232,14 +230,14 @@
                                 </el-row>
 
                                 <el-row>
-                                    <el-col>
+                                    <el-col  :span="20">
                                         <el-form-item label="变更主题：" :label-width="longFormLabelWidth">
                                             <el-input type="textarea" v-model="lxdForm.contactTitle"
                                                       :rows="1"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
-                                <el-row>
+                                <el-row v-show="isShowChangeContactForm">
                                     <el-col :span="8">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth">
                                             <el-select v-model="lxdForm.contactContent" placeholder="选择变更内容子类型"
@@ -254,15 +252,32 @@
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
-                                    <el-col :offset=1 :span="4">
-                                        <el-input v-model="lxdForm.contactContentByInput"
-                                                  placeholder="请输入"
-                                                  v-show="isShowContactContentInput"></el-input>
+                                   
+
+                                    <el-col :span="4" :offset="12" >
+                                        <el-button
+                                                type="primary"
+                                                class="el-icon-plus"
+                                                style="float:right"
+                                                @click="addChangeItem()">变更条目
+                                        </el-button>
                                     </el-col>
                                 </el-row>
 
-                                <el-row>
-                                    <div v-for="item in lxdForm.contentList">
+                                <el-row v-show="isShowWorkContactForm">
+                                    <el-col :span="20">
+                                        <el-form-item label="变更内容：" :label-width="longFormLabelWidth">
+                                                 <el-input type="textarea" v-model="lxdForm.contactTitle"
+                                                      :rows="5">
+                                                 </el-input>
+                                        </el-form-item>
+                                    </el-col>
+
+                                    
+                                </el-row>
+
+                                <el-row v-show="isShowChangeContactForm">
+                                    <span v-for="item in lxdForm.contentList" style="padding-top:10px;">
                                         <el-col :span="8">
                                             <el-form-item label="旧状态：" :label-width="longFormLabelWidth">
                                                 <el-input v-model="item.oldStatus" placeholder="输入变更前的状态"></el-input>
@@ -285,21 +300,78 @@
                                                     class="el-icon-delete"
                                                     @click="onDeleteItem(item)" style="margin-top: 5px;"></el-button>
                                         </el-col>
-                                    </div>
-                                    <el-col :span="4" :offset="20">
-                                        <el-button
-                                                type="primary"
-                                                class="el-icon-plus"
-                                                @click="addChangeItem()">增加变更条目
-                                        </el-button>
-                                    </el-col>
-                                </el-row>
-
-                                <el-row>
+                                    </span>
                                 </el-row>
                             </el-form>
                         </el-card>
 
+                        <el-card class="box-card" style="margin: 25px">
+                             <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
+                                   联系单审批
+                                </div>
+                                <el-row>
+                                  <el-col :span="24">
+                                    <el-table
+                                      border
+                                      :row-class-name="tableRowClassName"
+                                      :data="lxdForm.signContent"
+                                      style="margin-bottom: 20px;margin-top: 20px;"
+                                    >
+                                      <el-table-column align="center" label="签核步骤" width="80">
+                                        <template scope="scope">
+                                          <el-button
+                                            style="font-size: 14px; font-weight: bold"
+                                            type="primary"
+                                            round
+                                            size="mini"
+                                          >{{scope.row.number}}</el-button>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column align="center" width="150" label="签核角色">
+                                        <template slot-scope="scope">
+                                          <span
+                                            style="font-size: 14px; font-weight: bold"
+                                          >{{scope.row.roleId | filterRole}}</span>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column align="center" width="150" label="签核人">
+                                        <template slot-scope="scope">
+                                          <span style="font-size: 14px; font-weight: bold">{{scope.row.user}}</span>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column align="center" width="180" label="日期">
+                                        <template slot-scope="scope">
+                                          <span>{{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}</span>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column align="center" label="意见">
+                                        <template slot-scope="scope">
+                                          <el-input
+                                            type="textarea"
+                                            v-model="scope.row.comment"
+                                            auto-complete="off"
+                                          ></el-input>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column align="center" label="操作" width="200">
+                                        <template scope="scope">
+                                          <el-button
+                                            type="primary"
+                                            icon="el-icon-check"
+                                            size="small"
+                                          >同意</el-button>
+
+                                          <el-button
+                                            type="danger"
+                                            icon="el-icon-close"
+                                            size="small"
+                                          >驳回</el-button>
+                                        </template>
+                                      </el-table-column>
+                                    </el-table>
+                                  </el-col>
+                                </el-row>
+                        </el-card>
                     </el-form>
                     <el-form>
                         <div>
@@ -328,7 +400,7 @@
     var _this;
 
     export default {
-        name: 'contract_sign',
+        name: 'contact_sign',
         components: {
             Tinymce,
             ConfigData
@@ -346,8 +418,6 @@
                 SIGN_MODE: 1,
                 ADD_MODE: 2,
                 EDIT_MODE: 3,
-                CHANGE_MODE: 4,
-                SPLIT_MODE: 5,
                 tableData: [],
                 //分页
                 totalNum: 1,
@@ -368,9 +438,11 @@
                     applicantPerson: '',
                     status: LXD_INITIAL,
                     contentList: [],
+                    signContent:[],
 
                 },
-
+                normalSignProcess:[],
+                defaultSignProcess:[],
                 addButtonDisabled: false,
                 contractSignForms: [{
                     title: '合同签核记录',
@@ -400,9 +472,6 @@
                 },
 
                 allRoles: [],
-
-                // 变更联系单里，“变更内容”下拉选择了“其他，需说明”时 为true.
-                isShowContactContentInput: false,
 
                 timeout: null,
 
@@ -457,8 +526,6 @@
                 //todo? 可以定制,
                 lxdChangeTypes: ["设计变更", "材料变更", "工艺变更", "模具设备", "工艺夹具", "制造场所", "新供应商", "包装运输", "检验方法", "其他变更，需说明"],
 
-                isShowHopeDate: false,
-
                 changeItems: [],
             };
 
@@ -475,25 +542,6 @@
 
             checkShow() {
                 return false;
-            },
-
-            handleTypeSelect(val) {
-                if (_this.lxdForm.contactType == "变更联系单") {
-                    _this.isShowHopeDate = true;
-                } else if (_this.lxdForm.contactType == "工作联系单") {
-                    _this.isShowHopeDate = false;
-                } else
-                    console.log("没有选对");
-            },
-
-            // 变更联系单里的变更内容
-            handleChangeContentSelect(val) {
-                if (_this.lxdForm.contactContent == "其他变更，需说明") {
-                    _this.isShowContactContentInput = true;
-                } else {
-                    _this.isShowContactContentInput = false;
-                }
-
             },
 
 
@@ -568,15 +616,26 @@
                     }
                 });
             },
-
+            tableRowClassName({ row, rowIndex }) {
+                if (row.result == SIGN_REJECT) {
+                  return 'warning-row';
+                }
+                return '';
+            },
 
             handleAdd() {
-                this.addLxdVisible = true;
                 this.dialogTitle = '新增联系单';
                 _this.lxdForm.applicantDepartment = this.userInfo.role.roleName;
                 _this.lxdForm.contactType = _this.lxdTypes[0];
                 _this.lxdForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
-                _this.isShowHopeDate = true;
+                for(let i=0;i<_this.defaultSignProcess.length;i++)
+                {
+                  let item={};
+                  Object.assign(item,_this.defaultSignProcess[i]);
+                  item.roleName=_this.getRoleNameById(item.roleId);
+                  _this.lxdForm.signContent.push(item);
+                }
+                this.addLxdVisible = true;
                 _this.mode = _this.ADD_MODE;
 
             },
@@ -864,8 +923,51 @@
                 _this.addLxdVisible = false;
                 _this.selectContacts();
             },
+            initSignProcesses()
+            {
+                $.ajax({
+                    url: HOST + 'sign/process/list',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function(res) {
+                      if (res.code == 200) {
+                        _this.signProcesses = res.data.list;
+                        for (let i = 0; i < _this.signProcesses.length; i++) {
+                            if (_this.signProcesses[i].processName.indexOf('联系单') != -1) {
+                                _this.normalSignProcess = JSON.parse(
+                                  _this.signProcesses[i].processContent
+                                );
+                              for (let j = 0; j < _this.normalSignProcess.length; j++) {
+                                  if (_this.normalSignProcess[j].signType == '联系单签核') {
+                                          let item = _this.normalSignProcess[j];
+                                          item.date = '';
+                                          item.user = '';
+                                          item.result = SIGN_INITIAL;
+                                          item.comment = '';
+                                          _this.defaultSignProcess.push(item);
+                                  } 
+                              }
+                          }
+                        }
+                      } else {
+                        showMessage(_this, res.message, 0);
+                      }
+                    }
+                });
+            },
+
         },
-        computed: {},
+        computed: {
+            isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
+              
+              return  _this.lxdForm.contactType==_this.lxdTypes[0];
+            },
+
+            isShowWorkContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
+              return  _this.lxdForm.contactType==_this.lxdTypes[1];
+            },
+        },
         filters: {
             filterRole(id) {
                 let result = '';
@@ -906,7 +1008,7 @@
             ) {
                 _this.filters.roleName = this.userInfo.role.roleName;
             }
-
+            _this.initSignProcesses();
             //获取用户所在部门
 
             _this.lxdForm.applicantDepartment = this.userInfo.role.roleName;
