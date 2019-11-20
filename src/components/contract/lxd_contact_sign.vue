@@ -267,7 +267,7 @@
                                 <el-row v-show="isShowWorkContactForm">
                                     <el-col :span="20">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth">
-                                                 <el-input type="textarea" v-model="lxdForm.contactTitle"
+                                                 <el-input type="textarea" v-model="lxdForm.contactContent"
                                                       :rows="5">
                                                  </el-input>
                                         </el-form-item>
@@ -277,7 +277,7 @@
                                 </el-row>
 
                                 <el-row v-show="isShowChangeContactForm">
-                                    <span v-for="item in lxdForm.contentList" style="padding-top:10px;">
+                                    <span v-for="item in lxdForm.changeItem" style="padding-top:10px;">
                                         <el-col :span="8">
                                             <el-form-item label="旧状态：" :label-width="longFormLabelWidth">
                                                 <el-input v-model="item.oldStatus" placeholder="输入变更前的状态"></el-input>
@@ -302,6 +302,17 @@
                                         </el-col>
                                     </span>
                                 </el-row>
+                                <el-row>
+                                  <el-col :span="4">
+                                    <el-button
+                                      :disabled="notWritter()"
+                                      size="small"
+                                      type="primary"
+                                      icon="el-icon-upload"
+                                      @click="onUpload()">附件
+                                      </el-button>
+                                  </el-col>
+                                </el-row>
                             </el-form>
                         </el-card>
 
@@ -314,7 +325,7 @@
                                     <el-table
                                       border
                                       :row-class-name="tableRowClassName"
-                                      :data="lxdForm.signContent"
+                                      :data="lxdForm.contactSign.signContent"
                                       style="margin-bottom: 20px;margin-top: 20px;"
                                     >
                                       <el-table-column align="center" label="签核步骤" width="80">
@@ -373,6 +384,54 @@
                                 </el-row>
                         </el-card>
                     </el-form>
+                    <el-dialog title="附件上传" :visible.sync="uploadDialogVisible"
+                          width="35%" right @close="fileLists=[]">
+                          <el-form id="uploadForm">
+                              <el-row>
+                                  <el-form-item>
+                                      <el-col :span="24">
+                                          <el-upload
+                                                  class="upload-demo"
+                                                  ref="upload"
+                                                  :action="uploadURL"
+                                                  :multiple="false"
+                                                  :on-change="handleFileChange"
+                                                  :before-upload="handleBefore"
+                                                  :on-preview="handlePreview"
+                                                  :on-remove="handleRemove"
+                                                  :file-list="fileLists"
+                                                  :auto-upload="false"
+                                                  :limit="1"
+                                                  :data="uploadData">
+                                              <el-button slot="trigger" size="small"
+                                                        plain
+                                                        type="primary">选取文件
+                                              </el-button>
+                                              <el-button style="margin-left: 10px;" size="small"
+                                                        icon="el-icon-upload"
+                                                        :disabled="fileLists.length==0"
+                                                        type="success" @click="submitUpload">
+                                                  上传到服务器
+                                              </el-button>
+                                              <div slot="tip" class="el-upload__tip"
+                                                  style="font-size: 12px;color: gray">
+                                                  只能上传xls/xlsx文件
+                                              </div>
+                                          </el-upload>
+                                      </el-col>
+                                  </el-form-item>
+                              </el-row>
+                          </el-form>
+                          <div slot="footer" class="dialog-footer" style="margin-bottom: 60px">
+                              <el-col :span="24" style="margin-bottom: 30px;">
+                                  <el-button icon="el-icon-close"
+                                            size="normal"
+                                            type="danger"
+                                            @click="uploadDialogVisible = false">关 闭
+                                  </el-button>
+                              </el-col>
+                          </div>
+                    </el-dialog>
                     <el-form>
                         <div>
                             <el-button @click="dialogClose()" icon="el-icon-back" type="info" offset="120">关 闭
@@ -432,15 +491,39 @@
 
                 //联系单内容
                 lxdForm: {
-                    contactType: '',
-                    contractNum: '',
-                    applicantDepartment: '',
-                    applicantPerson: '',
-                    status: LXD_INITIAL,
-                    contentList: [],
-                    signContent:[],
-
-                },
+                      id:'',
+                      num:'',
+                      orderId:'',
+                      contactTitle:"",
+                      contactType: "",
+                      applicantDepartment: "",
+                      createDate:"",
+                      hopeDate:'',
+                      applicantPerson: "",
+                      status: "",
+                      contactContent: "", //工作联系单内容
+                      attachedFile:"",
+                      changeItem: [{ //变更单内容
+                        id:"",//guid
+                        oldStatus: "",
+                        newStatus: "",
+                        remark: ""
+                      }],
+                      contactSign:{
+                          contactFormId:'',
+                          currentStep:'',
+                          signContent:[{
+                            number: "",
+                            roleId: "",
+                            signType: "",
+                            date: "",
+                            user: "",
+                            result: "",
+                            comment: "",
+                            isEnabled:"",
+                          }]
+                      },
+                  },
                 normalSignProcess:[],
                 defaultSignProcess:[],
                 addButtonDisabled: false,
@@ -525,14 +608,73 @@
                 lxdTypes: ["变更联系单", "工作联系单"],
                 //todo? 可以定制,
                 lxdChangeTypes: ["设计变更", "材料变更", "工艺变更", "模具设备", "工艺夹具", "制造场所", "新供应商", "包装运输", "检验方法", "其他变更，需说明"],
-
-                changeItems: [],
+                uploadDialogVisible:false,
+                fileLists:[],
+                uploadForm:{},
+                uploadData:{},
+                uploadURL: HOST + "order/loading/list/upload/",
             };
 
         },
         methods: {
+            handleFileChange(file, fileList)
+            {
+                var errorMsg = "";
+                var xlsFile = file.name.split('.');
+                if (xlsFile == null || xlsFile.length < 2) {
+                    errorMsg = "上传的文件没有后缀名，不能上传！";
+                }
+                else if (xlsFile[1] !== "xls" && xlsFile[1] !== "xlsx") {
+                    errorMsg = "只能上传xls/xlsx文件，请重新上传！";
+                }
+                if (!isStringEmpty(errorMsg)) {
+                    var removeIndex = -1;
+                    for (var i = 0; i < fileList.length; i++) {
+                        if (fileList[i].name == file.name) {
+                            removeIndex = i;
+                            break;
+                        }
+                    }
+                    if (removeIndex > -1) {
+                        fileList.splice(removeIndex, 1);
+                    }
+                    fileList = [];
+                    showMessage(_this, errorMsg, 0)
+                } else {
+                    fileList = [];
+                    fileList.push(file);
+                }
+                _this.fileLists = fileList;
+            },
+
+            handleRemove(file, fileList) {
+                _this.fileLists = fileList;
+                console.log("remove file" + file.name);
+            },
+            handlePreview(file) {
+              console.log(handlePreview);
+            },
+             handleBefore(file)
+            {
+              console.log(handleBefore);
+            },
+            submitUpload(){
+              
+            },
+            notWritter()
+            {
+              if (this.userInfo!= null) {
+                    return this.userInfo.account!=_this.lxdForm.applicantPerson;
+                }
+                return true;
+            },
+            onUpload()
+            {
+                _this.fileLists = [];
+                _this.uploadDialogVisible = true;
+            },
             addChangeItem() {
-                _this.lxdForm.contentList.push({
+                _this.lxdForm.changeItem.push({
                     id: getGuid(),
                     oldStatus: '',
                     newStatus: '',
@@ -628,12 +770,14 @@
                 _this.lxdForm.applicantDepartment = this.userInfo.role.roleName;
                 _this.lxdForm.contactType = _this.lxdTypes[0];
                 _this.lxdForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
+                _this.lxdForm.changeItem=[];
+                _this.lxdForm.contactSign.signContent=[];
                 for(let i=0;i<_this.defaultSignProcess.length;i++)
                 {
                   let item={};
                   Object.assign(item,_this.defaultSignProcess[i]);
                   item.roleName=_this.getRoleNameById(item.roleId);
-                  _this.lxdForm.signContent.push(item);
+                  _this.lxdForm.contactSign.signContent.push(item);
                 }
                 this.addLxdVisible = true;
                 _this.mode = _this.ADD_MODE;
@@ -671,12 +815,11 @@
             },
 
             onDeleteItem(item) {
-                for (var i = 0; i < _this.lxdForm.contentList.length; i++) {
-                    if (_this.lxdForm.contentList[i].id == item.id) {
-                        _this.lxdForm.contentList.splice(i, 1);
+                for (var i = 0; i < _this.lxdForm.changeItem.length; i++) {
+                    if (_this.lxdForm.changeItem[i]== item) {
+                        _this.lxdForm.changeItem.splice(i, 1);
                         break;
                     }
-
                 }
             },
 
@@ -1103,5 +1246,17 @@
 
     .my-autocomplete {
         width: 100%;
+    }
+     /*很关键*/
+    input[type="file"] {
+        display: none;
+    }
+
+    .el-upload-list {
+        height: 100px;
+    }
+
+    .el-upload__tip {
+
     }
 </style>
