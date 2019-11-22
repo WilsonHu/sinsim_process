@@ -165,10 +165,10 @@
                     <div style="text-align: center; font-weight: bold; font-size: 28px; font-family: 'Microsoft YaHei UI';padding-bottom: 20px">
                         {{dialogTitle}}
                     </div>
-                    <el-form>
+                    <el-form :model="lxdForm" :rules="rules" >
                         <el-row>
                             <el-col :span="6">
-                                <el-form-item label="联系单类型：" :label-width="formLabelWidth">
+                                <el-form-item label="联系单类型：" :label-width="longFormLabelWidth" prop="contactType">
                                     <el-select v-model="lxdForm.contactType" placeholder="选择不同类型，会有不同的内容" clearable
                                                 >
                                         <el-option
@@ -180,26 +180,33 @@
                                     </el-select>
                                 </el-form-item>
                             </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="联系单号：" :label-width="longFormLabelWidth" prop="num">
+                                    <el-input v-model="lxdForm.num"  
+                                              :readonly="changeLxdContentDisable(lxdForm)" clearable
+                                              placeholder="联系单号："></el-input>
+                                </el-form-item>
+                            </el-col>
                         </el-row>
 
 
                         <el-card class="box-card" style="margin: 25px">
-                            <el-form :model="lxdForm">
+                            <el-form :model="lxdForm" :rules="rules">
                                 <el-row>
-                                    <el-col :span="4">
+                                    <el-col :span="6">
                                         <el-form-item label="提出部门：" :label-width="longFormLabelWidth">
                                             <el-input v-model="lxdForm.applicantDepartment" disabled></el-input>
                                         </el-form-item>
                                     </el-col>
-                                    <el-col :span="4">
+                                    <el-col :span="6">
                                         <el-form-item label="提出人：" :label-width="formLabelWidth">
                                             <el-input v-model="lxdForm.applicantPerson" disabled></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row>
-                                    <el-col :span="5">
-                                        <el-form-item label="申请日期："
+                                    <el-col :span="6">
+                                        <el-form-item label="申请日期：" prop="createDate"
                                                       :label-width="longFormLabelWidth">
                                             <el-date-picker
                                                     type="date"
@@ -209,7 +216,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="6" :offset="2" v-show="isShowChangeContactForm">
-                                        <el-form-item label="ECO希望日期：" >
+                                        <el-form-item label="ECO希望日期：" prop="hopeDate" :label-width="longFormLabelWidth">
                                             <el-date-picker
                                                     type="date"
                                                     placeholder="ECO希望完成日期"
@@ -219,30 +226,29 @@
                                     </el-col>
 
                                     <el-col :span="6" style="margin-left:20px;">
-                                        <el-form-item label="合同号：" :label-width="longFormLabelWidth">
+                                        <el-form-item label="订单号: " :label-width="longFormLabelWidth" prop="orderId">
                                             <el-input
-                                                    v-model="lxdForm.contractNum"
-                                                    :readonly="changeLxdContentDisable(lxdForm)"
-                                                    placeholder="合同号"
+                                                    v-model="lxdForm.orderId"
+                                                    :readonly="changeLxdContentDisable(lxdForm)" clearable
+                                                    placeholder="订单号"
                                             ></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
 
                                 <el-row>
-                                    <el-col  :span="20">
-                                        <el-form-item label="变更主题：" :label-width="longFormLabelWidth">
-                                            <el-input type="textarea" v-model="lxdForm.contactTitle"
+                                    <el-col  :span="20" style="margin-top:10px;">
+                                        <el-form-item label="变更主题：" :label-width="longFormLabelWidth" prop="contactTitle">
+                                            <el-input type="textarea" v-model="lxdForm.contactTitle"  clearable
                                                       :rows="1"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row v-show="isShowChangeContactForm">
-                                    <el-col :span="8">
-                                        <el-form-item label="变更内容：" :label-width="longFormLabelWidth">
+                                    <el-col :span="8" style="margin-top:10px;">
+                                        <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
                                             <el-select v-model="lxdForm.contactContent" placeholder="选择变更内容子类型"
-                                                       clearable
-                                                       @change="handleChangeContentSelect(lxdForm.contactContent)">
+                                                       clearable >
                                                 <el-option
                                                         v-for="item in lxdChangeTypes"
                                                         :key="item"
@@ -276,21 +282,21 @@
                                     
                                 </el-row>
 
-                                <el-row v-show="isShowChangeContactForm">
-                                    <span v-for="item in lxdForm.changeItem" style="padding-top:10px;">
+                                <el-row v-show="isShowChangeContactForm" >
+                                    <span v-for="item in lxdForm.changeItem" style="margin-top:10px;">
                                         <el-col :span="8">
                                             <el-form-item label="旧状态：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.oldStatus" placeholder="输入变更前的状态"></el-input>
+                                                <el-input v-model="item.oldStatus" placeholder="输入变更前的状态" clearable></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="8">
                                             <el-form-item label="新状态：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.newStatus" placeholder="输入变更后的状态"></el-input>
+                                                <el-input v-model="item.newStatus" placeholder="输入变更后的状态" clearable></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="6">
                                             <el-form-item label="备注：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.remark"></el-input>
+                                                <el-input v-model="item.remarks" placeholder="输入备注" clearable></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="2">
@@ -302,17 +308,35 @@
                                         </el-col>
                                     </span>
                                 </el-row>
-                                <el-row>
-                                  <el-col :span="4">
-                                    <el-button
-                                      :disabled="notWritter()"
-                                      size="small"
-                                      type="primary"
-                                      icon="el-icon-upload"
-                                      @click="onUpload()">附件
-                                      </el-button>
-                                  </el-col>
+                                <el-row style="margin-top:10px;">
+                                    <div>
+                                        <el-col :span="2">
+                                             <el-form-item label="附件: " :label-width="longFormLabelWidth">
+                                               
+                                             </el-form-item>
+                                        </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                            :disabled="notWritter()"
+                                            size="small"
+                                            type="success"
+                                            style="float:left; margin-left:5px;"
+                                            icon="el-icon-upload"
+                                            @click="onUpload()">上传
+                                            </el-button>
+                                        </el-col>
+                                    </div>
                                 </el-row>
+                                <el-row>
+                                      <el-col :span="20">
+                                        <el-form-item label="" :label-width="longFormLabelWidth">
+                                            <span style="float:left;">
+                                                {{lxdForm.attachedFile}}
+                                            </span>    
+                                        </el-form-item>
+                                      </el-col>
+                                </el-row>
+                             
                             </el-form>
                         </el-card>
 
@@ -385,7 +409,7 @@
                         </el-card>
                     </el-form>
                     <el-dialog title="附件上传" :visible.sync="uploadDialogVisible"
-                          width="35%" right @close="fileLists=[]">
+                          width="35%" right @close="fileLists=[]" :modal="false"> 
                           <el-form id="uploadForm">
                               <el-row>
                                   <el-form-item>
@@ -402,7 +426,7 @@
                                                   :file-list="fileLists"
                                                   :auto-upload="false"
                                                   :limit="1"
-                                                  :data="uploadData">
+                                                  >
                                               <el-button slot="trigger" size="small"
                                                         plain
                                                         type="primary">选取文件
@@ -415,14 +439,14 @@
                                               </el-button>
                                               <div slot="tip" class="el-upload__tip"
                                                   style="font-size: 12px;color: gray">
-                                                  只能上传xls/xlsx文件
+                                                  上传文件
                                               </div>
                                           </el-upload>
                                       </el-col>
                                   </el-form-item>
                               </el-row>
                           </el-form>
-                          <div slot="footer" class="dialog-footer" style="margin-bottom: 60px">
+                          <div slot="footer" class="dialog-footer" style="margin-bottom: 30px">
                               <el-col :span="24" style="margin-bottom: 30px;">
                                   <el-button icon="el-icon-close"
                                             size="normal"
@@ -504,10 +528,9 @@
                       contactContent: "", //工作联系单内容
                       attachedFile:"",
                       changeItem: [{ //变更单内容
-                        id:"",//guid
                         oldStatus: "",
                         newStatus: "",
-                        remark: ""
+                        remarks: ""
                       }],
                       contactSign:{
                           contactFormId:'',
@@ -534,7 +557,7 @@
                 }],
 
                 formLabelWidth: '100px',
-                longFormLabelWidth: '120px',
+                longFormLabelWidth: '140px',
 
                 mode: this.SIGN_MODE,
 
@@ -602,17 +625,38 @@
                 lxdSignRoleList: [],
                 lxdStatusForFilterList: [],
 
-                LxdStatusList: LxdStatusList,
                 lxdStatusList: LxdStatusList,
 
                 lxdTypes: ["变更联系单", "工作联系单"],
-                //todo? 可以定制,
                 lxdChangeTypes: ["设计变更", "材料变更", "工艺变更", "模具设备", "工艺夹具", "制造场所", "新供应商", "包装运输", "检验方法", "其他变更，需说明"],
                 uploadDialogVisible:false,
                 fileLists:[],
                 uploadForm:{},
-                uploadData:{},
-                uploadURL: HOST + "order/loading/list/upload/",
+                uploadURL: HOST + "contact/form/uploadAttachedFile",
+                rules: {
+                    contactType: [
+                        { type: 'string', required: true, message: '请选择联系单类型!', trigger: 'change' }
+                    ],
+                    num: [
+                        { type: 'string', required: true, message: '请填写联系单号!', trigger: 'change' }
+                    ],
+                    createDate: [
+                        {  type: 'date',required: true, message: '请选择申请日期!', trigger: 'change' }
+                    ],
+                    hopeDate: [
+                        {  type: 'date',required: true, message: '请选择ECO希望完成日期!', trigger: 'change' }
+                    ],
+                    orderId: [
+                        {  type: 'string',required: true, message: '请填写订单号!', trigger: 'change' }
+                    ],
+                    contactTitle: [
+                        {  type: 'string',required: true, message: '请填写变更主题!', trigger: 'change' }
+                    ],
+                    contactContent: [
+                        {  type: 'string',required: true, message: '请填写变更内容：!', trigger: 'change' }
+                    ]
+                    
+                }
             };
 
         },
@@ -624,9 +668,9 @@
                 if (xlsFile == null || xlsFile.length < 2) {
                     errorMsg = "上传的文件没有后缀名，不能上传！";
                 }
-                else if (xlsFile[1] !== "xls" && xlsFile[1] !== "xlsx") {
-                    errorMsg = "只能上传xls/xlsx文件，请重新上传！";
-                }
+                // else if (xlsFile[1] !== "xls" && xlsFile[1] !== "xlsx") {
+                //     errorMsg = "只能上传xls/xlsx文件，请重新上传！";
+                // }
                 if (!isStringEmpty(errorMsg)) {
                     var removeIndex = -1;
                     for (var i = 0; i < fileList.length; i++) {
@@ -659,7 +703,40 @@
               console.log(handleBefore);
             },
             submitUpload(){
-              
+                if (_this.fileLists == null || _this.fileLists.length == 0) {
+                    showMessage(_this, "上传文件不能为空！", 0)
+                    return;
+                }
+                var formData = new FormData($("#uploadForm")[0]);
+                formData.append("file", _this.fileLists[0].name);
+                formData.append("lxdNum", _this.lxdForm.num);
+                $.ajax({
+                    url: _this.uploadURL,// 需要链接到服务器地址
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        if (res.code === 200) {
+                            if (_this.lxdForm.attachedFile != null &&_this.lxdForm.attachedFile .length> 0) {
+                                showMessage(_this, "附件更新成功！", 1);
+                            }
+                            else {
+                                showMessage(_this, "附件上传成功！", 1);
+                            }
+                            _this.lxdForm.attachedFile=res.data;
+                            _this.uploadDialogVisible = false;
+                        }
+                        else {
+                            showMessage(_this, '上传失败！', 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '上传失败！', 0);
+                    }
+                });
             },
             notWritter()
             {
@@ -675,10 +752,9 @@
             },
             addChangeItem() {
                 _this.lxdForm.changeItem.push({
-                    id: getGuid(),
                     oldStatus: '',
                     newStatus: '',
-                    remark: ''
+                    remarks: ''
                 });
             },
 
@@ -857,24 +933,17 @@
             },
 
             onAdd() {
-                //先校验联系单是否正常
-                //todo
-
                 $.ajax({
                     url: HOST + 'contact/form/add',
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        contract: JSON.stringify(_this.lxdForm),
-                        contractSign: JSON.stringify(
-                            _this.contractSignForms[0].contractSignData
-                        ),
+                        contactFormAllInfo: JSON.stringify(_this.lxdForm),
                     },
                     success: function (res) {
                         _this.isError = res.code != 200;
                         if (!_this.isError) {
                             _this.addLxdVisible = false;
-                            _this.editContract = '';
                             showMessage(_this, '添加成功', 1);
                             _this.selectContacts();
                         } else {
@@ -1164,7 +1233,7 @@
                 choosed: false
             };
 
-            for (let i = 0; i < _this.LxdStatusList.length; i++) {
+            for (let i = 0; i < _this.lxdStatusList.length; i++) {
                 this.lxdStatusForFilterList.push({
                     name: this.lxdStatusList[i].name,
                     value: this.lxdStatusList[i].value,
