@@ -51,8 +51,8 @@
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="4">
-                                    <el-form-item label="合同号:">
-                                        <el-input v-model="filters.contractNum" placeholder="合同号" auto-complete="off"
+                                    <el-form-item label="订单号:">
+                                        <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off"
                                                   clearable></el-input>
                                     </el-form-item>
                                 </el-col>
@@ -93,6 +93,13 @@
                                     <div v-on:click="handleSign(scope.$index, scope.row)" style="font-weight: bold;"
                                          class="btn btn-link">
                                         {{scope.row.orderNum}}
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" label="联系单号" min-width="100">
+                                <template scope="scope">
+                                    <div style="font-weight: bold;">
+                                        {{scope.row.num}}
                                     </div>
                                 </template>
                             </el-table-column>
@@ -236,10 +243,10 @@
                                     </el-col>
 
                                     <el-col :span="6" style="margin-left:20px;">
-                                        <el-form-item label="订单号: " :label-width="longFormLabelWidth" prop="orderId">
+                                        <el-form-item label="订单号: " :label-width="longFormLabelWidth" prop="orderNum">
                                             <el-input 
                                                 :disabled="notWritter()"
-                                                v-model="lxdForm.contactForm.orderId"
+                                                v-model="lxdForm.contactForm.orderNum"
                                                 clearable
                                                 placeholder="订单号"
                                             ></el-input>
@@ -317,7 +324,7 @@
                                                 size="mini"
                                                 type="danger"
                                                 class="el-icon-delete"
-                                                @click="onDeleteItem(item)" style="margin-top: 5px;"></el-button>
+                                                @click="onDeleteChangeItem(item)" style="margin-top: 5px;"></el-button>
                                         </el-col>
                                     </span>
                                 </el-row>
@@ -397,7 +404,7 @@
                                           <el-input
                                             type="textarea"
                                             clearable
-                                            :disabled="!isHasPermissionToSign()"
+                                            :disabled="signDisable(scope.row)"
                                             v-model="scope.row.comment"
                                             auto-complete="off"
                                           ></el-input>
@@ -407,6 +414,7 @@
                                         <template scope="scope">
                                             <el-tooltip placement="top" content="同意"  v-show="isHasPermissionToSign()">
                                                 <el-button
+                                                    :readonly="signDisable(scope.row)"
                                                     type="success"
                                                     icon="el-icon-check"
                                                     size="mini"
@@ -414,6 +422,7 @@
                                             </el-tooltip>
                                             <el-tooltip placement="top" content="驳回" v-show="isHasPermissionToSign()">
                                                 <el-button
+                                                    :readonly="signDisable(scope.row)"
                                                     type="danger"
                                                     icon="el-icon-close"
                                                     size="mini"
@@ -434,6 +443,16 @@
                                 </el-row>
                         </el-card>
                     </el-form>
+                    <el-dialog title="删除" :visible.sync="deleteConfirmVisible" width="30%" append-to-body>
+                        <span style="font-size: 22px">
+                            确认要删除编号为[
+                            <b style="color: #F56C6C;font-weight: bold">{{selectedItem.num}}</b> ]的联系单吗？
+                        </span>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
+                            <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
+                        </span>
+                    </el-dialog>
                     <el-dialog title="附件上传" :visible.sync="uploadDialogVisible"
                           width="35%" right @close="fileLists=[]" :modal="false"> 
                           <el-form id="uploadForm">
@@ -487,9 +506,9 @@
                             <el-button @click="dialogClose()" icon="el-icon-back" type="info" offset="120">关 闭
                             </el-button>
                             <el-button
-                                    v-show="mode == ADD_MODE"
+                                    v-show="mode == ADD_MODE||mode==EDIT_MODE"
                                     type="primary"
-                                    @click="onAdd"
+                                    @click="onAddOrEdit"
                                     icon="el-icon-check"
                                     :disabled="addButtonDisabled"
                             >保 存
@@ -518,7 +537,7 @@
             _this = this;
             return {
                 editUrl: HOST + 'contact/form/update',
-                deleteUrl: HOST + 'contact/form/updateValid',
+                deleteUrl: HOST + 'contact/form/delete',
                 isError: false,
                 errorMsg: '',
                 totalRecords: 0,
@@ -539,11 +558,13 @@
                 signProcesses: [],
                 userInfo: '',
 
-                defaultForm:{
+                
+                //联系单内容
+                lxdForm: {  
                     contactForm:{
                         id:'',
                         num:'',
-                        orderId:'',
+                        orderNum:'',
                         contactTitle:"",
                         contactType: "",
                         applicantDepartment: "",
@@ -576,10 +597,7 @@
                             comment: "",
                             isEnabled:true,
                         }]
-                    },
-                },
-                //联系单内容
-                lxdForm: {   
+                    }, 
                   },
                 normalSignProcess:[],
                 defaultSignProcess:[],
@@ -588,7 +606,7 @@
                 formLabelWidth: '100px',
                 longFormLabelWidth: '140px',
 
-                mode: this.SIGN_MODE,
+                mode: 1,
 
                 dialogTitle: '联系单',
                 editContract: '',
@@ -598,7 +616,7 @@
                 rejectContractSignResultVisible: false,
                 filters: {
                     contactType: '',
-                    contractNum: '',
+                    orderNum: '',
                     //默认审核中
                     
                     applicantDepartment: '',
@@ -675,7 +693,7 @@
                     hopeDate: [
                         {  type: 'date',required: true, message: '请选择ECO希望完成日期!', trigger: 'change' }
                     ],
-                    orderId: [
+                    orderNum: [
                         {  type: 'string',required: true, message: '请填写订单号!', trigger: 'change' }
                     ],
                     contactTitle: [
@@ -781,7 +799,6 @@
                 }
                 return res;
             },
-
             notWritter()
             {
               if (this.userInfo!= null) {
@@ -830,7 +847,7 @@
             selectContacts() {
                 var condition = {
                     contactType: _this.filters.contactType,
-                    contractNum: _this.filters.contractNum,
+                    orderNum: _this.filters.orderNum,
                     applicantDepartment: _this.filters.applicantDepartment,
                     //applicantPerson: _this.userInfo.account,
                     queryStartTime: '',
@@ -873,6 +890,7 @@
 
             handleAdd() {
                 this.dialogTitle = '新增联系单';
+                _this.mode = this.ADD_MODE;
                 _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
                 _this.lxdForm.contactForm.contactType = _this.lxdTypes[0];
                 _this.lxdForm.contactForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
@@ -902,7 +920,7 @@
                 this.errorMsg = '';
                 this.dialogTitle = '签核联系单';
                 this.mode = this.SIGN_MODE;
-                this.editContract = item;
+                this.selectedItem = copyObject(item);
                 _this.fetchLxdData(item.id);
                 this.addLxdVisible = true;
             },
@@ -913,7 +931,7 @@
                 this.dialogTitle = '编辑联系单';
 
                 this.mode = this.EDIT_MODE;
-                this.editContract = item;
+                this.selectedItem = copyObject(item);
                 _this.fetchLxdData(item.id);
                 this.addLxdVisible = true;
             },
@@ -925,7 +943,7 @@
                 }
             },
 
-            onDeleteItem(item) {
+            onDeleteChangeItem(item) {
                 for (var i = 0; i < _this.lxdForm.changeItemList.length; i++) {
                     if (_this.lxdForm.changeItemList[i]== item) {
                         _this.lxdForm.changeItemList.splice(i, 1);
@@ -941,7 +959,7 @@
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
-                        orderId: _this.selectedItem.orderId
+                        id: _this.selectedItem.id
                     },
                     success: function (res) {
                         if (res.code == 200) {
@@ -959,11 +977,47 @@
           
 
             dialogCloseCallback() {
-                _this.lxdForm=Object.assign({},_this.defaultForm);//reset;
+                
+                _this.lxdForm={  
+                    contactForm:{
+                        id:'',
+                        num:'',
+                        orderNum:'',
+                        contactTitle:"",
+                        contactType: "",
+                        applicantDepartment: "",
+                        createDate:"",
+                        hopeDate:'',
+                        applicantPerson: "",
+                        status: "",
+                        contactContent: "", //工作联系单内容
+                        attachedFile:"",
+                    },
+                    changeItemList: [],
+                    contactSign:{
+                        id:'',
+                        contactFormId:'',
+                        currentStep:'',
+                        createTime:'',
+                        signContent:[ 
+                        ]
+                    }, 
+                  },
                 _this.selectContacts();
             },
 
-            onAdd() {
+            onAddOrEdit() {
+               if(_this.mode==_this.ADD_MODE)
+               {
+                    _this.onAdd();
+               }else if(_this.mode==_this.EDIT_MODE)
+               {
+                    _this.onEdit();
+               }
+
+            },
+            onAdd()
+            {
                 let submitData=JSON.stringify(_this.lxdForm);
                 $.ajax({
                     url: HOST + 'contact/form/add',
@@ -992,23 +1046,22 @@
                 setTimeout(() => {
                     _this.addButtonDisabled = false;
                 }, 2000);
-
             },
 
             onEdit() {
 
             },
 
-            signDisable(signContentList, row, status) {
+            signDisable(row) {
                 //超级管理员可以操作，或者当前合同属于“签核状态”、登陆的用户有权限签核并且合同currentStep处于属于该角色签核
                 //修改：下一个签核人未签核的状态下，允许修改。
                 if (_this.userInfo.role.id == 1) {
                     return false;
                 }
-                if (row.roleId == _this.userInfo.role.id && status == 1) {
-                    if (_this.editContract.currentStep == _this.userInfo.role.roleName) {
+                if (row.roleId == _this.userInfo.role.id && _this.lxdForm.contactForm.status == 1) {
+                    if (_this.lxdForm.contactSign.currentStep == _this.userInfo.role.roleName) {
                         return false;
-                    } else if (row.result > 0 && signContentList[row.number].result == 0) {
+                    } else if (row.result > 0 && _this.lxdForm.contactSign.signContent[row.number].result == 0) {
                         return false;
                     } else {
                         return true;
@@ -1078,7 +1131,7 @@
                                     _this.lxdSignRoleList.push({
                                         roleId: '',
                                         name: '全部',
-                                        choosed: _this.filters.roleName == '' ? true : false
+                                        choosed:true
                                     });
                                     var temp = JSON.parse(tmpList[i].processContent);
                                     if (temp != null && temp.length > 0) {
@@ -1086,9 +1139,7 @@
                                             _this.lxdSignRoleList.push({
                                                 roleId: temp[j].roleId,
                                                 name: _this.getRoleNameById(temp[j].roleId),
-                                                choosed: _this.filters.roleName ==
-                                                _this.getRoleNameById(temp[j].roleId) ?
-                                                    true : false
+                                                choosed: _this.filters.roleName == _this.getRoleNameById(temp[j].roleId)
                                             });
                                         }
                                     }
@@ -1241,7 +1292,6 @@
                 this.$router.push({path: '/login'});
                 return;
             }
-            Object.assign(_this.lxdForm,_this.defaultForm);
             _this.initSignProcesses();
 
             //获取用户所在部门
