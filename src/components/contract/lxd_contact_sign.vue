@@ -46,7 +46,7 @@
                             <el-row>
                                 <el-col :span="4">
                                     <el-form-item label="类型:">
-                                        <el-input v-model="filters.contractNum" placeholder="类型" auto-complete="off"
+                                        <el-input v-model="filters.contactType" placeholder="类型" auto-complete="off"
                                                   clearable></el-input>
                                     </el-form-item>
                                 </el-col>
@@ -96,6 +96,13 @@
                                     </div>
                                 </template>
                             </el-table-column>
+                            <el-table-column align="center" label="变更主题" min-width="125">
+                                <template scope="scope">
+                                    <div style="font-weight: bold;">
+                                        {{scope.row.contactTitle}}
+                                    </div>
+                                </template>
+                            </el-table-column>
                             <el-table-column align="center" prop="applicantDepartment" label="发起部门"></el-table-column>
                             <el-table-column align="center" prop="applicantPerson" label="发起人"></el-table-column>
                             <el-table-column align="center" prop="status" label="审核状态">
@@ -106,7 +113,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column align="center" prop="currentStep" label="审核阶段"></el-table-column>
-                            <el-table-column align="center" prop="createTime" width="100" label="创建时间">
+                            <el-table-column align="center" prop="createDate" width="100" label="创建时间">
                                 <template scope="scope">
                                     <div>
                                         {{formatDate(scope.row.createDate)}}
@@ -124,21 +131,22 @@
                                 <template scope="scope">
                                     <el-tooltip placement="top">
                                         <div slot="content">审核</div>
-                                        <el-button v-show="userInfo.role.roleName !='销售员'" size="mini" type="success"
-                                                   icon="el-icon-check"
-                                                   @click="handleSign(scope.$index, scope.row)"></el-button>
+                                        <el-button size="mini" type="success"
+                                                icon="el-icon-check"
+                                                v-show="isHasPermissionToSign()"
+                                                @click="handleSign(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
                                     <el-tooltip placement="top">
                                         <div slot="content">编辑</div>
                                         <el-button
-                                                v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)"
+                                                v-show="!notWritter()"
                                                 size="mini" type="primary" icon="el-icon-edit"
                                                 @click="handleEdit(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
                                     <el-tooltip placement="top">
                                         <div slot="content">删除</div>
                                         <el-button
-                                                v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)&&(scope.row.status>=5||scope.row.status==0)"
+                                                v-show="!notWritter()"
                                                 size="mini" type="danger" icon="el-icon-delete"
                                                 @click="handleDelete(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
@@ -170,7 +178,7 @@
                             <el-col :span="6">
                                 <el-form-item label="联系单类型：" :label-width="longFormLabelWidth" prop="contactType">
                                     <el-select v-model="lxdForm.contactForm.contactType" placeholder="选择不同类型，会有不同的内容" clearable
-                                                >
+                                                :disabled="notWritter()">
                                         <el-option
                                                 v-for="item in lxdTypes"
                                                 :key="item"
@@ -183,7 +191,7 @@
                             <el-col :span="6">
                                 <el-form-item label="联系单号：" :label-width="longFormLabelWidth" prop="num">
                                     <el-input v-model="lxdForm.contactForm.num"  
-                                              :readonly="changeLxdContentDisable(lxdForm.contactForm)" clearable
+                                              :disabled="notWritter()" clearable
                                               placeholder="联系单号："></el-input>
                                 </el-form-item>
                             </el-col>
@@ -209,28 +217,31 @@
                                         <el-form-item label="申请日期：" prop="createDate"
                                                       :label-width="longFormLabelWidth">
                                             <el-date-picker
-                                                    type="date"
-                                                    placeholder="申请日期"
-                                                    v-model="lxdForm.contactForm.createDate">
+                                                :disabled="notWritter()"
+                                                type="date"
+                                                placeholder="申请日期"
+                                                v-model="lxdForm.contactForm.createDate">
                                             </el-date-picker>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="6" :offset="2" v-show="isShowChangeContactForm">
                                         <el-form-item label="ECO希望日期：" prop="hopeDate" :label-width="longFormLabelWidth">
                                             <el-date-picker
-                                                    type="date"
-                                                    placeholder="ECO希望完成日期"
-                                                    v-model="lxdForm.contactForm.hopeDate">
+                                                :disabled="notWritter()"
+                                                type="date"
+                                                placeholder="ECO希望完成日期"
+                                                v-model="lxdForm.contactForm.hopeDate">
                                             </el-date-picker>
                                         </el-form-item>
                                     </el-col>
 
                                     <el-col :span="6" style="margin-left:20px;">
                                         <el-form-item label="订单号: " :label-width="longFormLabelWidth" prop="orderId">
-                                            <el-input
-                                                    v-model="lxdForm.contactForm.orderId"
-                                                    :readonly="changeLxdContentDisable(lxdForm.contactForm)" clearable
-                                                    placeholder="订单号"
+                                            <el-input 
+                                                :disabled="notWritter()"
+                                                v-model="lxdForm.contactForm.orderId"
+                                                clearable
+                                                placeholder="订单号"
                                             ></el-input>
                                         </el-form-item>
                                     </el-col>
@@ -240,7 +251,7 @@
                                     <el-col  :span="20" style="margin-top:10px;">
                                         <el-form-item label="变更主题：" :label-width="longFormLabelWidth" prop="contactTitle">
                                             <el-input type="textarea" v-model="lxdForm.contactForm.contactTitle"  clearable
-                                                      :rows="1"></el-input>
+                                                      :rows="1" :disabled="notWritter()"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
@@ -248,7 +259,7 @@
                                     <el-col :span="8" style="margin-top:10px;">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
                                             <el-select v-model="lxdForm.contactForm.contactContent" placeholder="选择变更内容子类型"
-                                                       clearable >
+                                                       clearable :disabled="notWritter()">
                                                 <el-option
                                                         v-for="item in lxdChangeTypes"
                                                         :key="item"
@@ -262,10 +273,11 @@
 
                                     <el-col :span="4" :offset="12" >
                                         <el-button
-                                                type="primary"
-                                                class="el-icon-plus"
-                                                style="float:right"
-                                                @click="addChangeItem()">变更条目
+                                            :disabled="notWritter()"
+                                            type="primary"
+                                            class="el-icon-plus"
+                                            style="float:right"
+                                            @click="addChangeItem()">变更条目
                                         </el-button>
                                     </el-col>
                                 </el-row>
@@ -274,7 +286,7 @@
                                     <el-col :span="20">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth">
                                                  <el-input type="textarea" v-model="lxdForm.contactForm.contactContent"
-                                                      :rows="5">
+                                                      :rows="5"  :disabled="notWritter()">
                                                  </el-input>
                                         </el-form-item>
                                     </el-col>
@@ -286,25 +298,26 @@
                                     <span v-for="item in lxdForm.changeItemList" style="margin-top:10px;">
                                         <el-col :span="8">
                                             <el-form-item label="旧状态：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.oldInfo" placeholder="输入变更前的状态" clearable></el-input>
+                                                <el-input v-model="item.oldInfo" placeholder="输入变更前的状态" clearable  :disabled="notWritter()"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="8">
                                             <el-form-item label="新状态：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.newInfo" placeholder="输入变更后的状态" clearable></el-input>
+                                                <el-input v-model="item.newInfo" placeholder="输入变更后的状态" clearable  :disabled="notWritter()"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="6">
                                             <el-form-item label="备注：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.remarks" placeholder="输入备注" clearable></el-input>
+                                                <el-input v-model="item.remarks" placeholder="输入备注" clearable  :disabled="notWritter()"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="2">
                                             <el-button
-                                                    size="mini"
-                                                    type="danger"
-                                                    class="el-icon-delete"
-                                                    @click="onDeleteItem(item)" style="margin-top: 5px;"></el-button>
+                                                :disabled="notWritter()"
+                                                size="mini"
+                                                type="danger"
+                                                class="el-icon-delete"
+                                                @click="onDeleteItem(item)" style="margin-top: 5px;"></el-button>
                                         </el-col>
                                     </span>
                                 </el-row>
@@ -383,6 +396,8 @@
                                         <template slot-scope="scope">
                                           <el-input
                                             type="textarea"
+                                            clearable
+                                            :disabled="!isHasPermissionToSign()"
                                             v-model="scope.row.comment"
                                             auto-complete="off"
                                           ></el-input>
@@ -390,14 +405,14 @@
                                       </el-table-column>
                                       <el-table-column align="center" label="操作" width="220">
                                         <template scope="scope">
-                                            <el-tooltip placement="top" content="同意">
+                                            <el-tooltip placement="top" content="同意"  v-show="isHasPermissionToSign()">
                                                 <el-button
                                                     type="success"
                                                     icon="el-icon-check"
                                                     size="mini"
                                                 > </el-button>
                                             </el-tooltip>
-                                            <el-tooltip placement="top" content="驳回">
+                                            <el-tooltip placement="top" content="驳回" v-show="isHasPermissionToSign()">
                                                 <el-button
                                                     type="danger"
                                                     icon="el-icon-close"
@@ -524,8 +539,7 @@
                 signProcesses: [],
                 userInfo: '',
 
-                //联系单内容
-                lxdForm: {
+                defaultForm:{
                     contactForm:{
                         id:'',
                         num:'',
@@ -539,14 +553,14 @@
                         status: "",
                         contactContent: "", //工作联系单内容
                         attachedFile:"",
-                      },
+                    },
                     changeItemList: [{ //变更单内容
                         id:'',
                         contactFormId:"",
                         oldInfo: "",
                         newInfo: "",
                         remarks: ""
-                      }],
+                    }],
                     contactSign:{
                         id:'',
                         contactFormId:'',
@@ -562,23 +576,21 @@
                             comment: "",
                             isEnabled:true,
                         }]
-                      },
+                    },
+                },
+                //联系单内容
+                lxdForm: {   
                   },
                 normalSignProcess:[],
                 defaultSignProcess:[],
                 addButtonDisabled: false,
-                contractSignForms: [{
-                    title: '合同签核记录',
-                    name: '1',
-                    contractSignData: []
-                }],
 
                 formLabelWidth: '100px',
                 longFormLabelWidth: '140px',
 
                 mode: this.SIGN_MODE,
 
-                dialogTitle: '合同',
+                dialogTitle: '联系单',
                 editContract: '',
 
                 submitSignResultVisible: false,
@@ -588,7 +600,7 @@
                     contactType: '',
                     contractNum: '',
                     //默认审核中
-                    status: 1,
+                    
                     applicantDepartment: '',
                     applicantPerson: '',
                     selectDate: ''
@@ -755,6 +767,21 @@
                     }
                 });
             },
+
+            isHasPermissionToSign()
+            {
+                let res=false;
+                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++) 
+                {
+                    if(_this.lxdForm.contactSign.signContent[i].roleId== this.userInfo.roleId)
+                    {
+                        res=true;
+                        break;
+                    }
+                }
+                return res;
+            },
+
             notWritter()
             {
               if (this.userInfo!= null) {
@@ -775,21 +802,6 @@
                     newInfo: '',
                     remarks: ''
                 });
-            },
-
-            checkShow() {
-                return false;
-            },
-
-
-            changeLxdContentDisable(item) {
-                return (
-                    (item.status != LXD_INITIAL &&
-                        item.status != LXD__REJECTED &&
-                        item.status != LXD__SPLITED &&
-                        item.status != LXD__CHANGED) ||
-                    this.mode == this.SIGN_MODE
-                );
             },
 
             formatDate(timeStamp) {
@@ -817,14 +829,13 @@
             },
             selectContacts() {
                 var condition = {
-                    id: _this.filters.id,
+                    contactType: _this.filters.contactType,
                     contractNum: _this.filters.contractNum,
-                    status: _this.filters.status,
                     applicantDepartment: _this.filters.applicantDepartment,
-                    marketGroupName: _this.userInfo.marketGroupName,
-                    query_start_time: '',
-                    query_finish_time: '',
-
+                    //applicantPerson: _this.userInfo.account,
+                    queryStartTime: '',
+                    queryFinishTime: '',
+                    isFuzzy:true,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
@@ -832,10 +843,10 @@
                     _this.filters.selectDate != null &&
                     _this.filters.selectDate.length > 0
                 ) {
-                    condition.query_start_time = _this.filters.selectDate[0].format(
+                    condition.queryStartTime = _this.filters.selectDate[0].format(
                         'yyyy-MM-dd'
                     );
-                    condition.query_finish_time = _this.filters.selectDate[1].format(
+                    condition.queryFinishTime = _this.filters.selectDate[1].format(
                         'yyyy-MM-dd'
                     );
                 }
@@ -893,7 +904,6 @@
                 this.mode = this.SIGN_MODE;
                 this.editContract = item;
                 _this.fetchLxdData(item.id);
-                _this.fetchLxdSignData(item.id);
                 this.addLxdVisible = true;
             },
 
@@ -905,7 +915,6 @@
                 this.mode = this.EDIT_MODE;
                 this.editContract = item;
                 _this.fetchLxdData(item.id);
-                _this.fetchLxdSignData(item.id);
                 this.addLxdVisible = true;
             },
 
@@ -947,14 +956,10 @@
                     }
                 });
             },
-            validContractInfo(formObj, isEdit) {
-                //todo
-                return iserror;
-            },
+          
 
             dialogCloseCallback() {
-                //reset after dialog closed
-                //todo
+                _this.lxdForm=Object.assign({},_this.defaultForm);//reset;
                 _this.selectContacts();
             },
 
@@ -1011,12 +1016,6 @@
                 } else {
                     return true;
                 }
-                // return !(
-                //     (roleId == _this.userInfo.role.id &&
-                //         status == 1 &&
-                //         this.editContract.currentStep == _this.userInfo.role.roleName) ||
-                //     _this.userInfo.role.id == 1
-                // );
             },
 
             fetchLxdData(contractId) {
@@ -1034,11 +1033,6 @@
                         }
                     }
                 });
-            },
-
-            fetchLxdSignData(contractId) {
-
-                //todo
             },
 
 
@@ -1220,13 +1214,21 @@
             },
 
             filterStatusStyle(id) {
-                var result = 'divStatusUnChecked';
+                // // 创建完成，未提交审核
+                //  LXD_INITIAL = 0;
+                // //审核中
+                //  LXD_CHECKING = 1;
+                // //审核完成
+                //  LXD_CHECKING_FINISHED = 2;
+                // //已驳回
+                //  LXD_REJECTED = 3;
+                // //已取消
+                //  LXD_CANCELED = 4;
 
-                if (id == 0 || id == 5 || id == 6) {
-                    result = 'divStatusUnChecked';
-                } else if (id == 2) {
+                var result = 'divStatusUnChecked';
+                if (id == 2) {
                     result = 'divOrderStatusFinished';
-                } else if (id == 1 || id == 3 || id == 4) {
+                } else if (id == 1) {
                     result = 'divOrderStatusChecking';
                 }
                 return result;
@@ -1239,17 +1241,10 @@
                 this.$router.push({path: '/login'});
                 return;
             }
-            //不是销售员，不是管理员
-            if (
-                this.userInfo.role.roleName != null &&
-                this.userInfo.role.roleName.indexOf('销售员') == -1 &&
-                this.userInfo.role.id != 1
-            ) {
-                _this.filters.roleName = this.userInfo.role.roleName;
-            }
+            Object.assign(_this.lxdForm,_this.defaultForm);
             _this.initSignProcesses();
-            //获取用户所在部门
 
+            //获取用户所在部门
             _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
             _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
 
@@ -1264,7 +1259,7 @@
                 this.lxdStatusForFilterList.push({
                     name: this.lxdStatusList[i].name,
                     value: this.lxdStatusList[i].value,
-                    choosed: this.lxdStatusList[i].value == 1 ? true : false
+                    choosed: this.lxdStatusList[i].value == 1
                 });
             }
             _this.initAllRoles();
