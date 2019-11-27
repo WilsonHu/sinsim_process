@@ -140,7 +140,7 @@
                                         <div slot="content">审核</div>
                                         <el-button size="mini" type="success"
                                                 icon="el-icon-check"
-                                                v-show="isHasPermissionToSign()"
+                                                v-show="userInfo.role.roleName !='销售员'"
                                                 @click="handleSign(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
                                     <el-tooltip placement="top">
@@ -571,7 +571,7 @@
                         createDate:"",
                         hopeDate:'',
                         applicantPerson: "",
-                        status: "",
+                        status: 0,
                         contactContent: "", //工作联系单内容
                         attachedFile:"",
                     },
@@ -789,6 +789,7 @@
             isHasPermissionToSign()
             {
                 let res=false;
+                
                 for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++) 
                 {
                     if(_this.lxdForm.contactSign.signContent[i].roleId== this.userInfo.roleId)
@@ -989,7 +990,7 @@
                         createDate:"",
                         hopeDate:'',
                         applicantPerson: "",
-                        status: "",
+                        status: 0,
                         contactContent: "", //工作联系单内容
                         attachedFile:"",
                     },
@@ -1055,6 +1056,10 @@
             signDisable(row) {
                 //超级管理员可以操作，或者当前合同属于“签核状态”、登陆的用户有权限签核并且合同currentStep处于属于该角色签核
                 //修改：下一个签核人未签核的状态下，允许修改。
+                if(_this.mode != _this.SIGN_MODE)
+                {
+                    return true;
+                }
                 if (_this.userInfo.role.id == 1) {
                     return false;
                 }
@@ -1071,22 +1076,31 @@
                 }
             },
 
-            fetchLxdData(contractId) {
+            fetchLxdData(formId) {
+                _this.getContactAllData(formId);
+            },
+
+            getContactAllData(formId)
+            {
                 $.ajax({
-                    url: HOST + 'contact/detail',
+                    url: HOST + 'contact/form/getAllInfo',
                     type: 'POST',
                     dataType: 'json',
-                    data: {id: contractId},
+                    data: {contactFormId: formId},
                     success: function (res) {
                         if (res.code == 200) {
-                            _this.lxdForm = res.data;
 
+                             res.data.contactSign.signContent=JSON.parse(res.data.contactSign.signContent);
+                            //  _this.lxdForm.contactForm=res.data.contactForm;
+                            //  _this.lxdForm.changeItemList=res.data.changeItemList;
+                            _this.lxdForm=res.data;
                         } else {
-                            showMessage(_this, res.message, 0);
+                            console.log("getContactAllData:"+res.message);
                         }
                     }
                 });
             },
+ 
 
 
             initAllRoles() {
@@ -1316,6 +1330,7 @@
 
         },
         mounted: function () {
+            _this.selectContacts();
         }
     };
 </script>
