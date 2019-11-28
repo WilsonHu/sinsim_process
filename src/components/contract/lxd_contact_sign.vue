@@ -13,7 +13,7 @@
                                     size="mini"
                                     :type="item.choosed ? 'primary': '' "
                                     style="margin-left: 8px"
-                                    @click="chooseCurrentSignStep(index)"
+                                    @click="chooseCurrentStatus(index)"
                             >{{item.name}}</el-button>
                           </span>
                         </el-col>
@@ -29,7 +29,7 @@
                                         :type="item.choosed ? 'primary': '' "
                                         style="margin-left: 8px"
                                         :disabled="!filterIsSigning()"
-                                        @click="chooseCurrentSignDepartment(index)"
+                                        @click="chooseCurrentSignStep(index)"
                                 >{{item.name}}</el-button>
                           </span>
                         </el-col>
@@ -146,14 +146,14 @@
                                     <el-tooltip placement="top">
                                         <div slot="content">编辑</div>
                                         <el-button
-                                                v-show="!notWritter()"
+                                                v-show="!notWritterRow(scope.row)"
                                                 size="mini" type="primary" icon="el-icon-edit"
                                                 @click="handleEdit(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
                                     <el-tooltip placement="top">
                                         <div slot="content">删除</div>
                                         <el-button
-                                                v-show="!notWritter()"
+                                                v-show="!notWritterRow(scope.row)"
                                                 size="mini" type="danger" icon="el-icon-delete"
                                                 @click="handleDelete(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
@@ -185,7 +185,7 @@
                             <el-col :span="6">
                                 <el-form-item label="联系单类型：" :label-width="longFormLabelWidth" prop="contactType">
                                     <el-select v-model="lxdForm.contactForm.contactType" placeholder="选择不同类型，会有不同的内容" clearable
-                                                :disabled="notWritter()">
+                                                :disabled="notWritter()||mode==SIGN_MODE">
                                         <el-option
                                                 v-for="item in lxdTypes"
                                                 :key="item"
@@ -198,7 +198,7 @@
                             <el-col :span="6">
                                 <el-form-item label="联系单号：" :label-width="longFormLabelWidth" prop="num">
                                     <el-input v-model="lxdForm.contactForm.num"  
-                                              :disabled="notWritter()" clearable
+                                              :disabled="notWritter()||mode==SIGN_MODE" clearable
                                               placeholder="联系单号："></el-input>
                                 </el-form-item>
                             </el-col>
@@ -224,7 +224,7 @@
                                         <el-form-item label="申请日期：" prop="createDate"
                                                       :label-width="longFormLabelWidth">
                                             <el-date-picker
-                                                :disabled="notWritter()"
+                                                :disabled="notWritter()||mode==SIGN_MODE"
                                                 type="date"
                                                 placeholder="申请日期"
                                                 v-model="lxdForm.contactForm.createDate">
@@ -234,7 +234,7 @@
                                     <el-col :span="6" :offset="2" v-show="isShowChangeContactForm">
                                         <el-form-item label="ECO希望日期：" prop="hopeDate" :label-width="longFormLabelWidth">
                                             <el-date-picker
-                                                :disabled="notWritter()"
+                                                :disabled="notWritter()||mode==SIGN_MODE"
                                                 type="date"
                                                 placeholder="ECO希望完成日期"
                                                 v-model="lxdForm.contactForm.hopeDate">
@@ -242,10 +242,10 @@
                                         </el-form-item>
                                     </el-col>
 
-                                    <el-col :span="6" style="margin-left:20px;">
+                                    <el-col :span="6" style="margin-left:20px;" v-show="isShowChangeContactForm">
                                         <el-form-item label="订单号: " :label-width="longFormLabelWidth" prop="orderNum">
                                             <el-input 
-                                                :disabled="notWritter()"
+                                                :disabled="notWritter()||mode==SIGN_MODE"
                                                 v-model="lxdForm.contactForm.orderNum"
                                                 clearable
                                                 placeholder="订单号"
@@ -258,7 +258,7 @@
                                     <el-col  :span="20" style="margin-top:10px;">
                                         <el-form-item label="变更主题：" :label-width="longFormLabelWidth" prop="contactTitle">
                                             <el-input type="textarea" v-model="lxdForm.contactForm.contactTitle"  clearable
-                                                      :rows="1" :disabled="notWritter()"></el-input>
+                                                      :rows="1" :disabled="notWritter()||mode==SIGN_MODE"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
@@ -266,7 +266,7 @@
                                     <el-col :span="8" style="margin-top:10px;">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
                                             <el-select v-model="lxdForm.contactForm.contactContent" placeholder="选择变更内容子类型"
-                                                       clearable :disabled="notWritter()">
+                                                       clearable :disabled="notWritter()||mode==SIGN_MODE">
                                                 <el-option
                                                         v-for="item in lxdChangeTypes"
                                                         :key="item"
@@ -280,7 +280,7 @@
 
                                     <el-col :span="4" :offset="12" >
                                         <el-button
-                                            :disabled="notWritter()"
+                                            :disabled="notWritter()||mode==SIGN_MODE"
                                             type="primary"
                                             class="el-icon-plus"
                                             style="float:right"
@@ -293,7 +293,7 @@
                                     <el-col :span="20">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth">
                                                  <el-input type="textarea" v-model="lxdForm.contactForm.contactContent"
-                                                      :rows="5"  :disabled="notWritter()">
+                                                      :rows="5"  :disabled="notWritter()||mode==SIGN_MODE">
                                                  </el-input>
                                         </el-form-item>
                                     </el-col>
@@ -305,22 +305,22 @@
                                     <span v-for="item in lxdForm.changeItemList" style="margin-top:10px;">
                                         <el-col :span="8">
                                             <el-form-item label="旧状态：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.oldInfo" placeholder="输入变更前的状态" clearable  :disabled="notWritter()"></el-input>
+                                                <el-input v-model="item.oldInfo" placeholder="输入变更前的状态" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="8">
                                             <el-form-item label="新状态：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.newInfo" placeholder="输入变更后的状态" clearable  :disabled="notWritter()"></el-input>
+                                                <el-input v-model="item.newInfo" placeholder="输入变更后的状态" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="6">
                                             <el-form-item label="备注：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.remarks" placeholder="输入备注" clearable  :disabled="notWritter()"></el-input>
+                                                <el-input v-model="item.remarks" placeholder="输入备注" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="2">
                                             <el-button
-                                                :disabled="notWritter()"
+                                                :disabled="notWritter()||mode==SIGN_MODE"
                                                 size="mini"
                                                 type="danger"
                                                 class="el-icon-delete"
@@ -337,7 +337,7 @@
                                         </el-col>
                                         <el-col :span="2" style="margin-left:20px;">
                                             <el-button
-                                            :disabled="notWritter()"
+                                            :disabled="notWritter()||mode==SIGN_MODE"
                                             size="small"
                                             type="success"
                                             style="float:left; margin-left:5px;"
@@ -618,7 +618,8 @@
                     contactType: '',
                     orderNum: '',
                     //默认审核中
-                    
+                    roleName:'',
+                    status:1,
                     applicantDepartment: '',
                     applicantPerson: '',
                     selectDate: ''
@@ -807,6 +808,13 @@
                 }
                 return true;
             },
+            notWritterRow(row)
+            {
+              if (this.userInfo!= null) {
+                    return this.userInfo.account!=row.applicantPerson;
+                }
+                return true;
+            },
             onUpload()
             {
                 _this.fileLists = [];
@@ -851,6 +859,8 @@
                     orderNum: _this.filters.orderNum,
                     applicantDepartment: _this.filters.applicantDepartment,
                     //applicantPerson: _this.userInfo.account,
+                    status:_this.filters.status,
+                    currentStep:_this.filters.roleName,
                     queryStartTime: '',
                     queryFinishTime: '',
                     isFuzzy:true,
@@ -1060,9 +1070,9 @@
                 {
                     return true;
                 }
-                if (_this.userInfo.role.id == 1) {
-                    return false;
-                }
+                // if (_this.userInfo.role.id == 1) {
+                //     return false;
+                // }
                 if (row.roleId == _this.userInfo.role.id && _this.lxdForm.contactForm.status == 1) {
                     if (_this.lxdForm.contactSign.currentStep == _this.userInfo.role.roleName) {
                         return false;
@@ -1169,7 +1179,7 @@
                     }
                 });
             },
-            chooseCurrentSignDepartment(index) {
+            chooseCurrentSignStep(index) {
                 for (let i = 0; i < _this.lxdSignRoleList.length; i++) {
                     if (index == i) {
                         _this.lxdSignRoleList[i].choosed = true;
@@ -1182,7 +1192,7 @@
                 }
                 _this.selectContacts();
             },
-            chooseCurrentSignStep(index) {
+            chooseCurrentStatus(index) {
                 for (let i = 0; i < _this.lxdStatusForFilterList.length; i++) {
                     if (index == i) {
                         _this.lxdStatusForFilterList[i].choosed = true;
