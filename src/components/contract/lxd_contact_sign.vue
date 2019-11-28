@@ -198,7 +198,7 @@
                             <el-col :span="6">
                                 <el-form-item label="联系单号：" :label-width="longFormLabelWidth" prop="num">
                                     <el-input v-model="lxdForm.contactForm.num"  
-                                              :disabled="notWritter()||mode==SIGN_MODE" clearable
+                                              :disabled="notWritter()||mode!=ADD_MODE" clearable
                                               placeholder="联系单号："></el-input>
                                 </el-form-item>
                             </el-col>
@@ -1060,7 +1060,34 @@
             },
 
             onEdit() {
-
+                let submitData=JSON.stringify(_this.lxdForm);
+                $.ajax({
+                    url: HOST + 'contact/form/update',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        jsonContactFormAllInfo:submitData,
+                    },
+                    success: function (res) {
+                        _this.isError = res.code != 200;
+                        if (!_this.isError) {
+                            _this.addLxdVisible = false;
+                            showMessage(_this, '更新成功', 1);
+                            _this.selectContacts();
+                        } else {
+                            _this.errorMsg = res.message;
+                            showMessage(_this, _this.errorMsg, 0);
+                        }
+                    },
+                    error: function (info) {
+                        _this.errorMsg = '服务器访问出错！';
+                        _this.isError = true;
+                    }
+                });
+                _this.addButtonDisabled = true;
+                setTimeout(() => {
+                    _this.addButtonDisabled = false;
+                }, 2000);
             },
 
             signDisable(row) {
