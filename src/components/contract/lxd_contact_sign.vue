@@ -115,7 +115,7 @@
                             <el-table-column align="center" prop="status" label="审核状态">
                                 <template scope="scope">
                                     <div :class="scope.row.status|filterStatusStyle">
-                                        {{filterContactStatus(scope.row.status)}}
+                                        {{scope.row.status}}
                                     </div>
                                 </template>
                             </el-table-column>
@@ -412,20 +412,22 @@
                                       </el-table-column>
                                       <el-table-column align="center" label="操作" width="220">
                                         <template scope="scope">
-                                            <el-tooltip placement="top" content="同意"  v-show="isHasPermissionToSign()">
+                                            <el-tooltip placement="top" content="同意"  v-show="isRowHasPermissionToSign(scope.row)">
                                                 <el-button
                                                     :readonly="signDisable(scope.row)"
                                                     type="success"
                                                     icon="el-icon-check"
                                                     size="mini"
+                                                    @click="handleSubmitSign(scope.row)"
                                                 > </el-button>
                                             </el-tooltip>
-                                            <el-tooltip placement="top" content="驳回" v-show="isHasPermissionToSign()">
+                                            <el-tooltip placement="top" content="驳回" v-show="isRowHasPermissionToSign(scope.row)">
                                                 <el-button
                                                     :readonly="signDisable(scope.row)"
                                                     type="danger"
                                                     icon="el-icon-close"
                                                     size="mini"
+                                                    @click="handleRejectSign(scope.row)"
                                                 > </el-button>
                                             </el-tooltip>
                                             <el-tooltip placement="top" content="是否启用该流程审核">
@@ -451,6 +453,20 @@
                         <span slot="footer" class="dialog-footer">
                             <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
                             <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
+                        </span>
+                    </el-dialog>
+                    <el-dialog title="提示" :visible.sync="rejectSignResultVisible" width="30%" append-to-body>
+                        <span style="font-size: 15px">确认驳回该联系单吗？</span>
+                        <span slot="footer" class="dialog-footer">
+                        <el-button @click="rejectSignResultVisible = false" icon="el-icon-back">取 消</el-button>
+                        <el-button type="success" @click="onRejectSign" icon="el-icon-check">确 定</el-button>
+                        </span>
+                    </el-dialog>
+                    <el-dialog title="提示" :visible.sync="submitSignResultVisible" width="30%" append-to-body>
+                        <span style="font-size: 15px">确认批准该联系单吗？</span>
+                        <span slot="footer" class="dialog-footer">
+                        <el-button @click="submitSignResultVisible = false" icon="el-icon-back">取 消</el-button>
+                        <el-button type="success" @click="onSubmitSign" icon="el-icon-check">确 定</el-button>
                         </span>
                     </el-dialog>
                     <el-dialog title="附件上传" :visible.sync="uploadDialogVisible"
@@ -675,7 +691,7 @@
 
                 lxdStatusList: LxdStatusList,
 
-                lxdTypes: ["变更联系单", "工作联系单"],
+                lxdTypes: ["变更", "工作"],
                 lxdChangeTypes: ["设计变更", "材料变更", "工艺变更", "模具设备", "工艺夹具", "制造场所", "新供应商", "包装运输", "检验方法", "其他变更，需说明"],
                 uploadDialogVisible:false,
                 fileLists:[],
@@ -704,7 +720,10 @@
                         {  type: 'string',required: true, message: '请填写变更内容：!', trigger: 'change' }
                     ]
                     
-                }
+                },
+                submitSignResultVisible: false,
+                rejectSignResultVisible: false,
+                signContentObj:{},
             };
 
         },
@@ -793,7 +812,7 @@
                 
                 for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++) 
                 {
-                    if(_this.lxdForm.contactSign.signContent[i].roleId== this.userInfo.roleId)
+                    if(_this.lxdForm.contactSign.signContent[i].roleId== this.userInfo.role.id)
                     {
                         res=true;
                         break;
@@ -801,6 +820,12 @@
                 }
                 return res;
             },
+
+            isRowHasPermissionToSign(row)
+            {
+                return row.roleId== this.userInfo.role.id;
+            },
+
             notWritter()
             {
               if (this.userInfo!= null) {
@@ -903,6 +928,7 @@
                 this.dialogTitle = '新增联系单';
                 _this.mode = this.ADD_MODE;
                 _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
+                _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
                 _this.lxdForm.contactForm.contactType = _this.lxdTypes[0];
                 _this.lxdForm.contactForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
                 _this.lxdForm.changeItemList=[];
@@ -1100,17 +1126,96 @@
                 // if (_this.userInfo.role.id == 1) {
                 //     return false;
                 // }
-                if (row.roleId == _this.userInfo.role.id && _this.lxdForm.contactForm.status == 1) {
-                    if (_this.lxdForm.contactSign.currentStep == _this.userInfo.role.roleName) {
-                        return false;
-                    } else if (row.result > 0 && _this.lxdForm.contactSign.signContent[row.number].result == 0) {
-                        return false;
-                    } else {
-                        return true;
-                    }
+                //&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0
+                if (row.roleId == _this.userInfo.role.id) {
+                   return false;
                 } else {
                     return true;
                 }
+            },
+
+            onSubmitSign()
+            {
+                if (_this.signContentObj.comment == null || _this.signContentObj.comment == '') {
+                    showMessage(_this, '审核意见不能为空！', 0);
+                    return;
+                } 
+                _this.signContentObj.result = SIGN_APPROVE;
+                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++)
+                {
+                    if(_this.lxdForm.contactSign.signContent[i].number==_this.signContentObj.number)
+                    {
+                        _this.lxdForm.contactSign.signContent[i]=_this.signContentObj;
+                        break;
+                    }
+                }
+                $.ajax({
+                    url: HOST + 'contact/sign/update',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { contactSign: JSON.stringify(_this.lxdForm.contactSign) },
+                    success: function(res) {
+                        if (res.code == 200) {
+                            showMessage(_this, '提交审核成功', 1);
+                        } else {
+                        showMessage(_this, res.message, 0);
+                        }
+                        _this.submitSignResultVisible = false;
+                    }
+                });
+            },
+            handleSubmitSign(item) {
+               
+                if (item.comment == null || item.comment == '') {
+                    showMessage(_this, '审核意见不能为空！', 0);
+                } else {
+                    this.submitSignResultVisible = true;
+                    item.user = _this.userInfo.name;
+                    item.date = new Date().format('yyyy-MM-dd hh:mm:ss');
+                    _this.signContentObj=item;
+                }
+            },
+
+            handleRejectSign(item) {
+                if (item.comment == null || item.comment == '') {
+                    showMessage(_this, '审核意见不能为空！', 0);
+                } else {
+                    this.rejectSignResultVisible = true;
+                    item.user = _this.userInfo.name;
+                    item.date = new Date().format('yyyy-MM-dd hh:mm:ss');
+                    _this.signContentObj=item;
+                }
+            },
+
+            onRejectSign() {
+                if (_this.signContentObj.comment == null || _this.signContentObj.comment == '') {
+                    showMessage(_this, '审核意见不能为空！', 0);
+                    return;
+                } 
+                _this.signContentObj.result = SIGN_REJECT;
+                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++)
+                {
+                    if(_this.lxdForm.contactSign.signContent[i].number==_this.signContentObj.number)
+                    {
+                        _this.lxdForm.contactSign.signContent[i]=_this.signContentObj;
+                        break;
+                    }
+                }
+                //准备好数据，提交服务器
+                $.ajax({
+                    url: HOST + 'contact/sign/update',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { contactSign: JSON.stringify(_this.lxdForm.contactSign) },
+                    success: function(res) {
+                        if (res.code == 200) {
+                            showMessage(_this, '驳回成功', 1);
+                        } else {
+                            showMessage(_this, res.message, 0);
+                        }
+                        _this.rejectSignResultVisible = false;
+                    }
+                });
             },
 
             fetchLxdData(formId) {
@@ -1315,7 +1420,7 @@
                 return result;
             },
 
-            filterStatusStyle(id) {
+            filterStatusStyle(status) {
                 // // 创建完成，未提交审核
                 //  LXD_INITIAL = 0;
                 // //审核中
@@ -1328,9 +1433,9 @@
                 //  LXD_CANCELED = 4;
 
                 var result = 'divStatusUnChecked';
-                if (id == 2) {
+                if (status.indexOf("完成")>=0) {
                     result = 'divOrderStatusFinished';
-                } else if (id == 1) {
+                } else if (status.indexOf("审核中")>=0) {
                     result = 'divOrderStatusChecking';
                 }
                 return result;
