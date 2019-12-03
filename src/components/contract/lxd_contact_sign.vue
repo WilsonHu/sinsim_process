@@ -370,8 +370,7 @@
                                       border
                                       :row-class-name="tableRowClassName"
                                       :data="lxdForm.contactSign.signContent"
-                                      style="margin-bottom: 20px;margin-top: 20px;"
-                                    >
+                                      style="margin-bottom: 20px;margin-top: 20px;">
                                       <el-table-column align="center" label="签核步骤" width="80">
                                         <template scope="scope">
                                           <el-button
@@ -390,18 +389,19 @@
                                         </template>
                                       </el-table-column>
                                       <el-table-column align="center" width="150" label="签核人">
-                                        <template slot-scope="scope">
+                                        <template slot-scope="scope" >
                                           <span style="font-size: 14px; font-weight: bold">{{scope.row.user}}</span>
                                         </template>
                                       </el-table-column>
-                                      <el-table-column align="center" width="180" label="日期">
+                                      <el-table-column align="center" width="180" label="日期"  >
                                         <template slot-scope="scope">
                                           <span>{{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}</span>
                                         </template>
                                       </el-table-column>
-                                      <el-table-column align="center" label="意见">
-                                        <template slot-scope="scope">
+                                      <el-table-column align="center" label="意见" >
+                                        <template slot-scope="scope" >
                                           <el-input
+                                            v-show="isRowHasPermissionToSign(scope.row)"
                                             type="textarea"
                                             clearable
                                             :disabled="signDisable(scope.row)"
@@ -411,26 +411,26 @@
                                         </template>
                                       </el-table-column>
                                       <el-table-column align="center" label="操作" width="220">
-                                        <template scope="scope">
+                                        <template scope="scope" >
                                             <el-tooltip placement="top" content="同意"  v-show="isRowHasPermissionToSign(scope.row)">
                                                 <el-button
-                                                    :readonly="signDisable(scope.row)"
+                                                    :disabled="signDisable(scope.row)"
                                                     type="success"
                                                     icon="el-icon-check"
                                                     size="mini"
                                                     @click="handleSubmitSign(scope.row)"
                                                 > </el-button>
                                             </el-tooltip>
-                                            <el-tooltip placement="top" content="驳回" v-show="isRowHasPermissionToSign(scope.row)">
+                                            <el-tooltip placement="top" content="驳回"  v-show="isRowHasPermissionToSign(scope.row)">
                                                 <el-button
-                                                    :readonly="signDisable(scope.row)"
+                                                    :disabled="signDisable(scope.row)"
                                                     type="danger"
                                                     icon="el-icon-close"
                                                     size="mini"
                                                     @click="handleRejectSign(scope.row)"
                                                 > </el-button>
                                             </el-tooltip>
-                                            <el-tooltip placement="top" content="是否启用该流程审核">
+                                            <el-tooltip placement="top" content="是否启用该流程审核" v-show="isRowHasPermissionToSign(scope.row)">
                                                 <el-switch
                                                     v-show="!notWritter()"
                                                     v-model="scope.row.isEnabled"
@@ -823,7 +823,19 @@
 
             isRowHasPermissionToSign(row)
             {
-                return row.roleId== this.userInfo.role.id;
+                if(_this.mode==_this.SIGN_MODE)
+                {
+                    if(row.isEnabled)
+                    {
+                        return row.roleId== this.userInfo.role.id;
+                    }
+                    return false;
+                }
+                else{
+                    return true;
+                }
+               
+                
             },
 
             notWritter()
