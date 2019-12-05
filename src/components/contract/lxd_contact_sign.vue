@@ -1157,7 +1157,20 @@
             },
             onSubmitToSign()
             {
-
+                $.ajax({
+                    url: HOST + 'contact/form/startSign',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { lxdId: _this.lxdForm.contactForm.id },
+                    success: function(res) {
+                        if (res.code == 200) {
+                            showMessage(_this, '提交审核成功', 1);
+                        } else {
+                            showMessage(_this, res.message, 0);
+                        }
+                        _this.addLxdVisible = false;
+                    }
+                });
             },
 
             onSubmitSign()
@@ -1427,11 +1440,11 @@
         computed: {
             isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
               
-              return  _this.lxdForm.contactForm.contactType==_this.lxdTypes[0];
+              return  _this.lxdForm.contactForm.contactType.indexOf("变更")>=0;
             },
 
             isShowWorkContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
-              return  _this.lxdForm.contactForm.contactType==_this.lxdTypes[1];
+              return  _this.lxdForm.contactForm.contactType.indexOf("工作")>=0;
             },
         },
         filters: {
