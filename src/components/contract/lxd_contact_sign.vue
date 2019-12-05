@@ -845,11 +845,11 @@
 
             isShowSubmitSign()
             {
-                if(_this.mode!=_this.SIGN_MODE||notWritter())
+                if(_this.mode!=_this.SIGN_MODE||_this.notWritter())
                 {
                     return false;
                 }
-                if(_this.lxdForm.contactForm.status.indexOf("初始化")>=0)
+                if(_this.lxdForm.contactForm.status==0||_this.lxdForm.contactForm.status.indexOf("初始化")>=0)
                 {
                     return true;
                 }
@@ -1157,7 +1157,7 @@
             },
             onSubmitToSign()
             {
-                
+
             },
 
             onSubmitSign()
