@@ -185,7 +185,7 @@
                             <el-col :span="6">
                                 <el-form-item label="联系单类型：" :label-width="longFormLabelWidth" prop="contactType">
                                     <el-select v-model="lxdForm.contactForm.contactType" placeholder="选择不同类型，会有不同的内容" clearable
-                                                :disabled="notWritter()||mode==SIGN_MODE">
+                                                :disabled="notWritter()||mode!=ADD_MODE">
                                         <el-option
                                                 v-for="item in lxdTypes"
                                                 :key="item"
@@ -526,8 +526,14 @@
                                     type="primary"
                                     @click="onAddOrEdit"
                                     icon="el-icon-check"
-                                    :disabled="addButtonDisabled"
                             >保 存
+                            </el-button>
+                               <el-button
+                                    v-show="isShowSubmitSign()"
+                                    type="success"
+                                    @click="onSubmitToSign"
+                                    icon="el-icon-check"
+                            >提交审核
                             </el-button>
                         </div>
                     </el-form>
@@ -617,7 +623,6 @@
                   },
                 normalSignProcess:[],
                 defaultSignProcess:[],
-                addButtonDisabled: false,
 
                 formLabelWidth: '100px',
                 longFormLabelWidth: '140px',
@@ -836,6 +841,19 @@
                 }
                
                 
+            },
+
+            isShowSubmitSign()
+            {
+                if(_this.mode!=_this.SIGN_MODE||notWritter())
+                {
+                    return false;
+                }
+                if(_this.lxdForm.contactForm.status.indexOf("初始化")>=0)
+                {
+                    return true;
+                }
+                return false;
             },
 
             notWritter()
@@ -1091,10 +1109,6 @@
                         _this.isError = true;
                     }
                 });
-                _this.addButtonDisabled = true;
-                setTimeout(() => {
-                    _this.addButtonDisabled = false;
-                }, 2000);
             },
 
             onEdit() {
@@ -1122,10 +1136,6 @@
                         _this.isError = true;
                     }
                 });
-                _this.addButtonDisabled = true;
-                setTimeout(() => {
-                    _this.addButtonDisabled = false;
-                }, 2000);
             },
 
             signDisable(row) {
@@ -1139,11 +1149,15 @@
                 //     return false;
                 // }
                 //&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0
-                if (row.roleId == _this.userInfo.role.id) {
+                if (row.roleId == _this.userInfo.role.id&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0) {
                    return false;
                 } else {
                     return true;
                 }
+            },
+            onSubmitToSign()
+            {
+                
             },
 
             onSubmitSign()
