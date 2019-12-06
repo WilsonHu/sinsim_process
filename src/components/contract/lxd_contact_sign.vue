@@ -202,6 +202,16 @@
                                               placeholder="联系单号："></el-input>
                                 </el-form-item>
                             </el-col>
+                            <el-col :span="4" :offset="8">
+                                <el-button
+                                    style="float:right;margin-right:30px;"
+                                        v-show="isShowSubmitSign()"
+                                        type="success"
+                                        @click="onSubmitToSign"
+                                        icon="el-icon-check"
+                                >提交审核
+                                </el-button>
+                            </el-col>
                         </el-row>
 
 
@@ -845,7 +855,7 @@
 
             isShowSubmitSign()
             {
-                if(_this.mode!=_this.SIGN_MODE||_this.notWritter())
+                if(_this.mode==_this.ADD_MODE||_this.notWritter())
                 {
                     return false;
                 }
