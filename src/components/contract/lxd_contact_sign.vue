@@ -411,7 +411,6 @@
                                       <el-table-column align="center" label="意见" >
                                         <template slot-scope="scope" >
                                           <el-input
-                                            v-show="isRowHasPermissionToSign(scope.row)"
                                             type="textarea"
                                             clearable
                                             :disabled="signDisable(scope.row)"
