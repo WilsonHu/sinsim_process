@@ -180,7 +180,7 @@
                     <div style="text-align: center; font-weight: bold; font-size: 28px; font-family: 'Microsoft YaHei UI';padding-bottom: 20px">
                         {{dialogTitle}}
                     </div>
-                    <el-form :model="lxdForm.contactForm" :rules="rules" >
+                    <el-form :model="lxdForm.contactForm" :rules="rules" ref="ruleForm">
                         <el-row>
                             <el-col :span="6">
                                 <el-form-item label="联系单类型：" :label-width="longFormLabelWidth" prop="contactType">
@@ -216,7 +216,7 @@
 
 
                         <el-card class="box-card" style="margin: 25px">
-                            <el-form :model="lxdForm.contactForm" :rules="rules">
+                            
                                 <el-row>
                                     <el-col :span="6">
                                         <el-form-item label="提出部门：" :label-width="longFormLabelWidth">
@@ -366,8 +366,7 @@
                                         </el-form-item>
                                       </el-col>
                                 </el-row>
-                             
-                            </el-form>
+                        
                         </el-card>
 
                         <el-card class="box-card" style="margin: 25px">
@@ -533,14 +532,14 @@
                             <el-button
                                     v-show="mode == ADD_MODE||mode==EDIT_MODE"
                                     type="primary"
-                                    @click="onAddOrEdit"
+                                    @click="onAddOrEdit('ruleForm')"
                                     icon="el-icon-check"
                             >保 存
                             </el-button>
                                <el-button
                                     v-show="isShowSubmitSign()"
                                     type="success"
-                                    @click="onSubmitToSign"
+                                    @click="onSubmitToSign()"
                                     icon="el-icon-check"
                             >提交审核
                             </el-button>
@@ -599,7 +598,7 @@
                         contactTitle:"",
                         contactType: "",
                         applicantDepartment: "",
-                        createDate:"",
+                        createDate:'',
                         hopeDate:'',
                         applicantPerson: "",
                         status: 0,
@@ -691,6 +690,10 @@
                 },
                 pickerOptions2: {
                     disabledDate(time) {
+                        if(time==null)
+                        {
+                            return false;
+                        }
                         return time.getTime() < Date.now();
                     },
                     shortcuts: [{
@@ -725,7 +728,7 @@
                         {  type: 'date',required: true, message: '请选择ECO希望完成日期!', trigger: 'change' }
                     ],
                     orderNum: [
-                        {  type: 'string',required: true, message: '请填写订单号!', trigger: 'change' }
+                        {  type: 'string',required: false, message: '请填写订单号!', trigger: 'change' }
                     ],
                     contactTitle: [
                         {  type: 'string',required: true, message: '请填写变更主题!', trigger: 'change' }
@@ -969,7 +972,7 @@
                 _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
                 _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
                 _this.lxdForm.contactForm.contactType = _this.lxdTypes[0];
-                _this.lxdForm.contactForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
+                //_this.lxdForm.contactForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
                 _this.lxdForm.changeItemList=[];
                 _this.lxdForm.contactSign.signContent=[];
                 for(let i=0;i<_this.defaultSignProcess.length;i++)
@@ -1082,18 +1085,28 @@
                 _this.selectContacts();
             },
 
-            onAddOrEdit() {
-               if(_this.mode==_this.ADD_MODE)
-               {
-                    _this.onAdd();
-               }else if(_this.mode==_this.EDIT_MODE)
-               {
-                    _this.onEdit();
-               }
-
+            onAddOrEdit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        if(_this.mode==_this.ADD_MODE)
+                        {
+                            _this.onAdd();
+                        }
+                        else if(_this.mode==_this.EDIT_MODE)
+                        {
+                             _this.onEdit();
+                        }
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+              
             },
             onAdd()
-            {
+            {   
+               
+
                 let submitData=JSON.stringify(_this.lxdForm);
                 $.ajax({
                     url: HOST + 'contact/form/add',
@@ -1164,6 +1177,7 @@
                     return true;
                 }
             },
+
             onSubmitToSign()
             {
                 $.ajax({
