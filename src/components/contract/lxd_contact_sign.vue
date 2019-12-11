@@ -273,7 +273,7 @@
                                     </el-col>
                                 </el-row>
                                 <el-row v-show="isShowChangeContactForm">
-                                    <el-col :span="8" style="margin-top:10px;">
+                                    <el-col :span="8"  style="margin-top:10px;">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
                                             <el-select v-model="lxdForm.contactForm.contactContent" placeholder="选择变更内容子类型"
                                                        clearable :disabled="notWritter()||mode==SIGN_MODE">
@@ -300,8 +300,8 @@
                                 </el-row>
 
                                 <el-row v-show="isShowWorkContactForm">
-                                    <el-col :span="20">
-                                        <el-form-item label="变更内容：" :label-width="longFormLabelWidth">
+                                    <el-col :span="20" style="margin-top:10px;">
+                                        <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
                                                  <el-input type="textarea" v-model="lxdForm.contactForm.contactContent"
                                                       :rows="5"  :disabled="notWritter()||mode==SIGN_MODE">
                                                  </el-input>
@@ -1462,12 +1462,19 @@
         },
         computed: {
             isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
-              
-              return  _this.lxdForm.contactForm.contactType.indexOf("变更")>=0;
+                let res=_this.lxdForm.contactForm.contactType.indexOf("变更")>=0;
+                _this.rules.hopeDate[0].required=res;
+
+                return  res;
             },
 
             isShowWorkContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
-              return  _this.lxdForm.contactForm.contactType.indexOf("工作")>=0;
+                let res=_this.lxdForm.contactForm.contactType.indexOf("工作")>=0;
+                if(res)
+                {
+                    _this.lxdForm.contactForm.hopeDate=new Date();
+                }
+                return res; 
             },
         },
         filters: {
