@@ -286,8 +286,6 @@
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
-                                   
-
                                     <el-col :span="4" :offset="12" >
                                         <el-button
                                             :disabled="notWritter()||mode==SIGN_MODE"
@@ -307,8 +305,6 @@
                                                  </el-input>
                                         </el-form-item>
                                     </el-col>
-
-                                    
                                 </el-row>
 
                                 <el-row v-show="isShowChangeContactForm" >
@@ -598,7 +594,7 @@
                         contactTitle:"",
                         contactType: "",
                         applicantDepartment: "",
-                        createDate:'',
+                        createDate:new Date(),
                         hopeDate:'',
                         applicantPerson: "",
                         status: 0,
@@ -1471,7 +1467,7 @@
             isShowWorkContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
                 let res=_this.lxdForm.contactForm.contactType.indexOf("工作")>=0;
                 if(res)
-                {
+                { /// 这是一个workAround, 因为工作联系单里本来是不需要hopeDate
                     _this.lxdForm.contactForm.hopeDate=new Date();
                 }
                 return res; 
