@@ -416,7 +416,7 @@
                                       </el-table-column>
                                       <el-table-column align="center" label="操作" width="220">
                                         <template scope="scope" >
-                                            <el-tooltip placement="top" content="同意"  v-show="isRowHasPermissionToSign(scope.row)">
+                                            <el-tooltip placement="top" content="同意"  v-show="isRowHasPermissionToShow(scope.row)">
                                                 <el-button
                                                     :disabled="signDisable(scope.row)"
                                                     type="success"
@@ -425,7 +425,7 @@
                                                     @click="handleSubmitSign(scope.row)"
                                                 > </el-button>
                                             </el-tooltip>
-                                            <el-tooltip placement="top" content="驳回"  v-show="isRowHasPermissionToSign(scope.row)">
+                                            <el-tooltip placement="top" content="驳回"  v-show="isRowHasPermissionToShow(scope.row)">
                                                 <el-button
                                                     :disabled="signDisable(scope.row)"
                                                     type="danger"
@@ -434,10 +434,11 @@
                                                     @click="handleRejectSign(scope.row)"
                                                 > </el-button>
                                             </el-tooltip>
-                                            <el-tooltip placement="top" content="是否启用该流程审核" v-show="isRowHasPermissionToSign(scope.row)">
+                                            <el-tooltip placement="top" content="是否启用该流程审核"
+                                                        v-show="(mode == ADD_MODE||mode==EDIT_MODE) && isRowHasPermissionToShow(scope.row)">
                                                 <el-switch
                                                     v-show="!notWritter()"
-                                                    v-model="scope.row.isEnabled"
+                                                    v-model="scope.row.shenHeEnabled"
                                                     active-color="#13ce66"
                                                     inactive-color="gray">
                                                 </el-switch>
@@ -621,7 +622,7 @@
                             user: "",
                             result: "",
                             comment: "",
-                            isEnabled:true,
+                            shenHeEnabled:true,
                         }]
                     }, 
                   },
@@ -834,23 +835,23 @@
                 return res;
             },
 
-            isRowHasPermissionToSign(row)
+            isRowHasPermissionToShow(row)
             {
                 if(_this.mode==_this.SIGN_MODE)
                 {
-                    if(row.isEnabled)
+                    if(row.shenHeEnabled)
                     {
                         return row.roleId== this.userInfo.role.id;
                     }
                     return false;
                 }
-                else{
+                else{ //非签核模式，即新增和编辑模式都允许显示
                     return true;
                 }
-               
                 
             },
 
+            //是否显示 “提交审核”按钮
             isShowSubmitSign()
             {
                 if(_this.mode==_this.ADD_MODE||_this.notWritter())
@@ -858,6 +859,12 @@
                     return false;
                 }
                 if(_this.lxdForm.contactForm.status==0||_this.lxdForm.contactForm.status.indexOf("初始化")>=0)
+                {
+                    return true;
+                }
+
+                //驳回以后，允许再次提交
+                if(_this.lxdForm.contactForm.status.indexOf("联系单审核被拒")>= 0)
                 {
                     return true;
                 }
@@ -973,17 +980,17 @@
                 _this.lxdForm.contactSign.signContent=[];
                 for(let i=0;i<_this.defaultSignProcess.length;i++)
                 {
-                  let item={
-                    isEnabled:true,  
-                    signType: "",
-                    date: "",
-                    user: "",
-                    result: "",
-                    comment: "",
+                    let item={
+                        shenHeEnabled:true,
+                        signType: "",
+                        date: "",
+                        user: "",
+                        result: "",
+                        comment: "",
                     };
-                  Object.assign(item,_this.defaultSignProcess[i]);
-                  item.roleName=_this.getRoleNameById(item.roleId);
-                  _this.lxdForm.contactSign.signContent.push(item);
+                    Object.assign(item,_this.defaultSignProcess[i]);
+                    item.roleName=_this.getRoleNameById(item.roleId);
+                    _this.lxdForm.contactSign.signContent.push(item);
                 }
                 this.addLxdVisible = true;
                 _this.mode = _this.ADD_MODE;
@@ -1174,6 +1181,7 @@
                 }
             },
 
+            //提交审核按钮
             onSubmitToSign()
             {
                 $.ajax({
@@ -1192,6 +1200,7 @@
                 });
             },
 
+            //同意的“确认”按钮
             onSubmitSign()
             {
                 if (_this.signContentObj.comment == null || _this.signContentObj.comment == '') {
@@ -1222,8 +1231,9 @@
                     }
                 });
             },
+
+            // “同意”按钮
             handleSubmitSign(item) {
-               
                 if (item.comment == null || item.comment == '') {
                     showMessage(_this, '审核意见不能为空！', 0);
                 } else {
@@ -1300,8 +1310,6 @@
                     }
                 });
             },
- 
-
 
             initAllRoles() {
                 $.ajax({
