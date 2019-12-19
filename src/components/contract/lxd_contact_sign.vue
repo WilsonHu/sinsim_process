@@ -343,12 +343,20 @@
                                         </el-col>
                                         <el-col :span="2" style="margin-left:20px;">
                                             <el-button
-                                            :disabled="notWritter()||mode==SIGN_MODE"
-                                            size="small"
-                                            type="success"
-                                            style="float:left; margin-left:5px;"
-                                            icon="el-icon-upload"
-                                            @click="onUpload()">上传
+                                                    :disabled="notWritter()||mode==SIGN_MODE"
+                                                    size="small"
+                                                    type="success"
+                                                    style="float:left; margin-left:5px;"
+                                                    icon="el-icon-upload"
+                                                    @click="onUpload()">上传
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                                    size="small"
+                                                    type="success"
+                                                    icon="el-icon-download"
+                                                    @click="onAttachedDownload(lxdForm.contactForm)">下载
                                             </el-button>
                                         </el-col>
                                     </div>
@@ -783,6 +791,7 @@
             {
               console.log(handleBefore);
             },
+
             submitUpload(){
                 if (_this.fileLists == null || _this.fileLists.length == 0) {
                     showMessage(_this, "上传文件不能为空！", 0)
@@ -818,6 +827,38 @@
                         showMessage(_this, '上传失败！', 0);
                     }
                 });
+            },
+
+            onAttachedDownload(item)
+            {
+                _this.selectedItem = copyObject(item);
+                $.ajax({
+                    url: HOST + "contact/form/getLxdAttachedFile",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        contact_form_id: _this.selectedItem.id,
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            if (res.data.length > 0) {
+                                var downLoadURL = DOWNLOADPATH_LXD + res.data;
+                                _this.downloadFile(downLoadURL);
+                            }
+                        }
+                    }
+                })
+            },
+
+            downloadFile(url)
+            {
+                console.log("downloadFile url: " + url);
+                var form = $("<form>");
+                form.attr("style", "display:none");
+                form.attr("method", "get");
+                form.attr("action", url);
+                $("body").append(form);
+                form.submit();
             },
 
             isHasPermissionToSign()
@@ -1056,7 +1097,6 @@
                     }
                 });
             },
-          
 
             dialogCloseCallback() {
                 
