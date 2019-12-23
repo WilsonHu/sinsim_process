@@ -22,12 +22,17 @@
               @select="handleSelect"
             >
               <template v-for="item in $router.options.routes" v-if="!item.hidden">
-                <el-menu-item
-                  v-for="child in item.children"
-                  :index="child.path"
-                  v-show="!child.hidden && child.meta && showMenu(child.path)"
-                  style="font-size: 17px;font-weight: bold"
-                >{{child.meta}}</el-menu-item>
+                  <el-menu-item
+                          v-for="child in item.children"
+                          :index="child.path"
+                          v-show="!child.hidden && child.meta && showMenu(child.path)"
+                          style="font-size: 17px;font-weight: bold">
+                      <el-badge :value="toSignCount" :max="99" v-if="child.path == '/home/contract'">
+                      {{child.meta}}
+                    </el-badge>
+                    <p v-else="child.path != '/home/contract'">{{child.meta}}</p>
+
+                  </el-menu-item>
               </template>
             </el-menu>
           </el-col>
@@ -164,7 +169,9 @@ export default {
         oldPassword: '',
         password: ''
       },
-      isShowPwd: false
+      isShowPwd: false,
+        toSignCount: 0,
+        userDomesticTradeZoneListStr:""
     };
   },
   methods: {
@@ -360,14 +367,71 @@ export default {
           showMessage(_this, '服务器访问出错！', 0);
         }
       });
-    }
+    },
+      getUserDomesticTradeZoneListStr() {
+          if (_this.userinfo.marketGroupName == '内贸部') {
+              //根据账号返回内贸区域
+              $.ajax({
+                  url: HOST + 'domestic/trade/zone/getDomesticTradeZone',
+                  type: 'POST',
+                  dataType: 'json',
+                  data: { account: _this.userInfo.account },
+                  success: function(data) {
+                      if (data.code == 200) {
+                          for (let k = 0; k < data.data.size; k++) {
+                              if (_this.userDomesticTradeZoneListStr == '') {
+                                  _this.userDomesticTradeZoneListStr =
+                                      data.data.list[k].zoneName;
+                              } else {
+                                  _this.userDomesticTradeZoneListStr =
+                                      _this.userDomesticTradeZoneListStr +
+                                      ';' +
+                                      data.data.list[k].zoneName;
+                              }
+                          }
+                          _this.selectContracts();
+                          return _this.userDomesticTradeZoneListStr;
+                      }
+                  },
+                  error: function(data) {
+                      showMessage(_this, '服务器访问失败！', 0);
+                  }
+              });
+              return '';
+          } else {
+              _this.selectContracts();
+              return '';
+          }
+      },
+      selectContracts() {
+          var condition = {
+              status: 1,
+              marketGroupName: _this.userinfo.marketGroupName,
+              userDomesticTradeZoneListStr: _this.userDomesticTradeZoneListStr,
+          };
+          if( _this.userinfo.role.roleName != "超级管理员") {
+              condition.roleName = _this.userinfo.role.roleName;
+          }
+          $.ajax({
+              url: HOST + 'contract/selectContracts',
+              type: 'POST',
+              dataType: 'json',
+              data: condition,
+              success: function(data) {
+                  if (data.code == 200) {
+                      _this.toSignCount = data.data.total;
+                  }
+              }
+          });
+      },
   },
   computed: {},
   filters: {},
   created: function() {
-    this.userinfo = JSON.parse(sessionStorage.getItem('user'));
-    this.fetchUserRoleScope(this.userinfo.role.id);
-    this.loadconfigData();
+    _this.userinfo = JSON.parse(sessionStorage.getItem('user'));
+    _this.fetchUserRoleScope(this.userinfo.role.id);
+    _this.getUserDomesticTradeZoneListStr();
+    _this.loadconfigData();
   },
   mounted: function() {
     //		    setInterval(function getDate() {
@@ -404,5 +468,12 @@ export default {
 .el-main {
   color: #333;
   text-align: center;
+}
+.el-badge__content.is-fixed {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  -webkit-transform: translateY(-50%) translateX(100%);
+  transform: translateY(-50%) translateX(100%);
 }
 </style>
