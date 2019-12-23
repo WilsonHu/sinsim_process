@@ -275,15 +275,16 @@
                                 <el-row v-show="isShowChangeContactForm">
                                     <el-row :span="2"  style="margin-top:10px;">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
-                                            <li v-for=" item in lxdChangeTypes"
-                                                style="display:inline-block;  list-style: none; margin-left: 1px">
-                                                <el-checkbox style="font-weight: normal; float:left; margin-right: 20px"
-                                                             v-model="item.checked">{{item.lxdChangeTypeName}}
+                                            <el-checkbox-group  v-model="checkedChangeTypes" style="margin-left:0px;float:left;">
+                                                <el-checkbox v-for="item in lxdChangeTypes" :label="item" :key="item">
+                                                    {{item}}
                                                 </el-checkbox>
-                                            </li>
+                                            </el-checkbox-group>
                                         </el-form-item>
                                     </el-row>
-                                    <el-col :span="4" :offset="12" >
+                                </el-row>
+                                <el-row v-show="isShowChangeContactForm">
+                                    <el-col :span="4" :offset="20" style="margin-top:10px;margin-bottom:10px;">
                                         <el-button
                                             :disabled="notWritter()||mode==SIGN_MODE"
                                             type="primary"
@@ -712,17 +713,21 @@
 
                 lxdTypes: ["变更", "工作"],
                 //变更联系单的变更类型(变更内容)
+                // lxdChangeTypes: [
+                //     {"lxdChangeTypeName":"设计变更", "checked": false,},
+                //     {"lxdChangeTypeName":"材料变更", "checked": false},
+                //     {"lxdChangeTypeName":"工艺变更", "checked": false},
+                //     {"lxdChangeTypeName":"模具设备", "checked": false},
+                //     {"lxdChangeTypeName":"工艺夹具", "checked": false},
+                //     {"lxdChangeTypeName":"制造场所", "checked": false},
+                //     {"lxdChangeTypeName":"新供应商", "checked": false},
+                //     {"lxdChangeTypeName":"包装运输", "checked": false},
+                //     {"lxdChangeTypeName":"检验方法", "checked": false},
+                //     {"lxdChangeTypeName":"其他变更，需说明", "checked": false}],
                 lxdChangeTypes: [
-                    {"lxdChangeTypeName":"设计变更", "checked": false,},
-                    {"lxdChangeTypeName":"材料变更", "checked": false},
-                    {"lxdChangeTypeName":"工艺变更", "checked": false},
-                    {"lxdChangeTypeName":"模具设备", "checked": false},
-                    {"lxdChangeTypeName":"工艺夹具", "checked": false},
-                    {"lxdChangeTypeName":"制造场所", "checked": false},
-                    {"lxdChangeTypeName":"新供应商", "checked": false},
-                    {"lxdChangeTypeName":"包装运输", "checked": false},
-                    {"lxdChangeTypeName":"检验方法", "checked": false},
-                    {"lxdChangeTypeName":"其他变更，需说明", "checked": false}],
+                    "设计变更","材料变更","工艺变更","模具设备", "工艺夹具","制造场所", "新供应商","包装运输","检验方法","其他变更，需说明", 
+                ],
+                checkedChangeTypes:[],
                 uploadDialogVisible:false,
                 fileLists:[],
                 uploadForm:{},
@@ -761,10 +766,7 @@
         methods: {
 
             resetStatus(){
-                let i;
-                for (i = 0; i < _this.lxdChangeTypes.length; i++) {
-                    _this.lxdChangeTypes[i].checked = false;
-                }
+               _this.checkedChangeTypes=[];
             },
 
             handleFileChange(file, fileList)
@@ -1173,7 +1175,10 @@
 
             validContactContent(){
                 var iserror = false;
-                _this.lxdForm.contactForm.contactContent = _this.getLxdChangeTypes();
+                if(_this.lxdForm.contactForm.contactType.indexOf("变更")>=0)//变更
+                {
+                    _this.lxdForm.contactForm.contactContent = _this.getLxdChangeTypes();
+                }
                 if(_this.lxdForm.contactForm.contactContent == null || _this.lxdForm.contactForm.contactContent.length ==0){
                     iserror = true;
                     this.errorMsg = '联系单内容不能为空';
@@ -1211,15 +1216,12 @@
 
             //组建变更内容的类型，用逗号分隔
             getLxdChangeTypes(){
-                let result = "";
-                let contactContentArr = [];
-                for (let i = 0; i < _this.lxdChangeTypes.length; i++) {
-                    if (_this.lxdChangeTypes[i].checked) {
-                        contactContentArr.push(_this.lxdChangeTypes[i].lxdChangeTypeName)
-                    }
+                if(_this.checkedChangeTypes==null||_this.checkedChangeTypes.length==0)
+                {
+                    return "";
                 }
                 //内容之间 用逗号隔开
-                return contactContentArr.join(",");
+                return _this.checkedChangeTypes.join(",");
             },
 
             onEdit() {
@@ -1554,7 +1556,6 @@
             isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
                 let res=_this.lxdForm.contactForm.contactType.indexOf("变更")>=0;
                 _this.rules.hopeDate[0].required=res;
-
                 return  res;
             },
 
