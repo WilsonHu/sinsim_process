@@ -85,16 +85,16 @@ export default [{
                         meta: '合同签核'
                     },
                     {
-                        path: '/home/contract/sign_process',
-                        component: SignProcess,
-                        name: 'sign_process',
-                        meta: '签核流程'
-                    },
-                    {
                         path: '/home/contract/contact_sign',
                         component: ContactSign,
                         name: 'contact_sign',
                         meta: '联系单签核'
+                    },
+                    {
+                        path: '/home/contract/sign_process',
+                        component: SignProcess,
+                        name: 'sign_process',
+                        meta: '签核流程'
                     },
                 ]
             },

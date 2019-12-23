@@ -273,19 +273,16 @@
                                     </el-col>
                                 </el-row>
                                 <el-row v-show="isShowChangeContactForm">
-                                    <el-col :span="8"  style="margin-top:10px;">
+                                    <el-row :span="2"  style="margin-top:10px;">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
-                                            <el-select v-model="lxdForm.contactForm.contactContent" placeholder="选择变更内容子类型"
-                                                       clearable :disabled="notWritter()||mode==SIGN_MODE">
-                                                <el-option
-                                                        v-for="item in lxdChangeTypes"
-                                                        :key="item"
-                                                        :label="item"
-                                                        :value="item">
-                                                </el-option>
-                                            </el-select>
+                                            <li v-for=" item in lxdChangeTypes"
+                                                style="display:inline-block;  list-style: none; margin-left: 1px">
+                                                <el-checkbox style="font-weight: normal; float:left; margin-right: 20px"
+                                                             v-model="item.checked">{{item.lxdChangeTypeName}}
+                                                </el-checkbox>
+                                            </li>
                                         </el-form-item>
-                                    </el-col>
+                                    </el-row>
                                     <el-col :span="4" :offset="12" >
                                         <el-button
                                             :disabled="notWritter()||mode==SIGN_MODE"
@@ -595,7 +592,7 @@
 
                 
                 //联系单内容
-                lxdForm: {  
+                lxdForm: {
                     contactForm:{
                         id:'',
                         num:'',
@@ -714,7 +711,18 @@
                 lxdStatusList: LxdStatusList,
 
                 lxdTypes: ["变更", "工作"],
-                lxdChangeTypes: ["设计变更", "材料变更", "工艺变更", "模具设备", "工艺夹具", "制造场所", "新供应商", "包装运输", "检验方法", "其他变更，需说明"],
+                //变更联系单的变更类型(变更内容)
+                lxdChangeTypes: [
+                    {"lxdChangeTypeName":"设计变更", "checked": false,},
+                    {"lxdChangeTypeName":"材料变更", "checked": false},
+                    {"lxdChangeTypeName":"工艺变更", "checked": false},
+                    {"lxdChangeTypeName":"模具设备", "checked": false},
+                    {"lxdChangeTypeName":"工艺夹具", "checked": false},
+                    {"lxdChangeTypeName":"制造场所", "checked": false},
+                    {"lxdChangeTypeName":"新供应商", "checked": false},
+                    {"lxdChangeTypeName":"包装运输", "checked": false},
+                    {"lxdChangeTypeName":"检验方法", "checked": false},
+                    {"lxdChangeTypeName":"其他变更，需说明", "checked": false}],
                 uploadDialogVisible:false,
                 fileLists:[],
                 uploadForm:{},
@@ -738,9 +746,10 @@
                     contactTitle: [
                         {  type: 'string',required: true, message: '请填写变更主题!', trigger: 'change' }
                     ],
-                    contactContent: [
-                        {  type: 'string',required: true, message: '请填写变更内容：!', trigger: 'change' }
-                    ]
+                    //在后面有检查
+//                    contactContent: [
+//                        {  type: 'string',required: true, message: '请选择变更内容：!', trigger: 'change' }
+//                    ]
                     
                 },
                 submitSignResultVisible: false,
@@ -750,6 +759,14 @@
 
         },
         methods: {
+
+            resetStatus(){
+                let i;
+                for (i = 0; i < _this.lxdChangeTypes.length; i++) {
+                    _this.lxdChangeTypes[i].checked = false;
+                }
+            },
+
             handleFileChange(file, fileList)
             {
                 var errorMsg = "";
@@ -919,6 +936,7 @@
                 }
                 return true;
             },
+
             notWritterRow(row)
             {
               if (this.userInfo!= null) {
@@ -1036,6 +1054,7 @@
                 this.addLxdVisible = true;
                 _this.mode = _this.ADD_MODE;
 
+                this.resetStatus();
             },
 
             handleSign(index, item) {
@@ -1131,25 +1150,39 @@
             onAddOrEdit(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        if(_this.mode==_this.ADD_MODE)
-                        {
-                            _this.onAdd();
-                        }
-                        else if(_this.mode==_this.EDIT_MODE)
-                        {
-                             _this.onEdit();
+                        //在此检查变更内容
+                        _this.isError = this.validContactContent();
+                        if (_this.isError) {
+                            showMessage(_this, _this.errorMsg, 0);
+                        } else {
+
+                            if (_this.mode == _this.ADD_MODE) {
+                                _this.onAdd();
+                            }
+                            else if (_this.mode == _this.EDIT_MODE) {
+                                _this.onEdit();
+                            }
                         }
                     } else {
-                        console.log('error submit!!');
+                        console.log('提交的表单有问题，error submit!!');
                         return false;
                     }
                 });
               
             },
-            onAdd()
-            {   
-               
 
+            validContactContent(){
+                var iserror = false;
+                _this.lxdForm.contactForm.contactContent = _this.getLxdChangeTypes();
+                if(_this.lxdForm.contactForm.contactContent == null || _this.lxdForm.contactForm.contactContent.length ==0){
+                    iserror = true;
+                    this.errorMsg = '联系单内容不能为空';
+                }
+                return iserror;
+            },
+
+            onAdd()
+            {
                 let submitData=JSON.stringify(_this.lxdForm);
                 $.ajax({
                     url: HOST + 'contact/form/add',
@@ -1174,6 +1207,19 @@
                         _this.isError = true;
                     }
                 });
+            },
+
+            //组建变更内容的类型，用逗号分隔
+            getLxdChangeTypes(){
+                let result = "";
+                let contactContentArr = [];
+                for (let i = 0; i < _this.lxdChangeTypes.length; i++) {
+                    if (_this.lxdChangeTypes[i].checked) {
+                        contactContentArr.push(_this.lxdChangeTypes[i].lxdChangeTypeName)
+                    }
+                }
+                //内容之间 用逗号隔开
+                return contactContentArr.join(",");
             },
 
             onEdit() {
