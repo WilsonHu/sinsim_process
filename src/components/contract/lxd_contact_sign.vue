@@ -275,7 +275,9 @@
                                 <el-row v-show="isShowChangeContactForm">
                                     <el-row :span="2"  style="margin-top:10px;">
                                         <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
-                                            <el-checkbox-group  v-model="checkedChangeTypes" style="margin-left:0px;float:left;">
+                                            <el-checkbox-group  v-model="checkedChangeTypes" 
+                                                :disabled="notWritter()||mode==SIGN_MODE"
+                                                style="margin-left:0px;float:left;">
                                                 <el-checkbox v-for="item in lxdChangeTypes" :label="item" :key="item">
                                                     {{item}}
                                                 </el-checkbox>
@@ -1254,7 +1256,7 @@
 
             signDisable(row) {
                 //超级管理员可以操作，或者当前合同属于“签核状态”、登陆的用户有权限签核并且合同currentStep处于属于该角色签核
-                //修改：下一个签核人未签核的状态下，允许修改。
+                //修改：不分先后，只要最后一步没有完成，都可以审核操作。
                 if(_this.mode != _this.SIGN_MODE)
                 {
                     return true;
