@@ -725,17 +725,6 @@
 
                 lxdTypes: ["变更", "工作"],
                 //变更联系单的变更类型(变更内容)
-                // lxdChangeTypes: [
-                //     {"lxdChangeTypeName":"设计变更", "checked": false,},
-                //     {"lxdChangeTypeName":"材料变更", "checked": false},
-                //     {"lxdChangeTypeName":"工艺变更", "checked": false},
-                //     {"lxdChangeTypeName":"模具设备", "checked": false},
-                //     {"lxdChangeTypeName":"工艺夹具", "checked": false},
-                //     {"lxdChangeTypeName":"制造场所", "checked": false},
-                //     {"lxdChangeTypeName":"新供应商", "checked": false},
-                //     {"lxdChangeTypeName":"包装运输", "checked": false},
-                //     {"lxdChangeTypeName":"检验方法", "checked": false},
-                //     {"lxdChangeTypeName":"其他变更，需说明", "checked": false}],
                 lxdChangeTypes: [
                     "设计变更","材料变更","工艺变更","模具设备", "工艺夹具","制造场所", "新供应商","包装运输","检验方法","其他变更，需说明", 
                 ],
@@ -1399,11 +1388,13 @@
                     data: {contactFormId: formId},
                     success: function (res) {
                         if (res.code == 200) {
-
-                             res.data.contactSign.signContent=JSON.parse(res.data.contactSign.signContent);
-                            //  _this.lxdForm.contactForm=res.data.contactForm;
-                            //  _this.lxdForm.changeItemList=res.data.changeItemList;
+                            res.data.contactSign.signContent=JSON.parse(res.data.contactSign.signContent);
                             _this.lxdForm=res.data;
+                            if(_this.lxdForm.contactForm.contactType.indexOf("变更")>=0)//变更
+                            {
+                                _this.checkedChangeTypes=_this.lxdForm.contactForm.contactContent.split(",");
+                            }
+                        
                         } else {
                             console.log("getContactAllData:"+res.message);
                         }
