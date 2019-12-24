@@ -384,12 +384,24 @@
                                       style="margin-bottom: 20px;margin-top: 20px;">
                                       <el-table-column align="center" label="签核步骤" width="80">
                                         <template scope="scope">
-                                          <el-button
-                                            style="font-size: 14px; font-weight: bold"
-                                            type="primary"
-                                            round
-                                            size="mini"
-                                          >{{scope.row.number}}</el-button>
+
+                                            <div v-if="scope.row.shenHeEnabled" style="color: darkorange">
+                                                <el-button
+                                                        style="font-size: 14px; font-weight: bold"
+                                                        type="primary"
+                                                        round
+                                                        size="mini"
+                                                >{{scope.row.number}}</el-button>
+                                            </div>
+                                            <div v-else>
+                                                <el-button
+                                                        style="font-size: 14px; font-weight: bold"
+                                                        type="primary"
+                                                        round
+                                                        disabled
+                                                        size="mini"
+                                                >{{scope.row.number}}</el-button>
+                                            </div>
                                         </template>
                                       </el-table-column>
                                       <el-table-column align="center" width="150" label="签核角色">
@@ -1262,7 +1274,7 @@
                 //     return false;
                 // }
                 //&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0
-                if (row.roleId == _this.userInfo.role.id&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0) {
+                if (row.roleId == _this.userInfo.role.id&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0 && row.shenHeEnabled) {
                    return false;
                 } else {
                     return true;
