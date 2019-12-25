@@ -2988,6 +2988,56 @@ export default {
       }
     },
 
+    //查询该订单对于的联系单，是否存在并且审核完成通过。
+    relatedLxdPassed(orderNum){
+      var condition = {
+        orderNum: orderNum,
+        status:2, //LXD_CHECKING_FINISHED
+        contactType: '',
+        applicantDepartment:  '',
+        applicantPerson: '',
+        currentStep: '',
+        queryStartTime: '',
+        queryFinishTime: '',
+        isFuzzy:true,
+        page: _this.currentPage,
+        size: _this.pageSize
+      };
+
+      let result11 = false;
+      $.ajax({
+        url: HOST + 'contact/form/selectContacts',
+        type: 'POST',
+        dataType: 'json',
+        data: condition,
+        success: function (data) {
+          if (data.code == 200) {
+            _this.tableData = data.data.list;
+            _this.totalNum = data.data.total;
+            _this.startRow = data.data.startRow;
+            if(_this.totalNum<1){
+              console.log("小于1，没有联系单");
+              result11 = false;
+            } else if(_this.tableData[_this.totalNum -1].status == "联系单审核完成" ){
+              //有多个联系单时，取决于最后最新的联系单
+              console.log("最后的联系单 状态为 完成");
+              result11 = true;
+            } else {
+              console.log("最后的联系单 状态为 没完成");
+              result11 = false;
+            }
+          }
+          return result11;
+        },
+
+        error: function(data) {
+          showMessage(_this, '服务器访问失败！', 0);
+          return false;
+        }
+      });
+
+    },
+
     canSplitOrChangeOrder(status) {
       if (
         this.mode != this.SIGN_MODE &&
