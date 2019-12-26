@@ -90,15 +90,18 @@
                                              label="类型"></el-table-column>
                             <el-table-column align="center" label="订单号" min-width="125">
                                 <template scope="scope">
-                                    <div v-on:click="handleSign(scope.$index, scope.row)" style="font-weight: bold;"
-                                         class="btn btn-link">
+                                    <div   v-if="isBianGengLxd(scope.row)" style="font-weight: bold;">
                                         {{scope.row.orderNum}}
+                                    </div>
+                                    <div v-else>
+                                        N/A
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="联系单号" min-width="100">
+                            <el-table-column align="center" label="联系单号" min-width="125">
                                 <template scope="scope">
-                                    <div style="font-weight: bold;">
+                                    <div v-on:click="handleSign(scope.$index, scope.row)" style="font-weight: bold;"
+                                         class="btn btn-link">
                                         {{scope.row.num}}
                                     </div>
                                 </template>
@@ -1556,6 +1559,14 @@
                 });
             },
 
+            isBianGengLxd(row){
+                //变更联系单才有订单号
+                if(row.contactType.indexOf("变更")>=0){
+                    return true;
+                } else {
+                    return false;
+                }
+            },
         },
         computed: {
             isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
