@@ -368,8 +368,8 @@
                                       <el-col :span="20">
                                         <el-form-item label="" :label-width="longFormLabelWidth">
                                             <span style="float:left;">
-                                                {{lxdForm.contactForm.attachedFile}}
-                                            </span>    
+                                                {{removeAbsolutePath(lxdForm.contactForm.attachedFile)}}
+                                            </span>
                                         </el-form-item>
                                       </el-col>
                                 </el-row>
@@ -1566,6 +1566,11 @@
                 } else {
                     return false;
                 }
+            },
+
+            //不要显示完整路径 /opt/sinsim/output/lxdAttached/lxd_lxd1111_lxdAttached__0.xls
+            removeAbsolutePath(fullPath){
+                return fullPath.split("/")[fullPath.split("/").length-1];
             },
         },
         computed: {

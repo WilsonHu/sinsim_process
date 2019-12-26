@@ -739,7 +739,7 @@
                         size="small"
                         style="margin-top: 15px"
                         v-if="canSplitOrChangeOrder(item.machineOrder.status)"
-                        :disabled="item.machineOrder.machineNum <= 1"
+                        :disabled="item.machineOrder.machineNum <= 1 || item.machineOrder.lxdPassed != true"
                         @click="handleSplitOrder(item)"
                       >拆单</el-button>
                     </el-col>
@@ -749,6 +749,7 @@
                         size="small"
                         style="margin-top: 15px"
                         v-if="canSplitOrChangeOrder(item.machineOrder.status)"
+                        :disabled="item.machineOrder.lxdPassed != true"
                         @click="handleChangeOrder(item)"
                       >改单</el-button>
                     </el-col>
@@ -2609,7 +2610,9 @@ export default {
           },
           orderDetail: copyObjectByJSON(DefaultOrderDetail),
           //每个需求单中的签核记录
-          orderSign: {}
+          orderSign: {},
+
+          lxdPassed: false
         }
       ],
 
@@ -3038,7 +3041,7 @@ export default {
 
     },
 
-    canSplitOrChangeOrder(status) {
+    canSplitOrChangeOrder(status) { //, lxdPassed
       if (
         this.mode != this.SIGN_MODE &&
         this.mode != this.CHANGE_MODE &&
