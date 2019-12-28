@@ -281,11 +281,21 @@
                                             <el-checkbox-group  v-model="checkedChangeTypes" 
                                                 :disabled="notWritter()||mode==SIGN_MODE"
                                                 style="margin-left:0px;float:left;">
-                                                <el-checkbox v-for="item in lxdChangeTypes" :label="item" :key="item">
+                                                <el-checkbox v-for="item in lxdChangeTypes" :label="item" :key="item"
+                                                             @change="handleCheckedChange(checkedChangeTypes)">
                                                     {{item}}
                                                 </el-checkbox>
                                             </el-checkbox-group>
                                         </el-form-item>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="20" style="margin-top:10px;" v-show="isShowChangeContactForm &&lxdForm.contactForm.contactContentElseIsChecked">
+                                            <el-form-item label="其他变更：" :label-width="longFormLabelWidth" prop="contactContentElse">
+                                                <el-input v-model="lxdForm.contactForm.contactContentElse" placeholder="选中”其他变更”时输入" clearable
+                                                          :disabled="notWritter()||mode==SIGN_MODE">
+                                                </el-input>
+                                            </el-form-item>
+                                        </el-col>
                                     </el-row>
                                 </el-row>
                                 <el-row v-show="isShowChangeContactForm">
@@ -359,6 +369,7 @@
                                                     size="small"
                                                     type="success"
                                                     icon="el-icon-download"
+                                                    :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedFile)"
                                                     @click="onAttachedDownload(lxdForm.contactForm)">下载
                                             </el-button>
                                         </el-col>
@@ -624,6 +635,8 @@
                         status: 0,
                         contactContent: "", //工作联系单内容
                         attachedFile:"",
+                        contactContentElse: "", // 选中“其他变更”时的输入
+                        contactContentElseIsChecked: false, // “其他变更” 是否被选中。
                     },
                     changeItemList: [{ //变更单内容
                         id:'',
@@ -1398,6 +1411,9 @@
                             if(_this.lxdForm.contactForm.contactType.indexOf("变更")>=0)//变更
                             {
                                 _this.checkedChangeTypes=_this.lxdForm.contactForm.contactContent.split(",");
+                                if(_this.lxdForm.contactForm.contactContentElse != "" ){
+                                _this.lxdForm.contactForm.contactContentElseIsChecked = true;
+                                }
                             }
                         
                         } else {
@@ -1570,8 +1586,32 @@
 
             //不要显示完整路径 /opt/sinsim/output/lxdAttached/lxd_lxd1111_lxdAttached__0.xls
             removeAbsolutePath(fullPath){
-                return fullPath.split("/")[fullPath.split("/").length-1];
+                if (fullPath == null || fullPath == "") {
+                    return "无附件";
+                } else {
+                    return fullPath.split("/")[fullPath.split("/").length - 1];
+                }
             },
+
+            haveNoAttachedFile(fullPath){
+                if (fullPath == null || fullPath == "") {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+
+            handleCheckedChange(checkedChangeTypes){
+                if(checkedChangeTypes[checkedChangeTypes.length-1].indexOf("其他变更，需说明")>=0)
+                {
+                    /**
+                     * 选中的内容包含了 "其他变更，需说明"
+                     */
+                    _this.lxdForm.contactForm.contactContentElseIsChecked = true;
+                } else {
+                    _this.lxdForm.contactForm.contactContentElseIsChecked = false;
+                }
+            }
         },
         computed: {
             isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
@@ -1588,6 +1628,7 @@
                 }
                 return res; 
             },
+
         },
         filters: {
             filterRole(id) {
