@@ -282,7 +282,7 @@
                                                 :disabled="notWritter()||mode==SIGN_MODE"
                                                 style="margin-left:0px;float:left;">
                                                 <el-checkbox v-for="item in lxdChangeTypes" :label="item" :key="item"
-                                                             @change="handleCheckedChange(checkedChangeTypes)">
+                                                             @change="handleCheckedChange(checkedChangeTypes,item)">
                                                     {{item}}
                                                 </el-checkbox>
                                             </el-checkbox-group>
@@ -1601,15 +1601,16 @@
                 }
             },
 
-            handleCheckedChange(checkedChangeTypes){
-                if(checkedChangeTypes[checkedChangeTypes.length-1].indexOf("其他变更，需说明")>=0)
-                {
-                    /**
-                     * 选中的内容包含了 "其他变更，需说明"
-                     */
-                    _this.lxdForm.contactForm.contactContentElseIsChecked = true;
-                } else {
-                    _this.lxdForm.contactForm.contactContentElseIsChecked = false;
+            handleCheckedChange(checkedChangeTypes, item){
+                //改变的项是"其他变更，需说明"
+                if (item.indexOf("其他变更，需说明") >= 0) {
+                    if (checkedChangeTypes.length != 0) {
+                        if(_this.lxdForm.contactForm.contactContentElseIsChecked){
+                            _this.lxdForm.contactForm.contactContentElseIsChecked = false
+                        } else {
+                            _this.lxdForm.contactForm.contactContentElseIsChecked =true;
+                        }
+                    }
                 }
             }
         },
