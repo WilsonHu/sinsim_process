@@ -191,7 +191,6 @@
                                                 :disabled="notWritter()||mode!=ADD_MODE">
                                         <el-option
                                                 v-for="item in lxdTypes"
-                                                :key="item"
                                                 :label="item"
                                                 :value="item">
                                         </el-option>
@@ -200,7 +199,7 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="联系单号：" :label-width="longFormLabelWidth" prop="num">
-                                    <el-input v-model="lxdForm.contactForm.num"  
+                                    <el-input v-model="lxdForm.contactForm.num"
                                               :disabled="notWritter()||mode!=ADD_MODE" clearable
                                               placeholder="联系单号："></el-input>
                                 </el-form-item>
@@ -257,12 +256,18 @@
 
                                     <el-col :span="6" style="margin-left:20px;" v-show="isShowChangeContactForm">
                                         <el-form-item label="订单号: " :label-width="longFormLabelWidth" prop="orderNum">
-                                            <el-input 
+                                            <el-select
                                                 :disabled="notWritter()||mode==SIGN_MODE"
                                                 v-model="lxdForm.contactForm.orderNum"
                                                 clearable
-                                                placeholder="订单号"
-                                            ></el-input>
+                                                filterable
+                                                placeholder="订单号">
+                                                <el-option
+                                                        v-for="item in allOrderList"
+                                                        :label="item.orderNum"
+                                                        :value="item.orderNum">
+                                                </el-option>
+                                            </el-select>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
@@ -779,6 +784,7 @@
                 submitSignResultVisible: false,
                 rejectSignResultVisible: false,
                 signContentObj:{},
+                allOrderList:[]
             };
 
         },
@@ -1612,7 +1618,21 @@
                         }
                     }
                 }
-            }
+            },
+            fetchAllOrderList() {
+                $.ajax({
+                    url: HOST + 'machine/order/list',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.allOrderList = res.data.list;
+                        }
+                    }
+                });
+            },
+
         },
         computed: {
             isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
@@ -1696,6 +1716,7 @@
         },
         mounted: function () {
             _this.selectContacts();
+            _this.fetchAllOrderList();
         }
     };
 </script>
