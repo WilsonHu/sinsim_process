@@ -3552,7 +3552,11 @@
                         url: HOST + 'machine/selectMachines',
                         type: 'POST',
                         dataType: 'json',
-                        data: {order_id: requisitionItem.machineOrder.id},
+                        data: {
+                          order_id: requisitionItem.machineOrder.id,
+                          //查询订单id号，不能模糊查询，否则可能返回不属于本订单的机器，比如，订单id为12，可能返回订单号为120 121等的机器
+                          is_fuzzy: false
+                        },
                         success: function (data) {
                             if (data.code == 200) {
                                 _this.splitOrderVisible = true;
@@ -4428,7 +4432,8 @@
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
-                                //_this.addContractVisible = false;
+                              // 改单时，是新增订单，所以要关闭，否则再次点击保存又会新增一个订单。
+                                _this.addContractVisible = false;
                                 _this.editContract = '';
                                 showMessage(_this, '保存成功', 1);
                                 _this.selectContracts();
@@ -4518,7 +4523,8 @@
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
-                                //_this.addContractVisible = false;
+                              //  拆单时，同改单时一样，是新增订单，所以要关闭，否则再次点击保存又会新增一个订单。
+                                _this.addContractVisible = false;
                                 _this.editContract = '';
                                 showMessage(_this, '保存成功', 1);
                                 _this.selectContracts();
