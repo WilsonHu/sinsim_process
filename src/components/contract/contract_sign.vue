@@ -749,7 +749,6 @@
                                                     type="danger"
                                                     size="small"
                                                     style="margin-top: 15px"
-                                                    v-if="canSplitOrChangeOrder(item.machineOrder.status)"
                                                     :disabled="item.machineOrder.machineNum <= 1 || !allContactListPassed(item.machineOrder.contactFormDetailList)"
                                                     @click="handleSplitOrder(item)"
                                             >拆单
@@ -760,7 +759,6 @@
                                                     type="danger"
                                                     size="small"
                                                     style="margin-top: 15px"
-                                                    v-if="canSplitOrChangeOrder(item.machineOrder.status)"
                                                     :disabled="!allContactListPassed(item.machineOrder.contactFormDetailList)"
                                                     @click="handleChangeOrder(item)"
                                             >改单
@@ -2542,7 +2540,7 @@
                                 </el-col>
                             </el-row>
                             <el-row>
-                                <el-col :span="6">
+                                <el-col :span="4">
                                     <el-form-item label="申请日期：" prop="createDate"
                                                   :label-width="longFormLabelWidth">
                                         <el-date-picker
@@ -2553,7 +2551,7 @@
                                         </el-date-picker>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6" :offset="2" v-show="isShowChangeContactForm">
+                                <el-col :span="4" :offset="2" v-show="isShowChangeContactForm">
                                     <el-form-item label="ECO希望日期：" prop="hopeDate" :label-width="longFormLabelWidth">
                                         <el-date-picker
                                                 disabled
@@ -2700,7 +2698,7 @@
                                                 <div v-else>
                                                     <el-button
                                                             style="font-size: 14px; font-weight: bold"
-                                                            type="primary"
+                                                            type="info"
                                                             round
                                                             disabled
                                                             size="mini"
@@ -2730,7 +2728,7 @@
                                                 <el-input
                                                         type="textarea"
                                                         clearable
-                                                        :disabled="signDisable(scope.row)"
+                                                        :disabled="lxdSignDisable(scope.row)"
                                                         v-model="scope.row.comment"
                                                         auto-complete="off"
                                                 ></el-input>
@@ -2740,21 +2738,21 @@
                                             <template scope="scope" >
                                                 <el-tooltip placement="top" content="同意"  v-show="isRowHasPermissionToShow(scope.row)">
                                                     <el-button
-                                                            :disabled="signDisable(scope.row)"
+                                                            :disabled="lxdSignDisable(scope.row)"
                                                             type="success"
                                                             icon="el-icon-check"
                                                             size="mini"
-                                                            @click="handleSubmitSign(scope.row)"
-                                                    > </el-button>
+                                                            @click="handleSubmitLxdSign(scope.row)"
+                                                    ></el-button>
                                                 </el-tooltip>
                                                 <el-tooltip placement="top" content="驳回"  v-show="isRowHasPermissionToShow(scope.row)">
                                                     <el-button
-                                                            :disabled="signDisable(scope.row)"
+                                                            :disabled="lxdSignDisable(scope.row)"
                                                             type="danger"
                                                             icon="el-icon-close"
                                                             size="mini"
-                                                            @click="handleRejectSign(scope.row)"
-                                                    > </el-button>
+                                                            @click="handleRejectLxdSign(scope.row)"
+                                                    ></el-button>
                                                 </el-tooltip>
                                             </template>
                                         </el-table-column>
@@ -2765,7 +2763,8 @@
                     </el-form>
                     <el-form>
                         <div>
-                            <el-button @click="dialogClose()" icon="el-icon-back" type="info" offset="120">关 闭
+                            <el-button @click="contactDialogCloseCallback()" icon="el-icon-back" type="info"
+                                       offset="120">关 闭
                             </el-button>
                         </div>
                     </el-form>
@@ -2956,7 +2955,7 @@
                 emptyTableText: '被拆需求单未签核完毕，暂无机器记录！',
 
                 formLabelWidth: '100px',
-                longFormLabelWidth: '120px',
+                longFormLabelWidth: '125px',
 
                 mode: this.SIGN_MODE,
                 //			    isEdit: false,
@@ -5040,6 +5039,22 @@
                 // );
             },
 
+
+            lxdSignDisable(row) {
+                //超级管理员可以操作，或者当前合同属于“签核状态”、登陆的用户有权限签核并且合同currentStep处于属于该角色签核
+                //修改：不分先后，只要最后一步没有完成，都可以审核操作。
+
+                // if (_this.userInfo.role.id == 1) {
+                //     return false;
+                // }
+                //&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0
+                if (row.roleId == _this.userInfo.role.id && _this.lxdForm.contactForm.status.indexOf("审核中") >= 0 && row.shenHeEnabled) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+
             changeOrderContentDisable(item) {
                 return (
                     item.status == ORDER_CHANGED ||
@@ -5651,9 +5666,8 @@
                 }
             },
             //组建变更内容的类型，用逗号分隔
-            getLxdChangeTypes(){
-                if(_this.checkedChangeTypes==null||_this.checkedChangeTypes.length==0)
-                {
+            getLxdChangeTypes() {
+                if (_this.checkedChangeTypes == null || _this.checkedChangeTypes.length == 0) {
                     return "";
                 }
                 //内容之间 用逗号隔开
@@ -5690,6 +5704,73 @@
             contactDialogCloseCallback() {
                 _this.addLxdVisible = false;
 
+            },
+            isRowHasPermissionToShow(row) {
+                if (row.shenHeEnabled) {
+                    return row.roleId == this.userInfo.role.id;
+                }
+                return false;
+            },
+            // “同意”按钮
+            handleSubmitLxdSign(item) {
+                if (item.comment == null || item.comment == '') {
+                    showMessage(_this, '审核意见不能为空！', 0);
+                } else {
+                    item.user = _this.userInfo.name;
+                    item.date = new Date().format('yyyy-MM-dd hh:mm:ss');
+                    item.result = SIGN_APPROVE;
+                    for (let i = 0; i < _this.lxdForm.contactSign.signContent.length; i++) {
+                        if (_this.lxdForm.contactSign.signContent[i].number == item.number) {
+                            _this.lxdForm.contactSign.signContent[i] = item;
+                            break;
+                        }
+                    }
+                    $.ajax({
+                        url: HOST + 'contact/sign/update',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {contactSign: JSON.stringify(_this.lxdForm.contactSign)},
+                        success: function (res) {
+                            if (res.code == 200) {
+                                showMessage(_this, '提交审核成功', 1);
+                            } else {
+                                showMessage(_this, res.message, 0);
+                            }
+                            _this.addLxdVisible = false;
+                        }
+                    });
+                }
+            },
+
+            handleRejectLxdSign(item) {
+                if (item.comment == null || item.comment == '') {
+                    showMessage(_this, '审核意见不能为空！', 0);
+                } else {
+                    item.user = _this.userInfo.name;
+                    item.date = new Date().format('yyyy-MM-dd hh:mm:ss');
+                    item.result = SIGN_REJECT;
+                    for (let i = 0; i < _this.lxdForm.contactSign.signContent.length; i++) {
+                        if (_this.lxdForm.contactSign.signContent[i].number == item.number) {
+                            _this.lxdForm.contactSign.signContent[i] = item;
+                            break;
+                        }
+                    }
+                    //准备好数据，提交服务器
+                    $.ajax({
+                        url: HOST + 'contact/sign/update',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {contactSign: JSON.stringify(_this.lxdForm.contactSign)},
+                        success: function (res) {
+                            if (res.code == 200) {
+                                showMessage(_this, '驳回成功', 1);
+                            } else {
+                                showMessage(_this, res.message, 0);
+                            }
+                            _this.rejectSignResultVisible = false;
+                        }
+                    });
+                }
             },
         },
         computed: {

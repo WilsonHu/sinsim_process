@@ -417,7 +417,7 @@
                                             <div v-else>
                                                 <el-button
                                                         style="font-size: 14px; font-weight: bold"
-                                                        type="primary"
+                                                        type="info"
                                                         round
                                                         disabled
                                                         size="mini"
