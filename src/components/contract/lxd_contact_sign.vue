@@ -769,6 +769,7 @@
                     hopeDate: [
                         {  type: 'date',required: true, message: '请选择ECO希望完成日期!', trigger: 'change' }
                     ],
+                    //后面有更新
                     orderNum: [
                         {  type: 'string',required: false, message: '请填写订单号!', trigger: 'change' }
                     ],
@@ -779,7 +780,10 @@
 //                    contactContent: [
 //                        {  type: 'string',required: true, message: '请选择变更内容：!', trigger: 'change' }
 //                    ]
-                    
+                    //后面有更新
+                    contactContentElse: [
+                        {  type: 'string',required: false, message: '选择了其他变更，需填写具体内容!', trigger: 'change' }
+                    ],
                 },
                 submitSignResultVisible: false,
                 rejectSignResultVisible: false,
@@ -1613,8 +1617,11 @@
                     if (checkedChangeTypes.length != 0) {
                         if(_this.lxdForm.contactForm.contactContentElseIsChecked){
                             _this.lxdForm.contactForm.contactContentElseIsChecked = false
+                            _this.rules.contactContentElse[0].required = false;
+                            _this.lxdForm.contactForm.contactContentElse = "";
                         } else {
                             _this.lxdForm.contactForm.contactContentElseIsChecked =true;
+                            _this.rules.contactContentElse[0].required = true;
                         }
                     }
                 }
@@ -1638,6 +1645,7 @@
             isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
                 let res=_this.lxdForm.contactForm.contactType.indexOf("变更")>=0;
                 _this.rules.hopeDate[0].required=res;
+                _this.rules.orderNum[0].required=res;
                 return  res;
             },
 
