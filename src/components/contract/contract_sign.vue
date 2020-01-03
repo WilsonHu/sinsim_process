@@ -680,9 +680,6 @@
                                                     style="padding-bottom: 12px"
                                                     prop="orderSplitRecord.splitReason"
                                                     :readonly="changeOrderContentDisable(item.machineOrder)"
-                                                    :rules="[
-                                                                              { required: true, message: '拆单原因不能为空'},
-                                                                      ]"
                                             >
                                                 <el-input
                                                         v-model="item.orderSplitRecord.splitReason"
