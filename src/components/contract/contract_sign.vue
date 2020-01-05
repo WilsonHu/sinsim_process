@@ -140,9 +140,9 @@
                             </el-table-column>
                             <el-table-column align="center" prop="contractNum" min-width="85"
                                              label="合同号"></el-table-column>
-                            <el-table-column align="center" min-width="125" prop="customerName"
+                            <el-table-column align="center" min-width="110" prop="customerName"
                                              label="客户"></el-table-column>
-                            <el-table-column align="center" label="订单号" min-width="125">
+                            <el-table-column align="center" label="订单号" min-width="145">
                                 <template scope="scope">
                                     <div
                                             v-on:click="handleSign(scope.$index, scope.row)"
@@ -173,7 +173,7 @@
                                     <div>{{scope.row.updateTime != null ? formatDate(scope.row.updateTime) : ""}}</div>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作" width="200">
+                            <el-table-column align="center" label="操作" width="240">
                                 <template scope="scope">
                                     <el-tooltip placement="top">
                                         <div slot="content">审核</div>
@@ -749,6 +749,7 @@
                                                     type="danger"
                                                     size="small"
                                                     style="margin-top: 15px"
+                                                    v-if="showSplitOrChangeOrder(item.machineOrder.status)"
                                                     :disabled="item.machineOrder.machineNum <= 1 || !allContactListPassed(item.machineOrder.contactFormDetailList)"
                                                     @click="handleSplitOrder(item)"
                                             >拆单
@@ -759,6 +760,7 @@
                                                     type="danger"
                                                     size="small"
                                                     style="margin-top: 15px"
+                                                    v-if="showSplitOrChangeOrder(item.machineOrder.status)"
                                                     :disabled="!allContactListPassed(item.machineOrder.contactFormDetailList)"
                                                     @click="handleChangeOrder(item)"
                                             >改单
@@ -3428,12 +3430,14 @@
             //
             // },
 
-            canSplitOrChangeOrder(status) { //, lxdPassed
+          //是否显示拆单改单按钮
+            showSplitOrChangeOrder(status) {
                 if (
                     this.mode != this.SIGN_MODE &&
                     this.mode != this.CHANGE_MODE &&
                     this.mode != this.SPLIT_MODE &&
                     (status == ORDER_CHECKING_FINISHED || status == ORDER_SPLITED)
+                       && _this.contractForm.recordUser == _this.userInfo.account
                 ) {
                     return true;
                 } else {
