@@ -86,9 +86,9 @@
                                 <template scope="scope">{{scope.$index+startRow}}
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" min-width="125" prop="contactType"
+                            <el-table-column align="center" min-width="55" prop="contactType"
                                              label="类型"></el-table-column>
-                            <el-table-column align="center" label="订单号" min-width="125">
+                            <el-table-column align="center" label="订单号" min-width="100">
                                 <template scope="scope">
                                     <div   v-if="isBianGengLxd(scope.row)" style="font-weight: bold;">
                                         {{scope.row.orderNum}}
@@ -962,7 +962,13 @@
 
             notWritter()
             {
-              if (this.userInfo!= null) {
+                //审核开始了，不应该再修改除了审核部门之外内容，否则审核没意义。
+                //驳回的话，应该允许修改。
+                if(_this.lxdForm.contactSign.currentStep !="" && _this.lxdForm.contactForm.status.indexOf("联系单审核被拒") == -1 ){
+                    return true;
+                }
+                
+                if (this.userInfo!= null) {
                     return this.userInfo.account!=_this.lxdForm.contactForm.applicantPerson;
                 }
                 return true;
