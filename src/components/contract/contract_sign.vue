@@ -5820,7 +5820,7 @@
 
                 if (id == 0 || id == 5 || id == 6) {
                     result = 'divOrderStatusUnChecked';
-                } else if (id == 2) {
+                } else if (id == 2 || id == 7 || id == 8) {
                     result = 'divOrderStatusFinished';
                 } else if (id == 1 || id == 3 || id == 4) {
                     result = 'divOrderStatusChecking';

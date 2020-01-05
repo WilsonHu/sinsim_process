@@ -95,7 +95,9 @@ const OrderStatusList = [
     {value: 3, name: '已改单'},
     {value: 4, name: '已拆单'},
     {value: 5, name: '已驳回'},
-    {value: 6, name: '已取消'}
+    {value: 6, name: '已取消'},
+    {value: 7, name: '拆单前已审核联系单'},
+    {value: 8, name: '改单前已审核联系单'}
 ];
 //联系单状态
 const LxdStatusList = [
