@@ -1481,7 +1481,7 @@
                                     _this.lxdSignRoleList.push({
                                         roleId: '',
                                         name: '全部',
-                                        choosed:true
+                                        choosed:_this.filters.roleName==null||_this.filters.roleName.length==0,
                                     });
                                     var temp = JSON.parse(tmpList[i].processContent);
                                     if (temp != null && temp.length > 0) {
@@ -1706,8 +1706,7 @@
                 return;
             }
             _this.initSignProcesses();
-
-            _this.filters.applicantDepartment = this.userInfo.role.roleName;
+            _this.filters.roleName = this.userInfo.role.roleName;
             //获取用户所在部门
             _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
             _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
