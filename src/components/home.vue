@@ -375,7 +375,7 @@ export default {
                   url: HOST + 'domestic/trade/zone/getDomesticTradeZone',
                   type: 'POST',
                   dataType: 'json',
-                  data: { account: _this.userInfo.account },
+                  data: { account: _this.userinfo.account},
                   success: function(data) {
                       if (data.code == 200) {
                           for (let k = 0; k < data.data.size; k++) {
@@ -421,6 +421,8 @@ export default {
               success: function(data) {
                   if (data.code == 200) {
                       _this.toSignCount = data.data.total;
+                    //应该在获取合同待签核数之后再发起查询联系单待签核数
+                    _this.selectLxd();
                   }
               }
           });
@@ -452,7 +454,6 @@ export default {
     _this.userinfo = JSON.parse(sessionStorage.getItem('user'));
     _this.fetchUserRoleScope(this.userinfo.role.id); 
     _this.getUserDomesticTradeZoneListStr();
-    _this.selectLxd();
     _this.loadconfigData();
   },
   mounted: function() {
