@@ -1707,6 +1707,7 @@
             }
             _this.initSignProcesses();
 
+            _this.filters.applicantDepartment = this.userInfo.role.roleName;
             //获取用户所在部门
             _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
             _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
