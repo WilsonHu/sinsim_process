@@ -403,6 +403,7 @@ export default {
               return '';
           }
       },
+
       selectContracts() {
           var condition = {
               status: 1,
@@ -424,13 +425,34 @@ export default {
               }
           });
       },
+
+    selectLxd() {
+      var condition = {
+        status: 1, //LXD_CHECKING
+      };
+      if( _this.userinfo.role.roleName != "超级管理员") {
+        condition.currentStep = _this.userinfo.role.roleName;
+      }
+      $.ajax({
+        url: HOST + 'contact/form/selectContacts',
+        type: 'POST',
+        dataType: 'json',
+        data: condition,
+        success: function(data) {
+          if (data.code == 200) {
+            _this.toSignCount  = _this.toSignCount + data.data.total;
+          }
+        }
+      });
+    },
   },
   computed: {},
   filters: {},
   created: function() {
     _this.userinfo = JSON.parse(sessionStorage.getItem('user'));
-    _this.fetchUserRoleScope(this.userinfo.role.id);
+    _this.fetchUserRoleScope(this.userinfo.role.id); 
     _this.getUserDomesticTradeZoneListStr();
+    _this.selectLxd();
     _this.loadconfigData();
   },
   mounted: function() {
