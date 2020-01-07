@@ -5776,7 +5776,40 @@
                     });
                 }
             },
+
+          onAttachedDownload(item)
+          {
+            _this.selectedItem = copyObject(item);
+            $.ajax({
+              url: HOST + "contact/form/getLxdAttachedFile",
+              type: 'POST',
+              dataType: 'json',
+              data: {
+                contact_form_id: _this.selectedItem.id,
+              },
+              success: function (res) {
+                if (res.code == 200) {
+                  if (res.data.length > 0) {
+                    var downLoadURL = DOWNLOADPATH_LXD + res.data;
+                    _this.downloadFile(downLoadURL);
+                  }
+                }
+              }
+            })
+          },
+
+          downloadFile(url)
+          {
+            console.log("downloadFile url: " + url);
+            var form = $("<form>");
+            form.attr("style", "display:none");
+            form.attr("method", "get");
+            form.attr("action", url);
+            $("body").append(form);
+            form.submit();
+          },
         },
+	
         computed: {
             isShowChangeContactForm: function(){//test为计算属性，调用时和调用属性一样调用test即可
                 let res=_this.lxdForm.contactForm.contactType.indexOf("变更")>=0;
