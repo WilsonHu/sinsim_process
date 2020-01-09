@@ -200,7 +200,8 @@
                             <el-col :span="6">
                                 <el-form-item label="联系单号：" :label-width="longFormLabelWidth" prop="num">
                                     <el-input v-model="lxdForm.contactForm.num"
-                                              :disabled="notWritter()||mode!=ADD_MODE" clearable
+                                              disabled
+                                              clearable
                                               placeholder="联系单号："></el-input>
                                 </el-form-item>
                             </el-col>
@@ -1068,6 +1069,7 @@
             handleAdd() {
                 this.dialogTitle = '新增联系单';
                 _this.mode = this.ADD_MODE;
+                _this.lxdForm.contactForm.num = this.createLxdNum();
                 _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
                 _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
                 _this.lxdForm.contactForm.contactType = _this.lxdTypes[0];
@@ -1092,6 +1094,10 @@
                 _this.mode = _this.ADD_MODE;
 
                 this.resetStatus();
+            },
+
+            createLxdNum(){
+               return  new Date().format('yyyy-MMdd-hhmm') + "-" + this.userInfo.name;
             },
 
             handleSign(index, item) {
