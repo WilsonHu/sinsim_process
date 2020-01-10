@@ -1128,6 +1128,21 @@
                 }
             },
 
+            changeUIMode()
+            {
+                _this.isError = false;
+                _this.errorMsg = '';
+                if(_this.mode == _this.EDIT_MODE)
+                {
+                    _this.dialogTitle = '编辑联系单';
+                }else if(_this.mode == _this.SIGN_MODE)
+                {
+                    _this.dialogTitle = '签核联系单';
+                }else{
+                    _this.dialogTitle = '新增联系单';
+                }
+            },
+
             onDeleteChangeItem(item) {
                 for (var i = 0; i < _this.lxdForm.changeItemList.length; i++) {
                     if (_this.lxdForm.changeItemList[i]== item) {
@@ -1240,9 +1255,14 @@
                     success: function (res) {
                         _this.isError = res.code != 200;
                         if (!_this.isError) {
-                            _this.addLxdVisible = false;
+                            //_this.addLxdVisible = false;
                             showMessage(_this, '添加成功', 1);
-                            _this.selectContacts();
+                            //新需求:赋值主键ID,UI不关闭，继续可编辑，变成更新页面
+                            _this.lxdForm.contactForm.id = res.data; 
+                            _this.mode = _this.EDIT_MODE;  
+                            _this.changeUIMode();  
+                            _this.fetchLxdData(res.data);  
+                            //_this.selectContacts();
                         } else {
                             _this.errorMsg = res.message;
                             showMessage(_this, _this.errorMsg, 0);
@@ -1277,7 +1297,7 @@
                     success: function (res) {
                         _this.isError = res.code != 200;
                         if (!_this.isError) {
-                            _this.addLxdVisible = false;
+                            //_this.addLxdVisible = false;
                             showMessage(_this, '更新成功', 1);
                             _this.selectContacts();
                         } else {
