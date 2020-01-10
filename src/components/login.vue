@@ -114,9 +114,19 @@
                 //判断外网登陆权限
                 let isExtranet = false;
                 console.log("loginUrl:",loginUrl);
-                if (loginUrl === WANIP) {
+
+                /// 这个loginUrl 会 “not available”
+//                if (loginUrl == WANIP) {
+//                    isExtranet = true;
+//                }
+
+                if (window.location.host === WANIP) {
+                    console.log(this.ruleForm2.account + "外网登录");
                     isExtranet = true;
+                } else {
+                    console.log(this.ruleForm2.account + "内网登录");
                 }
+
                 this.isError = this.validateForm();
                 if (!_this.isError) {
                     $.ajax({

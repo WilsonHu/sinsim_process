@@ -8,9 +8,12 @@ var DOWNLOADPATH = IP + "/oll/";
 var DOWNLOADPATH_LXD = IP + "/lxdAttached/";
 var SOCKECT_ADDR = "ws://127.0.0.1:9998";//CRHService IP address(Windows service)
 var SYSTEMNAME = "SinSim流程管理系统";
+
 //var WANIP = '115.231.6.43/eservice'//外网ip
 // var WANIP = '47.101.141.182/eservice';//外网ip
-var WANIP = '47.101.141.182:88';//外网ip
+//var WANIP = '47.101.141.182:88';
+var WANIP = 'eservice-tech.cn';
+//var WANIP = '115.231.6.43:88'; ////
 
 var EveryPageNum = 10;
 var MaxUpDownItems = 4;
