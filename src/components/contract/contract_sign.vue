@@ -4605,8 +4605,16 @@
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
-                                _this.addContractVisible = false;
+                                //_this.addContractVisible = false;
                                 _this.editContract = '';
+                                _this.isError = false;
+                                _this.errorMsg = '';
+                                _this.dialogTitle = '编辑合同';
+                                _this.mode = _this.EDIT_MODE;
+                                _this.contractForm.id = res.data;
+                                _this.fetchContractData(_this.contractForm.id);
+                                _this.fetchContractSignData(_this.contractForm.id);
+                                _this.fetchMachineOrdersData(_this.contractForm.id);
                                 showMessage(_this, '添加成功', 1);
                                 _this.selectContracts();
                             } else {

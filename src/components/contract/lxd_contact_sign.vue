@@ -1262,7 +1262,7 @@
                             _this.mode = _this.EDIT_MODE;  
                             _this.changeUIMode();  
                             _this.fetchLxdData(res.data);  
-                            //_this.selectContacts();
+                            _this.selectContacts();
                         } else {
                             _this.errorMsg = res.message;
                             showMessage(_this, _this.errorMsg, 0);
