@@ -1628,9 +1628,9 @@
 
             getLxdTypeLabel(type) {
                 if(type == '变更') {
-                    return "变更主题";
+                    return "联络主题：";
                 } else {
-                    return "工作主题";
+                    return "工作主题：";
                 }
             },
 
