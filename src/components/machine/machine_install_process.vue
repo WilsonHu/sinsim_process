@@ -61,7 +61,11 @@
  		       
             </el-row>
         </el-form>
-        <el-table v-loading="loadingUI" element-loading-text="获取数据中..." :data="tableData" border empty-text="暂无数据..." ref="singleTable" highlight-current-row show-overflow-tooltip="true" style="width: 100%; ">
+        <el-table v-loading="loadingUI" element-loading-text="获取数据中..." 
+            :data="tableData" border empty-text="暂无数据..." 
+            ref="singleTable" highlight-current-row show-overflow-tooltip="true" 
+            :row-class-name="tableRowClassName"
+            style="width: 100%; ">
             <el-table-column width="75" align="center" label="序号">
                 <template scope="scope">
                     <div :style="scope.row.warning|filterWaring">
@@ -69,20 +73,12 @@
                     </div>
                 </template>
             </el-table-column>
-
-            <!-- <el-table-column
-                        align="center"
-                        prop="machineStrId"
-                        label="系统编号">
-                </el-table-column> -->
+ 
             <el-table-column align="center" prop="nameplate" label="机器编号">
                 <template scope="scope">
-                    <div v-if="scope.row.isUrgent==1 && scope.row.status!=4" style="color: darkorange">
-                            {{scope.row.nameplate}}
-                        </div>
-                        <div v-else>
-                            {{scope.row.nameplate}}
-                        </div>
+                    <div>
+                         {{scope.row.nameplate}}
+                    </div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -804,7 +800,12 @@
 
         },
         methods: {
-
+            tableRowClassName({row, rowIndex}) {
+                if (row.isUrgent==1 && row.status!=4) {
+                    return 'urgent-row';
+                } 
+                return '';
+            },
             getSummaries() {
                 return _this.totalRecords;
             },
@@ -2131,6 +2132,10 @@
         margin-top: 5px;
         margin-left: 10px;
     }
+    .el-table .urgent-row {
+        background: yellow;
+    }
+
 
 </style>
 
