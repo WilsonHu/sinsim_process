@@ -4606,15 +4606,8 @@
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
                                 //_this.addContractVisible = false;
-                                _this.editContract = '';
-                                _this.isError = false;
-                                _this.errorMsg = '';
-                                _this.dialogTitle = '编辑合同';
-                                _this.mode = _this.EDIT_MODE;
                                 _this.contractForm.id = res.data;
-                                _this.fetchContractData(_this.contractForm.id);
-                                _this.fetchContractSignData(_this.contractForm.id);
-                                _this.fetchMachineOrdersData(_this.contractForm.id);
+                                _this.resetAfterSubmit();
                                 showMessage(_this, '添加成功', 1);
                                 _this.selectContracts();
                             } else {
@@ -4794,10 +4787,10 @@
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
-                              // 改单时，是新增订单，所以要关闭，否则再次点击保存又会新增一个订单。
-                                _this.addContractVisible = false;
-                                _this.editContract = '';
-                                showMessage(_this, '保存成功', 1);
+                                // 改单时，是新增订单，所以要关闭，否则再次点击保存又会新增一个订单。
+                                //_this.addContractVisible = false;
+                                _this.resetAfterSubmit();
+                                showMessage(_this, '保存改单成功', 1);
                                 _this.selectContracts();
                             } else {
                                 _this.errorMsg = res.message;
@@ -4885,10 +4878,9 @@
                         success: function (res) {
                             _this.isError = res.code != 200;
                             if (!_this.isError) {
-                              //  拆单时，同改单时一样，是新增订单，所以要关闭，否则再次点击保存又会新增一个订单。
-                                _this.addContractVisible = false;
-                                _this.editContract = '';
-                                showMessage(_this, '保存成功', 1);
+                                //_this.addContractVisible = false;
+                               _this.resetAfterSubmit();
+                                showMessage(_this, '保存拆单成功', 1);
                                 _this.selectContracts();
                             } else {
                                 _this.errorMsg = res.message;
@@ -4904,6 +4896,24 @@
                         _this.splitButtonDisabled = false;
                     }, 2000);
                 }
+            },
+
+            resetAfterSubmit()
+            {
+                //新需求，保存操作之后，不需要关闭页面。
+                _this.isError = false;
+                _this.errorMsg = '';
+                _this.dialogTitle = '编辑合同';
+                _this.mode = _this.EDIT_MODE;
+                _this.editContract=_this.contractForm;
+                _this.fetchContractData(_this.contractForm.id);
+                _this.fetchContractSignData(_this.contractForm.id);
+                _this.fetchMachineOrdersData(_this.contractForm.id);
+                setTimeout(() => {
+                    _this.tabIndex=0;
+                    this.editableTabsValue = this.requisitionForms[_this.tabIndex].name;
+                }, 1000);
+                
             },
 
             onSubmitOrderSign(item, signObj) {
