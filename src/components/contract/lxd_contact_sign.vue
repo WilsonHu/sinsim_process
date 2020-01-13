@@ -275,7 +275,7 @@
 
                                 <el-row>
                                     <el-col  :span="20" style="margin-top:10px;">
-                                        <el-form-item label="变更主题：" :label-width="longFormLabelWidth" prop="contactTitle">
+                                        <el-form-item :label="getLxdTypeLabel(lxdForm.contactForm.contactType)" :label-width="longFormLabelWidth" prop="contactTitle">
                                             <el-input type="textarea" v-model="lxdForm.contactForm.contactTitle"  clearable
                                                       :rows="1" :disabled="notWritter()||mode==SIGN_MODE"></el-input>
                                         </el-form-item>
@@ -318,7 +318,7 @@
 
                                 <el-row v-show="isShowWorkContactForm">
                                     <el-col :span="20" style="margin-top:10px;">
-                                        <el-form-item label="变更内容：" :label-width="longFormLabelWidth" prop="contactContent">
+                                        <el-form-item label="工作内容：" :label-width="longFormLabelWidth" prop="contactContent">
                                                  <el-input type="textarea" v-model="lxdForm.contactForm.contactContent"
                                                       :rows="5"  :disabled="notWritter()||mode==SIGN_MODE">
                                                  </el-input>
@@ -1623,6 +1623,14 @@
                     return true;
                 } else {
                     return false;
+                }
+            },
+
+            getLxdTypeLabel(type) {
+                if(type == '变更') {
+                    return "变更主题";
+                } else {
+                    return "工作主题";
                 }
             },
 

@@ -2564,7 +2564,7 @@
                                     </el-form-item>
                                 </el-col>
 
-                                <el-col :span="6" style="margin-left:20px;" v-show="isShowChangeContactForm">
+                                <el-col :span="6" :offset="1" v-show="isShowChangeContactForm">
                                     <el-form-item label="订单号: " :label-width="longFormLabelWidth" prop="orderNum">
                                         <el-input
                                                 disabled
