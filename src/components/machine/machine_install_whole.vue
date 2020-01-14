@@ -186,7 +186,7 @@
                             </el-select>
                         </el-form-item >
                     </el-col >
-                    <el-col :span="8">
+                    <el-col :span="8" :offset="1">
                         <el-form-item label="日期：" :label-width="formLabelWidth">
                             <el-date-picker
                                     v-model="addForm.installDatePlan"
@@ -204,16 +204,8 @@
                             <el-input v-model="addForm.orderNum" @change="onOrderChanged(addForm.orderNum)" clearable></el-input>
                         </el-form-item>
                     </el-col >
-                    <el-col :span="8">
-
-                        <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                            <el-select v-model="addForm.nameplate" placeholder="根据订单号自动提供选择" clearable >
-                                <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4" >
+                  
+                    <el-col :span="4" :offset="1">
                         <el-form-item label="头数："  :label-width="formLabelWidthSmall">
                             <el-input v-model="addForm.headNum" clearable>
                             </el-input>
@@ -224,6 +216,14 @@
                             <el-input v-model="addForm.needleNum" @change="onChange" clearable></el-input>
                         </el-form-item >
                     </el-col >
+                    <el-col :span="24">
+                        <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
+                            <el-select v-model="addForm.nameplate" placeholder="根据订单号自动提供选择" multiple clearable >
+                                <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="23" :offset="1">
                         <el-form-item label="备注信息：" prop="desc">
                             <el-input type="textarea" v-model="addForm.cmtSend" :rows="5"></el-input>
@@ -231,7 +231,7 @@
                     </el-col>
                 </el-row>
 
-                <el-col :span="4" :offset ="21">
+                <el-col :span="4" :offset ="21" style="margin-bottom:10px;">
                     <el-button
                             type="primary"
                             class="el-icon-plus"
@@ -316,7 +316,7 @@
             <span  slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
                 <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
                 <el-button type="primary" @click="onAdd('TRUE')" icon="el-icon-check">立刻排产</el-button >
-                <el-button type="primary" @click="onAdd()" icon="el-icon-check">确定排产</el-button >
+                <el-button type="success" @click="onAdd()" icon="el-icon-check">确定排产</el-button >
             </span >
 
         </el-dialog >
@@ -334,20 +334,12 @@
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8" >
+                    <el-col :span="8" :offset="1">
                         <el-form-item label="订单号：" :label-width="formLabelWidth">
                             <el-input v-model="modifyForm.orderNum" @change="onOrderChanged(addForm.orderNum)"  disabled></el-input>
                         </el-form-item>
                     </el-col >
-                    <el-col :span="8">
-
-                        <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                            <el-select v-model="modifyForm.nameplate" placeholder="根据订单号自动提供选择" disabled >
-                                <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
+                   
                     <el-col :span="8" >
                         <el-form-item label="安装组："  :label-width="formLabelWidth">
                             <el-select v-model="modifyForm.groupName" placeholder="安装组" disabled>
@@ -356,12 +348,20 @@
                             </el-select>
                         </el-form-item >
                     </el-col >
-                    <el-col :span="8" >
+                    <el-col :span="8" :offset="1">
                         <el-form-item label="头数："  :label-width="formLabelWidth">
                             <el-input v-model="modifyForm.headNum" disabled>
                             </el-input>
                         </el-form-item >
                     </el-col >
+                    <el-col :span="24">
+                        <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
+                            <el-select v-model="modifyForm.nameplate" placeholder="根据订单号自动提供选择" multiple disabled>
+                                <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="23" :offset="1">
                         <el-form-item label="备注信息：" prop="desc">
                             <el-input type="textarea" v-model="modifyForm.cmtSend" :rows="5"></el-input>
@@ -586,7 +586,7 @@
                                     success: function (data) {
                                         if (data.code == 200) {
                                             _this.search();
-                                             _this.expanddFormList();
+                                            _this.expanddFormList();
 
                                         } else {
                                             _this.isError = true;
