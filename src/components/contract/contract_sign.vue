@@ -3436,7 +3436,8 @@
                     this.mode != this.SIGN_MODE &&
                     this.mode != this.CHANGE_MODE &&
                     this.mode != this.SPLIT_MODE &&
-                    (status == ORDER_CHECKING_FINISHED || status == ORDER_SPLITED)
+                    (status == ORDER_CHECKING_FINISHED || status == ORDER_SPLITED
+                    || status == ORDER_SPLIT_FINISHED || status == ORDER_CHANGE_FINISHED)  //允许二次多次改单拆单
                        && _this.contractForm.recordUser == _this.userInfo.account
                 ) {
                     return true;

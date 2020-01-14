@@ -655,11 +655,13 @@
                     return;
                 }
                 $.ajax({
-                    url: HOST + "machine/selectMachines",
+                    url: HOST + "machine/selectMachinesNotInstallPlanned",
                     type: 'POST',
                     dataType: 'json',
                     data: {
                         orderNum: orderNum,
+			            //要排除已经对该工序排产的机器。即如果该机器已经排产了该工序，就不用显示在列表里。
+                        installGroupId: _this.addForm.installGroupId, 
                         is_fuzzy: "false",
                     },
                     success: function (res) {
