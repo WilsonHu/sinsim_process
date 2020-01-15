@@ -174,7 +174,7 @@
                     </el-pagination>
                 </div>
             </el-col>
-        <el-dialog title="新增总装排产" :visible.sync="addDialogVisible" append-to-body width="70%">
+        <el-dialog title="新增总装排产" :visible.sync="addDialogVisible" @closed="onAddClosed" append-to-body width="70%">
             <el-form :model="addForm" >
                 <el-row >
                     <el-col :span="8" >
@@ -218,7 +218,7 @@
                     </el-col >
                     <el-col :span="24">
                         <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                            <el-select v-model="addForm.nameplate" placeholder="根据订单号自动提供选择" multiple clearable >
+                            <el-select v-model="addForm.machineList" placeholder="根据订单号自动提供选择" multiple clearable >
                                 <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
                                 </el-option>
                             </el-select>
@@ -356,7 +356,7 @@
                     </el-col >
                     <el-col :span="24">
                         <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                            <el-select v-model="modifyForm.nameplate" placeholder="根据订单号自动提供选择" multiple disabled>
+                            <el-select v-model="modifyForm.machineList" placeholder="根据订单号自动提供选择" multiple disabled>
                                 <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
                                 </el-option>
                             </el-select>
@@ -536,84 +536,34 @@
                 return iserror;
             },
 
-            expanddFormList(){
-                _this.addFormList.installPlanWholeContent.push({
-                    orderNum: this.addForm.orderNum,
-                    orderId: this.addForm.orderId,
-                    nameplate: this.addForm.nameplate,
-                    machineId: this.addForm.machineId,
-                    installGroupId: this.addForm.installGroupId,
-                    needleNum: this.addForm.needleNum,
-                    headNum: this.addForm.headNum,
-                    cmtSend: this.addForm.cmtSend,
-                    installDatePlan: this.addForm.installDatePlan,
-                    type:INSTALLTYPE.ALL,
-                });
-            },
-            //在添加排产时，先查询本地列表，再向服务器查, 这个排产，是否已经排过了。
-            checkTheInstallPlanIsSet() {
-                _this.isError = this.validInstallPlanInfo(_this.addForm, false);
-                if (_this.isError) {
-//                    showMessage(_this, _this.errorMsg, 0);
-                } else {
-                    _this.isError = this.checkIsExistInCurrentList(_this.addForm.nameplate, _this.addForm.installGroupId);
-                    if(_this.isError){
-                        console.log("===" +  this.errorMsg );
-                        return _this.isError;
-                    }
-                    _this.addForm.machineId = null;
-                    //step1. 根据nameplate获取机器machineId，
-                    $.ajax({
-                        url: HOST + "machine/selectMachinesByNameplate",
-                        type: 'POST',
-                        dataType: 'json',
-                        async: false,
-                        data: {
-                            nameplate: _this.addForm.nameplate,
-                        },
-                        success: function (res) {
-                            if (res.code == 200) {
-                                _this.addForm.machineId = res.data.id;
-
-                                // step2 再向服务器查询
-                                $.ajax({
-                                    url: HOST + "install/plan/checkTheInstallPlanIsSet",
-                                    type: 'POST',
-                                    dataType: 'json',
-                                    data: {
-                                        "installPlan": JSON.stringify(_this.addForm)
-                                    },
-                                    success: function (data) {
-                                        if (data.code == 200) {
-                                            _this.search();
-                                            _this.expanddFormList();
-
-                                        } else {
-                                            _this.isError = true;
-                                            _this.errorMsg = data.message;
-                                        }
-                                    },
-                                    error: function (data) {
-                                        _this.errorMsg = '服务器访问出错！';
-                                    }
-                                })
-                            } else {
-                                _this.isError = true;
-                                _this.errorMsg = data.message;
-                                console.log("fail");
-                            }
-                        },
-                        error: function (data) {
-                            _this.errorMsg = '服务器访问出错！';
+            handleAddInstallPlanWhole(){
+                if(_this.addForm.machineList==null||_this.addForm.machineList.length==0)
+                {
+                    showMessage(_this, '请选择机器进行添加', 0);
+                    return;
+                }
+                _this.addForm.machineList.forEach(element => {
+                    let id='';
+                    _this.machineList.forEach(m=>{
+                        if(m.nameplate==element)
+                        {
+                            id = m.id;
                         }
                     });
-                }
-                return _this.isError;
-
-            },
-            handleAddInstallPlanWhole(){
-                _this.isError = this.checkTheInstallPlanIsSet();
-
+                    let planItem={
+                        orderNum: this.addForm.orderNum,
+                        orderId: this.addForm.orderId,
+                        nameplate: element,
+                        machineId: id,
+                        installGroupId: this.addForm.installGroupId,
+                        needleNum: this.addForm.needleNum,
+                        headNum: this.addForm.headNum,
+                        cmtSend: this.addForm.cmtSend,
+                        installDatePlan: this.addForm.installDatePlan,
+                        type:INSTALLTYPE.ALL,
+                    };
+                    _this.addFormList.installPlanWholeContent.push(planItem);
+                });
             },
 
 
@@ -651,7 +601,7 @@
                 //机器未设置铭牌号的情况下，获取的铭牌号为空。
                 _this.machineList = [];
                 if (isStringEmpty(orderNum)) {
-                    _this.addForm.nameplate = '';
+                    _this.addForm.machineList = [];
                     return;
                 }
                 $.ajax({
@@ -733,69 +683,55 @@
                 _this.addFormList.installPlanWholeContent = [];
             },
 
+            onAddClosed()
+            {
+                _this.isError = false;
+                _this.errorMsg = '';
+                _this.addFormList.installPlanWholeContent = [];
+                _this.addForm={
+                    installGroupId:'',
+                    installDatePlan:'',
+                    orderNum:'',
+                    headNum:'',
+                    needleNum:'',
+                    machineList:[],
+                    cmtSend:'',
+                };
+            },
 
             onAdd(sendNow)
             {
-                _this.addForm.machineId = null;
-                //step1. 根据nameplate获取机器machineId，
-                $.ajax({
-                    url: HOST + "machine/selectMachinesByNameplate",
-                    type: 'POST',
-                    dataType: 'json',
-                    async: false,
-                    data: {
-                        nameplate: _this.addForm.nameplate,
-                    },
-                    success: function (res) {
-                        if (res.code == 200) {
-                            _this.addForm.machineId = res.data.id;
-
-                            var urlInstallPlanAdd;
-                            if(sendNow){
-                                urlInstallPlanAdd = "install/plan/addAndsendInstallPlanNow";
+                var urlInstallPlanAdd;
+                if(sendNow){
+                    urlInstallPlanAdd = "install/plan/addAndsendInstallPlanNow";
+                } else {
+                    urlInstallPlanAdd = "install/plan/add";
+                }
+                // step2 再逐一添加计划
+                for(var k = 0; k< _this.addFormList.installPlanWholeContent.length; k++){
+                    $.ajax({
+                        url: HOST + urlInstallPlanAdd,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            "installPlan": JSON.stringify(_this.addFormList.installPlanWholeContent[k])
+                        },
+                        success: function (data) {
+                            if (data.code == 200) {
+                                _this.search();
+                                _this.addDialogVisible = false;
+                                showMessage(_this, '添加成功', 1);
                             } else {
-                                urlInstallPlanAdd = "install/plan/add";
+                                _this.isError = true;
+                                _this.errorMsg = data.message;
+                                _this.addForm.installPlanWholeContent = [];
                             }
-                            // step2 再逐一添加计划
-                            for(var k = 0; k< _this.addFormList.installPlanWholeContent.length; k++){
-                                $.ajax({
-//                                    url: HOST + "install/plan/addInstallPlanList",
-                                    url: HOST + urlInstallPlanAdd,
-                                    type: 'POST',
-                                    dataType: 'json',
-                                    data: {
-                                        "installPlan": JSON.stringify(_this.addFormList.installPlanWholeContent[k])
-                                    },
-                                    success: function (data) {
-                                        if (data.code == 200) {
-                                            _this.search();
-                                            _this.addDialogVisible = false;
-                                            showMessage(_this, '添加成功', 1);
-                                        } else {
-                                            _this.isError = true;
-                                            _this.errorMsg = data.message;
-
-                                            _this.addForm.installPlanWholeContent = [];
-                                        }
-                                    },
-                                    error: function (data) {
-                                        _this.errorMsg = '服务器访问出错！';
-                                    }
-                                })
-                            }
-
-                        } else {
-                            _this.isError = true;
-                            _this.errorMsg = data.message;
-                            console.log("fail");
+                        },
+                        error: function (data) {
+                            _this.errorMsg = '服务器访问出错！';
                         }
-                    },
-                    error: function (data) {
-                        _this.errorMsg = '服务器访问出错！';
-                    }
-                });
-
-
+                    })
+                }
             },
 
             onModify() {
