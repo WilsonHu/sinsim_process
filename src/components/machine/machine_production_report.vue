@@ -156,7 +156,7 @@
                 filters: {
                     taskName: '',
                     orderNum: '',
-                    selectDate: '',
+                    selectDate: [new Date(), new Date()], //默认查询当天，否则数据量很大，比如此时点击导出到表格，
                     nameplate:'',
                 },
                 tableData: [],
