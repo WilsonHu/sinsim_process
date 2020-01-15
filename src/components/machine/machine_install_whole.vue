@@ -37,7 +37,7 @@
 
                     <el-col :span="2" :offset="2" align="center"  >
                         <el-form-item label="合计:">
-                            {{getSummaries()}}
+                           <sapn style="float:left;font-size:20px;color:red;"> {{getSummaries()}}</sapn>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4" :offset="10">
@@ -295,7 +295,7 @@
                                     <el-tooltip placement="left" content="删除">
                                         <el-button
                                                 size="mini"
-                                                type="primary"
+                                                type="danger"
                                                 icon="el-icon-delete"
                                                 @click="deleteWithItem(scope.$index)">
                                         </el-button>
@@ -356,7 +356,7 @@
                     </el-col >
                     <el-col :span="24">
                         <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                            <el-select v-model="modifyForm.machineList" placeholder="根据订单号自动提供选择" multiple disabled>
+                            <el-select v-model="modifyForm.nameplate" placeholder="根据订单号自动提供选择"  disabled>
                                 <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
                                 </el-option>
                             </el-select>
