@@ -205,6 +205,11 @@
                                               placeholder="联系单号："></el-input>
                                 </el-form-item>
                             </el-col>
+                            <el-col :span="10">
+                            <el-form-item label="(保存联系单时确定流水号)"   >
+
+                            </el-form-item>
+                        </el-col>
                             <el-col :span="4" :offset="8">
                                 <el-button
                                     style="float:right;margin-right:30px;"
@@ -271,7 +276,9 @@
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
-                                    <el-col :span="6"  v-show="isShowChangeContactForm">
+                                    <el-col :span="6"  v-show="isShowChangeContactForm
+                                                                && (lxdForm.contactForm.orderNum != null)
+                                                                && (lxdForm.contactForm.orderNum.length != 0)">
                                              <el-button type="warning" plain size="medium"
                                                         @click="handleViewContract(lxdForm.contactForm.orderNum)">查看订单 {{lxdForm.contactForm.orderNum}}</el-button>
 
@@ -1791,7 +1798,83 @@
             },
 
             createLxdNum(){
-               return  new Date().format('yyyy-MMdd-hhmm') + "-" + this.userInfo.name;
+                let department = "";
+                switch (this.lxdForm.contactForm.applicantDepartment) {
+                    case "超级管理员":
+                        department = "Admin";
+                        break;
+                    case "销售部经理":
+                        switch (this.userInfo.marketGroupName) {
+                            case "内贸部":
+                                department = "内";
+                                break;
+                            case "外贸一部":
+                                department = "外1";
+                                break;
+                            case "外贸二部":
+                                department = "外2";
+                                break;
+                        }
+                        break;
+                    case "销售员":
+                        department = "销";
+                        break;
+                    case "生产部管理员":
+                    case "生产部经理":
+                        department = "生";
+                        break;
+                    case "总经理":
+                        department = "总";
+                        break;
+                    case "总经理助理":
+                        department = "总助";
+                        break;
+
+                    case "技术部经理":
+                    case "技术员":
+                        department = "技";
+                        break;
+
+                    case "质检员":
+                    case "质检组长":
+                        department = "质";
+                        break;
+
+
+                    case "PMC":
+                        department = "P";
+                        break;
+
+                    case "成本核算员":
+                        department = "成";
+                        break;
+
+                    case "财务经理":
+                    case "财务会计":
+                        department = "技";
+                        break;
+
+                    case "采购人员":
+                    case "采购经理":
+                        department = "采";
+                        break;
+                    case "研发部经理":
+                        department = "研";
+                        break;
+                    case "品质部经理":
+                        department = "品";
+                        break;
+                    default:
+                        department = "其";
+                        break;
+
+
+                }
+                //流水号： 部门和年份为单位 比如 20-外1-111 表示2020年外贸一部的第111个联系单
+                //为允许多个联系单同时在编辑，把流水号后端放在生成。也避免了点击了新建联系单但是又没保存的情况
+                let noOfTheDepThisYear = 0;
+                //部门首字+年份（20）+部门 + 部门内部流水号
+               return  department + new Date().format('yy') + "-" + "xxx";
             },
 
             handleSign(index, item) {
