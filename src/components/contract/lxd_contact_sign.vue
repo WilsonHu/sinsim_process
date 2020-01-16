@@ -741,8 +741,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="客户：" :label-width="formLabelWidth">
                                         <el-input
-
-                                                readonly
+                                                disabled
                                                 v-model="form.customer"
                                                 placeholder="客户"
                                         ></el-input>
@@ -751,7 +750,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="国家：" :label-width="formLabelWidth">
                                         <el-select
-                                                readonly
+                                                disabled
                                                 v-model="form.country"
                                                 clearable
                                                 placeholder="请选择">
@@ -767,7 +766,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="商标：" :label-width="formLabelWidth">
                                         <el-input
-                                                readonly
+                                                disabled
                                                 v-model="form.brand"
                                                 placeholder="商标"
                                         ></el-input>
@@ -776,7 +775,7 @@
                                 <el-col :span="6">
                                     <el-form-item label="机型：" :label-width="formLabelWidth">
                                         <el-select
-                                                readonly
+                                                disabled
                                                 style="width: 100%"
                                                 v-model="form.machineType.id"
                                                 clearable
@@ -792,7 +791,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="针数：" :label-width="formLabelWidth">
                                         <el-input style="float: left;"
-                                                  readonly
+                                                  disabled
                                                   v-model="form.needleNum">
 
                                         </el-input>
@@ -801,7 +800,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="头数：" :label-width="formLabelWidth">
                                         <el-input style="float: left"
-                                                  readonly
+                                                  disabled
                                                   v-model="form.headNum">
                                         </el-input>
                                     </el-form-item>
@@ -810,14 +809,14 @@
                                     <el-form-item label="头距：" :label-width="formLabelWidth">
                                         <el-input style="float: left"
                                                   v-model="form.headDistance"
-                                                  readonly>
+                                                  disabled>
                                         </el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-form-item label="X行程：" :label-width="formLabelWidth">
                                         <el-input
-                                                readonly
+                                                disabled
                                                 v-model="form.xDistance"
                                                 placeholder="X行程"
                                         ></el-input>
@@ -826,7 +825,7 @@
                                 <el-col :span="6" :offset="0">
                                     <el-form-item label="Y行程：" :label-width="formLabelWidth">
                                         <el-input
-                                                readonly
+                                                disabled
                                                 v-model="form.yDistance"
                                                 placeholder="Y行程"
                                         ></el-input>
@@ -2465,12 +2464,11 @@
                     data: {order_num: orderNum},
                     success: function (res) {
                         if (res.code == 200) {
-                            this.form = copyObject(res.data.list[0]);
+                            _this.form = copyObject(res.data.list[0]);
 
                             /// todo : 数据已获取，但是界面上的 form的订单信息显示为空
-                            console.log("form.machineNum: " + this.form.machineNum);
-                            console.log("form.contractNum: " + this.form.contractNum);
-//                            _this.addContractVisible = true;
+                            console.log("form.machineNum: " + _this.form.machineNum);
+                            console.log("form.contractNum: " + _this.form.contractNum);
                         } else {
                             console.log("getContactAllData:"+res.message);
                         }
