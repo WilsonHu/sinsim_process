@@ -357,6 +357,10 @@ const PCModeList =
         {
             value: 8,
             text: "A15"
+        },
+        {
+            value: 9,
+            text: "定制"
         }
 
     ];
