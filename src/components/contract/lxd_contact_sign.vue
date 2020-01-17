@@ -1798,7 +1798,7 @@
 
             createLxdNum(){
                 let department = "";
-                switch (this.lxdForm.contactForm.applicantDepartment) {
+                switch (this.userInfo.role.roleName) {
                     case "超级管理员":
                         department = "Admin";
                         break;
@@ -1849,8 +1849,9 @@
                         break;
 
                     case "财务经理":
+                    case "财务部经理":
                     case "财务会计":
-                        department = "技";
+                        department = "财";
                         break;
 
                     case "采购人员":
@@ -1869,11 +1870,11 @@
 
 
                 }
-                //流水号： 部门和年份为单位 比如 20-外1-111 表示2020年外贸一部的第111个联系单
+                //流水号： 部门和年份为单位 比如 外1-20-111 表示 外贸一部 2020年 第111个联系单
                 //为允许多个联系单同时在编辑，把流水号后端放在生成。也避免了点击了新建联系单但是又没保存的情况
                 let noOfTheDepThisYear = 0;
-                //部门首字+年份（20）+部门 + 部门内部流水号
-               return  department + new Date().format('yy') + "-" + "xxx";
+                //部门代表字 + 年份（2位） + 部门内部流水号
+               return  department + "-" + new Date().format('yy') + "-" + "xxx";
             },
 
             handleSign(index, item) {
@@ -2465,12 +2466,8 @@
                     success: function (res) {
                         if (res.code == 200) {
                             _this.form = copyObject(res.data.list[0]);
-
-                            /// todo : 数据已获取，但是界面上的 form的订单信息显示为空
-                            console.log("form.machineNum: " + _this.form.machineNum);
-                            console.log("form.contractNum: " + _this.form.contractNum);
                         } else {
-                            console.log("getContactAllData:"+res.message);
+                            console.log("getMachineOrderData err:"+res.message);
                         }
                     }
                 });
