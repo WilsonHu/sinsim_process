@@ -37,7 +37,7 @@
 
                     <el-col :span="2" :offset="2" align="center"  >
                         <el-form-item label="合计:">
-                           <sapn style="float:left;font-size:20px;color:red;"> {{getSummaries()}}</sapn>
+                           <span style="float:left;font-size:20px;color:red;"> {{getSummaries()}}</span>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4" :offset="10">
@@ -179,7 +179,7 @@
                 <el-row >
                     <el-col :span="8" >
                         <el-form-item label="安装组："  :label-width="formLabelWidth">
-                            <el-select v-model="addForm.installGroupId" placeholder="安装组" clearable>
+                            <el-select v-model="addForm.installGroupId" placeholder="安装组" clearable  @change="onLoadMachineList()">
                                 <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id"
                                            @change="onInstallGroupChanged()">
                                 </el-option>
@@ -218,7 +218,7 @@
                     </el-col >
                     <el-col :span="24">
                         <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
-                            <el-select v-model="addForm.machineList" placeholder="根据订单号自动提供选择" multiple clearable >
+                            <el-select v-model="addForm.machineList" placeholder="根据订单号自动提供选择" multiple clearable>
                                 <el-option v-for="item in machineList" :key="item.id" :label="item.nameplate" :value="item.nameplate" >
                                 </el-option>
                             </el-select>
@@ -336,13 +336,13 @@
                     </el-col>
                     <el-col :span="8" :offset="1">
                         <el-form-item label="订单号：" :label-width="formLabelWidth">
-                            <el-input v-model="modifyForm.orderNum" @change="onOrderChanged(addForm.orderNum)"  disabled></el-input>
+                            <el-input v-model="modifyForm.orderNum" @change="onOrderChanged(modifyForm.orderNum)"  disabled></el-input>
                         </el-form-item>
                     </el-col >
                    
                     <el-col :span="8" >
                         <el-form-item label="安装组："  :label-width="formLabelWidth">
-                            <el-select v-model="modifyForm.groupName" placeholder="安装组" disabled>
+                            <el-select v-model="modifyForm.groupName" placeholder="安装组" disabled @change="onLoadMachineList()">
                                 <el-option v-for="item in groupList" :key="item.id" :label="item.groupName" :value="item.id">
                                 </el-option>
                             </el-select>
@@ -596,20 +596,26 @@
                     }
 
                 });
+                _this.onLoadMachineList();
+                
+            },
 
+            onLoadMachineList()
+            {
                 // 获取订单的机器(包含铭牌号）
                 //机器未设置铭牌号的情况下，获取的铭牌号为空。
                 _this.machineList = [];
-                if (isStringEmpty(orderNum)) {
-                    _this.addForm.machineList = [];
-                    return;
-                }
+                _this.addForm.machineList=[];
+                // if (isStringEmpty(_this.addForm.orderNum)) {
+                //     _this.addForm.machineList = [];
+                //     return;
+                // }
                 $.ajax({
                     url: HOST + "machine/selectMachinesNotInstallPlanned",
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        orderNum: orderNum,
+                        orderNum: _this.addForm.orderNum,
 			            //要排除已经对该工序排产的机器。即如果该机器已经排产了该工序，就不用显示在列表里。
                         installGroupId: _this.addForm.installGroupId, 
                         is_fuzzy: "false",
