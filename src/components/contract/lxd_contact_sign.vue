@@ -206,10 +206,10 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
-                            <el-form-item label="(保存联系单时确定流水号)"   >
-
-                            </el-form-item>
-                        </el-col>
+                                <el-form-item label="(保存联系单时确定流水号)"
+                                              v-show="mode==ADD_MODE">
+                                </el-form-item>
+                            </el-col>
                             <el-col :span="4" :offset="8">
                                 <el-button
                                     style="float:right;margin-right:30px;"
@@ -1872,7 +1872,6 @@
                 }
                 //流水号： 部门和年份为单位 比如 外1-20-111 表示 外贸一部 2020年 第111个联系单
                 //为允许多个联系单同时在编辑，把流水号后端放在生成。也避免了点击了新建联系单但是又没保存的情况
-                let noOfTheDepThisYear = 0;
                 //部门代表字 + 年份（2位） + 部门内部流水号
                return  department + "-" + new Date().format('yy') + "-" + "xxx";
             },
