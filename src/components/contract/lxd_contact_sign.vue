@@ -342,17 +342,17 @@
                                     <span v-for="item in lxdForm.changeItemList" style="margin-top:10px;">
                                         <el-col :span="8">
                                             <el-form-item label="旧状态：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.oldInfo" placeholder="输入变更前的状态" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
+                                                <el-input type="textarea" :rows="5" v-model="item.oldInfo" placeholder="输入变更前的状态" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="8">
                                             <el-form-item label="新状态：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.newInfo" placeholder="输入变更后的状态" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
+                                                <el-input type="textarea" :rows="5" v-model="item.newInfo" placeholder="输入变更后的状态" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="6">
                                             <el-form-item label="备注：" :label-width="longFormLabelWidth">
-                                                <el-input v-model="item.remarks" placeholder="输入备注" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
+                                                <el-input type="textarea" :rows="5" v-model="item.remarks" placeholder="输入备注" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="2">
