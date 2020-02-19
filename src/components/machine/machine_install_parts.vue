@@ -208,8 +208,19 @@
 
                 <el-row>
                     <el-col :span="8" >
-                        <el-form-item label="订单号：" :label-width="formLabelWidth">
-                            <el-input v-model="addForm.orderNum" @change="onOrderChanged(addForm.orderNum)" clearable></el-input>
+                        <el-form-item label="订单号: " :label-width="formLabelWidth" prop="orderNum">
+                            <el-select
+                                    v-model="addForm.orderNum"
+                                    @change="onOrderChanged(addForm.orderNum)"
+                                    clearable
+                                    filterable
+                                    placeholder="订单号">
+                                <el-option
+                                        v-for="item in allOrderList"
+                                        :label="item.orderNum"
+                                        :value="item.orderNum">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col >
                    
@@ -574,10 +585,26 @@
 
                 itemDetailsDialogVisible: false,
                 itemDetailForm: {},
+
+                allOrderList:[],
             }
 
         },
         methods: {
+
+            fetchAllOrderList() {
+                $.ajax({
+                    url: HOST + 'machine/order/list',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.allOrderList = res.data.list;
+                        }
+                    }
+                });
+            },
 
             /**
              * 删除选中的条目，这些条目都是在本地，没有传到服务器。
@@ -1141,6 +1168,7 @@
         mounted: function () {
             _this.filters.status = "";
             _this.search();
+            _this.fetchAllOrderList();
         },
     }
 </script>
