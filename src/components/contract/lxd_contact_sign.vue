@@ -2650,4 +2650,12 @@
     .el-upload__tip {
 
     }
+    /*输入框 disable后的字体*/
+    input:disabled,textarea:disabled {
+        -webkit-text-fill-color: black;
+    }
+    /*input[type=checkbox] { */
+        /*-webkit-text-fill-color: black;*/
+    /*}*/
+
 </style>
