@@ -1828,6 +1828,7 @@
                         department = "Admin";
                         break;
                     case "销售部经理":
+                    case "销售员":
                         switch (this.userInfo.marketGroupName) {
                             case "内贸部":
                                 department = "内";
@@ -1840,9 +1841,7 @@
                                 break;
                         }
                         break;
-                    case "销售员":
-                        department = "销";
-                        break;
+
                     case "生产部管理员":
                     case "生产部经理":
                         department = "生";
