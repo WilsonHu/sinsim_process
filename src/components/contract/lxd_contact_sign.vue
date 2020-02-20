@@ -106,7 +106,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="变更主题" min-width="125">
+                            <el-table-column align="center" label="变更主题" min-width="155">
                                 <template scope="scope">
                                     <div style="font-weight: bold;">
                                         {{scope.row.contactTitle}}
@@ -137,7 +137,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作" width="200">
+                            <el-table-column align="center" label="操作" width="160">
                                 <template scope="scope">
                                     <el-tooltip placement="top">
                                         <div slot="content">审核</div>
@@ -152,6 +152,12 @@
                                                 v-show="!notWritterRow(scope.row)"
                                                 size="mini" type="primary" icon="el-icon-edit"
                                                 @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                    </el-tooltip>
+                                    <el-tooltip placement="top">
+                                        <div slot="content">下载</div>
+                                        <el-button
+                                                size="mini" type="info" icon="el-icon-download"
+                                                @click="handleDownload(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
                                     <el-tooltip placement="top">
                                         <div slot="content">删除</div>
@@ -1494,6 +1500,25 @@
 
         },
         methods: {
+            
+            handleDownload(index, item) {
+                $.ajax({
+                    url: HOST + 'contact/form/buildLxdExcel',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {lxdId: item.id, account: _this.userInfo.account},
+                    success: function (data) {
+                        if (data.code == 200) {
+                            window.location.href = data.data;
+                        } else {
+                            showMessage(_this, data.message, 0);
+                        }
+                    },
+                    error: function (info) {
+                        showMessage(_this, '服务器访问出错', 0);
+                    }
+                });
+            },
 
             resetStatus(){
                _this.checkedChangeTypes=[];
