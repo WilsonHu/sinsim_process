@@ -397,6 +397,15 @@
                                                     @click="onAttachedDownload(lxdForm.contactForm)">下载
                                             </el-button>
                                         </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                                    size="small"
+                                                    type="danger"
+                                                    icon="el-icon-delete"
+                                                    :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedFile)||notWritter()||mode==SIGN_MODE"
+                                                    @click="handAttachedDelete(lxdForm.contactForm)">删除
+                                            </el-button>
+                                        </el-col>
                                     </div>
                                 </el-row>
                                 <el-row>
@@ -580,6 +589,17 @@
                               </el-col>
                           </div>
                     </el-dialog>
+
+                    <el-dialog title="删除附件" :visible.sync="attachedDeleteConfirmVisible" width="30%" append-to-body>
+                        <span style="font-size: 22px">
+                            确认要删除该附件吗？
+                        </span>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="attachedDeleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
+                            <el-button type="primary" @click="onConfirmDeleteAttached" icon="el-icon-check">确 定</el-button>
+                        </span>
+                    </el-dialog>
+
                     <el-form>
                         <div>
                             <el-button @click="dialogClose()" icon="el-icon-back" type="info" offset="120">关 闭
@@ -1246,6 +1266,7 @@
                 totalRecords: 0,
                 selectedItem: {},
                 deleteConfirmVisible: false,
+                attachedDeleteConfirmVisible: false,
                 SIGN_MODE: 1,
                 ADD_MODE: 2,
                 EDIT_MODE: 3,
@@ -1623,6 +1644,36 @@
                     }
                 })
             },
+            
+            onConfirmDeleteAttached(item){
+                _this.attachedDeleteConfirmVisible = false;
+                _this.lxdForm.contactForm.attachedFile = "";
+
+                let submitData=JSON.stringify(_this.lxdForm);
+                $.ajax({
+                    url: HOST + 'contact/form/update',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        jsonContactFormAllInfo:submitData,
+                    },
+                    success: function (res) {
+                        _this.isError = res.code != 200;
+                        if (!_this.isError) {
+                            //_this.addLxdVisible = false;
+                            showMessage(_this, '附件删除成功', 1);
+                            _this.selectContacts();
+                        } else {
+                            _this.errorMsg = res.message;
+                            showMessage(_this, _this.errorMsg, 0);
+                        }
+                    },
+                    error: function (info) {
+                        _this.errorMsg = '服务器访问出错！';
+                        _this.isError = true;
+                    }
+                });
+            },
 
             downloadFile(url)
             {
@@ -1925,6 +1976,14 @@
                 this.selectedItem = copyObject(item);
                 if (this.selectedItem) {
                     _this.deleteConfirmVisible = true;
+                }
+            },
+
+            // 附件删除
+            handAttachedDelete(item) {
+                this.selectedItem = copyObject(item);
+                if (this.selectedItem) {
+                    _this.attachedDeleteConfirmVisible = true;
                 }
             },
 
