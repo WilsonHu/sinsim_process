@@ -1521,18 +1521,21 @@
 
         },
         methods: {
-            
             handleDownload(index, item) {
                 $.ajax({
                     url: HOST + 'contact/form/buildLxdExcel',
                     type: 'POST',
                     dataType: 'json',
-                    data: {lxdId: item.id, account: _this.userInfo.account},
-                    success: function (data) {
-                        if (data.code == 200) {
-                            window.location.href = data.data;
+                    data: {
+                        contact_form_id: item.id, 
+                        account: _this.userInfo.account
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            var downLoadURL = DOWNLOADPATH_LXD + res.data;
+                            _this.downloadFile(downLoadURL);
                         } else {
-                            showMessage(_this, data.message, 0);
+                            showMessage(_this, res.message, 0);
                         }
                     },
                     error: function (info) {
