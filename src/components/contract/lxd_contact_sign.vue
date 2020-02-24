@@ -2336,7 +2336,23 @@
                                 _this.lxdForm.contactForm.contactContentElseIsChecked = true;
                                 }
                             }
-                        
+
+                            //成本核算员跟财务经理的意见,只给销售人员和王总看。
+                            if( _this.userInfo.role.roleName != "成本核算员"
+                                    && _this.userInfo.role.roleName != "财务经理"
+                                    && _this.userInfo.role.roleName != "销售部经理"
+                                    && _this.userInfo.role.roleName != "总经理"
+                                    && _this.userInfo.role.roleName != "超级管理员" ){
+
+                                for(let i=0; i<_this.lxdForm.contactSign.signContent.length; i++){
+                                    if(_this.lxdForm.contactSign.signContent[i].roleName == '成本核算员'
+                                            || _this.lxdForm.contactSign.signContent[i].roleName == '财务经理'){
+                                        if(_this.lxdForm.contactSign.signContent[i].comment.length !=0) {
+                                            _this.lxdForm.contactSign.signContent[i].comment = "-";
+                                        }
+                                    }
+                                }
+                            }
                         } else {
                             console.log("getContactAllData:"+res.message);
                         }
