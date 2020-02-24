@@ -1517,6 +1517,8 @@
 
                 orderChangeRecord: "",
                 orderSplitRecord: "" ,
+
+                userInfo: '',
             };
 
         },
@@ -1803,7 +1805,7 @@
                 var condition = {
                     contactType: _this.filters.contactType,
                     orderNum: _this.filters.orderNum,
-                    applicantDepartment: _this.filters.applicantDepartment,
+                    applicantDepartment: '',
                     //applicantPerson: _this.userInfo.account,
                     status:_this.filters.status,
                     currentStep:_this.filters.roleName,
@@ -1824,6 +1826,14 @@
                         'yyyy-MM-dd'
                     );
                 }
+
+                //销售部不要相互看到，都是要能看到其他非销售的部门的联系单
+                if(_this.userInfo.role.roleName == "销售部经理") {
+                    condition.applicantDepartment = _this.userInfo.marketGroupName;
+                } else {
+                    condition.applicantDepartment = '';
+                }
+
                 $.ajax({
                     url: HOST + 'contact/form/selectContacts',
                     type: 'POST',
@@ -1849,7 +1859,14 @@
                 this.dialogTitle = '新增联系单';
                 _this.mode = this.ADD_MODE;
                 _this.lxdForm.contactForm.num = this.createLxdNum();
-                _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
+
+                //销售部要具体分开，所以用 marketGroupName
+                if(this.userInfo.role.roleName == "销售部经理") {
+
+                    _this.lxdForm.contactForm.applicantDepartment = this.userInfo.marketGroupName;// this.userInfo.role.roleName;
+                } else {
+                    _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
+                }
                 _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
                 _this.lxdForm.contactForm.contactType = _this.lxdTypes[0];
                 //_this.lxdForm.contactForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
