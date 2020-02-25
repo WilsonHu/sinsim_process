@@ -2344,10 +2344,13 @@
                                     && _this.userInfo.role.roleName != "总经理"
                                     && _this.userInfo.role.roleName != "超级管理员" ){
 
-                                for(let i=0; i<_this.lxdForm.contactSign.signContent.length; i++){
-                                    if(_this.lxdForm.contactSign.signContent[i].roleName == '成本核算员'
-                                            || _this.lxdForm.contactSign.signContent[i].roleName == '财务经理'){
-                                        if(_this.lxdForm.contactSign.signContent[i].comment.length !=0) {
+                                //目前 signContent中有时候有roleName，少部分没有roleName只有roleId。
+                                for(let i=0; i<_this.lxdForm.contactSign.signContent.length; i++) {
+                                    if (_this.lxdForm.contactSign.signContent[i].roleName == '成本核算员'
+                                            || _this.lxdForm.contactSign.signContent[i].roleName == '财务经理'
+                                            || _this.lxdForm.contactSign.signContent[i].roleId == 13
+                                            || _this.lxdForm.contactSign.signContent[i].roleId == 14) {
+                                        if (_this.lxdForm.contactSign.signContent[i].comment.length != 0) {
                                             _this.lxdForm.contactSign.signContent[i].comment = "-";
                                         }
                                     }
