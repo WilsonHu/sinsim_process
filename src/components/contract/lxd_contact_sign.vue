@@ -1861,7 +1861,7 @@
                 _this.lxdForm.contactForm.num = this.createLxdNum();
 
                 //销售部要具体分开，所以用 marketGroupName
-                if(this.userInfo.role.roleName == "销售部经理") {
+                if(this.userInfo.role.roleName == "销售部经理" || this.userInfo.role.roleName == "销售员") {
 
                     _this.lxdForm.contactForm.applicantDepartment = this.userInfo.marketGroupName;// this.userInfo.role.roleName;
                 } else {
@@ -1934,7 +1934,6 @@
                         department = "质";
                         break;
 
-
                     case "PMC":
                         department = "P";
                         break;
@@ -1959,10 +1958,15 @@
                     case "品质部经理":
                         department = "品";
                         break;
+
+                    case "售后内勤":
+                    case "销售服务部经理":
+                        department = "售";
+                        break;
+
                     default:
                         department = "其";
                         break;
-
 
                 }
                 //流水号： 部门和年份为单位 比如 外1-20-111 表示 外贸一部 2020年 第111个联系单
