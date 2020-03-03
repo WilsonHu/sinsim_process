@@ -167,7 +167,7 @@
 
             handleCurrentChange(val) {
                 this.currentPage = val;
-                _this.fetchInstallGroups();
+                _this.fetchMarketGroups();
             },
             handleAdd() {
                 this.addDialogVisible = true;

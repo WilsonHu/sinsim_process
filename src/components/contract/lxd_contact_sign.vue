@@ -1827,13 +1827,13 @@
                     );
                 }
 
-                //销售部不要相互看到，都是要能看到其他非销售的部门的联系单
-                if(_this.userInfo.role.roleName == "销售部经理") {
-                    condition.applicantDepartment = _this.userInfo.marketGroupName;
-                } else {
-                    condition.applicantDepartment = '';
-                }
+//                if(_this.userInfo.role.roleName == "销售部经理") {
+//                    condition.applicantDepartment = _this.userInfo.marketGroupName;
+//                } else {
+//                    condition.applicantDepartment = '';
+//                }
 
+                condition.applicantDepartment = _this.filters.applicantDepartment;
                 $.ajax({
                     url: HOST + 'contact/form/selectContacts',
                     type: 'POST',
@@ -1893,77 +1893,74 @@
 
                 this.resetStatus();
             },
-
+//            综合管理部 -- 综
+//            销售服务部 -- 售
+//            研发部   -- 研
+//            财务部   -- 财
+//            总经办   -- 总
+//            人事部   -- 人
+//            品质部   -- 品
+//            仓储部   -- 仓
+//            采购部   -- 采
+//            计划部   -- 计
+//            技术部   -- 技
+//            生产部   -- 生
+//            内贸部   -- 内
+//            外贸一部  -- 外1
+//            外贸二部  -- 外2
             createLxdNum(){
                 let department = "";
-                switch (this.userInfo.role.roleName) {
-                    case "超级管理员":
-                        department = "Admin";
+                switch (this.userInfo.marketGroupName) {
+                    case "综合管理部":
+                        department = "综";
                         break;
-                    case "销售部经理":
-                    case "销售员":
-                        switch (this.userInfo.marketGroupName) {
-                            case "内贸部":
-                                department = "内";
-                                break;
-                            case "外贸一部":
-                                department = "外1";
-                                break;
-                            case "外贸二部":
-                                department = "外2";
-                                break;
-                        }
+                    case "销售服务部":
+                        department = "售";
                         break;
-
-                    case "生产部管理员":
-                    case "生产部经理":
-                        department = "生";
-                        break;
-                    case "总经理":
-                        department = "总";
-                        break;
-                    case "总经理助理":
-                        department = "总助";
-                        break;
-
-                    case "技术部经理":
-                    case "技术员":
-                        department = "技";
-                        break;
-
-                    case "质检员":
-                    case "质检组长":
-                        department = "质";
-                        break;
-
-                    case "PMC":
-                        department = "P";
-                        break;
-
-                    case "成本核算员":
-                        department = "成";
-                        break;
-
-                    case "财务经理":
-                    case "财务部经理":
-                    case "财务会计":
-                        department = "财";
-                        break;
-
-                    case "采购人员":
-                    case "采购经理":
-                        department = "采";
-                        break;
-                    case "研发部经理":
+                    case "研发部":
                         department = "研";
                         break;
-                    case "品质部经理":
+                    case "财务部":
+                        department = "财";
+                        break;
+                    case "总经办":
+                        department = "总";
+                        break;
+                    case "人事部":
+                        department = "人";
+                        break;
+
+                    case "品质部":
                         department = "品";
                         break;
 
-                    case "售后内勤":
-                    case "销售服务部经理":
-                        department = "售";
+                    case "仓储部":
+                        department = "仓";
+                        break;
+
+                    case "采购部":
+                        department = "采";
+                        break;
+
+                    case "计划部":
+                        department = "计";
+                        break;
+
+                    case "技术部":
+                        department = "技";
+                        break;
+                    case "生产部":
+                        department = "生";
+                        break;
+                    case "内贸部":
+                        department = "内";
+                        break;
+
+                    case "外贸一部":
+                        department = "外1";
+                        break;
+                    case "外贸二部":
+                        department = "外2";
                         break;
 
                     default:
@@ -2670,8 +2667,8 @@
             }
             _this.initSignProcesses();
             _this.filters.roleName = this.userInfo.role.roleName;
-            //获取用户所在部门
-            _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
+            //获取用户所在部门 ///2020-0303 销售组 改为 部门，代码里名称不改。
+            _this.lxdForm.contactForm.applicantDepartment = this.userInfo.marketGroupName;
             _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
 
 
