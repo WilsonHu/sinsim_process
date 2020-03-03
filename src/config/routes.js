@@ -225,7 +225,7 @@ export default [{
                         path: '/home/system/market_group_manage',
                         component: MarketGroupManage,
                         name: 'market_group_manage',
-                        meta: '销售组管理'
+                        meta: '部门管理' ///2020-0303 销售组 改为 部门，代码里名称不改。
                     },
                     {
                         path: '/home/system/role_manage',

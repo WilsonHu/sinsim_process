@@ -109,7 +109,7 @@
                         <el-table-column
                                 align="center"
                                 prop="marketGroupName"
-                                label="销售组" >
+                                label="部门" >
                         </el-table-column >
                         <el-table-column
                                 align="center"
@@ -204,7 +204,7 @@
                     </el-form-item >
                 </el-col >
                 <el-col :span="6" >
-                    <el-form-item label="销售组："  :label-width="formLabelWidth">
+                    <el-form-item label="部门："  :label-width="formLabelWidth">
                         <el-select v-model="form.marketGroupName" @change="onChange" clearable>
                             <el-option
                                     v-for="item in allMarketGroups"
@@ -283,7 +283,7 @@
                     </el-form-item >
                 </el-col >
                 <el-col :span="6" >
-                    <el-form-item label="销售组："  :label-width="formLabelWidth">
+                    <el-form-item label="部门："  :label-width="formLabelWidth">
                         <el-select v-model="modifyForm.marketGroupName" @change="onChange" clearable>
                             <el-option
                                     v-for="item in allMarketGroups"
@@ -628,7 +628,7 @@
                         }
                     },
                     error: function (data) {
-                        showMessage(_this, '获取销售组信息错误！', 0);
+                        showMessage(_this, '获取部门信息错误！', 0);
                     }
                 })
             },

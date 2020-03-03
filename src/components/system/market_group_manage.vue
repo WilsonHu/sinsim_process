@@ -6,9 +6,9 @@
                     icon="el-icon-plus"
                     size="normal"
                     type="primary"
-                    @click="handleAdd">销售组</el-button>
+                    @click="handleAdd">部门</el-button>
             </div>
-
+<!--///2020-0303 销售组 改为 部门，代码里名称不改。-->
             <el-table
                     :data="tableData"
                     border
@@ -25,7 +25,7 @@
                 <el-table-column
                         align="center"
                         prop="groupName"
-                        label="销售组名称">
+                        label="部门名称">
                 </el-table-column>
                 <el-table-column
                         label="操作"
@@ -56,10 +56,10 @@
                 </el-pagination>
             </div>
         </el-col>
-        <el-dialog title="添加销售组" :visible.sync="addDialogVisible" width="40%">
+        <el-dialog title="添加部门" :visible.sync="addDialogVisible" width="40%">
             <el-form :model="form">
                 <el-col :span="24">
-                    <el-form-item label="销售组名称：" :label-width="formLabelWidth" style="width: 50%">
+                    <el-form-item label="部门名称：" :label-width="formLabelWidth" style="width: 50%">
                         <el-input  v-model="form.groupName" clearable></el-input>
                     </el-form-item>
                 </el-col>
@@ -75,10 +75,10 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="编辑销售组" :visible.sync="modifyDialogVisible" width="40%">
+        <el-dialog title="编辑部门" :visible.sync="modifyDialogVisible" width="40%">
             <el-form :model="modifyForm">
                 <el-col :span="24">
-                    <el-form-item label="销售组名称：" :label-width="formLabelWidth" style="width: 50%">
+                    <el-form-item label="部门名称：" :label-width="formLabelWidth" style="width: 50%">
                         <el-input  v-model="modifyForm.groupName" clearable></el-input>
                     </el-form-item>
                 </el-col>
@@ -94,7 +94,7 @@
             </div>
         </el-dialog>
         <el-dialog title="提示" :visible.sync="deleteConfirmVisible" width="20%" >
-		  <span >确认要删除[ <b >{{selectedItem.groupName}}</b > ]的销售组吗？</span >
+		  <span >确认要删除[ <b >{{selectedItem.groupName}}</b > ]的部门吗？</span >
 		  <span slot="footer" class="dialog-footer" >
 		    <el-button @click="deleteConfirmVisible = false" type="danger" icon="el-icon-close">取 消</el-button >
 		    <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button >
@@ -184,7 +184,7 @@
                         if (!_this.isError) {
                             _this.addDialogVisible = false;
                             _this.fetchMarketGroups();
-                            showMessage(_this, '添加销售组成功', 1);
+                            showMessage(_this, '添加部门成功', 1);
                         } else {
                             _this.isError = true;
                             _this.errorMsg = data.message;
@@ -215,10 +215,10 @@
                         if (data.code == 200) {
                             _this.modifyDialogVisible = false;
                             _this.fetchMarketGroups();
-                            showMessage(_this, '修改销售组成功', 1);
+                            showMessage(_this, '修改部门成功', 1);
                         } else {
                             _this.isError = true;
-                            _this.errorMsg = '修改销售组失败！'
+                            _this.errorMsg = '修改部门失败！'
                         }
                     },
                     error: function (data) {
@@ -247,7 +247,7 @@
                     data: {"id":item.id},
                     success: function (data) {
                         if (data.code == 200) {
-                            showMessage(_this, '删除销售组成功', 1);
+                            showMessage(_this, '删除部门成功', 1);
                             _this.fetchMarketGroups();
                         } else {
                             showMessage(_this, data.message, 0);

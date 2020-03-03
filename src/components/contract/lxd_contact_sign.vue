@@ -1860,13 +1860,15 @@
                 _this.mode = this.ADD_MODE;
                 _this.lxdForm.contactForm.num = this.createLxdNum();
 
-                //销售部要具体分开，所以用 marketGroupName
-                if(this.userInfo.role.roleName == "销售部经理" || this.userInfo.role.roleName == "销售员") {
-
-                    _this.lxdForm.contactForm.applicantDepartment = this.userInfo.marketGroupName;// this.userInfo.role.roleName;
-                } else {
-                    _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
-                }
+//                //销售部要具体分开，所以用 marketGroupName
+//                if(this.userInfo.role.roleName == "销售部经理" || this.userInfo.role.roleName == "销售员") {
+//
+//                    _this.lxdForm.contactForm.applicantDepartment = this.userInfo.marketGroupName;// this.userInfo.role.roleName;
+//                } else {
+//                    _this.lxdForm.contactForm.applicantDepartment = this.userInfo.role.roleName;
+//                }
+                ///2020-0303 销售组 改为 部门，代码里名称不改。
+                _this.lxdForm.contactForm.applicantDepartment = this.userInfo.marketGroupName;
                 _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
                 _this.lxdForm.contactForm.contactType = _this.lxdTypes[0];
                 //_this.lxdForm.contactForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
