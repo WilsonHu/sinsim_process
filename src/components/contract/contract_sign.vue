@@ -3797,7 +3797,7 @@
                     contractNum: _this.filters.contractNum,
                     status: _this.filters.status,
                     sellman: _this.filters.sellman,
-                    marketGroupName: _this.userInfo.marketGroupName,
+                    marketGroupName: '',
                     roleName: _this.filters.roleName,
                     recordUser: _this.filters.recordUser,
                     query_start_time: '',
@@ -3818,6 +3818,10 @@
                     condition.query_finish_time = _this.filters.selectDate[1].format(
                         'yyyy-MM-dd'
                     );
+                }
+                //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
+                if( _this.userInfo.role.id == 7 || _this.userInfo.role.id == 7){
+                    condition.marketGroupName = _this.userInfo.marketGroupName;
                 }
                 $.ajax({
                     url: HOST + 'contract/selectContracts',
