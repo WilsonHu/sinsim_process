@@ -407,12 +407,16 @@ export default {
       selectContracts() {
           var condition = {
               status: 1,
-              marketGroupName: _this.userinfo.marketGroupName,
+              marketGroupName: '',
               userDomesticTradeZoneListStr: _this.userDomesticTradeZoneListStr,
           };
           if( _this.userinfo.role.roleName != "超级管理员") {
               condition.roleName = _this.userinfo.role.roleName;
           }
+        //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
+        if( _this.userInfo.role.id == 7 || _this.userInfo.role.id == 9){
+          condition.marketGroupName = _this.userInfo.marketGroupName;
+        }
           $.ajax({
               url: HOST + 'contract/selectContracts',
               type: 'POST',

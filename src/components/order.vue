@@ -1388,7 +1388,7 @@
                     status: _this.filters.status,
                     sellman: _this.filters.sellman,
                     customer: _this.filters.customer,
-                    marketGroupName: _this.userinfo.marketGroupName,
+                    marketGroupName: '',
                     query_start_time: '',
                     query_finish_time: '',
                     page: _this.currentPage,
@@ -1397,6 +1397,10 @@
                 if (_this.filters.selectDate != null && _this.filters.selectDate.length > 0) {
                     condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
                     condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
+                }
+                //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
+                if( _this.userinfo.role.id == 7 || _this.userinfo.role.id == 9){
+                    condition.marketGroupName = _this.userinfo.marketGroupName;
                 }
                 $.ajax({
                     url: HOST + "machine/order/selectOrders",

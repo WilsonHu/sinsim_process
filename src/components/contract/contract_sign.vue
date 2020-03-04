@@ -744,12 +744,12 @@
                                             >粘贴
                                             </el-button>
                                         </el-col>
-                                        <el-col :span="1" :offset="10">
+                                        <el-col :span="1" :offset="8">
                                             <el-button
                                                     type="danger"
                                                     size="small"
                                                     style="margin-top: 15px"
-                                                    v-if="showSplitOrChangeOrder(item.machineOrder.status)"
+                                                    v-if="showSplitOrChangeDeleteOrder(item.machineOrder.status)"
                                                     :disabled="item.machineOrder.machineNum <= 1 || !allContactListPassed(item.machineOrder.contactFormDetailList)"
                                                     @click="handleSplitOrder(item)"
                                             >拆单
@@ -760,10 +760,22 @@
                                                     type="danger"
                                                     size="small"
                                                     style="margin-top: 15px"
-                                                    v-if="showSplitOrChangeOrder(item.machineOrder.status)"
+                                                    v-if="showSplitOrChangeDeleteOrder(item.machineOrder.status)"
                                                     :disabled="!allContactListPassed(item.machineOrder.contactFormDetailList)"
                                                     @click="handleChangeOrder(item)"
                                             >改单
+                                            </el-button>
+                                        </el-col>
+
+                                        <el-col :span="1">
+                                            <el-button
+                                                    type="danger"
+                                                    size="small"
+                                                    style="margin-top: 15px"
+                                                    v-if="showSplitOrChangeDeleteOrder(item.machineOrder.status)"
+                                                    :disabled="!allContactListPassed(item.machineOrder.contactFormDetailList)"
+                                                    @click="handleDeleteOrder(item)"
+                                            >删除
                                             </el-button>
                                         </el-col>
                                     </el-row>
@@ -2446,6 +2458,17 @@
         <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
       </span>
         </el-dialog>
+
+        <el-dialog title="删除" :visible.sync="deleteOrderConfirmVisible" width="30%" append-to-body>
+      <span style="font-size: 22px">
+        确认要删除该需求单吗？如果存在对应的机器则机器被设置为取消。
+      </span>
+            <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteOrderConfirmVisible = false" icon="el-icon-back">取 消</el-button>
+        <el-button type="primary" @click="onConfirmOrderDelete" icon="el-icon-check">确 定</el-button>
+      </span>
+        </el-dialog>
+
         <el-dialog
                 title="合同签核记录"
                 :visible.sync="viewContractSignHistoryVisible"
@@ -2809,6 +2832,7 @@
                 totalRecords: 0,
                 selectedItem: {},
                 deleteConfirmVisible: false,
+                deleteOrderConfirmVisible:false, //这个是联系单审核通过之后， 订单里显示删除的按钮。类似改单拆单。
                 queryUserRoleUrl: HOST + 'role/list',
                 queryMachineTypeURL: HOST + 'machine/type/list',
                 SIGN_MODE: 1,
@@ -2989,6 +3013,9 @@
                 splitOrderVisible: false,
                 requisitionSplitItem: '',
                 splitNum: 1,
+
+                //删除订单
+                requisitionDeleteItem:'',
 
                 allRoles: [],
                 isShowConfirmPlanDate: false,
@@ -3430,8 +3457,8 @@
             //
             // },
 
-          //是否显示拆单改单按钮
-            showSplitOrChangeOrder(status) {
+          //是否显示拆单改单按钮，以及删除订单按钮，因为订单删除也要走联系单。
+            showSplitOrChangeDeleteOrder(status) {
                 if (
                     this.mode != this.SIGN_MODE &&
                     this.mode != this.CHANGE_MODE &&
@@ -3820,7 +3847,7 @@
                     );
                 }
                 //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
-                if( _this.userInfo.role.id == 7 || _this.userInfo.role.id == 7){
+                if( _this.userInfo.role.id == 7 || _this.userInfo.role.id == 9){
                     condition.marketGroupName = _this.userInfo.marketGroupName;
                 }
                 $.ajax({
@@ -4004,6 +4031,10 @@
                 this.changeOrderVisible = true;
             },
 
+            handleDeleteOrder(requisitionItem) {
+                this.requisitionDeleteItem = requisitionItem;
+                this.deleteOrderConfirmVisible = true;
+            },
             onConfirmChange() {
                 this.mode = _this.CHANGE_MODE;
                 this.tabIndex = this.requisitionForms.length;
@@ -4148,12 +4179,39 @@
 
             onConfirmDelete: function () {
                 _this.deleteConfirmVisible = false;
+
                 $.ajax({
                     url: _this.deleteUrl,
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
                         orderId: _this.selectedItem.orderId
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            //                            var index = _this.tableData.indexOf(_this.selectedItem);
+                            //                            _this.tableData.splice(index, 1);
+                            _this.selectContracts();
+                            showMessage(_this, '删除需求单成功', 1);
+                        } else {
+                            showMessage(_this, res.message, 0);
+                        }
+                    },
+                    error: function (info) {
+                        showMessage(_this, '服务器访问出错', 0);
+                    }
+                });
+            },
+            //
+            onConfirmOrderDelete: function () {
+                _this.deleteOrderConfirmVisible = false;
+
+                $.ajax({
+                    url: _this.deleteUrl,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        orderId: _this.requisitionDeleteItem.machineOrder.id,
                     },
                     success: function (res) {
                         if (res.code == 200) {
