@@ -4219,6 +4219,7 @@
                             //                            _this.tableData.splice(index, 1);
                             _this.selectContracts();
                             showMessage(_this, '删除需求单成功', 1);
+                            _this.dialogClose();
                         } else {
                             showMessage(_this, res.message, 0);
                         }

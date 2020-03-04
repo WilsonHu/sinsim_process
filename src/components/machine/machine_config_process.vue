@@ -223,7 +223,7 @@
                                     size="mini"
                                     type="success"
                                     icon="el-icon-setting"
-                                    :disabled="scope.row.status == 4"
+                                    :disabled="scope.row.status == 4 || scope.row.status == 7"
                                     @click="editWithItem(scope.$index, scope.row)">配置
                             </el-button>
                         </el-tooltip>
@@ -233,7 +233,7 @@
                                     size="mini"
                                     type="primary"
                                     icon="el-icon-setting"
-                                    :disabled="scope.row.status == 4"
+                                    :disabled="scope.row.status == 4|| scope.row.status == 7"
                                     @click="setMachineFinished(scope.row)">完成
                             </el-button>
                         </el-tooltip>
