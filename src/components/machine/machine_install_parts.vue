@@ -594,7 +594,7 @@
 
             fetchAllOrderList() {
                 $.ajax({
-                    url: HOST + 'machine/order/list',
+                    url: HOST + 'machine/order/getValidList',
                     type: 'POST',
                     dataType: 'json',
                     data: {},

@@ -506,8 +506,8 @@
 
             fetchAllOrderList() {
                 $.ajax({
-                    ///todo : 这里列出了所有订单，应该排产那些已删除的订单，否则会出错。比如重名等问题。
-                    url: HOST + 'machine/order/list',
+                    /// 应该排产那些已删除的订单，否则会出错。比如重名等问题。
+                    url: HOST + 'machine/order/getValidList',
                     type: 'POST',
                     dataType: 'json',
                     data: {},
