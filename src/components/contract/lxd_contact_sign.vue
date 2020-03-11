@@ -2667,6 +2667,10 @@
             }
             _this.initSignProcesses();
             _this.filters.roleName = this.userInfo.role.roleName;
+            //销售员 默认只看自己部门发起的
+            if(this.userInfo.role.roleName == '销售员') {
+                _this.filters.applicantDepartment = this.userInfo.marketGroupName;
+            }
             //获取用户所在部门 ///2020-0303 销售组 改为 部门，代码里名称不改。
             _this.lxdForm.contactForm.applicantDepartment = this.userInfo.marketGroupName;
             _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
