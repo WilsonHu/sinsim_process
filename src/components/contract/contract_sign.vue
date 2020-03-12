@@ -3830,8 +3830,9 @@
                     query_start_time: '',
                     query_finish_time: '',
                     //确定是哪个内贸区域,格式：用分号隔开的字符串
-                    userDomesticTradeZoneListStr: _this.userDomesticTradeZoneListStr,
-
+                    //内贸他们相互之间业务员串单很多的, 所以也不限制内贸之间互看
+//                    userDomesticTradeZoneListStr: _this.userDomesticTradeZoneListStr,
+                    userDomesticTradeZoneListStr:'',
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
