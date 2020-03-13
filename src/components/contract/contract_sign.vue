@@ -705,12 +705,14 @@
                                         </el-col>
                                         <el-col :span="5" style="margin-bottom: 10px;margin-top: 10px">
                                             <el-form-item label="填表日期：" :label-width="formLabelWidth">
-                                                <el-input
+                                               
+                                                <el-date-picker
+                                                        type="date"
                                                         v-model="item.machineOrder.createTime"
                                                         :readonly="changeOrderContentDisable(item.machineOrder)"
                                                         :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
                                                         placeholder="日期"
-                                                ></el-input>
+                                                ></el-date-picker>
                                             </el-form-item>
                                         </el-col>
                                         <!--<el-col :span="2" style="margin-bottom: 10px;margin-top: 10px">-->
@@ -725,7 +727,7 @@
                                         <!--</el-checkbox>-->
                                         <!--</el-form-item>-->
                                         <!--</el-col>-->
-                                        <el-col :span="1">
+                                        <el-col :span="3">
                                             <el-button
                                                     type="success"
                                                     size="small"
@@ -744,7 +746,7 @@
                                             >粘贴
                                             </el-button>
                                         </el-col>
-                                        <el-col :span="1" :offset="8">
+                                        <el-col :span="1" :offset="6">
                                             <el-button
                                                     type="danger"
                                                     size="small"
