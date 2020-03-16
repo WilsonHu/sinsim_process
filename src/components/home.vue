@@ -414,8 +414,8 @@ export default {
               condition.roleName = _this.userinfo.role.roleName;
           }
         //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
-        if( _this.userInfo.role.id == 7 || _this.userInfo.role.id == 9){
-          condition.marketGroupName = _this.userInfo.marketGroupName;
+        if( _this.userinfo.role.id == 7 || _this.userinfo.role.id == 9){
+          condition.marketGroupName = _this.userinfo.marketGroupName;
         }
           $.ajax({
               url: HOST + 'contract/selectContracts',
