@@ -133,7 +133,7 @@
                             <el-table-column align="center" width="100" label="更新时间">
                                 <template scope="scope">
                                     <div>
-                                        {{scope.row.updateDate != null ? formatDate(scope.row.updateDate) : "/"}}
+                                        {{scope.row.updateTime != null ? formatDate(scope.row.updateTime) : "/"}}
                                     </div>
                                 </template>
                             </el-table-column>
