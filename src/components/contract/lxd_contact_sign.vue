@@ -88,7 +88,7 @@
                             </el-table-column>
                             <el-table-column align="center" min-width="55" prop="contactType"
                                              label="类型"></el-table-column>
-                            <el-table-column align="center" label="订单号" min-width="100">
+                            <el-table-column align="center" label="订单号" min-width="110">
                                 <template scope="scope">
                                     <div   v-if="isBianGengLxd(scope.row)" style="font-weight: bold;">
                                         {{scope.row.orderNum}}
@@ -98,7 +98,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="联系单号" min-width="125">
+                            <el-table-column align="center" label="联系单号" min-width="100">
                                 <template scope="scope">
                                     <div v-on:click="handleSign(scope.$index, scope.row)" style="font-weight: bold;"
                                          class="btn btn-link">
@@ -106,7 +106,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="变更主题" min-width="155">
+                            <el-table-column align="center" label="变更主题" min-width="175">
                                 <template scope="scope">
                                     <div style="font-weight: bold;">
                                         {{scope.row.contactTitle}}
@@ -123,21 +123,21 @@
                                 </template>
                             </el-table-column>
                             <el-table-column align="center" prop="currentStep" label="审核阶段"></el-table-column>
-                            <el-table-column align="center" prop="createDate" width="100" label="创建时间">
+                            <el-table-column align="center" prop="createDate" width="95" label="创建时间">
                                 <template scope="scope">
                                     <div>
                                         {{formatDate(scope.row.createDate)}}
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" width="100" label="更新时间">
+                            <el-table-column align="center" width="95" label="更新时间">
                                 <template scope="scope">
                                     <div>
                                         {{scope.row.updateTime != null ? formatDate(scope.row.updateTime) : "/"}}
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作" width="160">
+                            <el-table-column align="center" label="操作" width="240">
                                 <template scope="scope">
                                     <el-tooltip placement="top">
                                         <div slot="content">审核</div>
@@ -1759,7 +1759,13 @@
             notWritterRow(row)
             {
               if (this.userInfo!= null) {
-                    return this.userInfo.account!=row.applicantPerson;
+                    //是管理员， 允许修改，
+                  if(this.userInfo.role.id == 1){
+                      return false;
+                  } else {
+                      //不是管理员， 就看登录账号是否等于联系单申请者
+                      return this.userInfo.account != row.applicantPerson;
+                  }
                 }
                 return true;
             },
@@ -2195,17 +2201,21 @@
             },
 
             signDisable(row) {
-                //超级管理员可以操作，或者当前合同属于“签核状态”、登陆的用户有权限签核并且合同currentStep处于属于该角色签核
-                //修改：不分先后，只要最后一步没有完成，都可以审核操作。
+                //超级管理员可以操作，在某些情况下需要由管理员来改签核意见等。
+                if (_this.userInfo.role.id == 1) {
+                    return false;
+                }
                 if(_this.mode != _this.SIGN_MODE)
                 {
                     return true;
                 }
-                // if (_this.userInfo.role.id == 1) {
-                //     return false;
-                // }
-                //&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0
-                if (row.roleId == _this.userInfo.role.id&& _this.lxdForm.contactForm.status.indexOf("审核中")>=0 && row.shenHeEnabled) {
+
+                //轮到当前角色审核， 且当前联系单属于“审核中”、登陆的用户有权限签核 并且合同currentStep处于属于该角色签核
+                if (row.roleId == _this.userInfo.role.id
+                        && _this.lxdForm.contactForm.status.indexOf("审核中")>=0
+                        && row.shenHeEnabled
+                        && _this.lxdForm.contactSign.currentStep == _this.userInfo.role.roleName
+                ) {
                    return false;
                 } else {
                     return true;
