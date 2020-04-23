@@ -4939,6 +4939,7 @@ export default {
                         );
                         return;
                     }
+                    _this.requisitionForms[i].title=_this.requisitionForms[i].machineOrder.orderNum;
                 }
                 //设置合同属于哪一个销售组
                 //（销售员和国内销售区域不绑定，所以不根据销售员来定内贸区域）
@@ -5035,6 +5036,8 @@ export default {
                             );
                             return;
                         }
+                        _this.requisitionForms[i].title=_this.requisitionForms[i].machineOrder.orderNum;
+
                     }
                 }
                 _this.contractForm.recordUser = _this.userInfo.account;
@@ -5125,6 +5128,8 @@ export default {
                             obj[i].machineOrder.equipment
                         );
                     }
+                    _this.requisitionForms[i].title=_this.requisitionForms[i].machineOrder.orderNum;
+
                 }
                 _this.contractForm.recordUser = _this.userInfo.account;
                 $.ajax({
@@ -5213,6 +5218,8 @@ export default {
                             obj[i].machineOrder.equipment
                         );
                     }
+                    _this.requisitionForms[i].title=_this.requisitionForms[i].machineOrder.orderNum;
+
                 }
                 _this.contractForm.recordUser = _this.userInfo.account;
                 $.ajax({
