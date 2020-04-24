@@ -3979,6 +3979,10 @@ export default {
         },
 
         startToSign() {
+            if(_this.editContract==''||_this.editContract==null)
+            {
+                _this.editContract = _this.contractForm;
+            }
             $.ajax({
                 url: HOST + 'contract/startSign',
                 type: 'POST',
