@@ -546,7 +546,21 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-            </el-form>
+            </el-form><el-form :model="machineDoPlaning" label-position="right" label-width="100px">
+            <el-row>
+
+                <el-col :span="3" :offset="0">
+                    <el-form-item label="头数:">
+                        <span style="font-size: 15px">{{machineDoPlaning.headNum }}</span>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="3" :offset="0">
+                    <el-form-item label="针数:">
+                        <span style="font-size: 15px">{{machineDoPlaning.needleNum }}</span>
+                    </el-form-item>
+                </el-col> 
+            </el-row>
+        </el-form>
             <el-row style="margin-top: 10px">
                 <el-row>
                     <el-col :span="6" :style="getProcessViewHeight()" style="margin-left: 25px;border-radius: 5px;
