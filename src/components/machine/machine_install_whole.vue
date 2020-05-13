@@ -40,14 +40,14 @@
                            <span style="float:left;font-size:20px;color:red;"> {{getSummaries()}}</span>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="4" :offset="10">
-                        <el-button
-                                icon="el-icon-plus"
-                                size="normal"
-                                type="danger"
-                                @click="addPlan">排产
-                        </el-button>
-                    </el-col>
+                    <!--<el-col :span="4" :offset="10">-->
+                        <!--<el-button-->
+                                <!--icon="el-icon-plus"-->
+                                <!--size="normal"-->
+                                <!--type="danger"-->
+                                <!--@click="addPlan">排产-->
+                        <!--</el-button>-->
+                    <!--</el-col>-->
                 </el-row>
             </el-form>
             <el-table v-loading="loadingUI" element-loading-text="获取数据中..." :data="tableData" border empty-text="暂无数据..." ref="singleTable" highlight-current-row show-overflow-tooltip="true" style="width: 100%; ">
@@ -130,38 +130,38 @@
                             </span>
                         </template>
                     </el-table-column>
-                   <el-table-column
-                            align="center"
-                            label="备注">
-                        <template slot-scope="scope">
-                            <span>
-                               {{scope.row.cmtSend}}
-                            </span>
-                        </template>
-                    </el-table-column>
-                     <el-table-column
-                            align="center"
-                            label="反馈">
-                        <template slot-scope="scope">
-                            <span>
-                               {{scope.row.cmtFeedback}}
-                            </span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                                    label="操作" align="center">
-                        <template scope="scope" style="text-align: center">
-                            <el-tooltip placement="left" content="修改">
-                                <el-button
-                                        size="mini"
-                                        type="primary"
-                                        icon="el-icon-edit"
-                                        :disabled="scope.row.headCountDone == scope.row.headNum"
-                                        @click="editWithItem(scope.row)">
-                                </el-button>
-                            </el-tooltip>
-                        </template>
-                    </el-table-column>
+                   <!--<el-table-column-->
+                            <!--align="center"-->
+                            <!--label="备注">-->
+                        <!--<template slot-scope="scope">-->
+                            <!--<span>-->
+                               <!--{{scope.row.cmtSend}}-->
+                            <!--</span>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
+                     <!--<el-table-column-->
+                            <!--align="center"-->
+                            <!--label="反馈">-->
+                        <!--<template slot-scope="scope">-->
+                            <!--<span>-->
+                               <!--{{scope.row.cmtFeedback}}-->
+                            <!--</span>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column-->
+                                    <!--label="操作" align="center">-->
+                        <!--<template scope="scope" style="text-align: center">-->
+                            <!--<el-tooltip placement="left" content="修改">-->
+                                <!--<el-button-->
+                                        <!--size="mini"-->
+                                        <!--type="primary"-->
+                                        <!--icon="el-icon-edit"-->
+                                        <!--:disabled="scope.row.headCountDone == scope.row.headNum"-->
+                                        <!--@click="editWithItem(scope.row)">-->
+                                <!--</el-button>-->
+                            <!--</el-tooltip>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
                 </el-table>
                 <div class="block" style="text-align: center; margin-top: 20px">
                     <el-pagination
@@ -441,7 +441,7 @@
                 filters: {
                     nameplate: '',
                     orderNum: '',
-                    selectDate: '',
+                    selectDate: [new Date(), new Date()],
                 },
                 workTaskList: [],
                 allMachineType: [],

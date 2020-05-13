@@ -527,7 +527,7 @@
                 filters: {
                     nameplate: '',
                     orderNum: '',
-                    selectDate: '',
+                    selectDate: [new Date(), new Date()],
                 },
                 workTaskList: [],
                 allMachineType: [],
