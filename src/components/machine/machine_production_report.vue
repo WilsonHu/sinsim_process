@@ -110,10 +110,21 @@
                 </span>
                     </template>
                 </el-table-column>
+
                 <el-table-column
                         align="center"
                         prop="spendTime"
                         label="耗时">
+                </el-table-column>
+
+                <el-table-column
+                        align="center"
+                        label="反馈">
+                    <template slot-scope="scope">
+                <span>
+                {{(scope.row.cmtFeedback)}}
+                </span>
+                    </template>
                 </el-table-column>
                 <!--                <el-table-column-->
                 <!--                        align="center"-->
