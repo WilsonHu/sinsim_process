@@ -82,130 +82,111 @@
                 <el-col :span="24">
                     <el-form-item>
                         <el-row style="background-color: #F9FAFC; border-radius: 5px;">
-                            <el-col :span="3" s:offset="1">
+                            <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="contractAllChecked"
-                                                     @change="handleContractCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">签核管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in contractRoleList" style="list-style: none;">
+                                                     @change="handleContractCheckAllChange">签核管理</el-checkbox>
+                                        <span v-for=" item in contractRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedContractChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="orderAllChecked"
-                                                     @change="handleOrderCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">订单管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in orderRoleList" style="list-style: none;">
+                                                     @change="handleOrderCheckAllChange">订单管理</el-checkbox>
+                                        <span v-for=" item in orderRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedOrderChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="machineAllChecked"
-                                                     @change="handleMachineCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">生产管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in machineRoleList" style="list-style: none;">
+                                                     @change="handleMachineCheckAllChange">生产管理</el-checkbox>
+                                    
+                                        <span v-for=" item in machineRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedMachineChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="planAllChecked"
-                                                     @change="handlePlanCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">计划管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in planRoleList" style="list-style: none;">
+                                                     @change="handlePlanCheckAllChange">计划管理</el-checkbox>
+                                      
+                                        <span v-for=" item in planRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedPlanChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="abnormalAllChecked"
-                                                     @change="handleAbnormalCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">异常管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in abnormalRoleList" style="list-style: none;">
+                                                     @change="handleAbnormalCheckAllChange">异常管理</el-checkbox>
+                                        <span v-for=" item in abnormalRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedAbnormalChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="taskAllChecked"
-                                                     @change="handleTaskCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">流程管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in taskRoleList" style="list-style: none;">
+                                                     @change="handleTaskCheckAllChange">流程管理</el-checkbox>
+                                        <span v-for=" item in taskRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedTaskChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
+                                                     v-model="reportAllChecked"
+                                                     @change="handleReportCheckAllChange">报表管理</el-checkbox>
+                                        <span v-for=" item in reportRoleList" style="list-style: none;">
+                                            <el-checkbox style="font-weight: normal"
+                                                         v-model="item.checked"
+                                                         @change="handleCheckedReportChange">{{item.name}}
+                                            </el-checkbox>
+                                        </span>
+                                </div>
+                            </el-col>
+                            <el-col :span="3">
+                                <div style="margin-top: 20px">
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="systemAllChecked"
-                                                     @change="handleSystemCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">系统管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in systemRoleList" style="list-style: none;">
+                                                     @change="handleSystemCheckAllChange">系统管理</el-checkbox>
+                                       
+                                        <span v-for=" item in systemRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedSystemChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                         </el-row>
@@ -223,7 +204,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="编辑角色" :visible.sync="modifyDialogVisible" width="70%">
+        <el-dialog title="编辑角色" :visible.sync="modifyDialogVisible" width="90%">
             <el-form :model="modifyForm">
                 <el-col :span="24">
                     <el-form-item label="角色名称：" :label-width="formLabelWidth" style="width: 35%">
@@ -241,131 +222,120 @@
                 <el-col :span="24">
                     <el-form-item>
                         <el-row style="background-color: #F9FAFC; border-radius: 5px;">
-                            <el-col :span="3" :offset="1">
+                            <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
-                                                     v-model="contractAllChecked"
-                                                     @change="handleContractCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">签核管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in contractRoleList" style="list-style: none;">
-                                            <el-checkbox style="font-weight: normal"
-                                                         v-model="item.checked"
-                                                         @change="handleCheckedContractChange">{{item.name}}
-                                            </el-checkbox>
-                                        </li>
-                                    </ul>
+                                    <el-checkbox class="mainCheckBox"
+                                                v-model="contractAllChecked"
+                                                @change="handleContractCheckAllChange" >签核管理</el-checkbox>
+                                    
+                                    <span v-for=" item in contractRoleList" style="list-style: none;">
+                                        <br>
+                                        <el-checkbox style="font-weight: normal"
+                                                        v-model="item.checked"
+                                                        @change="handleCheckedContractChange">{{item.name}}
+                                        </el-checkbox>
+                                    </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
-                                                     v-model="orderAllChecked"
-                                                     @change="handleOrderCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">订单管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in orderRoleList" style="list-style: none;">
+                                    <el-checkbox class="mainCheckBox"
+                                                    v-model="orderAllChecked"
+                                                    @change="handleOrderCheckAllChange">订单管理</el-checkbox>
+                                        <span v-for=" item in orderRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedOrderChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                    
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="machineAllChecked"
-                                                     @change="handleMachineCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">生产管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in machineRoleList" style="list-style: none;">
+                                                     @change="handleMachineCheckAllChange">生产管理</el-checkbox>
+                                      
+                                   
+                                        <span v-for=" item in machineRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedMachineChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
+                                    
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="planAllChecked"
-                                                     @change="handlePlanCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">计划管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in planRoleList" style="list-style: none;">
+                                                     @change="handlePlanCheckAllChange">计划管理</el-checkbox>
+                                        <span v-for=" item in planRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedPlanChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                    
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="abnormalAllChecked"
-                                                     @change="handleAbnormalCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">异常管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in abnormalRoleList" style="list-style: none;">
+                                                     @change="handleAbnormalCheckAllChange">异常管理</el-checkbox>
+                                        <span v-for=" item in abnormalRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedAbnormalChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="taskAllChecked"
-                                                     @change="handleTaskCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">流程管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in taskRoleList" style="list-style: none;">
+                                                     @change="handleTaskCheckAllChange">流程管理</el-checkbox>
+                                        <span v-for=" item in taskRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
                                                          @change="handleCheckedTaskChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
                                 </div>
                             </el-col>
                             <el-col :span="3">
                                 <div style="margin-top: 20px">
-                                    <div>
-                                        <el-checkbox style="margin-left: 20px"
+                                   
+                                        <el-checkbox class="mainCheckBox"
+                                                     v-model="reportAllChecked"
+                                                     @change="handleReportCheckAllChange">报表管理</el-checkbox>
+                                   
+                                        <span v-for=" item in reportRoleList" style="list-style: none;">
+                                            <el-checkbox style="font-weight: normal"
+                                                         v-model="item.checked"
+                                                         @change="handleCheckedReportChange">{{item.name}}
+                                            </el-checkbox>
+                                        </span>
+                                </div>
+                            </el-col>
+                            <el-col :span="3">
+                                <div style="margin-top: 20px">
+                                        <el-checkbox class="mainCheckBox"
                                                      v-model="systemAllChecked"
-                                                     @change="handleSystemCheckAllChange"></el-checkbox>
-                                        <div style="font-weight: bold;  margin-bottom: 20px; display: inline">系统管理</div>
-                                    </div>
-                                    <ul>
-                                        <li v-for=" item in systemRoleList" style="list-style: none;">
+                                                     @change="handleSystemCheckAllChange">系统管理</el-checkbox>
+                                  
+                                        <span v-for=" item in systemRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-show="item.enabled"
                                                          v-model="item.checked"
                                                          @change="handleCheckedSystemChange">{{item.name}}
                                             </el-checkbox>
-                                        </li>
-                                    </ul>
+                                        </span>
+                                   
                                 </div>
                             </el-col>
                         </el-row>
@@ -442,6 +412,7 @@
                 planRoleList: [],
                 abnormalRoleList: [],
                 taskRoleList: [],
+                reportRoleList: [],
                 systemRoleList: [],
                 contractAllChecked: false,//全选的checkbox是否checked
                 orderAllChecked: false,
@@ -449,6 +420,7 @@
                 planAllChecked: false,
                 abnormalAllChecked: false,
                 taskAllChecked: false,
+                reportAllChecked: false,
                 systemAllChecked: false
             }
         },
@@ -567,6 +539,9 @@
                 for (i = 0; i < _this.taskRoleList.length; i++) {
                     _this.taskRoleList[i].checked = false;
                 }
+                for (i = 0; i < _this.reportRoleList.length; i++) {
+                    _this.reportRoleList[i].checked = false;
+                }
                 for (i = 0; i < _this.systemRoleList.length; i++) {
                     _this.systemRoleList[i].checked = false;
                 }
@@ -577,6 +552,7 @@
                 this.planAllChecked = false;
                 this.abnormalAllChecked = false;
                 this.taskAllChecked = false;
+                this.reportAllChecked=false;
                 this.systemAllChecked = false
             },
 
@@ -728,6 +704,26 @@
                 }
             },
 
+            handleReportCheckAllChange() {
+                if (this.reportAllChecked) {
+                    for (let i = 0; i < this.reportRoleList.length; i++) {
+                        this.reportRoleList[i].checked = true;
+                    }
+                } else {
+                    for (let i = 0; i < this.reportRoleList.length; i++) {
+                        this.reportRoleList[i].checked = false;
+                    }
+                }
+            },
+
+             handleCheckedReportChange() {
+                if (this.reportCheckedNum === this.reportRoleList.length) {
+                    this.reportAllChecked = true;
+                } else {
+                    this.reportAllChecked = false;
+                }
+            },
+
             handleSystemCheckAllChange() {
                 if (this.systemAllChecked) {
                     for (let i = 0; i < this.systemRoleList.length; i++) {
@@ -754,6 +750,7 @@
                 let planArr = [];
                 let abnormalArr = [];
                 let taskArr = [];
+                let reportArr=[];
                 let systemArr = [];
                 for (let i = 0; i < this.contractRoleList.length; i++) {
                     if (this.contractRoleList[i].checked) {
@@ -785,6 +782,11 @@
                         taskArr.push(this.taskRoleList[i].path)
                     }
                 }
+                for (let i = 0; i < this.reportRoleList.length; i++) {
+                    if (this.reportRoleList[i].checked) {
+                        reportArr.push(this.reportRoleList[i].path)
+                    }
+                }
                 for (let i = 0; i < this.systemRoleList.length; i++) {
                     if (this.systemRoleList[i].checked) {
                         systemArr.push(this.systemRoleList[i].path)
@@ -797,6 +799,7 @@
                     "plan": _this.planAllChecked || planArr.length > 0 ? planArr : null,
                     "abnormal": _this.abnormalAllChecked || abnormalArr.length > 0 ? abnormalArr : null,
                     "task": _this.taskAllChecked || taskArr.length > 0 ? taskArr : null,
+                    "report": _this.reportAllChecked || reportArr.length > 0 ? reportArr : null,
                     "system": _this.systemAllChecked || systemArr.length > 0 ? systemArr : null
                 })
                 return result
@@ -901,6 +904,21 @@
                 }
 
                 count = 0;
+                if (all.report != null) {
+                    for (let i = 0; i < this.reportRoleList.length; i++) {
+                        for (let j = 0; j < all.report.length; j++) {
+                            if (this.reportRoleList[i].path == all.report[j]) {
+                                this.reportRoleList[i].checked = true;
+                                count++
+                            }
+                        }
+                    }
+                    if (count == this.reportRoleList.length) {
+                        this.reportAllChecked = true
+                    }
+                }
+
+                count = 0;
                 if (all.system != null) {
                     for (let i = 0; i < this.systemRoleList.length; i++) {
                         if(this.systemRoleList[i].path.indexOf("config_manage")>=0)
@@ -975,6 +993,15 @@
                 let num = 0;
                 for (let i = 0; i < this.taskRoleList.length; i++) {
                     if (this.taskRoleList[i].checked) {
+                        num = num + 1
+                    }
+                }
+                return num
+            },
+            reportCheckedNum() {
+                let num = 0;
+                for (let i = 0; i < this.reportRoleList.length; i++) {
+                    if (this.reportRoleList[i].checked) {
                         num = num + 1
                     }
                 }
@@ -1060,6 +1087,16 @@
                                         })//checked状态用于存储是否被选中的状态
                                     }
                                     break;
+                                case "/home/report":
+                                    for (let k = 0; k < routes[i].children[j].children.length; k++) {
+                                        _this.reportRoleList.push({
+                                            "path": routes[i].children[j].children[k].path,
+                                            "name": routes[i].children[j].children[k].meta,
+                                            "checked": 0,
+                                            "enabled": 1,
+                                        })//checked状态用于存储是否被选中的状态
+                                    }
+                                    break;
                                 case "/home/system":
                                     for (let k = 0; k < routes[i].children[j].children.length; k++) {
                                         _this.systemRoleList.push({
@@ -1083,5 +1120,13 @@
     }
 </script>
 <style>
-
+.el-checkbox {
+        float: left;
+        margin-left: 10px;
+    }
+.mainCheckBox{
+    font-weight:bold;
+    font-style: oblique;
+    color:black;
+}
 </style>

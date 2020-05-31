@@ -42,13 +42,19 @@ import Plan from "../components/plan.vue"
 import Machine from "../components/machine.vue"
 import MachineConfigProcess from "../components/machine/machine_config_process.vue"
 import MachineInstallProcess from "../components/machine/machine_install_process.vue"
-import MachineProductionReport from "../components/machine/machine_production_report.vue"
 import MachineInstallWhole from "../components/machine/machine_install_whole.vue"
 import MachineInstallParts from "../components/machine/machine_install_parts.vue"
 import produceStaffAttendance from "../components/machine/produce_staff_attendance.vue"
 
 //contact 联系单
 import ContactSign from "../components/contract/lxd_contact_sign.vue"
+
+//report 报表
+import Report from "../components/report.vue"
+import MachineProductionReport from "../components/report/machine_production_report.vue"
+
+
+
 
 export default [{
         path: '/login',
@@ -134,12 +140,7 @@ export default [{
                         name: 'machine_install_parts',
                         meta: '部装管理'
                     },
-                    {
-                        path: '/home/machine/machine_production_report',
-                        component: MachineProductionReport,
-                        name: 'machine_production_report',
-                        meta: '生产报表'
-                    },
+
                     {
                         path: '/home/machine/produce_staff_attendance',
                         component: produceStaffAttendance,
@@ -203,7 +204,20 @@ export default [{
                     }
                 ]
             },
+            {
+                path: '/home/report',
+                component: Report,
+                name: 'Report',
+                meta: "报表管理",
+                children: [{
+                        path: '/home/report/machine_production_report',
+                        component: MachineProductionReport,
+                        name: 'machine_production_report',
+                        meta: '生产报表'
+                    },
 
+                ],
+            },
             {
                 path: '/home/system',
                 component: System,
