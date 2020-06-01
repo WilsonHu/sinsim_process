@@ -52,6 +52,8 @@ import ContactSign from "../components/contract/lxd_contact_sign.vue"
 //report 报表
 import Report from "../components/report.vue"
 import MachineProductionReport from "../components/report/machine_production_report.vue"
+import FinanceReport from "../components/report/finance_report.vue"
+import SaleReport from "../components/report/sale_report.vue"
 
 
 
@@ -215,7 +217,18 @@ export default [{
                         name: 'machine_production_report',
                         meta: '生产报表'
                     },
-
+                    {
+                        path: '/home/report/finance_report',
+                        component: FinanceReport,
+                        name: 'finance_report',
+                        meta: '财务报表'
+                    },
+                    {
+                        path: '/home/report/sale_report',
+                        component: SaleReport,
+                        name: 'sale_report',
+                        meta: '销售报表'
+                    },
                 ],
             },
             {
