@@ -155,12 +155,11 @@ export default {
     },
     onSearchDetailData() {
       var condition = {
-        taskName: _this.filters.taskName.trim(),
-        machineOrderNumber: _this.filters.orderNum.trim(),
-        queryStartTime: '',
-        queryFinishTime: '',
+        customer: _this.filters.customer,
+        contract_num: _this.filters.contract_num,
+        order_num: _this.filters.orderNum,
         is_fuzzy: true,
-        nameplate: _this.filters.nameplate.trim(),
+        sellman: _this.filters.sellman,
         page: _this.currentPage,
         size: _this.pageSize
       };

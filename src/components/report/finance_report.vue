@@ -55,24 +55,50 @@
         <el-table-column width="75" align="center" label="序号">
           <template scope="scope">{{scope.$index+startRow}}</template>
         </el-table-column>
+        <el-table-column align="center" min-width="110" prop="customer" label="客户"></el-table-column>
         <el-table-column align="center" prop="contractNum" min-width="85" label="合同号"></el-table-column>
-        <el-table-column align="center" min-width="110" prop="customerName" label="客户"></el-table-column>
         <el-table-column align="center" label="订单号" min-width="145">
           <template scope="scope">
             <span>{{scope.row.orderNum}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="nameplate" label="机器编号">
+        <el-table-column align="center" prop="nameplate" label="机器名">
+          <template scope="scope">
+            <div>{{scope.row.name}}</div>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column align="center" prop="nameplate" label="机器编号">
           <template scope="scope">
             <div>{{scope.row.nameplate}}</div>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column align="center" prop="machineType" label="机型">
           <template scope="scope">
-            <div>{{scope.row.machineType|filterMachineType}}</div>
+            <div>{{scope.row.machineType.name}}</div>
           </template>
         </el-table-column>
+        <el-table-column align="center" prop="machineNum" label="台数"></el-table-column>
+        <el-table-column align="center" prop="machinePrice" label="单价" />
+        <el-table-column align="center" prop="sellman" label="装置金额" />
+        <el-table-column align="center" prop="sellman" label="优惠金额" />
+        <el-table-column align="center" prop="sellman" label="机架长度" />
+        <el-table-column align="center" prop="sellman" label="装置名称">
+          <template scope="scope">
+            <div>{{scope.row.equipment.name}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="sellman" label="装置数量">
+          <template scope="scope">
+            <div>{{scope.row.equipment.number}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="sellman" label="销售费"></el-table-column>
+        <el-table-column align="center" prop="sellman" label="保修费"></el-table-column>
+        <el-table-column align="center" prop="maintainPerson" label="保修人员"></el-table-column>
         <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
+        <el-table-column align="center" prop="payMethod" label="付款方式"></el-table-column>
+        <el-table-column align="center" prop="sellman" label="定金率"></el-table-column>
+        <el-table-column align="center" prop="sellman" label="毛利"></el-table-column>
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px">
         <el-pagination
@@ -95,16 +121,14 @@ export default {
   data() {
     _this = this;
     return {
-      getWorkTaskUrl: HOST + 'task/list',
-      onSearchDetailDataUrl: HOST + '/task/record/searchTaskRecordDetail',
+      onSearchDetailDataUrl: HOST + '/machine/order/selectOrders',
       queryMachineTypeURL: HOST + 'machine/type/list',
       allMachineType: [],
-      workTaskList: [],
       filters: {
         customer: '',
         contract_num: '',
         orderNum: '',
-        machineLength: '',
+        //machineLength: '',
         sellman: ''
       },
       tableData: [],
@@ -116,27 +140,6 @@ export default {
     };
   },
   methods: {
-    getWorkTask() {
-      $.ajax({
-        url: _this.getWorkTaskUrl,
-        type: 'POST',
-        dataType: 'json',
-        data: {},
-        success: function(res) {
-          if (res.code == 200) {
-            if (res.data.list.length > 0) {
-              _this.workTaskList = [];
-              res.data.list.forEach(item => {
-                _this.workTaskList.push({
-                  id: item.id,
-                  taskName: item.taskName
-                });
-              });
-            }
-          }
-        }
-      });
-    },
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
@@ -155,12 +158,11 @@ export default {
     },
     onSearchDetailData() {
       var condition = {
-        taskName: _this.filters.taskName.trim(),
-        machineOrderNumber: _this.filters.orderNum.trim(),
-        queryStartTime: '',
-        queryFinishTime: '',
+        customer: _this.filters.customer,
+        contract_num: _this.filters.contract_num,
+        order_num: _this.filters.orderNum,
         is_fuzzy: true,
-        nameplate: _this.filters.nameplate.trim(),
+        sellman: _this.filters.sellman,
         page: _this.currentPage,
         size: _this.pageSize
       };
@@ -182,12 +184,11 @@ export default {
 
     onExport() {
       var condition = {
-        taskName: _this.filters.taskName.trim(),
-        machineOrderNumber: _this.filters.orderNum.trim(),
-        queryStartTime: '',
-        queryFinishTime: '',
+        customer: _this.filters.customer,
+        contract_num: _this.filters.contract_num,
+        order_num: _this.filters.orderNum,
         is_fuzzy: true,
-        nameplate: _this.filters.nameplate.trim(),
+        sellman: _this.filters.sellman,
         page: _this.currentPage,
         size: _this.pageSize
       };
@@ -268,7 +269,6 @@ export default {
       return;
     }
     _this.initMachineType();
-    _this.getWorkTask();
   },
   mounted: function() {
     _this.search();
