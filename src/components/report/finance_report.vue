@@ -5,29 +5,39 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="客户:">
-              <el-input v-model="filters.customer" placeholder="客户" auto-complete="off"></el-input>
+              <el-input v-model="filters.customer" placeholder="客户" auto-complete="off" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="合同号:">
-              <el-input v-model="filters.contract_num" placeholder="合同号" auto-complete="off"></el-input>
+              <el-input
+                v-model="filters.contract_num"
+                placeholder="合同号"
+                auto-complete="off"
+                clearable
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="订单号:">
-              <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off"></el-input>
+              <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6">
             <el-form-item label="机架长度:">
-              <el-input v-model="filters.machineLength" placeholder="机架长度" auto-complete="off"></el-input>
+              <el-input
+                v-model="filters.machineLength"
+                placeholder="机架长度"
+                auto-complete="off"
+                clearable
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="销售员:">
-              <el-input v-model="filters.sellman" placeholder="销售员" auto-complete="off"></el-input>
+              <el-input v-model="filters.sellman" placeholder="销售员" auto-complete="off" clearable></el-input>
             </el-form-item>
           </el-col>
 

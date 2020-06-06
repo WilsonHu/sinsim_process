@@ -5,37 +5,42 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="客户:">
-              <el-input v-model="filters.customer" placeholder="客户" auto-complete="off"></el-input>
+              <el-input v-model="filters.customer" placeholder="客户" auto-complete="off" clearable></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="合同号:">
-              <el-input v-model="filters.contract_num" placeholder="合同号" auto-complete="off"></el-input>
+          <el-col :span="6" :offset="2">
+            <el-form-item label="机型:">
+              <el-input
+                v-model="filters.machineType"
+                placeholder="机型"
+                auto-complete="off"
+                clearable
+              ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="订单号:">
-              <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <el-form-item label="机架长度:">
-              <el-input v-model="filters.machineLength" placeholder="机架长度" auto-complete="off"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="销售员:">
-              <el-input v-model="filters.sellman" placeholder="销售员" auto-complete="off"></el-input>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="2" :offset="8">
+          <el-col :span="2" :offset="6">
             <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询</el-button>
           </el-col>
           <el-col :span="2" :offset="0">
             <el-button icon="el-icon-share" size="normal" type="danger" @click="onExport">导出</el-button>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="下单日期:">
+              <el-date-picker
+                style="float:left;"
+                v-model="filters.selectDate"
+                type="daterange"
+                align="left"
+                unlink-panels
+                range-separator="—"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerOptions"
+                clearable
+              ></el-date-picker>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -56,25 +61,23 @@
           <template scope="scope">{{scope.$index+startRow}}</template>
         </el-table-column>
         <el-table-column align="center" prop="contractNum" min-width="85" label="合同号"></el-table-column>
-        <el-table-column align="center" min-width="110" prop="customerName" label="客户"></el-table-column>
+        <el-table-column align="center" min-width="110" prop="customer" label="客户"></el-table-column>
         <el-table-column align="center" label="订单号" min-width="145">
           <template scope="scope">
             <span>{{scope.row.orderNum}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="nameplate" label="机器编号">
-          <template scope="scope">
-            <div>{{scope.row.nameplate}}</div>
-          </template>
-        </el-table-column>
         <el-table-column align="center" prop="machineType" label="机型">
           <template scope="scope">
-            <div>{{scope.row.machineType|filterMachineType}}</div>
+            <div>{{scope.row.machineType.name}}</div>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
+        <el-table-column align="center" prop="machineNum" label="数量"></el-table-column>
+        <el-table-column align="center" prop="machinePrice" label="单价" />
+        <el-table-column align="center" prop="machinePrice" label="总价人民币" />
+        <el-table-column align="center" prop="machinePrice" label="总价美元" />
       </el-table>
-      <div class="block" style="text-align: center; margin-top: 20px">
+      <div class="block" style="text-align: center; margin-top: 20px;">
         <el-pagination
           background
           @current-change="handleCurrentChange"
@@ -95,48 +98,55 @@ export default {
   data() {
     _this = this;
     return {
-      getWorkTaskUrl: HOST + 'task/list',
-      onSearchDetailDataUrl: HOST + '/task/record/searchTaskRecordDetail',
+      onSearchDetailDataUrl: HOST + '/machine/order/selectOrders',
       queryMachineTypeURL: HOST + 'machine/type/list',
       allMachineType: [],
       workTaskList: [],
       filters: {
         customer: '',
-        contract_num: '',
-        orderNum: '',
-        machineLength: '',
-        sellman: ''
+        machineType: '',
+        selectDate: ''
       },
       tableData: [],
       pageSize: EveryPageNum, //每一页的num
       currentPage: 1,
       startRow: 0,
       totalRecords: 0,
-      loadingUI: false
+      loadingUI: false,
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }
+        ]
+      }
     };
   },
   methods: {
-    getWorkTask() {
-      $.ajax({
-        url: _this.getWorkTaskUrl,
-        type: 'POST',
-        dataType: 'json',
-        data: {},
-        success: function(res) {
-          if (res.code == 200) {
-            if (res.data.list.length > 0) {
-              _this.workTaskList = [];
-              res.data.list.forEach(item => {
-                _this.workTaskList.push({
-                  id: item.id,
-                  taskName: item.taskName
-                });
-              });
-            }
-          }
-        }
-      });
-    },
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
@@ -156,13 +166,24 @@ export default {
     onSearchDetailData() {
       var condition = {
         customer: _this.filters.customer,
-        contract_num: _this.filters.contract_num,
         order_num: _this.filters.orderNum,
+        query_start_time: '',
+        query_finish_time: '',
         is_fuzzy: true,
-        sellman: _this.filters.sellman,
         page: _this.currentPage,
         size: _this.pageSize
       };
+      if (
+        _this.filters.selectDate != null &&
+        _this.filters.selectDate.length > 0
+      ) {
+        condition.query_start_time = _this.filters.selectDate[0].format(
+          'yyyy-MM-dd'
+        );
+        condition.query_finish_time = _this.filters.selectDate[1].format(
+          'yyyy-MM-dd'
+        );
+      }
       $.ajax({
         url: _this.onSearchDetailDataUrl,
         type: 'POST',
@@ -181,12 +202,11 @@ export default {
 
     onExport() {
       var condition = {
-        taskName: _this.filters.taskName.trim(),
-        machineOrderNumber: _this.filters.orderNum.trim(),
-        queryStartTime: '',
-        queryFinishTime: '',
+        customer: _this.filters.customer,
+        order_num: _this.filters.orderNum,
+        query_start_time: '',
+        query_finish_time: '',
         is_fuzzy: true,
-        nameplate: _this.filters.nameplate.trim(),
         page: _this.currentPage,
         size: _this.pageSize
       };
@@ -267,7 +287,6 @@ export default {
       return;
     }
     _this.initMachineType();
-    _this.getWorkTask();
   },
   mounted: function() {
     _this.search();
