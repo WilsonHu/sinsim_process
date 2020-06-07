@@ -82,7 +82,7 @@
                 <el-col :span="24">
                     <el-form-item>
                         <el-row style="background-color: #F9FAFC; border-radius: 5px;">
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="contractAllChecked"
@@ -95,7 +95,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="orderAllChecked"
@@ -108,7 +108,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="machineAllChecked"
@@ -122,7 +122,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="planAllChecked"
@@ -136,7 +136,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="abnormalAllChecked"
@@ -149,7 +149,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="taskAllChecked"
@@ -162,7 +162,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="reportAllChecked"
@@ -175,7 +175,20 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
+                                <div style="margin-top: 20px">
+                                    <el-checkbox class="mainCheckBox"
+                                                 v-model="designDepAllChecked"
+                                                 @change="handleDesignDepCheckAllChange">设计管理</el-checkbox>
+                                    <span v-for=" item in designDepRoleList" style="list-style: none;">
+                                            <el-checkbox style="font-weight: normal"
+                                                         v-model="item.checked"
+                                                         @change="handleDesignDepCheckChange">{{item.name}}
+                                            </el-checkbox>
+                                        </span>
+                                </div>
+                            </el-col>
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="systemAllChecked"
@@ -222,7 +235,7 @@
                 <el-col :span="24">
                     <el-form-item>
                         <el-row style="background-color: #F9FAFC; border-radius: 5px;">
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                     <el-checkbox class="mainCheckBox"
                                                 v-model="contractAllChecked"
@@ -237,7 +250,7 @@
                                     </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                     <el-checkbox class="mainCheckBox"
                                                     v-model="orderAllChecked"
@@ -250,7 +263,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                     
                                         <el-checkbox class="mainCheckBox"
@@ -267,7 +280,7 @@
                                     
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="planAllChecked"
@@ -280,7 +293,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                     
                                         <el-checkbox class="mainCheckBox"
@@ -294,7 +307,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="taskAllChecked"
@@ -307,7 +320,7 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                    
                                         <el-checkbox class="mainCheckBox"
@@ -322,7 +335,22 @@
                                         </span>
                                 </div>
                             </el-col>
-                            <el-col :span="3">
+
+                            <el-col :span="2">
+                                <div style="margin-top: 20px">
+                                    <el-checkbox class="mainCheckBox"
+                                                 v-model="designDepAllChecked"
+                                                 @change="handleDesignDepCheckAllChange">设计管理</el-checkbox>
+
+                                    <span v-for=" item in designDepRoleList" style="list-style: none;">
+                                            <el-checkbox style="font-weight: normal"
+                                                         v-model="item.checked"
+                                                         @change="handleDesignDepCheckChange">{{item.name}}
+                                            </el-checkbox>
+                                        </span>
+                                </div>
+                            </el-col>
+                            <el-col :span="2">
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="systemAllChecked"
@@ -413,6 +441,7 @@
                 abnormalRoleList: [],
                 taskRoleList: [],
                 reportRoleList: [],
+                designDepRoleList: [],
                 systemRoleList: [],
                 contractAllChecked: false,//全选的checkbox是否checked
                 orderAllChecked: false,
@@ -421,6 +450,7 @@
                 abnormalAllChecked: false,
                 taskAllChecked: false,
                 reportAllChecked: false,
+                designDepAllChecked: false,
                 systemAllChecked: false
             }
         },
@@ -542,6 +572,10 @@
                 for (i = 0; i < _this.reportRoleList.length; i++) {
                     _this.reportRoleList[i].checked = false;
                 }
+                for (i = 0; i < _this.designDepRoleList.length; i++) {
+                    _this.designDepRoleList[i].checked = false;
+                }
+
                 for (i = 0; i < _this.systemRoleList.length; i++) {
                     _this.systemRoleList[i].checked = false;
                 }
@@ -553,6 +587,7 @@
                 this.abnormalAllChecked = false;
                 this.taskAllChecked = false;
                 this.reportAllChecked=false;
+                this.designDepAllChecked=false;
                 this.systemAllChecked = false
             },
 
@@ -724,6 +759,27 @@
                 }
             },
 
+            //设计部的权限
+            handleDesignDepCheckAllChange() {
+                if (this.designDepAllChecked) {
+                    for (let i = 0; i < this.designDepRoleList.length; i++) {
+                        this.designDepRoleList[i].checked = true;
+                    }
+                } else {
+                    for (let i = 0; i < this.designDepRoleList.length; i++) {
+                        this.designDepRoleList[i].checked = false;
+                    }
+                }
+            },
+
+            handleDesignDepCheckChange() {
+                if (this.designDepCheckedNum === this.designDepRoleList.length) {
+                    this.designDepAllChecked = true;
+                } else {
+                    this.designDepAllChecked = false;
+                }
+            },
+
             handleSystemCheckAllChange() {
                 if (this.systemAllChecked) {
                     for (let i = 0; i < this.systemRoleList.length; i++) {
@@ -751,6 +807,7 @@
                 let abnormalArr = [];
                 let taskArr = [];
                 let reportArr=[];
+                let designDepArr=[];
                 let systemArr = [];
                 for (let i = 0; i < this.contractRoleList.length; i++) {
                     if (this.contractRoleList[i].checked) {
@@ -787,6 +844,12 @@
                         reportArr.push(this.reportRoleList[i].path)
                     }
                 }
+                for (let i = 0; i < this.designDepRoleList.length; i++) {
+                    if (this.designDepRoleList[i].checked) {
+                        designDepArr.push(this.designDepRoleList[i].path)
+                    }
+                }
+
                 for (let i = 0; i < this.systemRoleList.length; i++) {
                     if (this.systemRoleList[i].checked) {
                         systemArr.push(this.systemRoleList[i].path)
@@ -800,6 +863,8 @@
                     "abnormal": _this.abnormalAllChecked || abnormalArr.length > 0 ? abnormalArr : null,
                     "task": _this.taskAllChecked || taskArr.length > 0 ? taskArr : null,
                     "report": _this.reportAllChecked || reportArr.length > 0 ? reportArr : null,
+                    "designDep": _this.designDepAllChecked || designDepArr.length > 0 ? designDepArr : null,
+
                     "system": _this.systemAllChecked || systemArr.length > 0 ? systemArr : null
                 })
                 return result
@@ -917,6 +982,20 @@
                         this.reportAllChecked = true
                     }
                 }
+                count = 0;
+                if (all.designDep != null) {
+                    for (let i = 0; i < this.designDepRoleList.length; i++) {
+                        for (let j = 0; j < all.designDep.length; j++) {
+                            if (this.designDepRoleList[i].path == all.designDep[j]) {
+                                this.designDepRoleList[i].checked = true;
+                                count++
+                            }
+                        }
+                    }
+                    if (count == this.designDepRoleList.length) {
+                        this.designDepAllChecked = true
+                    }
+                }
 
                 count = 0;
                 if (all.system != null) {
@@ -1002,6 +1081,16 @@
                 let num = 0;
                 for (let i = 0; i < this.reportRoleList.length; i++) {
                     if (this.reportRoleList[i].checked) {
+                        num = num + 1
+                    }
+                }
+                return num
+            },
+
+            designDepCheckedNum() {
+                let num = 0;
+                for (let i = 0; i < this.designDepRoleList.length; i++) {
+                    if (this.designDepRoleList[i].checked) {
                         num = num + 1
                     }
                 }
@@ -1097,6 +1186,18 @@
                                         })//checked状态用于存储是否被选中的状态
                                     }
                                     break;
+
+                                case "/home/designDep":
+                                    for (let k = 0; k < routes[i].children[j].children.length; k++) {
+                                        _this.designDepRoleList.push({
+                                            "path": routes[i].children[j].children[k].path,
+                                            "name": routes[i].children[j].children[k].meta,
+                                            "checked": 0,
+                                            "enabled": 1,
+                                        })//checked状态用于存储是否被选中的状态
+                                    }
+                                    break;
+
                                 case "/home/system":
                                     for (let k = 0; k < routes[i].children[j].children.length; k++) {
                                         _this.systemRoleList.push({

@@ -55,8 +55,9 @@ import MachineProductionReport from "../components/report/machine_production_rep
 import FinanceReport from "../components/report/finance_report.vue"
 import SaleReport from "../components/report/sale_report.vue"
 
-
-
+//设计部
+import DesignDep from "../components/designDep.vue"
+import DesignDepManage from "../components/design/design_manage.vue"
 
 export default [{
         path: '/login',
@@ -212,11 +213,11 @@ export default [{
                 name: 'Report',
                 meta: "报表管理",
                 children: [{
-                        path: '/home/report/machine_production_report',
-                        component: MachineProductionReport,
-                        name: 'machine_production_report',
-                        meta: '生产报表'
-                    },
+                    path: '/home/report/machine_production_report',
+                    component: MachineProductionReport,
+                    name: 'machine_production_report',
+                    meta: '生产报表'
+                },
                     {
                         path: '/home/report/finance_report',
                         component: FinanceReport,
@@ -229,6 +230,22 @@ export default [{
                         name: 'sale_report',
                         meta: '销售报表'
                     },
+                ],
+            },
+
+            {
+                path: '/home/designDep',
+                component: DesignDep,
+                name: 'DesignDep',
+                meta: "设计管理",
+                children: [
+                    {
+                        path: '/home/designDep/design_manage',
+                        component: DesignDepManage,
+                        name: 'design_manage',
+                        meta: '设计管理'
+                    },
+
                 ],
             },
             {
