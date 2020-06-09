@@ -72,10 +72,32 @@
             <div>{{scope.row.machineType.name}}</div>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="machineNum" label="数量"></el-table-column>
-        <el-table-column align="center" prop="machinePrice" label="单价" />
-        <el-table-column align="center" prop="machinePrice" label="总价人民币" />
-        <el-table-column align="center" prop="machinePrice" label="总价美元" />
+        <el-table-column align="center" prop="equipment" label="装置" width="150">
+          <template scope="scope">
+            <el-tag
+              v-for="equip in getEquipmentFromJSON(scope.row.equipment)"
+              :key="equip.name"
+            >{{equip.name}}:{{equip.number}}个</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="装置金额" width="150">
+          <template scope="scope">
+            <span>{{getEquipmentAmount(scope.row.equipment)|filterNumberFormat}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="machineNum" label="机器台数"></el-table-column>
+        <el-table-column align="center" prop="machinePrice" label="单价" width="150">
+          <template scope="scope">
+            <span>{{scope.row.machinePrice|filterNumberFormat}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="150" />
+        <el-table-column align="center" label="销售费" width="150">
+          <template scope="scope">
+            <span>{{getTotalAmount(scope.row)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="currencyType" label="币种" />
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px;">
         <el-pagination
@@ -147,6 +169,31 @@ export default {
     };
   },
   methods: {
+    getEquipmentAmount(strData) {
+      let dataArray = _this.getEquipmentFromJSON(strData);
+      var res = 0;
+      for (var i = 0; i < dataArray.length; i++) {
+        res += parseInt(dataArray[i].price) * dataArray[i].number;
+      }
+      return res;
+    },
+    getTotalAmount(data) {
+      let totalAmount = 0;
+      let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
+      //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
+      totalAmount =
+        [equipAmount + parseInt(data.machinePrice)] *
+          parseInt(data.machineNum) -
+        parseInt(data.orderTotalDiscounts);
+      return number_format(totalAmount, 2, '.', ' ');
+    },
+    getEquipmentFromJSON(strData) {
+      let res = [];
+      if (strData != null && strData.length > 0) {
+        res = JSON.parse(strData);
+      }
+      return res;
+    },
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
@@ -278,6 +325,9 @@ export default {
         }
       }
       return result;
+    },
+    filterNumberFormat(ndata) {
+      return number_format(ndata, 2, '.', ' ');
     }
   },
   created: function() {
@@ -295,4 +345,7 @@ export default {
 </script>
 
 <style scoped>
+.el-tag {
+  margin-top: 5px;
+}
 </style>
