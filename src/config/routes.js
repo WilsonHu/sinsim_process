@@ -58,6 +58,7 @@ import SaleReport from "../components/report/sale_report.vue"
 //设计部
 import DesignDep from "../components/designDep.vue"
 import DesignDepManage from "../components/design/design_manage.vue"
+import lxdFulfill from "../components/design/design_manage.vue"
 
 export default [{
         path: '/login',
@@ -187,7 +188,6 @@ export default [{
                 ],
             },
 
-
             {
                 path: '/home/task',
                 component: Task,
@@ -244,6 +244,12 @@ export default [{
                         component: DesignDepManage,
                         name: 'design_manage',
                         meta: '设计管理'
+                    },
+                    {
+                        path: '/home/designDep/lxd_fulfill',
+                        component: lxdFulfill,
+                        name: 'lxd_fulfill',
+                        meta: '联系单落实'
                     },
 
                 ],
