@@ -70,7 +70,7 @@
             <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询 </el-button>
           </el-col>
           <el-col :span="2" :offset="0">
-            <el-button icon="el-icon-share" size="normal" type="danger" @click="onExport">导出</el-button>
+            <el-button icon="el-icon-plus" size="normal" type="danger" @click="handleAdd">设计</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -125,10 +125,31 @@
             </template>
         </el-table-column>
 
-        <el-table-column align="center" prop="drawingLoadingDone" label="图纸装车单" />
-        <el-table-column align="center" prop="bomRequiredDone" label="BOM" />
-        <el-table-column align="center" prop="coverRequiredDone" label="点孔罩盖" />
-        <el-table-column align="center" prop="designtatus" label="当前状态" />S
+        <el-table-column align="center" prop="drawingLoadingDone" label="图纸装车单">
+            <template scope="scope">
+                {{(scope.row.drawingLoadingDone)|filterDone }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" prop="bomDone" label="BOM" >
+            <template scope="scope">
+                {{(scope.row.bomDone)|filterDone }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" prop="holeTubeDone" label="点孔" >
+            <template scope="scope">
+                {{(scope.row.holeTubeDone)|filterDone }}
+            </template>
+        </el-table-column>
+          <el-table-column align="center" prop="coverDone" label="罩盖" >
+              <template scope="scope">
+                  {{(scope.row.coverDone)|filterDone }}
+              </template>
+          </el-table-column>
+        <el-table-column align="center" prop="designStatus" label="当前状态" >
+            <template scope="scope">
+                {{(scope.row.designStatus) }}
+            </template>
+        </el-table-column>S
 
 
         <el-table-column align="center" label="操作" width="240">
@@ -401,6 +422,22 @@ export default {
           return iDays;
 
       },
+      filterDone(status) {
+          var result = '';
+          console.log("status:" + status);
+          if (status == 0) {
+              result = "未完成"
+          } else if (status == 1) {
+              result = "完成"
+          } else {
+              result = "NA"
+          }
+          return result;
+      },
+      filterDesignStatus(status){ //未计划  设计中   完成（全部完成）/改单
+
+      }
+
   },
   created: function() {
     this.userInfo = JSON.parse(sessionStorage.getItem('user'));
