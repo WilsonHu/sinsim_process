@@ -74,7 +74,7 @@
         </el-table-column>
         <el-table-column align="center" prop="nameplate" label="机器名">
           <template scope="scope">
-            <div>{{scope.row.name}}</div>
+            <div>{{scope.row.nameplate}}</div>
           </template>
         </el-table-column>
         <!-- <el-table-column align="center" prop="nameplate" label="机器编号">
@@ -87,28 +87,64 @@
             <div>{{scope.row.machineType.name}}</div>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="machineNum" label="台数"></el-table-column>
-        <el-table-column align="center" prop="machinePrice" label="单价" />
-        <el-table-column align="center" prop="sellman" label="装置金额" />
-        <el-table-column align="center" prop="sellman" label="优惠金额" />
         <el-table-column align="center" prop="sellman" label="机架长度" />
-        <el-table-column align="center" prop="sellman" label="装置名称">
-          <template scope="scope">
-            <div>{{scope.row.equipment.name}}</div>
+        <el-table-column align="center" prop="packageMethod" label="包装方式" />
+        <el-table-column align="center" prop="equipment" label="装置" width="380">
+          <template slot-scope="item">
+            <el-table border :data="getEquipmentFromJSON(item.row.equipment)">
+              <el-table-column label="装置名称" align="center">
+                <template slot-scope="scope">
+                  <span>{{scope.row.name}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="数量" align="center">
+                <template slot-scope="scope">
+                  <span>{{scope.row.number}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="单价" align="center">
+                <template slot-scope="scope">
+                  <span>{{scope.row.price|filterNumberFormat}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="装置总价" align="center">
+                <template slot-scope="scope">
+                  <span
+                    style="font-weight: bold;color: #409EFF"
+                  >{{(scope.row.price*scope.row.number)|filterNumberFormat}}</span>
+                </template>
+              </el-table-column>
+            </el-table>
+            <!-- <el-tag
+              v-for="equip in getEquipmentFromJSON(scope.row.equipment)"
+              :key="equip.name"
+            >{{equip.name}}:{{equip.number}}个</el-tag>-->
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="sellman" label="装置数量">
+        <el-table-column align="center" label="装置金额" width="150">
           <template scope="scope">
-            <div>{{scope.row.equipment.number}}</div>
+            <span>{{getEquipmentAmount(scope.row.equipment)|filterNumberFormat}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="sellman" label="销售费"></el-table-column>
-        <el-table-column align="center" prop="sellman" label="保修费"></el-table-column>
+        <el-table-column align="center" prop="machineNum" label="机器台数"></el-table-column>
+        <el-table-column align="center" prop="machinePrice" label="单价" width="150">
+          <template scope="scope">
+            <span>{{scope.row.machinePrice|filterNumberFormat}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="150" />
+        <el-table-column align="center" label="销售费" width="150">
+          <template scope="scope">
+            <span>{{getTotalAmount(scope.row)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="currencyType" label="币种" />
+        <el-table-column align="center" prop=" " label="保修费"></el-table-column>
         <el-table-column align="center" prop="maintainPerson" label="保修人员"></el-table-column>
         <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
-        <el-table-column align="center" prop="payMethod" label="付款方式"></el-table-column>
-        <el-table-column align="center" prop="sellman" label="定金率"></el-table-column>
-        <el-table-column align="center" prop="sellman" label="毛利"></el-table-column>
+        <el-table-column align="center" prop="payMethod" label="付款方式" width="200"></el-table-column>
+        <el-table-column align="center" prop=" " label="定金率"></el-table-column>
+        <el-table-column align="center" prop=" " label="毛利"></el-table-column>
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px">
         <el-pagination
@@ -150,6 +186,31 @@ export default {
     };
   },
   methods: {
+    getEquipmentAmount(strData) {
+      let dataArray = _this.getEquipmentFromJSON(strData);
+      var res = 0;
+      for (var i = 0; i < dataArray.length; i++) {
+        res += parseInt(dataArray[i].price) * dataArray[i].number;
+      }
+      return res;
+    },
+    getTotalAmount(data) {
+      let totalAmount = 0;
+      let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
+      //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
+      totalAmount =
+        [equipAmount + parseInt(data.machinePrice)] *
+          parseInt(data.machineNum) -
+        parseInt(data.orderTotalDiscounts);
+      return number_format(totalAmount, 2, '.', ' ');
+    },
+    getEquipmentFromJSON(strData) {
+      let res = [];
+      if (strData != null && strData.length > 0) {
+        res = JSON.parse(strData);
+      }
+      return res;
+    },
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
@@ -261,6 +322,9 @@ export default {
   },
 
   filters: {
+    filterNumberFormat(ndata) {
+      return number_format(ndata, 2, '.', ' ');
+    },
     filterMachineType(id) {
       var result = '';
       for (var i = 0; i < _this.allMachineType.length; i++) {
@@ -287,4 +351,7 @@ export default {
 </script>
 
 <style scoped>
+.el-tag {
+  margin-top: 5px;
+}
 </style>
