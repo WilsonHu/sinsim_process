@@ -214,12 +214,17 @@ export default {
       var condition = {
         customer: _this.filters.customer,
         order_num: _this.filters.orderNum,
+        marketGroupName: '',
         query_start_time: '',
         query_finish_time: '',
         is_fuzzy: true,
         page: _this.currentPage,
         size: _this.pageSize
       };
+      //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
+      if( _this.userinfo.role.id == 7 || _this.userinfo.role.id == 9){
+        condition.marketGroupName = _this.userinfo.marketGroupName;
+      }
       if (
         _this.filters.selectDate != null &&
         _this.filters.selectDate.length > 0

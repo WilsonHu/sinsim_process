@@ -29,7 +29,7 @@
             <el-form-item label="机架长度:">
               <el-input
                 v-model="filters.machineLength"
-                placeholder="机架长度"
+                placeholder="暂无，不可用"
                 auto-complete="off"
                 clearable
               ></el-input>
@@ -133,18 +133,18 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="150" />
-        <el-table-column align="center" label="销售费" width="150">
-          <template scope="scope">
-            <span>{{getTotalAmount(scope.row)}}</span>
-          </template>
-        </el-table-column>
+        <!--<el-table-column align="center" label="销售费" width="150">-->
+          <!--<template scope="scope">-->
+            <!--<span>{{getTotalAmount(scope.row)}}</span>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
         <el-table-column align="center" prop="currencyType" label="币种" />
-        <el-table-column align="center" prop=" " label="保修费"></el-table-column>
+        <!--<el-table-column align="center" prop=" " label="保修费"></el-table-column>-->
         <el-table-column align="center" prop="maintainPerson" label="保修人员"></el-table-column>
         <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
         <el-table-column align="center" prop="payMethod" label="付款方式" width="200"></el-table-column>
-        <el-table-column align="center" prop=" " label="定金率"></el-table-column>
-        <el-table-column align="center" prop=" " label="毛利"></el-table-column>
+        <!--<el-table-column align="center" prop=" " label="定金率"></el-table-column>-->
+        <!--<el-table-column align="center" prop=" " label="毛利"></el-table-column>-->
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px">
         <el-pagination
