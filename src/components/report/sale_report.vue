@@ -8,24 +8,35 @@
               <el-input v-model="filters.customer" placeholder="客户" auto-complete="off" clearable></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6" :offset="2">
-            <el-form-item label="机型:">
+
+          <el-col :span="6">
+            <el-form-item label="合同号:">
               <el-input
-                v-model="filters.machineType"
-                placeholder="机型"
-                auto-complete="off"
-                clearable
+                      v-model="filters.contract_num"
+                      placeholder="合同号"
+                      auto-complete="off"
+                      clearable
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="2" :offset="6">
-            <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询</el-button>
-          </el-col>
-          <el-col :span="2" :offset="0">
-            <el-button icon="el-icon-share" size="normal" type="danger" @click="onExport">导出</el-button>
+          <el-col :span="6">
+            <el-form-item label="订单号:">
+              <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off" clearable></el-input>
+            </el-form-item>
           </el-col>
         </el-row>
+
         <el-row>
+          <el-col :span="6" >
+            <el-form-item label="机型:">
+              <el-input
+                      v-model="filters.machineTypeName"
+                      placeholder="机型"
+                      auto-complete="off"
+                      clearable
+              ></el-input>
+            </el-form-item>
+          </el-col>
           <el-col :span="6">
             <el-form-item label="下单日期:">
               <el-date-picker
@@ -41,6 +52,13 @@
                 clearable
               ></el-date-picker>
             </el-form-item>
+          </el-col>
+
+          <el-col :span="2" :offset="8">
+            <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询</el-button>
+          </el-col>
+          <el-col :span="2" :offset="0">
+            <el-button icon="el-icon-share" size="normal" type="danger" @click="onExport">导出</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -85,14 +103,14 @@
             <span>{{getEquipmentAmount(scope.row.equipment)|filterNumberFormat}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="machineNum" label="机器台数"></el-table-column>
-        <el-table-column align="center" prop="machinePrice" label="单价" width="150">
+        <el-table-column align="center" prop="machinePrice" label="机器单价" width="150">
           <template scope="scope">
             <span>{{scope.row.machinePrice|filterNumberFormat}}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" prop="machineNum" label="机器台数"></el-table-column>
         <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="150" />
-        <el-table-column align="center" label="销售费" width="150">
+        <el-table-column align="center" label="订单总价" width="150">
           <template scope="scope">
             <span>{{getTotalAmount(scope.row)}}</span>
           </template>
@@ -127,7 +145,10 @@ export default {
       filters: {
         customer: '',
         machineType: '',
-        selectDate: ''
+        selectDate: '',
+        machineTypeName: '',
+        contract_num: '',
+        order_num: ''
       },
       tableData: [],
       pageSize: EveryPageNum, //每一页的num
@@ -213,10 +234,12 @@ export default {
     onSearchDetailData() {
       var condition = {
         customer: _this.filters.customer,
+        contract_num: _this.filters.contract_num,
         order_num: _this.filters.orderNum,
         marketGroupName: '',
         query_start_time: '',
         query_finish_time: '',
+        machine_name: _this.filters.machineTypeName, //这个是机型
         is_fuzzy: true,
         page: _this.currentPage,
         size: _this.pageSize
@@ -330,7 +353,7 @@ export default {
       return result;
     },
     filterNumberFormat(ndata) {
-      return number_format(ndata, 2, '.', ' ');
+      return number_format(ndata, 0, '.', ' ');
     }
   },
   created: function() {
