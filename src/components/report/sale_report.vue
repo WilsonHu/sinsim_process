@@ -253,9 +253,7 @@ export default {
         order_num: _this.filters.orderNum,
         query_start_time: '',
         query_finish_time: '',
-        is_fuzzy: true,
-        page: _this.currentPage,
-        size: _this.pageSize
+        is_fuzzy: true
       };
       if (
         _this.filters.selectDate != null &&
@@ -280,7 +278,7 @@ export default {
         );
       }
       $.ajax({
-        url: HOST + 'task/record/exportToExcel',
+        url: HOST + '/machine/order/exportToSaleExcel',
         type: 'POST',
         dataType: 'json',
         data: condition,

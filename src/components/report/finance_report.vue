@@ -259,34 +259,11 @@ export default {
         contract_num: _this.filters.contract_num,
         order_num: _this.filters.orderNum,
         is_fuzzy: true,
-        sellman: _this.filters.sellman,
-        page: _this.currentPage,
-        size: _this.pageSize
+        sellman: _this.filters.sellman
       };
-      if (
-        _this.filters.selectDate != null &&
-        _this.filters.selectDate.length > 0
-      ) {
-        condition.queryStartTime = _this.filters.selectDate[0].format(
-          'yyyy-MM-dd'
-        );
-        condition.queryFinishTime = _this.filters.selectDate[1].format(
-          'yyyy-MM-dd'
-        );
-      }
-      if (
-        _this.filters.selectDate != null &&
-        _this.filters.selectDate.length > 0
-      ) {
-        condition.query_start_time = _this.filters.selectDate[0].format(
-          'yyyy-MM-dd'
-        );
-        condition.query_finish_time = _this.filters.selectDate[1].format(
-          'yyyy-MM-dd'
-        );
-      }
+
       $.ajax({
-        url: HOST + 'task/record/exportToExcel',
+        url: HOST + '/machine/order/exportToFinaceExcel',
         type: 'POST',
         dataType: 'json',
         data: condition,
