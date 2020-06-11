@@ -186,14 +186,14 @@
 
                             <el-card class="box-card" style="margin: 25px">
                                 <el-row>
-                                    <el-col :span="6" >
-                                        <el-form-item label="订单号: " :label-width="longFormLabelWidth" prop="orderNum">
+                                    <el-col :span="6"  >
+                                        <el-form-item label="订单号:" :label-width="longFormLabelWidth" prop="orderNum">
                                             <el-select
                                                     :disabled="notWritter() "
                                                     v-model="designForm.orderNum"
+                                                    @change="onOrderChanged(designForm.orderNum)"
                                                     clearable
-                                                    filterable
-                                                    placeholder="订单号">
+                                                    filterable >
                                                 <el-option
                                                         v-for="item in allOrderList"
                                                         :label="item.orderNum"
@@ -202,14 +202,44 @@
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
-                                    <!--<el-col :span="6"  v-show="isShowChangeContactForm-->
-                                    <!--&& (lxdForm.contactForm.orderNum != null)-->
-                                    <!--&& (lxdForm.contactForm.orderNum.length != 0)">-->
-                                    <!--<el-button type="warning" plain size="medium"-->
-                                    <!--@click="handleViewContract(lxdForm.contactForm.orderNum)">查看订单 {{lxdForm.contactForm.orderNum}}</el-button>-->
-
-                                    <!--</el-col>-->
                                 </el-row>
+
+                                <el-row>
+                                    <el-col :span="4" :offset="1">
+                                        <el-form-item label="销售员："  :label-width="formLabelWidthMiddle">
+                                            <el-input v-model="designForm.saleman"   clearable></el-input>
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="5" :offset="0">
+                                        <el-form-item label="客户："  :label-width="formLabelWidthMiddle">
+                                            <el-input v-model="designForm.customerName" clearable></el-input>
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="4" :offset="0">
+                                        <el-form-item label="国家："  :label-width="formLabelWidthMiddle">
+                                            <el-input v-model="designForm.country" clearable></el-input>
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="4" :offset="0">
+                                        <el-form-item label="机器数："  :label-width="formLabelWidthMiddle">
+                                            <el-input v-model="designForm.machineNum" clearable></el-input>
+                                        </el-form-item >
+                                    </el-col >
+                                    <el-col :span="5" :offset="0">
+                                        <el-form-item label="审核状态："  :label-width="longFormLabelWidth">
+                                            <el-input v-model="designForm.orderstatus" clearable></el-input>
+                                        </el-form-item >
+                                    </el-col >
+
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="23" :offset="1">
+                                        <el-form-item label="备注信息："   >
+                                            <el-input type="textarea" v-model="designForm.remark" :rows="5" clearable></el-input>
+                                        </el-form-item >
+                                    </el-col >
+                                </el-row>
+
                             </el-card>
                         </el-form>
 
@@ -325,6 +355,8 @@
                 CHANGE_MODE: 3,
                 formLabelWidth: '100px',
                 longFormLabelWidth: '125px',
+                formLabelWidthMiddle: '80px',
+                formLabelWidthSmall: '60px',
 
 
                 //用于保存设计内容
@@ -350,12 +382,45 @@
                 designExist: false,
                 rules: {
                     orderNum: [
-                        {  type: 'string',required: true, message: '请填写订单号!', trigger: 'change' }
+//                        {  type: 'string',required: true, message: '请填写订单号!', trigger: 'change' }
                     ],
                 },
             };
         },
         methods: {
+
+
+            onOrderChanged(orderNum)
+            {
+                //获取 订单的销售员等
+                $.ajax({
+                    url: HOST + 'machine/order/selectOrders',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        order_num: orderNum,
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            //因为订单号唯一 所以返回的值应该只有一个。
+                            _this.designForm.saleman = res.data.list[0].sellman;
+                            _this.designForm.customerName = res.data.list[0].customer;
+                            _this.designForm.country = res.data.list[0].country;
+                            _this.designForm.machineNum = res.data.list[0].machineNum;
+                            _this.designForm.orderstatus = res.data.list[0].status;
+                            _this.designForm.orderId = res.data.id;
+                            console.log(' 200, 获取 订单信息 OK' + res.data.customer);
+                            console.log(' 200, 获取 订单信息 OK sellman ' + res.data.sellman);
+                        } else {
+                            console.error('获取 订单信息失败，res.code: ' + res.code);
+                        }
+                    },
+                    error: function (data) {
+                        console.error('服务器访问出错');
+                        _this.errorMsg = '服务器访问出错！';
+                    }
+                });
+            },
 
             fetchAllOrderList() {
                 $.ajax({
@@ -401,6 +466,10 @@
                 this.requisitionForms.splice(0, this.requisitionForms.length);
                 _this.addDesignVisible = false;
                 _this.selectContracts();
+            },
+            dialogClose() {
+                _this.addDesignVisible = false;
+//                _this.selectContacts();
             },
             changeDesignContentDisable(item) {
                 return (
