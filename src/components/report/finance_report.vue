@@ -29,7 +29,7 @@
             <el-form-item label="机架长度:">
               <el-input
                 v-model="filters.machineLength"
-                placeholder="机架长度"
+                placeholder="暂无，不可用"
                 auto-complete="off"
                 clearable
               ></el-input>
@@ -87,7 +87,7 @@
             <div>{{scope.row.machineType.name}}</div>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="sellman" label="机架长度" />
+        <!--<el-table-column align="center" prop="" label="机架长度" />-->
         <el-table-column align="center" prop="packageMethod" label="包装方式" />
         <el-table-column align="center" prop="equipment" label="装置" width="380">
           <template slot-scope="item">
@@ -121,30 +121,37 @@
             >{{equip.name}}:{{equip.number}}个</el-tag>-->
           </template>
         </el-table-column>
-        <el-table-column align="center" label="装置金额" width="150">
-          <template scope="scope">
-            <span>{{getEquipmentAmount(scope.row.equipment)|filterNumberFormat}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="machineNum" label="机器台数"></el-table-column>
-        <el-table-column align="center" prop="machinePrice" label="单价" width="150">
+        <!-- 这个 装置金额 前面已经有了 装置总价-->
+        <!--<el-table-column align="center" label="装置金额" width="150">-->
+          <!--<template scope="scope">-->
+            <!--<span>{{getEquipmentAmount(scope.row.equipment)|filterNumberFormat}}</span>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
+        <el-table-column align="center" prop="machinePrice" label="机器单价" width="150">
           <template scope="scope">
             <span>{{scope.row.machinePrice|filterNumberFormat}}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" prop="machineNum" label="机器台数"></el-table-column>
+        <!--<el-table-column align="center" prop="machinePrice" label="单台价格 NG" width="150">-->
+        <!--<template scope="scope">-->
+          <!--<span>{{scope.row.machinePrice|filterNumberFormat}}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
         <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="150" />
-        <el-table-column align="center" label="销售费" width="150">
+
+        <el-table-column align="center" label="订单总价" width="150">
           <template scope="scope">
             <span>{{getTotalAmount(scope.row)}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="currencyType" label="币种" />
-        <el-table-column align="center" prop=" " label="保修费"></el-table-column>
+        <!--<el-table-column align="center" prop=" " label="保修费"></el-table-column>-->
         <el-table-column align="center" prop="maintainPerson" label="保修人员"></el-table-column>
         <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
         <el-table-column align="center" prop="payMethod" label="付款方式" width="200"></el-table-column>
-        <el-table-column align="center" prop=" " label="定金率"></el-table-column>
-        <el-table-column align="center" prop=" " label="毛利"></el-table-column>
+        <!--<el-table-column align="center" prop=" " label="定金率"></el-table-column>-->
+        <!--<el-table-column align="center" prop=" " label="毛利"></el-table-column>-->
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px">
         <el-pagination
@@ -300,7 +307,7 @@ export default {
 
   filters: {
     filterNumberFormat(ndata) {
-      return number_format(ndata, 2, '.', ' ');
+      return number_format(ndata, 0, '.', ' ');
     },
     filterMachineType(id) {
       var result = '';
