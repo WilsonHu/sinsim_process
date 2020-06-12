@@ -358,7 +358,10 @@
                                         </el-col>
                                         <el-col :span="6">
                                             <el-form-item label="备注：" :label-width="longFormLabelWidth">
-                                                <el-input type="textarea" :rows="5" v-model="item.remarks" placeholder="输入备注" clearable  :disabled="notWritter()||mode==SIGN_MODE"></el-input>
+                                                <el-input type="textarea" :rows="5" v-model="item.remarks" placeholder="输入备注"
+                                                          clearable  :disabled="notWritter()||mode==SIGN_MODE"
+                                                          v-if="isFinanceVisible()"
+                                                ></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="2">
@@ -2615,6 +2618,21 @@
             },
             contractDialogCloseCallback() {
                 _this.addContractVisible = false;
+            },
+
+            isFinanceVisible() {
+                if (
+                        (this.userInfo != '' &&
+                        (this.userInfo.role.roleName.indexOf('销售') != -1 ||
+                        this.userInfo.role.roleName.indexOf('财务') != -1)) ||
+                        this.userInfo.role.roleName.indexOf('总经理') != -1 ||
+                        this.userInfo.role.roleName.indexOf('成本核算') != -1 ||
+                        this.userInfo.role.id == 1
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
             },
         },
         computed: {
