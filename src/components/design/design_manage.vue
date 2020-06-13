@@ -218,7 +218,7 @@
                                     </el-col >
                                     <el-col :span="5" :offset="0">
                                         <el-form-item label="客户："  :label-width="formLabelWidthMiddle">
-                                            <el-input v-model="designForm.customerName" clearable></el-input>
+                                            <el-input v-model="designForm.guest_name" clearable></el-input>
                                         </el-form-item >
                                     </el-col >
                                     <el-col :span="4" :offset="0">
@@ -1104,22 +1104,28 @@
 
                 //用于保存设计内容
                 designForm: {
+
                     orderNum: '',
+                    order_id: '', ////
                     saleman: '',
-                    customerName: '',
+                    guest_name: '',
                     country: '',
                     machineNum: '',
                     remark: '',
                     orderStatus: CONTRACT_INITIAL,
 
                     designer: '',
-                    designCreatedDate: '',
+//                    designCreatedDate: new Date(),
                     machineSpec: '',
                     keywords: '',
-                    drawingLoadingDone: '',
-                    holeTubeDone: '',
-                    bomDone: '',
-                    coverDone: ''
+                    drawingLoadingDone: 0,
+                    drawing_loading_done: 0,
+                    holeTubeDone: 0,
+//                    hole_tube_done: '',
+                    bomDone: 0,
+                    coverDone: 0,
+                    createdDate: new Date(),
+                    updatedDate: new Date()
                 },
 
                 designExist: false,
@@ -1132,6 +1138,149 @@
         },
         methods: {
 
+            onAdd()
+            {
+                //先获取 order_id
+                $.ajax({
+                    url: HOST + 'machine/order/selectOrders',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {order_num: _this.designForm.orderNum},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.designForm.order_id = res.data.list[0].id;
+                            console.log("_this.designForm.order_id :" + _this.designForm.order_id );
+                        } else {
+                            console.log("getMachineOrderData err:" + res.message);
+                            _this.errorMsg = '获取order_id出错！';
+                            _this.isError = true;
+                        }
+                    },
+                    error: function (info) {
+                        _this.errorMsg = '服务器访问出错！';
+                        _this.isError = true;
+                    }
+                });
+
+
+                let submitData=JSON.stringify(_this.designForm);
+                $.ajax({
+                    url: HOST + 'design/dep/info/add',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        jsonDesignDepInfoFormAllInfo:submitData,
+                    },
+                    success: function (res) {
+                        _this.isError = res.code != 200;
+                        if (!_this.isError) {
+                            //_this.addLxdVisible = false;
+                            showMessage(_this, '添加成功', 1);
+                            //新需求:赋值主键ID,UI不关闭，继续可编辑，变成更新页面
+//                            _this.lxdForm.contactForm.id = res.data;
+                            _this.mode = _this.EDIT_MODE;
+                            _this.changeUIMode();
+//                            _this.fetchLxdData(res.data);
+//                            _this.selectContacts();
+                        } else {
+                            _this.errorMsg = res.message;
+                            showMessage(_this, _this.errorMsg, 0);
+                        }
+                    },
+                    error: function (info) {
+                        _this.errorMsg = '服务器访问出错！';
+                        _this.isError = true;
+                    }
+                });
+            },
+
+            changeUIMode()
+            {
+                _this.isError = false;
+                _this.errorMsg = '';
+                if(_this.mode == _this.EDIT_MODE)
+                {
+                    _this.dialogTitle = '编辑设计';
+                }else{
+                    _this.dialogTitle = '新增联系单';
+                }
+            },
+            onEdit() {
+                let submitData=JSON.stringify(_this.lxdForm);
+                $.ajax({
+                    url: HOST + 'design/dep/info/update',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        jsonDesignDepInfoFormAllInfo:submitData,
+                    },
+                    success: function (res) {
+                        _this.isError = res.code != 200;
+                        if (!_this.isError) {
+                            //_this.addLxdVisible = false;
+                            showMessage(_this, '更新成功', 1);
+                            _this.selectContacts();
+                        } else {
+                            _this.errorMsg = res.message;
+                            showMessage(_this, _this.errorMsg, 0);
+                        }
+                    },
+                    error: function (info) {
+                        _this.errorMsg = '服务器访问出错！';
+                        _this.isError = true;
+                    }
+                });
+            },
+
+            validDesignContent(){
+                //todo
+                return false;
+            },
+
+            onAddOrEdit(formName) {
+
+                //在此检查变更内容
+                _this.isError = this.validDesignContent();
+                if (_this.isError) {
+                    console.log('提交的表单有问题，error submit!!');
+                    return false;
+                    showMessage(_this, _this.errorMsg, 0);
+                } else {
+
+                    if (_this.mode == _this.ADD_MODE) {
+                        _this.onAdd();
+                    }
+                    else if (_this.mode == _this.EDIT_MODE) {
+                        _this.onEdit();
+                    }
+                }
+            },
+
+
+            getMachineOrderData(orderNum) {
+                $.ajax({
+                    url: HOST + 'machine/order/selectOrders',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {order_num: orderNum},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.form = copyObject(res.data.list[0]);
+                        } else {
+                            console.log("getMachineOrderData err:"+res.message);
+                        }
+                    }
+                });
+            },
+            handleViewContract(orderNum){
+                this.isError = false;
+                this.errorMsg = '';
+                this.getMachineOrderData(orderNum);
+                _this.addContractVisible = true;
+            },
+            contractDialogCloseCallback() {
+                _this.addContractVisible = false;
+            },
 
             onOrderChanged(orderNum)
             {
@@ -1147,13 +1296,12 @@
                         if (res.code == 200) {
                             //因为订单号唯一 所以返回的值应该只有一个。
                             _this.designForm.saleman = res.data.list[0].sellman;
-                            _this.designForm.customerName = res.data.list[0].customer;
+                            _this.designForm.guest_name = res.data.list[0].customer;
                             _this.designForm.country = res.data.list[0].country;
                             _this.designForm.machineNum = res.data.list[0].machineNum;
                             _this.designForm.orderstatus = res.data.list[0].status;
                             _this.designForm.orderId = res.data.id;
-                            console.log(' 200, 获取 订单信息 OK' + res.data.customer);
-                            console.log(' 200, 获取 订单信息 OK sellman ' + res.data.sellman);
+                            console.log(' 200, 获取 订单信息 OK'); 
                         } else {
                             console.error('获取 订单信息失败，res.code: ' + res.code);
                         }
@@ -1197,7 +1345,7 @@
                 //用于保存合同内容
                 this.contractForm = {
                     contractNum: '',
-                    customerName: '',
+                    guest_name: '',
                     marketGroupName: '',
                     sellman: '',
                     mark: '',
