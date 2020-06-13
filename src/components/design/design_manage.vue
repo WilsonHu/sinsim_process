@@ -233,7 +233,7 @@
                                     </el-col >
                                     <el-col :span="5" :offset="0">
                                         <el-form-item label="审核状态："  :label-width="longFormLabelWidth">
-                                            <el-input v-model="designForm.orderstatus" clearable></el-input>
+                                            <el-input v-model="designForm.orderSignStatus" clearable></el-input>
                                         </el-form-item >
                                     </el-col >
 
@@ -252,20 +252,19 @@
                                         <el-form-item label="设计人员:" :label-width="longFormLabelWidth" prop="orderNum">
                                             <el-select
                                                     :disabled="notWritter() "
-                                                    v-model="designForm.orderNum"
-                                                    @change="onOrderChanged(designForm.orderNum)"
+                                                    v-model="designForm.designer"
                                                     clearable
                                                     filterable >
                                                 <el-option
-                                                        v-for="item in allOrderList"
-                                                        :label="item.orderNum"
-                                                        :value="item.orderNum">
+                                                        v-for="item in disgnerList"
+                                                        :label="item.account"
+                                                        :value="item.account">
                                                 </el-option>
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="6" :offset="0">
-                                    <el-form-item label="日期：" prop="createDate"
+                                    <el-form-item label="日期：" prop="createdDate"
                                                   :label-width="longFormLabelWidth">
                                         <el-date-picker
                                                 :disabled="notWritter()||mode==VIEW_MODE"
@@ -1025,6 +1024,7 @@
                 },
 
                 allOrderList:[],
+                disgnerList:[],
                 onSearchDetailDataUrl: HOST + '/design/dep/info/selectDesignDepInfo',
                 queryMachineTypeURL: HOST + 'machine/type/list',
                 allMachineType: [],
@@ -1125,7 +1125,9 @@
                     bomDone: 0,
                     coverDone: 0,
                     createdDate: new Date(),
-                    updatedDate: new Date()
+                    updatedDate: new Date(),
+
+                    orderSignStatus: 0
                 },
 
                 designExist: false,
@@ -1177,7 +1179,7 @@
                             //_this.addLxdVisible = false;
                             showMessage(_this, '添加成功', 1);
                             //新需求:赋值主键ID,UI不关闭，继续可编辑，变成更新页面
-//                            _this.lxdForm.contactForm.id = res.data;
+                            _this.designForm.id = res.data;
                             _this.mode = _this.EDIT_MODE;
                             _this.changeUIMode();
 //                            _this.fetchLxdData(res.data);
@@ -1205,8 +1207,9 @@
                     _this.dialogTitle = '新增联系单';
                 }
             },
+
             onEdit() {
-                let submitData=JSON.stringify(_this.lxdForm);
+                let submitData=JSON.stringify(_this.designForm);
                 $.ajax({
                     url: HOST + 'design/dep/info/update',
                     type: 'POST',
@@ -1301,7 +1304,7 @@
                             _this.designForm.machineNum = res.data.list[0].machineNum;
                             _this.designForm.orderstatus = res.data.list[0].status;
                             _this.designForm.orderId = res.data.id;
-                            console.log(' 200, 获取 订单信息 OK'); 
+                            console.log(' 200, 获取 订单信息 OK');
                         } else {
                             console.error('获取 订单信息失败，res.code: ' + res.code);
                         }
@@ -1326,6 +1329,21 @@
                     }
                 });
             },
+
+            fetchDisgnerList() {
+                $.ajax({
+                    url: HOST + 'user/selectUsers',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {roleId: 27}, ///写死先
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.disgnerList = res.data.list;
+                        }
+                    }
+                });
+            },
+
             notWritter()
             {
                 return false;
@@ -1558,6 +1576,7 @@
 //        _this.selectContacts();
             _this.search();
             _this.fetchAllOrderList();
+            _this.fetchDisgnerList();
         }
     };
 </script>
