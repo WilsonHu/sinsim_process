@@ -155,6 +155,11 @@
                 <el-table-column align="center" label="操作" width="240">
                     <template scope="scope">
                         <el-tooltip placement="top">
+                            <div slot="content">装车单</div>
+                            <el-button size="mini" type="info" icon="el-icon-download"
+                                       @click="onDownload(scope.row)"></el-button>
+                        </el-tooltip>
+                        <el-tooltip placement="top">
                             <div slot="content">编辑</div>
                             <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
                         </el-tooltip>
@@ -177,6 +182,9 @@
                         <el-form :model="designForm.contactForm" :rules="rules" ref="ruleForm">
 
                             <el-card class="box-card" style="margin: 25px">
+                                <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
+                                    订单信息
+                                </div>
                                 <el-row>
                                     <el-col :span="6"  >
                                         <el-form-item label="订单号:" :label-width="longFormLabelWidth" prop="orderNum">
@@ -239,6 +247,9 @@
                                 </el-row>
                             </el-card>
                             <el-card class="box-card" style="margin: 25px">
+                                <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
+                                    设计准备
+                                </div>
                                 <el-row>
                                     <el-col :span="6"  >
                                         <el-form-item label="设计人员:" :label-width="longFormLabelWidth" prop="orderNum">
@@ -285,6 +296,111 @@
                                 </el-row>
 
 
+                            </el-card>
+                            <el-card class="box-card" style="margin: 25px">
+                                <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
+                                    设计进度
+                                </div>
+                                <el-row>
+                                    <div>
+                                        <el-col :span="2">
+                                            <el-form-item label="图纸、装车单：" :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="2">
+                                            <el-form-item label="附件 " :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                                    :disabled="notWritter()||mode==VIEW_MODE"
+                                                    size="small"
+                                                    type="success"
+                                                    style="float:left; margin-left:5px;"
+                                                    icon="el-icon-upload"
+                                                    @click="onUpload()">上传
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                                    size="small"
+                                                    type="success"
+                                                    icon="el-icon-download"
+                                                    :disabled=" haveNoAttachedFile(designForm.drawingLoadingFiles)"
+                                                    @click="onAttachedDownload(designForm.drawingLoadingFiles)">下载
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                                    size="small"
+                                                    type="danger"
+                                                    icon="el-icon-delete"
+                                                    :disabled=" haveNoAttachedFile(designForm.drawingLoadingFiles)||notWritter()||mode==VIEW_MODE"
+                                                    @click="handAttachedDelete(designForm.drawingLoadingFiles)">删除
+                                            </el-button>
+                                        </el-col>
+                                    </div>
+                                    <el-col :span="3"  >
+                                        <el-form-item label="是否已完成:" :label-width="longFormLabelWidth" prop="orderNum">
+                                            <el-switch
+                                                    v-model="designForm.drawingLoadingDone"
+                                                    active-color="#13ce66"
+                                                    inactive-color="gray">
+                                            </el-switch>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <div>
+                                        <el-col :span="2">
+                                            <el-form-item label="点孔、方管：" :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="2">
+                                            <el-form-item label="附件 " :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                                    :disabled="notWritter()||mode==VIEW_MODE"
+                                                    size="small"
+                                                    type="success"
+                                                    style="float:left; margin-left:5px;"
+                                                    icon="el-icon-upload"
+                                                    @click="onUpload()">上传
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                                    size="small"
+                                                    type="success"
+                                                    icon="el-icon-download"
+                                                    :disabled=" haveNoAttachedFile(designForm.holeTubeFiles)"
+                                                    @click="onAttachedDownload(designForm.holeTubeFiles)">下载
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="2" style="margin-left:20px;">
+                                            <el-button
+                                                    size="small"
+                                                    type="danger"
+                                                    icon="el-icon-delete"
+                                                    :disabled=" haveNoAttachedFile(designForm.holeTubeFiles)||notWritter()||mode==VIEW_MODE"
+                                                    @click="handAttachedDelete(designForm.holeTubeFiles)">删除
+                                            </el-button>
+                                        </el-col>
+                                    </div>
+                                    <el-col :span="3"  >
+                                        <el-form-item label="是否已完成:" :label-width="longFormLabelWidth" prop="orderNum">
+                                                <el-switch
+                                                        v-model="designForm.holeTubeDone"
+                                                        active-color="#13ce66"
+                                                        inactive-color="gray">
+                                                </el-switch>
+                                        </el-form-item>
+                                    </el-col>
+
+                                </el-row>
+                                <!---->
                             </el-card>
 
                         </el-form>
@@ -937,6 +1053,55 @@
                 <el-button @click="contractDialogCloseCallback()" icon="el-icon-back" type="info">关闭订单页面</el-button>
             </div>
         </el-dialog>
+        <el-dialog title="附件上传" :visible.sync="uploadDialogVisible"
+                   width="35%" right @close="fileLists=[]" :modal="false">
+            <el-form id="uploadForm">
+                <el-row>
+                    <el-form-item>
+                        <el-col :span="24">
+                            <el-upload
+                                    class="upload-demo"
+                                    ref="upload"
+                                    :action="uploadURL"
+                                    :multiple="false"
+                                    :on-change="handleFileChange"
+                                    :before-upload="handleBefore"
+                                    :on-preview="handlePreview"
+                                    :on-remove="handleRemove"
+                                    :file-list="fileLists"
+                                    :auto-upload="false"
+                                    :limit="1"
+                            >
+                                <el-button slot="trigger" size="small"
+                                           plain
+                                           type="primary">选取文件
+                                </el-button>
+                                <el-button style="margin-left: 10px;" size="small"
+                                           icon="el-icon-upload"
+                                           :disabled="fileLists.length==0"
+                                           type="success" @click="submitUpload(1)">
+                                    上传到服务器
+                                </el-button>
+                                <div slot="tip" class="el-upload__tip"
+                                     style="font-size: 12px;color: gray">
+                                    上传文件
+                                </div>
+                            </el-upload>
+                        </el-col>
+                    </el-form-item>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer" style="margin-bottom: 30px">
+                <el-col :span="24" style="margin-bottom: 30px;">
+                    <el-button icon="el-icon-close"
+                               size="normal"
+                               type="danger"
+                               @click="uploadDialogVisible = false">关 闭
+                    </el-button>
+                </el-col>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 <script>
@@ -948,6 +1113,9 @@
             _this = this;
             return {
 
+                uploadDialogVisible: false,
+                uploadURL: HOST + "contact/form/uploadDesignFiles",
+                fileLists:[],
                 //查看订单页面
                 addContractVisible:false,
                 orderChangeRecord: "",
@@ -1112,11 +1280,14 @@
                     machineSpec: '',
                     keywords: '',
                     drawingLoadingDone: 0,
-                    drawing_loading_done: 0,
+                    drawingLoadingiles:'',
+//                    drawing_loading_done: 0,
                     holeTubeDone: 0,
+                    holeTubeFiles:'',
 //                    hole_tube_done: '',
                     bomDone: 0,
                     coverDone: 0,
+                    coverFile:'',
                     createdDate: new Date(),
                     updatedDate: new Date(),
 
@@ -1129,9 +1300,136 @@
 //                        {  type: 'string',required: true, message: '请填写订单号!', trigger: 'change' }
                     ],
                 },
+
+                selectedItem: {},
             };
         },
         methods: {
+            
+            onUpload()
+            {
+                _this.fileLists = [];
+                _this.uploadDialogVisible = true;
+            },
+
+            handleFileChange(file, fileList)
+            {
+                var errorMsg = "";
+                var xlsFile = file.name.split('.');
+                if (xlsFile == null || xlsFile.length < 2) {
+                    errorMsg = "上传的文件没有后缀名，不能上传！";
+                }
+                // else if (xlsFile[1] !== "xls" && xlsFile[1] !== "xlsx") {
+                //     errorMsg = "只能上传xls/xlsx文件，请重新上传！";
+                // }
+                if (!isStringEmpty(errorMsg)) {
+                    var removeIndex = -1;
+                    for (var i = 0; i < fileList.length; i++) {
+                        if (fileList[i].name == file.name) {
+                            removeIndex = i;
+                            break;
+                        }
+                    }
+                    if (removeIndex > -1) {
+                        fileList.splice(removeIndex, 1);
+                    }
+                    fileList = [];
+                    showMessage(_this, errorMsg, 0)
+                } else {
+                    fileList = [];
+                    fileList.push(file);
+                }
+                _this.fileLists = fileList;
+            },
+
+            handleRemove(file, fileList) {
+                _this.fileLists = fileList;
+                console.log("remove file" + file.name);
+            },
+
+            handlePreview(file) {
+                console.log(handlePreview);
+            },
+            handleBefore(file)
+            {
+                console.log(handleBefore);
+            },
+
+            submitUpload(type){
+                if (_this.fileLists == null || _this.fileLists.length == 0) {
+                    showMessage(_this, "上传文件不能为空！", 0)
+                    return;
+                }
+                var formData = new FormData($("#uploadForm")[0]);
+                formData.append("file", _this.fileLists[0].name);
+                $.ajax({
+                    url: _this.uploadURL,// 需要链接到服务器地址
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        if (res.code === 200) {
+//                            if (_this.designForm.drawingLoadingFiles != null &&_this.lxdForm.contactForm.attachedFile .length> 0) {
+//                                showMessage(_this, "附件更新成功！", 1);
+//                            }
+//                            else
+                                {
+                                showMessage(_this, "附件上传/更新成功！", 1);
+                            }
+                            _this.designForm.attachedFile=res.data;
+                            _this.uploadDialogVisible = false;
+                        }
+                        else {
+                            showMessage(_this, '上传失败！', 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '上传失败！', 0);
+                    }
+                });
+            },
+
+            haveNoAttachedFile(fullPath){
+                if (fullPath == null || fullPath == "") {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+
+            onDownload(item)
+            {
+                _this.selectedItem = copyObject(item);
+                $.ajax({
+                    url: HOST + "order/loading/list/selectOrderLoadingFileNameByOrderId",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        order_id: _this.selectedItem.id,
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            if (res.data.length > 0) {
+                                var downLoadURL = DOWNLOADPATH + res.data[res.data.length - 1];
+                                _this.downloadFile(downLoadURL);
+                            }
+                        }
+                    }
+                })
+            },
+
+            downloadFile(url)
+            {
+                var form = $("<form>");
+                form.attr("style", "display:none");
+                form.attr("method", "get");
+                form.attr("action", url);
+                $("body").append(form);
+                form.submit();
+            },
 
             handleEdit(index, item) {
                 this.isError = false;
@@ -1220,7 +1518,6 @@
                     }
                 });
 
-
                 let submitData=JSON.stringify(_this.designForm);
                 $.ajax({
                     url: HOST + 'design/dep/info/add',
@@ -1260,7 +1557,7 @@
                 {
                     _this.dialogTitle = '编辑设计';
                 }else{
-                    _this.dialogTitle = '新增联系单';
+                    _this.dialogTitle = '新增设计';
                 }
             },
 
@@ -1412,12 +1709,12 @@
                 this.errorMsg = '';
                 this.dialogTitle = '新增设计项目';
                 this.addDesignVisible = true;
-                resetDesignFormEmpty();
+                this.resetDesignFormEmpty();
 
             },
 
             resetDesignFormEmpty(){
-                this.designForm =  {
+                _this.designForm =  {
                     orderNum: '',
                             order_id: '', ////
                             saleman: '',
@@ -1445,7 +1742,7 @@
             dialogCloseCallback() {
                 //reset after dialog closed
                 //用于保存合同内容
-                resetDesignFormEmpty();
+                _this.resetDesignFormEmpty();
                 _this.addDesignVisible = false;
                 _this.selectContracts();
             },
