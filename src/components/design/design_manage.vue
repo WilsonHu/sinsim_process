@@ -67,7 +67,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" :offset="0" >
-                        <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询 </el-button>
+                        <el-button icon="el-icon-search" size="normal" type="primary" @click="searchDesignList">查询 </el-button>
                     </el-col>
                     <el-col :span="2" :offset="0">
                         <el-button icon="el-icon-plus" size="normal" type="danger" @click="handleAdd">设计</el-button>
@@ -155,22 +155,14 @@
                 <el-table-column align="center" label="操作" width="240">
                     <template scope="scope">
                         <el-tooltip placement="top">
-                            <div slot="content">审核</div>
-                            <el-button v-show="userInfo.role.roleName !='销售员'" size="mini" type="success" icon="el-icon-check"
-                                       @click="handleSign(scope.$index, scope.row)"></el-button>
-                        </el-tooltip>
-                        <el-tooltip placement="top">
                             <div slot="content">编辑</div>
-                            <el-button v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)"
-                                       size="mini" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
-                        </el-tooltip>
-                        <el-tooltip placement="top">
-                            <div slot="content">下载</div>
-                            <el-button size="mini" type="info" icon="el-icon-download" @click="handleDownload(scope.$index, scope.row)"></el-button>
+                            <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
                         </el-tooltip>
                         <el-tooltip placement="top">
                             <div slot="content">删除</div>
-                            <el-button v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)&&(scope.row.status>=5||scope.row.status==0)" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)"></el-button>
+                            <el-button size="mini" type="danger" icon="el-icon-delete"
+                                       :disabled="!modifyAllowed"
+                                       @click="handleDelete(scope.$index, scope.row)"></el-button>
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -218,7 +210,7 @@
                                     </el-col >
                                     <el-col :span="5" :offset="0">
                                         <el-form-item label="客户："  :label-width="formLabelWidthMiddle">
-                                            <el-input v-model="designForm.guest_name" clearable></el-input>
+                                            <el-input v-model="designForm.guestName" clearable></el-input>
                                         </el-form-item >
                                     </el-col >
                                     <el-col :span="4" :offset="0">
@@ -269,7 +261,7 @@
                                         <el-date-picker
                                                 :disabled="notWritter()||mode==VIEW_MODE"
                                                 type="date"
-                                                v-model="designForm.createDate">
+                                                v-model="designForm.createdDate">
                                         </el-date-picker>
                                     </el-form-item>
                                     </el-col>
@@ -326,6 +318,7 @@
             </div>
         </el-col>
 
+        <!-- 在设计里面跳转到对应订单-->
         <el-dialog title="查看订单" :visible.sync="addContractVisible" fullscreen  @close="contractDialogCloseCallback()">
             <el-row type="flex" class="row-bg" justify="center">
                 <el-col :span="20" :offset="1">
@@ -1088,7 +1081,7 @@
                         }
                     }]
                 },
-                //增加对话框
+                //增加对话框 或者编辑
                 addDesignVisible: false,
                 dialogTitle: '设计',
 
@@ -1108,7 +1101,7 @@
                     orderNum: '',
                     order_id: '', ////
                     saleman: '',
-                    guest_name: '',
+                    guestName: '',
                     country: '',
                     machineNum: '',
                     remark: '',
@@ -1140,6 +1133,69 @@
         },
         methods: {
 
+            handleEdit(index, item) {
+                this.isError = false;
+                this.errorMsg = '';
+                this.dialogTitle = '编辑';
+                this.mode = this.EDIT_MODE;
+                this.selectedItem = copyObject(item);
+                _this.fetchDesignData(item.id);
+                this.addDesignVisible = true;
+            },
+
+            fetchDesignData(formId) {
+                $.ajax({
+                    url: HOST + 'design/dep/info/detail',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {id: formId},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.designForm=res.data;
+//                            if(_this.lxdForm.contactForm.contactType.indexOf("变更")>=0)//变更
+//                            {
+//                                _this.checkedChangeTypes=_this.lxdForm.contactForm.contactContent.split(",");
+//                                if(_this.lxdForm.contactForm.contactContentElse != "" ){
+//                                    _this.lxdForm.contactForm.contactContentElseIsChecked = true;
+//                                }
+//                            }
+
+                        } else {
+                            console.log("fetchDesignData:" + res.message);
+                        }
+                    }
+                });
+            },
+
+            modifyAllowed()
+            {
+                if (this.userInfo!= null) {
+                    //是管理员， 允许修改，
+                    if(this.userInfo.role.id == 1){
+                        return true;
+                    } else if(this.userInfo.role.id == 8) {
+                        //技术部经理 8
+                        return true;
+                    }
+                }
+                return false;
+            },
+            modifyAllowedRow(row)
+            {
+                if (this.userInfo!= null) {
+                    //是管理员， 允许修改，
+                    if(this.userInfo.role.id == 1){
+                        return true;
+                    } else if(this.userInfo.role.id == 8) {
+                        //技术部经理 8
+                        return true;
+                    } else {
+                        //除了管理员和技术部经理，设计员只能改自己的东西
+                        return this.userInfo.account == row.designer;
+                    }
+                }
+                return false;
+            },
             onAdd()
             {
                 //先获取 order_id
@@ -1209,6 +1265,7 @@
             },
 
             onEdit() {
+                _this.designForm.updatedDate = new Date();
                 let submitData=JSON.stringify(_this.designForm);
                 $.ajax({
                     url: HOST + 'design/dep/info/update',
@@ -1299,7 +1356,7 @@
                         if (res.code == 200) {
                             //因为订单号唯一 所以返回的值应该只有一个。
                             _this.designForm.saleman = res.data.list[0].sellman;
-                            _this.designForm.guest_name = res.data.list[0].customer;
+                            _this.designForm.guestName = res.data.list[0].customer;
                             _this.designForm.country = res.data.list[0].country;
                             _this.designForm.machineNum = res.data.list[0].machineNum;
                             _this.designForm.orderstatus = res.data.list[0].status;
@@ -1355,30 +1412,46 @@
                 this.errorMsg = '';
                 this.dialogTitle = '新增设计项目';
                 this.addDesignVisible = true;
+                resetDesignFormEmpty();
 
+            },
+
+            resetDesignFormEmpty(){
+                this.designForm =  {
+                    orderNum: '',
+                            order_id: '', ////
+                            saleman: '',
+                            guestName: '',
+                            country: '',
+                            machineNum: '',
+                            remark: '',
+                            orderStatus: CONTRACT_INITIAL,
+
+                            designer: '',
+                            machineSpec: '',
+                            keywords: '',
+                            drawingLoadingDone: 0,
+                            drawing_loading_done: 0,
+                            holeTubeDone: 0,
+                            bomDone: 0,
+                            coverDone: 0,
+                            createdDate: new Date(),
+                            updatedDate: new Date(),
+
+                            orderSignStatus: 0
+                };
             },
 
             dialogCloseCallback() {
                 //reset after dialog closed
                 //用于保存合同内容
-                this.contractForm = {
-                    contractNum: '',
-                    guest_name: '',
-                    marketGroupName: '',
-                    sellman: '',
-                    mark: '',
-                    status: CONTRACT_INITIAL,
-                    payMethod: ''
-                };
-                //修复T第一次打开对话框，Tinymce中无法显示的问题，主要原因tab container中的tab没有被remove，导致tinymce组件不会被destroy
-                //再一次打开就不会执行mounted，editor中的内容就无法显示
-                this.requisitionForms.splice(0, this.requisitionForms.length);
+                resetDesignFormEmpty();
                 _this.addDesignVisible = false;
                 _this.selectContracts();
             },
             dialogClose() {
                 _this.addDesignVisible = false;
-//                _this.selectContacts();
+                _this.searchDesignList();
             },
             changeDesignContentDisable(item) {
                 return (
@@ -1401,7 +1474,7 @@
                 _this.currentPage = val;
                 _this.onSearchDetailData();
             },
-            search() {
+            searchDesignList() {
                 _this.currentPage = 1;
                 _this.onSearchDetailData();
             },
@@ -1574,7 +1647,7 @@
 
         mounted: function () {
 //        _this.selectContacts();
-            _this.search();
+            _this.searchDesignList();
             _this.fetchAllOrderList();
             _this.fetchDisgnerList();
         }
