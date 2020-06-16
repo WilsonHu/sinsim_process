@@ -179,7 +179,7 @@
                         <div style="text-align: center; font-weight: bold; font-size: 28px; font-family: 'Microsoft YaHei UI';padding-bottom: 20px">
                             {{dialogTitle}}
                         </div>
-                        <el-form :model="designForm.contactForm" :rules="rules" ref="ruleForm">
+                        <el-form :model="designForm" :rules="rules" ref="ruleForm">
 
                             <el-card class="box-card" style="margin: 25px">
                                 <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
@@ -419,6 +419,55 @@
 
                             </div>
                         </el-form>
+
+                        <el-dialog title="附件上传" :visible.sync="uploadDialogVisible"
+                                   width="35%" right @close="fileLists=[]" :modal="false">
+                            <el-form id="uploadForm">
+                                <el-row>
+                                    <el-form-item>
+                                        <el-col :span="24">
+                                            <el-upload
+                                                    class="upload-demo"
+                                                    ref="upload"
+                                                    :action="uploadURL"
+                                                    :multiple="false"
+                                                    :on-change="handleFileChange"
+                                                    :before-upload="handleBefore"
+                                                    :on-preview="handlePreview"
+                                                    :on-remove="handleRemove"
+                                                    :file-list="fileLists"
+                                                    :auto-upload="false"
+                                                    :limit="1"
+                                            >
+                                                <el-button slot="trigger" size="small"
+                                                           plain
+                                                           type="primary">选取文件
+                                                </el-button>
+                                                <el-button style="margin-left: 10px;" size="small"
+                                                           icon="el-icon-upload"
+                                                           :disabled="fileLists.length==0"
+                                                           type="success" @click="submitUpload">
+                                                    上传到服务器
+                                                </el-button>
+                                                <div slot="tip" class="el-upload__tip"
+                                                     style="font-size: 12px;color: gray">
+                                                    上传文件
+                                                </div>
+                                            </el-upload>
+                                        </el-col>
+                                    </el-form-item>
+                                </el-row>
+                            </el-form>
+                            <div slot="footer" class="dialog-footer" style="margin-bottom: 30px">
+                                <el-col :span="24" style="margin-bottom: 30px;">
+                                    <el-button icon="el-icon-close"
+                                               size="normal"
+                                               type="danger"
+                                               @click="uploadDialogVisible = false">关 闭
+                                    </el-button>
+                                </el-col>
+                            </div>
+                        </el-dialog>
                     </el-col>
                 </el-row>
             </el-dialog>
@@ -1053,54 +1102,7 @@
                 <el-button @click="contractDialogCloseCallback()" icon="el-icon-back" type="info">关闭订单页面</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="附件上传" :visible.sync="uploadDialogVisible"
-                   width="35%" right @close="fileLists=[]" :modal="false">
-            <el-form id="uploadForm">
-                <el-row>
-                    <el-form-item>
-                        <el-col :span="24">
-                            <el-upload
-                                    class="upload-demo"
-                                    ref="upload"
-                                    :action="uploadURL"
-                                    :multiple="false"
-                                    :on-change="handleFileChange"
-                                    :before-upload="handleBefore"
-                                    :on-preview="handlePreview"
-                                    :on-remove="handleRemove"
-                                    :file-list="fileLists"
-                                    :auto-upload="false"
-                                    :limit="1"
-                            >
-                                <el-button slot="trigger" size="small"
-                                           plain
-                                           type="primary">选取文件
-                                </el-button>
-                                <el-button style="margin-left: 10px;" size="small"
-                                           icon="el-icon-upload"
-                                           :disabled="fileLists.length==0"
-                                           type="success" @click="submitUpload(1)">
-                                    上传到服务器
-                                </el-button>
-                                <div slot="tip" class="el-upload__tip"
-                                     style="font-size: 12px;color: gray">
-                                    上传文件
-                                </div>
-                            </el-upload>
-                        </el-col>
-                    </el-form-item>
-                </el-row>
-            </el-form>
-            <div slot="footer" class="dialog-footer" style="margin-bottom: 30px">
-                <el-col :span="24" style="margin-bottom: 30px;">
-                    <el-button icon="el-icon-close"
-                               size="normal"
-                               type="danger"
-                               @click="uploadDialogVisible = false">关 闭
-                    </el-button>
-                </el-col>
-            </div>
-        </el-dialog>
+
 
     </div>
 </template>
@@ -1114,7 +1116,8 @@
             return {
 
                 uploadDialogVisible: false,
-                uploadURL: HOST + "contact/form/uploadDesignFiles",
+//                差一个字符，会导致”blocked by CORS policy: No 'Access-Control-Allow-Origin' “错误，小心被误导。
+                uploadURL: HOST + "design/dep/info/uploadDesignFile",
                 fileLists:[],
                 //查看订单页面
                 addContractVisible:false,
@@ -1519,6 +1522,12 @@
                 });
 
                 let submitData=JSON.stringify(_this.designForm);
+                //转换 bool 到 tinyInt
+                if(_this.designForm.holeTubeDone == true){
+                    _this.designForm.holeTubeDone = '1';
+                } else {
+                    _this.designForm.holeTubeDone = '0';
+                }
                 $.ajax({
                     url: HOST + 'design/dep/info/add',
                     type: 'POST',
@@ -1951,5 +1960,92 @@
     };
 </script>
 
-<style scoped>
+<style>
+    .scopeMachine {
+        font-weight: bold;
+    }
+
+    .el-table .warning-row {
+        background: #909399;
+    }
+
+    .el-table .success-row {
+        background: #f0f9eb;
+    }
+
+    .el-dialog__headerbtn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background: #f56c6c;
+        outline: 0;
+        cursor: pointer;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .different-value {
+        /*border-width:5px;*/
+        /*border-style:solid;*/
+        background-color: #f56c6c;
+    }
+
+    .tab-disabled-background {
+        position: relative;
+        height: 100%;
+        line-height: 100%;
+        z-index: 9999;
+        background: #ff99ff;
+    }
+
+    .divOrderStatusFinished {
+        color: green;
+    }
+
+    .divOrderStatusChecking {
+        color: darkorange;
+    }
+
+    .divStatusUnChecked {
+        color: red;
+    }
+
+    .el-input {
+        width: 100%;
+    }
+
+    .el-select {
+        width: 100%;
+    }
+
+    .el-input-number {
+        width: 100%;
+    }
+
+    .my-autocomplete {
+        width: 100%;
+    }
+    /*很关键 --> 否则 upload页面会多出上传按钮*/
+    input[type="file"] {
+        display: none;
+    }
+
+    .el-upload-list {
+        height: 100px;
+    }
+
+    .el-upload__tip {
+
+    }
+    /*输入框 disable后的字体*/
+    input:disabled,textarea:disabled {
+        -webkit-text-fill-color: black;
+    }
+
+
+
 </style>
