@@ -149,8 +149,7 @@
                     <template scope="scope">
                         {{(scope.row.designStatus) }}
                     </template>
-                </el-table-column>S
-
+                </el-table-column>
 
                 <el-table-column align="center" label="操作" width="240">
                     <template scope="scope">
@@ -307,21 +306,21 @@
                                             <el-form-item label="图纸、装车单：" :label-width="longFormLabelWidth">
                                             </el-form-item>
                                         </el-col>
-                                        <el-col :span="2">
-                                            <el-form-item label="附件 " :label-width="longFormLabelWidth">
-                                            </el-form-item>
-                                        </el-col>
-                                        <el-col :span="2" style="margin-left:20px;">
+                                        <!--<el-col :span="2">-->
+                                        <!--<el-form-item label="文件 " :label-width="longFormLabelWidth">-->
+                                        <!--</el-form-item>-->
+                                        <!--</el-col>-->
+                                        <el-col :span="1" style="margin-left:20px;">
                                             <el-button
                                                     :disabled="notWritter()||mode==VIEW_MODE"
                                                     size="small"
                                                     type="success"
                                                     style="float:left; margin-left:5px;"
                                                     icon="el-icon-upload"
-                                                    @click="onUpload()">上传
+                                                    @click="onUpload(1)">上传
                                             </el-button>
                                         </el-col>
-                                        <el-col :span="2" style="margin-left:20px;">
+                                        <el-col :span="1" style="margin-left:40px;">
                                             <el-button
                                                     size="small"
                                                     type="success"
@@ -330,7 +329,7 @@
                                                     @click="onAttachedDownload(designForm.drawingLoadingFiles)">下载
                                             </el-button>
                                         </el-col>
-                                        <el-col :span="2" style="margin-left:20px;">
+                                        <el-col :span="1" style="margin-left:40px;">
                                             <el-button
                                                     size="small"
                                                     type="danger"
@@ -339,9 +338,28 @@
                                                     @click="handAttachedDelete(designForm.drawingLoadingFiles)">删除
                                             </el-button>
                                         </el-col>
+                                        <el-col :span="5" style="margin-left:20px;">
+                                            <el-form-item label="更新日期："
+                                                          :label-width="longFormLabelWidth">
+                                                <el-date-picker
+                                                        type="date"
+                                                        :disabled = "true"
+                                                        v-model="designForm.updatedDate">
+                                                </el-date-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="5" style="margin-left:20px;">
+                                            <el-form-item label="更新人："
+                                                          :label-width="longFormLabelWidth">
+                                                <el-input
+                                                        :disabled = "true"
+                                                        v-model="designForm.designer">
+                                                </el-input>
+                                            </el-form-item>
+                                        </el-col>
                                     </div>
                                     <el-col :span="3"  >
-                                        <el-form-item label="是否已完成:" :label-width="longFormLabelWidth" prop="orderNum">
+                                        <el-form-item label="是否已完成:" :label-width="longFormLabelWidth">
                                             <el-switch
                                                     v-model="designForm.drawingLoadingDone"
                                                     active-color="#13ce66"
@@ -356,21 +374,21 @@
                                             <el-form-item label="点孔、方管：" :label-width="longFormLabelWidth">
                                             </el-form-item>
                                         </el-col>
-                                        <el-col :span="2">
-                                            <el-form-item label="附件 " :label-width="longFormLabelWidth">
-                                            </el-form-item>
-                                        </el-col>
-                                        <el-col :span="2" style="margin-left:20px;">
+                                        <!--<el-col :span="2">-->
+                                        <!--<el-form-item label="文件 " :label-width="longFormLabelWidth">-->
+                                        <!--</el-form-item>-->
+                                        <!--</el-col>-->
+                                        <el-col :span="1" style="margin-left:20px;">
                                             <el-button
                                                     :disabled="notWritter()||mode==VIEW_MODE"
                                                     size="small"
                                                     type="success"
                                                     style="float:left; margin-left:5px;"
                                                     icon="el-icon-upload"
-                                                    @click="onUpload()">上传
+                                                    @click="onUpload(2)">上传
                                             </el-button>
                                         </el-col>
-                                        <el-col :span="2" style="margin-left:20px;">
+                                        <el-col :span="1" style="margin-left:40px;">
                                             <el-button
                                                     size="small"
                                                     type="success"
@@ -379,7 +397,7 @@
                                                     @click="onAttachedDownload(designForm.holeTubeFiles)">下载
                                             </el-button>
                                         </el-col>
-                                        <el-col :span="2" style="margin-left:20px;">
+                                        <el-col :span="1" style="margin-left:40px;">
                                             <el-button
                                                     size="small"
                                                     type="danger"
@@ -388,19 +406,141 @@
                                                     @click="handAttachedDelete(designForm.holeTubeFiles)">删除
                                             </el-button>
                                         </el-col>
+                                        <el-col :span="5" style="margin-left:20px;">
+                                            <el-form-item label="更新日期："
+                                                          :label-width="longFormLabelWidth">
+                                                <el-date-picker
+                                                        type="date"
+                                                        :disabled = "true"
+                                                        v-model="designForm.updatedDate">
+                                                </el-date-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="5" style="margin-left:20px;">
+                                            <el-form-item label="更新人："
+                                                          :label-width="longFormLabelWidth">
+                                                <el-input
+                                                        :disabled = "true"
+                                                        v-model="designForm.designer">
+                                                </el-input>
+                                            </el-form-item>
+                                        </el-col>
                                     </div>
                                     <el-col :span="3"  >
-                                        <el-form-item label="是否已完成:" :label-width="longFormLabelWidth" prop="orderNum">
-                                                <el-switch
-                                                        v-model="designForm.holeTubeDone"
-                                                        active-color="#13ce66"
-                                                        inactive-color="gray">
-                                                </el-switch>
+                                        <el-form-item label="是否已完成:" :label-width="longFormLabelWidth">
+                                            <el-switch
+                                                    v-model="designForm.holeTubeDone"
+                                                    active-color="#13ce66"
+                                                    inactive-color="gray">
+                                            </el-switch>
                                         </el-form-item>
                                     </el-col>
-
                                 </el-row>
-                                <!---->
+                                <el-row>
+                                    <div>
+                                        <el-col :span="2">
+                                            <el-form-item label="罩盖：" :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                        <!--<el-col :span="2">-->
+                                            <!--<el-form-item label="文件 " :label-width="longFormLabelWidth">-->
+                                            <!--</el-form-item>-->
+                                        <!--</el-col>-->
+                                        <el-col :span="1" style="margin-left:20px;">
+                                            <el-button
+                                                    :disabled="notWritter()||mode==VIEW_MODE"
+                                                    size="small"
+                                                    type="success"
+                                                    style="float:left; margin-left:5px;"
+                                                    icon="el-icon-upload"
+                                                    @click="onUpload(3)">上传
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="1" style="margin-left:40px;">
+                                            <el-button
+                                                    size="small"
+                                                    type="success"
+                                                    icon="el-icon-download"
+                                                    :disabled=" haveNoAttachedFile(designForm.coverFile)"
+                                                    @click="onAttachedDownload(designForm.coverFile)">下载
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="1" style="margin-left:40px;">
+                                            <el-button
+                                                    size="small"
+                                                    type="danger"
+                                                    icon="el-icon-delete"
+                                                    :disabled=" haveNoAttachedFile(designForm.coverFile)||notWritter()||mode==VIEW_MODE"
+                                                    @click="handAttachedDelete(designForm.coverFile)">删除
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="5" style="margin-left:20px;">
+                                            <el-form-item label="更新日期："
+                                                          :label-width="longFormLabelWidth">
+                                                <el-date-picker
+                                                        type="date"
+                                                        :disabled = "true"
+                                                        v-model="designForm.updatedDate">
+                                                </el-date-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="5" style="margin-left:20px;">
+                                            <el-form-item label="更新人："
+                                                          :label-width="longFormLabelWidth">
+                                                <el-input
+                                                        :disabled = "true"
+                                                        v-model="designForm.designer">
+                                                </el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </div>
+                                    <el-col :span="3"  >
+                                        <el-form-item label="是否已完成:" :label-width="longFormLabelWidth">
+                                            <el-switch
+                                                    v-model="designForm.coverDone"
+                                                    active-color="#13ce66"
+                                                    inactive-color="gray">
+                                            </el-switch>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <div>
+                                        <el-col :span="2">
+                                            <el-form-item label="BOM表、轴单：" :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="5" :offset="5"  >
+                                            <el-form-item label="更新日期："
+                                                          :label-width="longFormLabelWidth">
+                                                <el-date-picker
+                                                        type="date"
+                                                        :disabled = "true"
+                                                        v-model="designForm.updatedDate">
+                                                </el-date-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="5" style="margin-left:20px;">
+                                            <el-form-item label="更新人："
+                                                          :label-width="longFormLabelWidth">
+                                                <el-input
+                                                        :disabled = "true"
+                                                        v-model="designForm.designer">
+                                                </el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </div>
+                                    <el-col :span="2"   >
+                                        <el-form-item label="有/无:" :label-width="longFormLabelWidth">
+                                            <el-switch
+                                                    v-model="designForm.bomRequired"
+                                                    active-color="#13ce66"
+                                                    inactive-color="gray">
+                                            </el-switch>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+
                             </el-card>
 
                         </el-form>
@@ -420,7 +560,7 @@
                             </div>
                         </el-form>
 
-                        <el-dialog title="附件上传" :visible.sync="uploadDialogVisible"
+                        <el-dialog title="文件上传" :visible.sync="uploadDialogVisible"
                                    width="35%" right @close="fileLists=[]" :modal="false">
                             <el-form id="uploadForm">
                                 <el-row>
@@ -1285,6 +1425,7 @@
                     drawingLoadingDone: 0,
                     drawingLoadingiles:'',
 //                    drawing_loading_done: 0,
+                    bomRequired:0,
                     holeTubeDone: 0,
                     holeTubeFiles:'',
 //                    hole_tube_done: '',
@@ -1305,14 +1446,27 @@
                 },
 
                 selectedItem: {},
+                //给后端保存文件命名用。
+                uploadFileType: '',
             };
         },
         methods: {
             
-            onUpload()
+            onUpload(type)
             {
                 _this.fileLists = [];
                 _this.uploadDialogVisible = true;
+                if(type == 1) {
+                    _this.uploadFileType = "图纸";
+                } else if(type == 2) {
+                    _this.uploadFileType = "点孔";
+                } else if(type == 3) {
+                    _this.uploadFileType = "BOM";
+                } else if(type == 4) {
+                    _this.uploadFileType = "罩盖";
+                } else {
+                _this.uploadFileType = "其他";
+            }
             },
 
             handleFileChange(file, fileList)
@@ -1357,14 +1511,16 @@
             {
                 console.log(handleBefore);
             },
-
-            submitUpload(type){
+            
+            submitUpload(){
                 if (_this.fileLists == null || _this.fileLists.length == 0) {
                     showMessage(_this, "上传文件不能为空！", 0)
                     return;
                 }
                 var formData = new FormData($("#uploadForm")[0]);
                 formData.append("file", _this.fileLists[0].name);
+                formData.append("orderNum", _this.designForm.orderNum);
+                formData.append("type", _this.uploadFileType);
                 $.ajax({
                     url: _this.uploadURL,// 需要链接到服务器地址
                     type: 'POST',
@@ -1380,7 +1536,7 @@
 //                            }
 //                            else
                                 {
-                                showMessage(_this, "附件上传/更新成功！", 1);
+                                showMessage(_this, "文件上传/更新成功！", 1);
                             }
                             _this.designForm.attachedFile=res.data;
                             _this.uploadDialogVisible = false;
@@ -1522,12 +1678,6 @@
                 });
 
                 let submitData=JSON.stringify(_this.designForm);
-                //转换 bool 到 tinyInt
-                if(_this.designForm.holeTubeDone == true){
-                    _this.designForm.holeTubeDone = '1';
-                } else {
-                    _this.designForm.holeTubeDone = '0';
-                }
                 $.ajax({
                     url: HOST + 'design/dep/info/add',
                     type: 'POST',
@@ -1585,7 +1735,7 @@
                         if (!_this.isError) {
                             //_this.addLxdVisible = false;
                             showMessage(_this, '更新成功', 1);
-                            _this.selectContacts();
+                            _this.searchDesignList();
                         } else {
                             _this.errorMsg = res.message;
                             showMessage(_this, _this.errorMsg, 0);
@@ -1725,26 +1875,26 @@
             resetDesignFormEmpty(){
                 _this.designForm =  {
                     orderNum: '',
-                            order_id: '', ////
-                            saleman: '',
-                            guestName: '',
-                            country: '',
-                            machineNum: '',
-                            remark: '',
-                            orderStatus: CONTRACT_INITIAL,
+                    order_id: '', ////
+                    saleman: '',
+                    guestName: '',
+                    country: '',
+                    machineNum: '',
+                    remark: '',
+                    orderStatus: CONTRACT_INITIAL,
 
-                            designer: '',
-                            machineSpec: '',
-                            keywords: '',
-                            drawingLoadingDone: 0,
-                            drawing_loading_done: 0,
-                            holeTubeDone: 0,
-                            bomDone: 0,
-                            coverDone: 0,
-                            createdDate: new Date(),
-                            updatedDate: new Date(),
+                    designer: '',
+                    machineSpec: '',
+                    keywords: '',
+                    drawingLoadingDone: 0,
+                    holeTubeDone: 0,
+                    bomDone: 0,
+                    bomRequired,
+                    coverDone: 0,
+                    createdDate: new Date(),
+                    updatedDate: new Date(),
 
-                            orderSignStatus: 0
+                    orderSignStatus: 0
                 };
             },
 
@@ -1753,7 +1903,7 @@
                 //用于保存合同内容
                 _this.resetDesignFormEmpty();
                 _this.addDesignVisible = false;
-                _this.selectContracts();
+//                _this.selectContracts();
             },
             dialogClose() {
                 _this.addDesignVisible = false;
@@ -1927,7 +2077,7 @@
             },
             filterDone(status) {
                 var result = '';
-                console.log("status:" + status);
+//                console.log("status:" + status);
                 if (status == 0) {
                     result = "未完成"
                 } else if (status == 1) {
