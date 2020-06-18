@@ -344,7 +344,7 @@
                                                 <el-date-picker
                                                         type="date"
                                                         :disabled = "true"
-                                                        v-model="designForm.updatedDate">
+                                                        v-model="designForm.drawingLoadingUpdateTime">
                                                 </el-date-picker>
                                             </el-form-item>
                                         </el-col>
@@ -412,7 +412,7 @@
                                                 <el-date-picker
                                                         type="date"
                                                         :disabled = "true"
-                                                        v-model="designForm.updatedDate">
+                                                        v-model="designForm.holeTubeUpdateTime">
                                                 </el-date-picker>
                                             </el-form-item>
                                         </el-col>
@@ -480,7 +480,7 @@
                                                 <el-date-picker
                                                         type="date"
                                                         :disabled = "true"
-                                                        v-model="designForm.updatedDate">
+                                                        v-model="designForm.coverUpdateTime">
                                                 </el-date-picker>
                                             </el-form-item>
                                         </el-col>
@@ -516,7 +516,7 @@
                                                 <el-date-picker
                                                         type="date"
                                                         :disabled = "true"
-                                                        v-model="designForm.updatedDate">
+                                                        v-model="designForm.bomUpdateTime">
                                                 </el-date-picker>
                                             </el-form-item>
                                         </el-col>
@@ -1435,7 +1435,18 @@
                     createdDate: new Date(),
                     updatedDate: new Date(),
 
-                    orderSignStatus: 0
+                    orderSignStatus: 0,
+
+                    drawingLoadingMan:'',
+                    holeTubeMan:'',
+                    bomMan:'',
+                    coverMan:'',
+
+                    //更新时间会在后台完成，然后
+                    drawingLoadingUpdateTime: new Date(),
+                    holeTubeUpdateTime: new Date(),
+                    bomUpdateTime: new Date(),
+                    coverUpdateTime: new Date(),
                 },
 
                 designExist: false,
@@ -1455,18 +1466,18 @@
             onUpload(type)
             {
                 _this.fileLists = [];
-                _this.uploadDialogVisible = true;
                 if(type == 1) {
                     _this.uploadFileType = "图纸";
                 } else if(type == 2) {
                     _this.uploadFileType = "点孔";
                 } else if(type == 3) {
-                    _this.uploadFileType = "BOM";
-                } else if(type == 4) {
                     _this.uploadFileType = "罩盖";
+                } else if(type == 4) {
+                    _this.uploadFileType = "BOM";
                 } else {
-                _this.uploadFileType = "其他";
-            }
+                    _this.uploadFileType = "其他";
+                }
+                _this.uploadDialogVisible = true;
             },
 
             handleFileChange(file, fileList)
@@ -1521,6 +1532,18 @@
                 formData.append("file", _this.fileLists[0].name);
                 formData.append("orderNum", _this.designForm.orderNum);
                 formData.append("type", _this.uploadFileType);
+
+                //在第一次新建时上传文件，designDepInfoID为空，需要把日期在前端准备好
+                if(_this.designForm.id == null) {
+                    _this.designForm.drawingLoadingUpdateTime = new Date();
+                    _this.designForm.holeTubeUpdateTime = new Date();
+                    _this.designForm.bomUpdateTime = new Date();
+                    _this.designForm.coverUpdateTime = new Date();
+                } else {
+                    // 在编辑时，设计页已经保存过了，只需要上传ID，让后端设定更新时间
+                    formData.append("designDepInfoID", _this.designForm.id);
+                }
+
                 $.ajax({
                     url: _this.uploadURL,// 需要链接到服务器地址
                     type: 'POST',
@@ -1538,8 +1561,19 @@
                                 {
                                 showMessage(_this, "文件上传/更新成功！", 1);
                             }
-                            _this.designForm.attachedFile=res.data;
+
+                            _this.fetchDesignData(_this.designForm.id);
+                            if(_this.uploadFileType == "图纸") {
+                                _this.designForm.drawingLoadingFiles = res.data;
+                            } else if(_this.uploadFileType == "点孔") {
+                                _this.designForm.holeTubeFiles = res.data;
+                            } else if(_this.uploadFileType == "罩盖") {
+                                _this.designForm.coverFile = res.data;
+                            }  else if(_this.uploadFileType == "BOM") {
+                                _this.designForm.drawingLoadingFiles = res.data;
+                            }
                             _this.uploadDialogVisible = false;
+
                         }
                         else {
                             showMessage(_this, '上传失败！', 0);
@@ -1889,12 +1923,28 @@
                     drawingLoadingDone: 0,
                     holeTubeDone: 0,
                     bomDone: 0,
-                    bomRequired,
+                    bomRequired: 0,
+                    holeTubeDone: 0,
+                    holeTubeFiles:'',
+//                    hole_tube_done: '',
+                    bomDone: 0,
                     coverDone: 0,
+                    coverFile:'',
                     createdDate: new Date(),
                     updatedDate: new Date(),
 
-                    orderSignStatus: 0
+                    orderSignStatus: 0,
+
+                    drawingLoadingMan:'',
+                    holeTubeMan:'',
+                    bomMan:'',
+                    coverMan:'',
+
+                    //更新时间会在后台完成，然后
+                    drawingLoadingUpdateTime: new Date(),
+                    holeTubeUpdateTime: new Date(),
+                    bomUpdateTime: new Date(),
+                    coverUpdateTime: new Date(),
                 };
             },
 
@@ -1907,6 +1957,7 @@
             },
             dialogClose() {
                 _this.addDesignVisible = false;
+                _this.resetDesignFormEmpty();
                 _this.searchDesignList();
             },
             changeDesignContentDisable(item) {
