@@ -94,7 +94,7 @@
             <span>{{scope.row.orderNum}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="nameplate" label="机器名">
+        <el-table-column align="center" prop="nameplate" label="铭牌号">
           <template scope="scope">
             <div>{{scope.row.nameplate}}</div>
           </template>
@@ -104,9 +104,16 @@
             <div>{{scope.row.nameplate}}</div>
           </template>
         </el-table-column>-->
-        <el-table-column align="center" prop="machineType" label="机器信息">
+        <el-table-column align="center"   label="机器信息"  min-width="145">
           <template scope="scope">
-            <div>{{scope.row.machineType.name}}</div>
+            <div>{{scope.row.machineType.name +"/"
+              + scope.row.needleNum +"/"
+              + scope.row.headNum +"/"
+              + scope.row.headDistance +"/"
+              + scope.row.xDistance +"/"
+              + scope.row.yDistance +"/"
+              + scope.row.electricTrim +"/"
+              + scope.row.electricPc}}</div>
           </template>
         </el-table-column>
         <!--<el-table-column align="center" prop="" label="机架长度" />-->
@@ -149,20 +156,20 @@
             <!--<span>{{getEquipmentAmount(scope.row.equipment)|filterNumberFormat}}</span>-->
           <!--</template>-->
         <!--</el-table-column>-->
-        <el-table-column align="center" prop="machinePrice" label="机器单价" width="150">
+        <el-table-column align="center" prop="machinePrice" label="机器单价" width="80">
           <template scope="scope">
             <span>{{scope.row.machinePrice|filterNumberFormat}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="machineNum" label="机器台数"></el-table-column>
+        <el-table-column align="center" prop="machineNum" label="机器台数" width="80"></el-table-column>
         <!--<el-table-column align="center" prop="machinePrice" label="单台价格 NG" width="150">-->
         <!--<template scope="scope">-->
           <!--<span>{{scope.row.machinePrice|filterNumberFormat}}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
-        <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="150" />
+        <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="80" />
 
-        <el-table-column align="center" label="订单总价" width="150">
+        <el-table-column align="center" label="订单总价" width="100">
           <template scope="scope">
             <span>{{getTotalAmount(scope.row)}}</span>
           </template>
@@ -248,6 +255,7 @@ export default {
     };
   },
   methods: {
+
     getEquipmentAmount(strData) {
       let dataArray = _this.getEquipmentFromJSON(strData);
       var res = 0;
