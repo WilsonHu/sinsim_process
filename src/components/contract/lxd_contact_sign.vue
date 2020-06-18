@@ -520,16 +520,6 @@
                                 </el-row>
                         </el-card>
                     </el-form>
-                    <el-dialog title="删除" :visible.sync="deleteConfirmVisible" width="30%" append-to-body>
-                        <span style="font-size: 22px">
-                            确认要删除编号为[
-                            <b style="color: #F56C6C;font-weight: bold">{{selectedItem.num}}</b> ]的联系单吗？
-                        </span>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
-                            <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
-                        </span>
-                    </el-dialog>
                     <el-dialog title="提示" :visible.sync="rejectSignResultVisible" width="30%" append-to-body>
                         <span style="font-size: 15px">确认驳回该联系单吗？</span>
                         <span slot="footer" class="dialog-footer">
@@ -625,6 +615,16 @@
                     </el-form>
                 </el-col>
             </el-row>
+        </el-dialog>
+        <el-dialog title="删除" :visible.sync="deleteConfirmVisible" width="30%" append-to-body>
+                        <span style="font-size: 22px">
+                            确认要删除编号为[
+                            <b style="color: #F56C6C;font-weight: bold">{{selectedItem.num}}</b> ]的联系单吗？
+                        </span>
+            <span slot="footer" class="dialog-footer">
+                            <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
+                            <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
+                        </span>
         </el-dialog>
         <el-dialog title="查看订单" :visible.sync="addContractVisible" fullscreen  @close="contractDialogCloseCallback()">
             <el-row type="flex" class="row-bg" justify="center">

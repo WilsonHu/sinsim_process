@@ -611,6 +611,18 @@
                     </el-col>
                 </el-row>
             </el-dialog>
+
+            <el-dialog title="删除" :visible.sync="deleteConfirmVisible" width="30%" append-to-body>
+                <span style="font-size: 22px">
+                           确认要删除订单号为[
+                            <b style="color: #F56C6C;font-weight: bold">{{selectedItem.orderNum}}</b> ] 的该设计单吗？
+                </span>
+                <span slot="footer" class="dialog-footer">
+                            <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
+                            <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
+                        </span>
+            </el-dialog>
+
             <div class="block" style="text-align: center; margin-top: 20px">
                 <el-pagination
                         background
@@ -1329,8 +1341,9 @@
 
                 allOrderList:[],
                 disgnerList:[],
-                onSearchDetailDataUrl: HOST + '/design/dep/info/selectDesignDepInfo',
+                onSearchDetailDataUrl: HOST + 'design/dep/info/selectDesignDepInfo',
                 queryMachineTypeURL: HOST + 'machine/type/list',
+                deleteUrl: HOST + 'design/dep/info/delete',
                 allMachineType: [],
                 filters: {
                     customer: '',
@@ -1459,10 +1472,44 @@
                 selectedItem: {},
                 //给后端保存文件命名用。
                 uploadFileType: '',
+                deleteConfirmVisible: false,
             };
         },
         methods: {
-            
+
+            handleDelete(index, item) {
+                this.selectedItem = copyObject(item);
+                if (this.selectedItem) {
+                    console.log("ooooooo");
+                    _this.deleteConfirmVisible = true;
+                } else{
+                    console.log("aaaaaaa");
+                }
+            },
+
+            onConfirmDelete: function () {
+                _this.deleteConfirmVisible = false;
+                $.ajax({
+                    url: _this.deleteUrl,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        id: _this.selectedItem.id
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.searchDesignList();
+                            showMessage(_this, '删除设计单成功', 1);
+                        } else {
+                            showMessage(_this, res.message, 0);
+                        }
+                    },
+                    error: function (info) {
+                        showMessage(_this, '服务器访问出错', 0);
+                    }
+                });
+            },
+
             onUpload(type)
             {
                 _this.fileLists = [];
@@ -1689,27 +1736,27 @@
             },
             onAdd()
             {
-                //先获取 order_id
-                $.ajax({
-                    url: HOST + 'machine/order/selectOrders',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {order_num: _this.designForm.orderNum},
-                    success: function (res) {
-                        if (res.code == 200) {
-                            _this.designForm.order_id = res.data.list[0].id;
-                            console.log("_this.designForm.order_id :" + _this.designForm.order_id );
-                        } else {
-                            console.log("getMachineOrderData err:" + res.message);
-                            _this.errorMsg = '获取order_id出错！';
-                            _this.isError = true;
-                        }
-                    },
-                    error: function (info) {
-                        _this.errorMsg = '服务器访问出错！';
-                        _this.isError = true;
-                    }
-                });
+//                //先获取 order_id
+//                $.ajax({
+//                    url: HOST + 'machine/order/selectOrders',
+//                    type: 'POST',
+//                    dataType: 'json',
+//                    data: {order_num: _this.designForm.orderNum},
+//                    success: function (res) {
+//                        if (res.code == 200) {
+//                            _this.designForm.order_id = res.data.list[0].id;
+//                            console.log("_this.designForm.order_id :" + _this.designForm.order_id );
+//                        } else {
+//                            console.log("getMachineOrderData err:" + res.message);
+//                            _this.errorMsg = '获取order_id出错！';
+//                            _this.isError = true;
+//                        }
+//                    },
+//                    error: function (info) {
+//                        _this.errorMsg = '服务器访问出错！';
+//                        _this.isError = true;
+//                    }
+//                });
 
                 let submitData=JSON.stringify(_this.designForm);
                 $.ajax({
@@ -1850,7 +1897,7 @@
                             _this.designForm.country = res.data.list[0].country;
                             _this.designForm.machineNum = res.data.list[0].machineNum;
                             _this.designForm.orderstatus = res.data.list[0].status;
-                            _this.designForm.orderId = res.data.id;
+                            _this.designForm.order_id = res.data.list[0].id;
                             console.log(' 200, 获取 订单信息 OK');
                         } else {
                             console.error('获取 订单信息失败，res.code: ' + res.code);
