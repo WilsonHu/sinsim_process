@@ -84,7 +84,7 @@
         show-summary
         style="width: 100%; "
       >
-        <el-table-column width="75" align="center" label="序号">
+        <el-table-column width="55" align="center" label="序号">
           <template scope="scope">{{scope.$index+startRow}}</template>
         </el-table-column>
         <el-table-column align="center" min-width="110" prop="customer" label="客户"></el-table-column>
@@ -104,16 +104,9 @@
             <div>{{scope.row.nameplate}}</div>
           </template>
         </el-table-column>-->
-        <el-table-column align="center"   label="机器信息"  min-width="145">
+        <el-table-column align="center"   label="机型">
           <template scope="scope">
-            <div>{{scope.row.machineType.name +"/"
-              + scope.row.needleNum +"/"
-              + scope.row.headNum +"/"
-              + scope.row.headDistance +"/"
-              + scope.row.xDistance +"/"
-              + scope.row.yDistance +"/"
-              + scope.row.electricTrim +"/"
-              + scope.row.electricPc}}</div>
+            <div>{{scope.row.machineType.name}}</div>
           </template>
         </el-table-column>
         <!--<el-table-column align="center" prop="" label="机架长度" />-->
