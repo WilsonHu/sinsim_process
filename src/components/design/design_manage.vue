@@ -302,6 +302,25 @@
                                 </div>
                                 <el-row>
                                     <div>
+                                        <el-col :span="5" :offset="2"  >
+                                            <el-form-item label="文 件"
+                                                          :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="5" :offset="2"  >
+                                            <el-form-item label="更新日期"
+                                                          :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="5" style="margin-left:20px;">
+                                            <el-form-item label="更新人"
+                                                          :label-width="longFormLabelWidth">
+                                            </el-form-item>
+                                        </el-col>
+                                    </div>
+                                </el-row>
+                                <el-row>
+                                    <div>
                                         <el-col :span="2">
                                             <el-form-item label="图纸、装车单：" :label-width="longFormLabelWidth">
                                             </el-form-item>
@@ -339,7 +358,7 @@
                                             </el-button>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:20px;">
-                                            <el-form-item label="更新日期："
+                                            <el-form-item label=""
                                                           :label-width="longFormLabelWidth">
                                                 <el-date-picker
                                                         type="date"
@@ -349,7 +368,7 @@
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:20px;">
-                                            <el-form-item label="更新人："
+                                            <el-form-item label=""
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
@@ -368,6 +387,7 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
+
                                 <el-row>
                                     <div>
                                         <el-col :span="2">
@@ -407,7 +427,7 @@
                                             </el-button>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:20px;">
-                                            <el-form-item label="更新日期："
+                                            <el-form-item label=""
                                                           :label-width="longFormLabelWidth">
                                                 <el-date-picker
                                                         type="date"
@@ -417,7 +437,7 @@
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:20px;">
-                                            <el-form-item label="更新人："
+                                            <el-form-item label=""
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
@@ -443,8 +463,8 @@
                                             </el-form-item>
                                         </el-col>
                                         <!--<el-col :span="2">-->
-                                            <!--<el-form-item label="文件 " :label-width="longFormLabelWidth">-->
-                                            <!--</el-form-item>-->
+                                        <!--<el-form-item label="文件 " :label-width="longFormLabelWidth">-->
+                                        <!--</el-form-item>-->
                                         <!--</el-col>-->
                                         <el-col :span="1" style="margin-left:20px;">
                                             <el-button
@@ -475,7 +495,7 @@
                                             </el-button>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:20px;">
-                                            <el-form-item label="更新日期："
+                                            <el-form-item label=""
                                                           :label-width="longFormLabelWidth">
                                                 <el-date-picker
                                                         type="date"
@@ -485,7 +505,7 @@
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:20px;">
-                                            <el-form-item label="更新人："
+                                            <el-form-item label=""
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
@@ -511,7 +531,7 @@
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="5" :offset="5"  >
-                                            <el-form-item label="更新日期："
+                                            <el-form-item label=""
                                                           :label-width="longFormLabelWidth">
                                                 <el-date-picker
                                                         type="date"
@@ -521,7 +541,7 @@
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:20px;">
-                                            <el-form-item label="更新人："
+                                            <el-form-item label=""
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
@@ -543,6 +563,23 @@
 
                             </el-card>
 
+                            <el-card class="box-card" style="margin: 25px">
+                                <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
+                                    联系单信息
+                                </div>
+                                <el-row>
+                                    <el-col :span="6"  >
+                                        <el-form-item label="联系单号:" :label-width="longFormLabelWidth" prop="orderNum">
+                                            <el-input
+                                                    :disabled="notWritter() "
+                                                    v-model="lxdForm.contactForm.num"
+                                                    clearable
+                                                    filterable >
+                                            </el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
                         </el-form>
 
                         <el-form>
@@ -1462,6 +1499,24 @@
                     coverUpdateTime: new Date(),
                 },
 
+                lxdForm: {
+                    contactForm: {
+                        id: "",
+                        num: "",
+                        orderNum: "",
+                        contactTitle: "",
+                        contactType: "",
+                        applicantDepartment: "",
+                        createDate: new Date(),
+                        hopeDate: "",
+                        applicantPerson: "",
+                        status: 0,
+                        contactContent: "", //工作联系单内容
+                        attachedFile: "",
+                        contactContentElse: "", // 选中“其他变更”时的输入
+                        contactContentElseIsChecked: false // “其他变更” 是否被选中。
+                    },
+                },
                 designExist: false,
                 rules: {
                     orderNum: [
