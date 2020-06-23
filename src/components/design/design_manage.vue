@@ -302,12 +302,12 @@
                                 </div>
                                 <el-row>
                                     <div>
-                                        <el-col :span="5" :offset="2"  >
+                                        <el-col :span="5" :offset="3"  >
                                             <el-form-item label="文 件"
                                                           :label-width="longFormLabelWidth">
                                             </el-form-item>
                                         </el-col>
-                                        <el-col :span="5" :offset="2"  >
+                                        <el-col :span="5" :offset="1"  >
                                             <el-form-item label="更新日期"
                                                           :label-width="longFormLabelWidth">
                                             </el-form-item>
@@ -568,15 +568,20 @@
                                     联系单信息
                                 </div>
                                 <el-row>
-                                    <el-col :span="6"  >
-                                        <el-form-item label="联系单号:" :label-width="longFormLabelWidth" prop="orderNum">
-                                            <el-input
-                                                    :disabled="notWritter() "
-                                                    v-model="lxdForm.contactForm.num"
-                                                    clearable
-                                                    filterable >
-                                            </el-input>
-                                        </el-form-item>
+                                    <el-col :span="2" style="font-size: 20px; margin-bottom: 10px;margin-top: 10px">
+                                        <el-form-item label="联系单：" :label-width="formLabelWidth"></el-form-item>
+                                    </el-col>
+                                    <el-col :span="22" style="text-align: left">
+                                          <span v-for="contact in form.contactFormDetailList">
+                                            <el-button
+                                                    type="warning"
+                                                    plain
+                                                    size="medium"
+                                                    style="margin: 10px;font-size: 20px;font-weight: bold"
+                                                    @click="handleViewContact(contact.id)"
+                                            >{{contact.num}}</el-button>
+                                                {{contact.status}}
+                                          </span>
                                     </el-col>
                                 </el-row>
                             </el-card>
@@ -1314,6 +1319,7 @@
                 orderSplitRecord: "" ,//订单页面, 包括了订单细节
 //                formList:[],
                 form: {
+                    contactFormDetailList:[],
                     createUserId: '',
                     customer: '',
                     contractNum: '',
@@ -1378,7 +1384,6 @@
 
                 allOrderList:[],
                 disgnerList:[],
-                onSearchDetailDataUrl: HOST + 'design/dep/info/selectDesignDepInfo',
                 queryMachineTypeURL: HOST + 'machine/type/list',
                 deleteUrl: HOST + 'design/dep/info/delete',
                 allMachineType: [],
@@ -1927,7 +1932,6 @@
             handleViewContract(orderNum){
                 this.isError = false;
                 this.errorMsg = '';
-                this.getMachineOrderData(orderNum);
                 _this.addContractVisible = true;
             },
             contractDialogCloseCallback() {
@@ -1936,7 +1940,7 @@
 
             onOrderChanged(orderNum)
             {
-                //获取 订单的销售员等
+                //获取 订单的销售员等, 以及对应联系单信息
                 $.ajax({
                     url: HOST + 'machine/order/selectOrders',
                     type: 'POST',
@@ -1953,6 +1957,8 @@
                             _this.designForm.machineNum = res.data.list[0].machineNum;
                             _this.designForm.orderstatus = res.data.list[0].status;
                             _this.designForm.order_id = res.data.list[0].id;
+
+                            _this.form.contactFormDetailList = res.data.list[0].contactFormDetailList;
                             console.log(' 200, 获取 订单信息 OK');
                         } else {
                             console.error('获取 订单信息失败，res.code: ' + res.code);
@@ -2087,6 +2093,7 @@
                 _this.currentPage = 1;
                 _this.onSearchDetailData();
             },
+
             onSearchDetailData() {
                 var condition = {
                     customer: _this.filters.customer,
@@ -2098,7 +2105,7 @@
                     size: _this.pageSize
                 };
                 $.ajax({
-                    url: _this.onSearchDetailDataUrl,
+                    url: HOST + 'design/dep/info/selectDesignDepInfo',
                     type: 'POST',
                     dataType: 'json',
                     data: condition,
