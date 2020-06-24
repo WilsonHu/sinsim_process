@@ -30,11 +30,13 @@
                     <!--</el-col>-->
                     <el-col :span="4">
                         <el-form-item label="审核状态:">
-                            <el-input
-                                    v-model="filters.machineLength"
-                                    auto-complete="off"
-                                    clearable
-                            ></el-input>
+                            <el-select v-model="filters.orderStatus" clearable>
+                                <el-option
+                                        v-for="item in orderStatusList"
+                                        :value="item.value"
+                                        :label="item.name">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
@@ -1298,6 +1300,7 @@
             </div>
         </el-dialog>
 
+        <!-- 跳转到联系单-->
         <el-dialog :visible.sync="addLxdVisible" fullscreen @close="contactDialogCloseCallback()">
             <el-row type="flex" class="row-bg" justify="center">
                 <el-col :span="24">
@@ -1629,6 +1632,7 @@
             _this = this;
             return {
 
+                orderStatusList: OrderStatusList,
                 addLxdVisible: false,
                 lxdTypes: ["变更", "工作"],
                 //变更联系单的变更类型(变更内容)
@@ -1902,6 +1906,18 @@
         },
         methods: {
 
+            filterOrderStatus(id)
+            {
+                var result = _this.orderStatusList[0].name;
+                for (var i = 0; i < _this.orderStatusList.length; i++) {
+                    if (id == _this.orderStatusList[i].value) {
+                        result = _this.orderStatusList[i].name;
+                        break;
+                    }
+                }
+                return result;
+            },
+
             handleViewContact(id) {
                 _this.getContactAllData(id);
                 this.addLxdVisible = true;
@@ -2029,6 +2045,10 @@
                         }
                     }
                 });
+            },
+
+            formatDate(timeStamp) {
+                return new Date(timeStamp).format("yyyy-MM-dd");
             },
 
             handleDelete(index, item) {
@@ -2588,11 +2608,12 @@
 
             onSearchDetailData() {
                 var condition = {
-                    customer: _this.filters.customer,
+                    guestName: _this.filters.customer,
                     contract_num: _this.filters.contract_num,
-                    order_num: _this.filters.orderNum,
+                    orderNum: _this.filters.orderNum,
                     is_fuzzy: true,
-                    sellman: _this.filters.sellman,
+                    saleman: _this.filters.saleman,
+                    orderStatus:_this.filters.orderStatus,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
