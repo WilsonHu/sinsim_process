@@ -102,6 +102,11 @@ const OrderStatusList = [
     {value: 7, name: '拆单前已审核联系单'},
     {value: 8, name: '改单前已审核联系单'}
 ];
+//xxx完成状态
+const doneStatusList = [
+    {value: 0, name: '未完成'},
+    {value: 1, name: '已完成'}
+];
 //联系单状态
 const LxdStatusList = [
     {value: 0, name: '未提交审核'},

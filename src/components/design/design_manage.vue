@@ -41,7 +41,13 @@
                     </el-col>
                     <el-col :span="4">
                         <el-form-item label="图纸状态:">
-                            <el-input v-model="filters.drawingLoadingDone" placeholder="" auto-complete="off" clearable></el-input>
+                            <el-select v-model="filters.drawingLoadingDoneStatus" clearable>
+                                <el-option
+                                        v-for="item in drawingLoadingDoneStatusList"
+                                        :value="item.value"
+                                        :label="item.name">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -49,7 +55,9 @@
                 <el-row>
                     <el-col :span="4">
                         <el-form-item label="设备规格:">
-                            <el-input v-model="filters.machineSpec" placeholder="" auto-complete="off" clearable></el-input>
+                            <el-input v-model="filters.machineSpec" placeholder="" auto-complete="off" clearable
+                                      placeholder="1-2-3*4">
+                            </el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
@@ -64,7 +72,7 @@
                     </el-col>
 
                     <el-col :span="8">
-                        <el-form-item label="创建日期:">
+                        <el-form-item label="更新日期:">
                             <el-date-picker v-model="filters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -89,7 +97,7 @@
                     show-summary
                     style="width: 100%; "
             >
-                <el-table-column width="75" align="center" label="序号">
+                <el-table-column width="55" align="center" label="序号">
                     <template scope="scope">{{scope.$index+startRow}}</template>
                 </el-table-column>
                 <el-table-column align="center" label="订单号" min-width="145">
@@ -282,8 +290,10 @@
                                 <el-row>
                                     <el-row>
                                         <el-col :span="23" :offset="1">
-                                            <el-form-item label="设计规格："   >
-                                                <el-input type="textarea" v-model="designForm.machineSpec" :rows="2" clearable></el-input>
+                                            <el-form-item label="设备规格："   >
+                                                <el-input type="textarea" v-model="designForm.machineSpec"
+                                                          :rows="2" clearable>
+                                                </el-input>
                                             </el-form-item >
                                         </el-col >
                                     </el-row>
@@ -1633,6 +1643,7 @@
             return {
 
                 orderStatusList: OrderStatusList,
+                drawingLoadingDoneStatusList:doneStatusList,
                 addLxdVisible: false,
                 lxdTypes: ["变更", "工作"],
                 //变更联系单的变更类型(变更内容)
@@ -2469,9 +2480,9 @@
                             _this.designForm.machineNum = res.data.list[0].machineNum;
                             _this.designForm.orderstatus = res.data.list[0].status;
                             _this.designForm.order_id = res.data.list[0].id;
-
+                            _this.designForm.orderSignStatus = res.data.list[0].status;
                             _this.form.contactFormDetailList = res.data.list[0].contactFormDetailList;
-                            console.log(' 200, 获取 订单信息 OK');
+                            console.log(' 200, 获取 订单信息 OK, orderSignStatus:' + _this.designForm.orderSignStatus);
                         } else {
                             console.error('获取 订单信息失败，res.code: ' + res.code);
                         }
@@ -2614,9 +2625,24 @@
                     is_fuzzy: true,
                     saleman: _this.filters.saleman,
                     orderStatus:_this.filters.orderStatus,
+                    drawingLoadingDoneStatus:_this.filters.drawingLoadingDoneStatus,
+                    machineSpec: _this.filters.machineSpec,
+                    keywords: _this.filters.keywords,
+                    designer: _this.filters.designer,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
+                if (
+                        _this.filters.selectDate != null &&
+                        _this.filters.selectDate.length > 0
+                ) {
+                    condition.updateDateStart = _this.filters.selectDate[0].format(
+                            'yyyy-MM-dd'
+                    );
+                    condition.updateDateEnd = _this.filters.selectDate[1].format(
+                            'yyyy-MM-dd'
+                    );
+                }
                 $.ajax({
                     url: HOST + 'design/dep/info/selectDesignDepInfo',
                     type: 'POST',
@@ -2761,7 +2787,7 @@
                     return "-";
                 }
                 var resDate = new Date(strDate);
-                return resDate.format("yyyy-MM-dd hh:mm:ss");
+                return resDate.format("yyyy-MM-dd");
             },
 
             CalculateAndfilterDateString(strDate) {
