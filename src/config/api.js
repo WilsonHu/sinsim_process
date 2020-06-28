@@ -28,6 +28,14 @@ const INSTALLTYPE = {
     PART: '部装', //部装
 }
 
+const DESIGN_UPLOAD_FILE_TYPE = {
+    DRAWING: '图纸',
+    LOADING_FILE:'装车单',
+    HOLE: '点孔', //
+    TUBE: '方管', //
+    BOM: 'BOM', //
+    COVER: '罩盖',
+}
 
 const STATISTICS_DATE_MODE = {
     YEAR: 0,
