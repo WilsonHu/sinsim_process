@@ -170,12 +170,14 @@
                         </el-tooltip>
                         <el-tooltip placement="top">
                             <div slot="content">编辑</div>
-                            <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
+                            <el-button size="mini" type="primary" icon="el-icon-edit"
+                                       :disabled="!modifyAllowedRow(scope.row)"
+                                       @click="handleEdit(scope.$index, scope.row)"></el-button>
                         </el-tooltip>
                         <el-tooltip placement="top">
                             <div slot="content">删除</div>
                             <el-button size="mini" type="danger" icon="el-icon-delete"
-                                       :disabled="!modifyAllowed"
+                                       :disabled="!modifyAllowedRow(scope.row)"
                                        @click="handleDelete(scope.$index, scope.row)"></el-button>
                         </el-tooltip>
                     </template>
@@ -380,7 +382,7 @@
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
-                                                        v-model="designForm.designer">
+                                                        v-model="designForm.drawingMan">
                                                 </el-input>
                                             </el-form-item>
                                         </el-col>
@@ -417,7 +419,7 @@
                                                     type="success"
                                                     icon="el-icon-download"
                                                     :disabled=" haveNoAttachedFile(designForm.loadingFiles)"
-                                                    @click="onAttachedDownload(designForm, '图纸')">下载
+                                                    @click="onAttachedDownload(designForm, '装车单')">下载
                                             </el-button>
                                         </el-col>
                                         <el-col :span="1" style="margin-left:40px;">
@@ -444,7 +446,7 @@
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
-                                                        v-model="designForm.designer">
+                                                        v-model="designForm.loadingMan">
                                                 </el-input>
                                             </el-form-item>
                                         </el-col>
@@ -508,7 +510,7 @@
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
-                                                        v-model="designForm.designer">
+                                                        v-model="designForm.holeMan">
                                                 </el-input>
                                             </el-form-item>
                                         </el-col>
@@ -545,7 +547,7 @@
                                                     type="success"
                                                     icon="el-icon-download"
                                                     :disabled=" haveNoAttachedFile(designForm.tubeFiles)"
-                                                    @click="onAttachedDownload(designForm, '点孔')">下载
+                                                    @click="onAttachedDownload(designForm, '方管')">下载
                                             </el-button>
                                         </el-col>
                                         <el-col :span="1" style="margin-left:40px;">
@@ -572,7 +574,7 @@
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
-                                                        v-model="designForm.designer">
+                                                        v-model="designForm.tubeMan">
                                                 </el-input>
                                             </el-form-item>
                                         </el-col>
@@ -640,7 +642,7 @@
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
-                                                        v-model="designForm.designer">
+                                                        v-model="designForm.coverMan">
                                                 </el-input>
                                             </el-form-item>
                                         </el-col>
@@ -676,7 +678,7 @@
                                                           :label-width="longFormLabelWidth">
                                                 <el-input
                                                         :disabled = "true"
-                                                        v-model="designForm.designer">
+                                                        v-model="designForm.bomMan">
                                                 </el-input>
                                             </el-form-item>
                                         </el-col>
@@ -1942,6 +1944,12 @@
                     orderStatus: CONTRACT_INITIAL,
 
                     designer: '',
+                    drawingMan:'', //图纸更新人
+                    loadingMan:'', //装车单更新人
+                    tubeMan:'', //方管 的更新人
+                    holeMan:'',
+                    bomMan:'',
+                    coverMan:'',
 //                    designCreatedDate: new Date(),
                     machineSpec: '',
                     keywords: '',
@@ -1962,11 +1970,6 @@
                     updatedDate: new Date(),
 
                     orderSignStatus: 0,
-
-                    drawingLoadingMan:'',
-                    holeTubeMan:'',
-                    bomMan:'',
-                    coverMan:'',
 
                     //更新时间会在后台完成，然后
                     drawingUpdateTime: new Date(),
@@ -2318,17 +2321,29 @@
 
                             if(_this.uploadFileType == "图纸") {
                                 _this.designForm.drawingFiles = res.data;
+                                _this.designForm.drawingUpdateTime = new Date();
+                                _this.designForm.drawingMan = _this.userInfo.account;
                             }  else if(_this.uploadFileType == "装车单") {
                                 _this.designForm.loadingFiles = res.data;
+                                _this.designForm.loadingMan = _this.userInfo.account;
+                                _this.designForm.loadingUpdateTime = new Date();
                             } else if(_this.uploadFileType == "点孔") {
                                 _this.designForm.holeFiles = res.data;
+                                _this.designForm.holeUpdateTime = new Date();
+                                _this.designForm.holeMan = _this.userInfo.account;
                             }  else if(_this.uploadFileType == "方管") {
                                 _this.designForm.tubeFiles = res.data;
+                                _this.designForm.tubeUpdateTime = new Date();
+                                _this.designForm.tubeMan = _this.userInfo.account;
                             } else if(_this.uploadFileType == "罩盖") {
                                 _this.designForm.coverFile = res.data;
+                                _this.designForm.coverMan = _this.userInfo.account;
+                                _this.designForm.coverUpdateTime = new Date();
                             }  else if(_this.uploadFileType == "BOM") {
                                 //BOM 没附件
+                                _this.designForm.bomUpdateTime = new Date();
                             }
+
                             showMessage(_this, "文件上传/更新成功！", 1);
 
                             _this.uploadDialogVisible = false;
@@ -2689,6 +2704,12 @@
                     orderStatus: CONTRACT_INITIAL,
 
                     designer: '',
+                    drawingMan:'', //图纸更新人
+                    loadingMan:'', //装车单更新人
+                    tubeMan:'', //方管 的更新人
+                    holeMan:'',
+                    bomMan:'',
+                    coverMan:'',
                     machineSpec: '',
                     keywords: '',
                     drawingFileDone: 0,
@@ -2706,13 +2727,7 @@
                     updatedDate: new Date(),
 
                     orderSignStatus: 0,
-
-                    drawingLoadingMan:'',
-                    holeTubeMan:'',
-                    bomMan:'',
-                    coverMan:'',
-
-                    //更新时间会在后台完成，然后
+                      //更新时间会在后台完成，然后
                     drawingUpdateTime: new Date(),
                     loadingUpdateTime: new Date(),
                     holeUpdateTime: new Date(),
