@@ -58,7 +58,7 @@ import SaleReport from "../components/report/sale_report.vue"
 //设计部
 import DesignDep from "../components/designDep.vue"
 import DesignDepManage from "../components/design/design_manage.vue"
-import lxdFulfill from "../components/design/design_manage.vue"
+import lxdFulfill from "../components/design/lxd_fulfill.vue"
 
 export default [{
         path: '/login',
@@ -166,7 +166,7 @@ export default [{
                 path: '/home/abnormal',
                 component: Abnormal,
                 name: 'Abnormal',
-                meta: "异常管理",
+                meta: "品质管理",
                 children: [{
                         path: '/home/abnormal/abnormal_statistic_manage',
                         component: AbnormalStatisticManage,
@@ -184,6 +184,18 @@ export default [{
                         component: AbnormalTypeManage,
                         name: 'abnormal_type_manage',
                         meta: '异常分类'
+                    },
+                    {
+                        path: '/home/abnormal/abnormal_type_manage',
+                        component: AbnormalTypeManage,
+                        name: 'abnormal_type_manage',
+                        meta: '质检内容'
+                    },
+                    {
+                        path: '/home/abnormal/abnormal_type_manage',
+                        component: AbnormalTypeManage,
+                        name: 'abnormal_type_manage',
+                        meta: '质检数据'
                     }
                 ],
             },
@@ -250,6 +262,12 @@ export default [{
                         component: lxdFulfill,
                         name: 'lxd_fulfill',
                         meta: '联系单落实'
+                    },
+                    {
+                        path: '/home/designDep/optimization',
+                        component: lxdFulfill,
+                        name: 'lxd_fulfill',
+                        meta: '优化测试'
                     },
 
                 ],

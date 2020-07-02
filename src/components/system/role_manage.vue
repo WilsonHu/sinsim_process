@@ -140,7 +140,7 @@
                                 <div style="margin-top: 20px">
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="abnormalAllChecked"
-                                                     @change="handleAbnormalCheckAllChange">异常管理</el-checkbox>
+                                                     @change="handleAbnormalCheckAllChange">品质管理</el-checkbox>
                                         <span v-for=" item in abnormalRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"
@@ -298,7 +298,7 @@
                                     
                                         <el-checkbox class="mainCheckBox"
                                                      v-model="abnormalAllChecked"
-                                                     @change="handleAbnormalCheckAllChange">异常管理</el-checkbox>
+                                                     @change="handleAbnormalCheckAllChange">品质管理</el-checkbox>
                                         <span v-for=" item in abnormalRoleList" style="list-style: none;">
                                             <el-checkbox style="font-weight: normal"
                                                          v-model="item.checked"

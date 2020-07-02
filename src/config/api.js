@@ -115,6 +115,15 @@ const doneStatusList = [
     {value: 0, name: '未完成'},
     {value: 1, name: '已完成'}
 ];
+
+//落实状态
+const constFulfillStatusList = [
+    {value: 0, name: '初始化'},
+    {value: 1, name: '未指定落实人员'},
+    {value: 2, name: '落实进行中'},
+    {value: 3, name: '落实完成'}
+];
+
 //联系单状态
 const LxdStatusList = [
     {value: 0, name: '未提交审核'},
