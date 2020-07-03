@@ -519,6 +519,60 @@
                                   </el-col>
                                 </el-row>
                         </el-card>
+
+                        <!--联系单的落实-->
+                        <el-card class="box-card" style="margin: 25px">
+                            <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
+                                联系单落实跟踪
+                            </div>
+                            <el-row>
+
+                                <el-col :span="6"  >
+                                    <el-form-item label="指定落实人员:" :label-width="longFormLabelWidth" >
+                                        <el-select
+                                                :disabled="notWritter() "
+                                                v-model="lxdForm.contactFulfill.fulfillMan"
+                                                clearable
+                                                filterable >
+                                            <el-option
+                                                    v-for="item in fulfillManList"
+                                                    :label="item.account"
+                                                    :value="item.account">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                            <el-col :span="20"  >
+                                <el-form-item label="意见/信息：" :label-width="longFormLabelWidth" >
+                                    <el-input type="textarea" v-model="lxdForm.contactFulfill.message"
+                                              :rows="5"  :disabled="notWritter()||mode==SIGN_MODE">
+                                    </el-input>
+                                </el-form-item>
+                            </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="6"  v-show="true">
+                                    <el-form-item label="开始日期：" :label-width="longFormLabelWidth">
+                                        <el-date-picker
+                                                :disabled="notWritter()||mode==SIGN_MODE"
+                                                type="date"
+                                                v-model="lxdForm.contactFulfill.createDate">
+                                        </el-date-picker>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6"  v-show="true" :offset = "1">
+                                <el-form-item label="期望完成日期：" :label-width="longFormLabelWidth">
+                                    <el-date-picker
+                                            :disabled="notWritter()||mode==SIGN_MODE"
+                                            type="date"
+                                            v-model="lxdForm.contactFulfill.hopeDate">
+                                    </el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                            </el-row>
+                        </el-card>
                     </el-form>
                     <el-dialog title="提示" :visible.sync="rejectSignResultVisible" width="30%" append-to-body>
                         <span style="font-size: 15px">确认驳回该联系单吗？</span>
@@ -1311,6 +1365,12 @@
                         newInfo: "",
                         remarks: ""
                     }],
+                    //落实单
+                    contactFulfill:{
+                        id: "",
+                        fulfillMan: "",
+                        message: ""
+                    },
                     contactSign:{
                         id:'',
                         contactFormId:'',
@@ -1326,8 +1386,9 @@
                             comment: "",
                             shenHeEnabled:true,
                         }]
-                    }, 
+                    },
                   },
+                fulfillManList:[],
                 normalSignProcess:[],
                 defaultSignProcess:[],
 
@@ -1526,6 +1587,20 @@
 
         },
         methods: {
+
+            fetchFulfillManList() {
+                $.ajax({
+                    url: HOST + 'user/selectUsers',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {roleId: 10}, //技术员
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.fulfillManList = res.data.list;
+                        }
+                    }
+                });
+            },
             handleDownload(index, item) {
                 $.ajax({
                     url: HOST + 'contact/form/buildLxdExcel',
@@ -2082,6 +2157,12 @@
                         status: 0,
                         contactContent: "", //工作联系单内容
                         attachedFile:"",
+                    },
+                    //落实单
+                    contactFulfill:{
+                        id: "",
+                        fulfillMan: "",
+                        message: ""
                     },
                     changeItemList: [],
                     contactSign:{
@@ -2718,7 +2799,7 @@
                 });
             }
             _this.initAllRoles();
-
+            _this.fetchFulfillManList();
         },
         mounted: function () {
             _this.selectContacts();
