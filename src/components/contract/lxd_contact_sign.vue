@@ -530,7 +530,7 @@
                                 <el-col :span="6"  >
                                     <el-form-item label="指定落实人员:" :label-width="longFormLabelWidth" >
                                         <el-select
-                                                :disabled="notWritter() "
+                                                :disabled="fulfillNotWrite()  "
                                                 v-model="lxdForm.contactFulfill.fulfillMan"
                                                 clearable
                                                 filterable >
@@ -547,30 +547,52 @@
                             <el-col :span="20"  >
                                 <el-form-item label="意见/信息：" :label-width="longFormLabelWidth" >
                                     <el-input type="textarea" v-model="lxdForm.contactFulfill.message"
-                                              :rows="5"  :disabled="notWritter()||mode==SIGN_MODE">
+                                              :rows="5"  :disabled="fulfillNotWrite()">
                                     </el-input>
                                 </el-form-item>
                             </el-col>
                             </el-row>
                             <el-row>
-                                <el-col :span="6"  v-show="true">
-                                    <el-form-item label="开始日期：" :label-width="longFormLabelWidth">
+                                <!--<el-col :span="6"  v-show="true">-->
+                                    <!--<el-form-item label="开始日期：" :label-width="longFormLabelWidth">-->
+                                        <!--<el-date-picker-->
+                                                <!--:disabled="fulfillNotWrite()"-->
+                                                <!--type="date"-->
+                                                <!--v-model="lxdForm.contactFulfill.createDate">-->
+                                        <!--</el-date-picker>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
+                                <el-col :span="6"  v-show="true" :offset = "0">
+                                    <el-form-item label="期望完成日期：" :label-width="longFormLabelWidth">
                                         <el-date-picker
-                                                :disabled="notWritter()||mode==SIGN_MODE"
+                                                :disabled="fulfillNotWrite()"
                                                 type="date"
-                                                v-model="lxdForm.contactFulfill.createDate">
+                                                v-model="lxdForm.contactFulfill.hopeDate">
                                         </el-date-picker>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6"  v-show="true" :offset = "1">
-                                <el-form-item label="期望完成日期：" :label-width="longFormLabelWidth">
-                                    <el-date-picker
-                                            :disabled="notWritter()||mode==SIGN_MODE"
-                                            type="date"
-                                            v-model="lxdForm.contactFulfill.hopeDate">
-                                    </el-date-picker>
-                                </el-form-item>
-                            </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="20"  >
+                                    <el-form-item label="反馈信息：" :label-width="longFormLabelWidth" >
+                                        <el-input type="textarea" v-model="lxdForm.contactFulfill.feedback"
+                                                  placeholder="落实人员填写"
+                                                  :rows="5"  :disabled="fulfillNotWrite()">
+                                        </el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="3"  >
+                                    <el-form-item label="是否已完成:" :label-width="longFormLabelWidth">
+                                            <el-switch
+                                                    v-model="lxdForm.contactFulfill.filfullSuccess"
+                                                    active-color="#13ce66"
+                                                    :disabled="fulfillNotWrite()"
+                                                    inactive-color="gray">
+                                            </el-switch>
+                                    </el-form-item>
+                                </el-col>
                             </el-row>
                         </el-card>
                     </el-form>
@@ -652,7 +674,7 @@
                             <el-button @click="dialogClose()" icon="el-icon-back" type="info" offset="120">关 闭
                             </el-button>
                             <el-button
-                                    v-show="mode == ADD_MODE||mode==EDIT_MODE"
+                                    v-show="showSaveButton()"
                                     type="primary"
                                     @click="onAddOrEdit('ruleForm')"
                                     icon="el-icon-check"
@@ -1316,6 +1338,8 @@
         data() {
             _this = this;
             return {
+
+                fulfillStatusList: constFulfillStatusList,
                 editUrl: HOST + 'contact/form/update',
                 deleteUrl: HOST + 'contact/form/delete',
                 isError: false,
@@ -1367,9 +1391,15 @@
                     }],
                     //落实单
                     contactFulfill:{
-                        id: "",
+//                        id: "",
                         fulfillMan: "",
-                        message: ""
+                        message: "",
+                        createDate: new Date(),
+                        updateDate: '',
+                        hopedate: '',
+                        feedback: '',
+                        status:'',
+                        filfullSuccess:''
                     },
                     contactSign:{
                         id:'',
@@ -1820,6 +1850,19 @@
                 return false;
             },
 
+            showSaveButton(){
+                if(_this.mode==_this.ADD_MODE ||_this.mode == _this.EDIT_MODE)
+                {
+                    return true;
+                }
+                //联系单的落实，需要技术部经理编辑联系单的落实信息
+                if(_this.userInfo.role.id == 8){
+                  return true;
+                }
+
+                return false;
+            },
+
             notWritter()
             {
                 //审核开始了，不应该再修改除了审核部门之外内容，否则审核没意义。
@@ -1834,11 +1877,28 @@
                 return true;
             },
 
+            //落实单的不可写
+            fulfillNotWrite(){
+                if(_this.lxdForm.contactFulfill.status.indexOf('落实完成') >=0 ){
+                    //落实完成，所以不可改
+                    return true;
+                }
+//                console.log("_this.lxdForm.contactFulfill.status：" + _this.lxdForm.contactFulfill.status)
+                if (this.userInfo!= null) {
+                    if(this.userInfo.role.id != 8 && this.userInfo.role.id != 1) {
+                        //不是技术部经理，也不是管理员，所以不可改
+                        return true;
+                    }
+                }
+                //其他情况，可改
+                return false;
+            },
+
             notWritterRow(row)
             {
               if (this.userInfo!= null) {
                     //是管理员， 允许修改，
-                  if(this.userInfo.role.id == 1){
+                  if(this.userInfo.role.id == 1 ){
                       return false;
                   } else {
                       //不是管理员， 就看登录账号是否等于联系单申请者
@@ -2160,9 +2220,15 @@
                     },
                     //落实单
                     contactFulfill:{
-                        id: "",
+//                        id: "",
                         fulfillMan: "",
-                        message: ""
+                        message: "",
+                        createDate: new Date(),
+                        updateDate: '',
+                        hopedate: '',
+                        feedback: '',
+                        status:'',
+                        filfullSuccess:''
                     },
                     changeItemList: [],
                     contactSign:{
@@ -2189,7 +2255,9 @@
                             if (_this.mode == _this.ADD_MODE) {
                                 _this.onAdd();
                             }
-                            else if (_this.mode == _this.EDIT_MODE) {
+                            // 允许技术部经理在旧联系单上指定落实信息
+                            else if (_this.mode == _this.EDIT_MODE
+                                    || (_this.mode == _this.SIGN_MODE && _this.userInfo.role.roleName == '技术部经理' )) {
                                 _this.onEdit();
                             }
                         }
@@ -2735,6 +2803,14 @@
 
         },
         filters: {
+            filtlerFulfillStatus(statusStr){
+                if( statusStr.indexOf('落实完成') != -1 ){
+                    return 1;
+                } else {
+                    return 0;
+                }
+            },
+
             filterRole(id) {
                 let result = '';
                 for (let i = 0; i < _this.allRoles.length; i++) {

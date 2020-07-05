@@ -77,9 +77,9 @@
                     <template scope="scope">{{scope.$index+startRow}}</template>
                 </el-table-column>
 
-                <el-table-column align="center" label="联系单号" min-width="145">
+                <el-table-column align="center" label="联系单号" min-width="95">
                     <template scope="scope">
-                        <span>{{scope.row.contactForm.orderNum}}</span>
+                        <span>{{scope.row.contactForm.num}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="订单号" min-width="145">
@@ -88,13 +88,13 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" label="发起部门" min-width="145">
+                <el-table-column align="center" label="发起部门" min-width="80">
                     <template scope="scope">
                         <span>{{scope.row.contactForm.applicantDepartment}}</span>
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" label="发起人" min-width="145">
+                <el-table-column align="center" label="发起人" min-width="80">
                     <template scope="scope">
                         <span>{{scope.row.contactForm.applicantPerson}}</span>
                     </template>
@@ -118,12 +118,12 @@
                         <div>{{scope.row.fulfillMan}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="updatedDate" min-width="85" label="落实期限">
+                <el-table-column align="center" prop="updatedDate" min-width="90" label="落实期限">
                     <template scope="scope">
                         {{(scope.row.hopeDate)|filterDateString}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="updatedDate" min-width="85" label="更新日期">
+                <el-table-column align="center" prop="updatedDate" min-width="90" label="更新日期">
                     <template scope="scope">
                         {{(scope.row.updateDate)|filterDateString}}
                     </template>
