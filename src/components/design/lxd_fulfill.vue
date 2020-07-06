@@ -20,7 +20,11 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="创建日期:">
-                            <el-date-picker v-model="filters.selectCreateDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
+                            <el-date-picker v-model="filters.selectCreateDate" type="daterange"
+                                            align="left" unlink-panels range-separator="—"
+                                            start-placeholder="开始日期"
+                                            end-placeholder="结束日期"
+                                            :picker-options="pickerOptions"></el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -49,7 +53,10 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="更新日期:">
-                            <el-date-picker v-model="filters.selectUpdateDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
+                            <el-date-picker v-model="filters.selectUpdateDate" type="daterange" align="left"
+                                            unlink-panels range-separator="—" start-placeholder="开始日期"
+                                            end-placeholder="结束日期" :picker-options="pickerOptions">
+                            </el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" :offset="0" >
@@ -556,7 +563,7 @@
                                         <el-form-item label="反馈信息：" :label-width="longFormLabelWidth" >
                                             <el-input type="textarea" v-model="lxdForm.contactFulfill.feedback"
                                                       placeholder="落实人员填写"
-                                                      :rows="5"  :disabled="fulfillNotWrite()">
+                                                      :rows="5"  :disabled="fulfillFeedbackNotWrite()">
                                             </el-input>
                                         </el-form-item>
                                     </el-col>
@@ -567,7 +574,7 @@
                                             <el-switch
                                                     v-model="lxdForm.contactFulfill.filfullSuccess"
                                                     active-color="#13ce66"
-                                                    :disabled="fulfillNotWrite()"
+                                                    :disabled="fulfillFeedbackNotWrite()"
                                                     inactive-color="gray">
                                             </el-switch>
                                         </el-form-item>
@@ -634,6 +641,8 @@
             _this = this;
             return {
 
+                STR_FULFILL_STATUS_FULFILLING: CONST_STR_FULFILL_STATUS_FULFILLING,
+                STR_FULFILL_STATUS_DONE: CONST_STR_FULFILL_STATUS_DONE,
                 fulfillManList:[],
                 fulfillStatusList: constFulfillStatusList,
                 editFulfillVisible: false,
@@ -731,13 +740,18 @@
                 queryMachineTypeURL: HOST + 'machine/type/list',
                 allMachineType: [],
                 filters: {
-                    customer: '',
-                    contract_num: '',
+                    applicantPerson: '',
+                    applicantDepartment: '',
                     orderNum: '',
-                    //machineLength: '',
-                    sellman: '',
-                    selectDate: [new Date(), new Date()], //默认查询当天
+                    queryStartTimeCreate: '',
+                    queryFinishTimeCreate: '',
+                    fulfillMan: '',
+                    fulfillStatus: '',
+                    contactFormNum: '',
+                    queryStartTimeUpdate: [new Date(), new Date()], //默认查询当天,
+                    queryFinishTimeUpdate: [new Date(), new Date()] //默认查询当天
                 },
+
                 tableData: [],
                 pageSize: EveryPageNum, //每一页的num
                 currentPage: 1,
@@ -1038,10 +1052,33 @@
                 }
 //                console.log("_this.lxdForm.contactFulfill.status：" + _this.lxdForm.contactFulfill.status)
                 if (this.userInfo!= null) {
-                    if(this.userInfo.role.id != 8 && this.userInfo.role.id != 1) {
-                        //不是技术部经理，也不是管理员，所以不可改
+                    if(this.userInfo.role.id != 8 && this.userInfo.role.id != 1 ) {
+                        //不是技术部经理，也不是管理员, 也不是被指定的落实人员，所以不可改
                         return true;
                     }
+                }
+                //其他情况，可改
+                return false;
+            },
+
+            fulfillFeedbackNotWrite(){
+
+                //允许管理员和技术部经理 修改结果
+                if(this.userInfo.role.roleName.indexOf('超级管理员') >=0 || this.userInfo.role.roleName.indexOf('技术部经理') >=0){
+                    return false;
+                }
+
+//                console.log("_this.lxdForm.contactFulfill.status：" + _this.lxdForm.contactFulfill.status)
+                if (this.userInfo!= null) {
+                    if( this.userInfo.role.id != 1 && this.userInfo.account != this.lxdForm.contactFulfill.fulfillMan) {
+                        //不是管理员, 也不是被指定的落实人员，所以不可改
+                        return true;
+                    }
+                }
+
+                if(_this.lxdForm.contactFulfill.status.indexOf('落实完成') >=0 ){
+                    //落实完成，所以不可改
+                    return true;
                 }
                 //其他情况，可改
                 return false;
@@ -1097,6 +1134,14 @@
             },
 
             onEdit() {
+
+                if(_this.lxdForm.contactFulfill.filfullSuccess == true) {
+                    _this.lxdForm.contactFulfill.status = CONST_STR_FULFILL_STATUS_DONE;
+                } else if(_this.lxdForm.contactFulfill.fulfillMan == null || _this.lxdForm.contactFulfill.fulfillMan == ''){
+                    _this.lxdForm.contactFulfill.status = CONST_STR_FULFILL_STATUS_UN_ASSIGN;
+                } else {
+                    _this.lxdForm.contactFulfill.status = CONST_STR_FULFILL_STATUS_FULFILLING;
+                }
                 let submitData=JSON.stringify(_this.lxdForm);
                 $.ajax({
                     url: HOST + 'contact/form/update',
@@ -1249,8 +1294,8 @@
                         //技术部经理 8
                         return true;
                     } else {
-                        //除了管理员和技术部经理，设计员只能改自己的东西
-                        return this.userInfo.account == row.designer;
+                        //除了管理员和技术部经理，被指定的落实人员 能改自己的东西
+                        return this.userInfo.account == row.fulfillMan;
                     }
                 }
                 return false;
@@ -1299,29 +1344,26 @@
 
             onSearchFulfillList() {
                 var condition = {
-                    guestName: _this.filters.customer,
-                    contract_num: _this.filters.contract_num,
-                    orderNum: _this.filters.orderNum,
-                    is_fuzzy: true,
-                    saleman: _this.filters.saleman,
-                    orderStatus:_this.filters.orderStatus,
-                    drawingLoadingDoneStatus:_this.filters.drawingLoadingDoneStatus,
-                    machineSpec: _this.filters.machineSpec,
-                    keywords: _this.filters.keywords,
-                    designer: _this.filters.designer,
+                    applicantPerson: _this.filters.applicantPerson,
+                    applicantDepartment:  _this.filters.applicantDepartment,
+                    orderNum:  _this.filters.orderNum,
+                    fulfillMan:  _this.filters.fulfillMan,
+                    fulfillStatus:  _this.filters.fulfillStatus,
+                    contactFormNum:  _this.filters.contactFormNum,
+
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
-                if (
-                        _this.filters.selectDate != null &&
-                        _this.filters.selectDate.length > 0
-                ) {
-                    condition.updateDateStart = _this.filters.selectDate[0].format(
-                            'yyyy-MM-dd'
-                    );
-                    condition.updateDateEnd = _this.filters.selectDate[1].format(
-                            'yyyy-MM-dd'
-                    );
+                if (_this.filters.selectCreateDate != null &&
+                        _this.filters.selectCreateDate.length > 0) {
+                    condition.queryStartTimeCreate = _this.filters.selectCreateDate[0].format('yyyy-MM-dd');
+                    condition.queryFinishTimeCreate = _this.filters.selectCreateDate[1].format('yyyy-MM-dd');
+                }
+
+                if (_this.filters.selectUpdateDate != null &&
+                        _this.filters.selectUpdateDate.length > 0) {
+                    condition.queryStartTimeUpdate = _this.filters.selectUpdateDate[0].format('yyyy-MM-dd');
+                    condition.queryFinishTimeUpdate = _this.filters.selectUpdateDate[1].format('yyyy-MM-dd');
                 }
                 $.ajax({
                     url: HOST + 'contact/fulfill/selectFulfillList',
@@ -1393,6 +1435,7 @@
         mounted: function () {
             _this.searchFulfillList();
             _this.fetchDisgnerList();
+            _this.fetchFulfillManList();
         }
     };
 </script>
