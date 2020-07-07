@@ -100,12 +100,12 @@
                 <el-table-column width="55" align="center" label="序号">
                     <template scope="scope">{{scope.$index+startRow}}</template>
                 </el-table-column>
-                <el-table-column align="center" label="订单号" min-width="145">
+                <el-table-column align="center" label="订单号" min-width="105">
                     <template scope="scope">
                         <span>{{scope.row.orderNum}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" min-width="110" prop="orderSignStatus" label="审核状态">
+                <el-table-column align="center" min-width="80" prop="orderSignStatus" label="审核状态">
                     <template scope="scope">
                         <div>
                             {{scope.row.orderSignStatus|filterOrderStatus}}
@@ -113,13 +113,13 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="updatedDate" min-width="85" label="审核更新日期">
+                <el-table-column align="center" prop="updatedDate" min-width="95" label="订单审核更新">
                     <template scope="scope">
-                        {{(scope.row.updatedDate)|filterDateString}}
+                        {{(scope.row.updateTime)|filterDateString}}
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" prop="nameplate" label="设备规格">
+                <el-table-column align="center" prop="nameplate" min-width="125" label="设备规格">
                     <template scope="scope">
                         <div>{{scope.row.machineSpec}}</div>
                     </template>
@@ -135,22 +135,22 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" prop="drawingFileDone" label="图纸">
+                <el-table-column align="center" prop="drawingFileDone" min-width="65" label="图纸">
                     <template scope="scope">
                         {{(scope.row.drawingFileDone)|filterDone }}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="bomDone" label="BOM" >
+                <el-table-column align="center" prop="bomDone" min-width="65" label="BOM" >
                     <template scope="scope">
                         {{(scope.row.bomDone)|filterDone }}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="holeDone" label="点孔" >
+                <el-table-column align="center" prop="holeDone" min-width="65" label="点孔" >
                     <template scope="scope">
                         {{(scope.row.holeDone)|filterDone }}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="coverDone" label="罩盖" >
+                <el-table-column align="center" prop="coverDone" min-width="65" label="罩盖" >
                     <template scope="scope">
                         {{(scope.row.coverDone)|filterDone }}
                     </template>
@@ -158,6 +158,11 @@
                 <el-table-column align="center" prop="designStatus" label="当前状态" >
                     <template scope="scope">
                         {{(scope.row.designStatus) }}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" prop="updatedDate" min-width="95" label="设计更新">
+                    <template scope="scope">
+                        {{(scope.row.updatedDate)|filterDateString}}
                     </template>
                 </el-table-column>
 
@@ -684,9 +689,9 @@
                                         </el-col>
                                     </div>
                                     <el-col :span="2"   >
-                                        <el-form-item label="有/无:" :label-width="longFormLabelWidth">
+                                        <el-form-item label="是否完成:" :label-width="longFormLabelWidth">
                                             <el-switch
-                                                    v-model="designForm.bomRequired"
+                                                    v-model="designForm.bomDone"
                                                     active-color="#13ce66"
                                                     inactive-color="gray">
                                             </el-switch>
@@ -713,7 +718,10 @@
                                             </el-button>
                                           </span>
                                     </el-col>
-                                </el-row>
+                                </el-row> 
+                                <div   v-if="contactFormDetailListIsEmpty(form.contactFormDetailList)">
+                                    无联系单
+                                </div>
                             </el-card>
                         </el-form>
 
@@ -2040,6 +2048,14 @@
             };
         },
         methods: {
+
+            contactFormDetailListIsEmpty(contactFormDetailList){
+                if(contactFormDetailList == null || contactFormDetailList =='' || contactFormDetailList.isEmpty){
+                    return true;
+                } else {
+                    return false;
+                }
+            },
 
             filterOrderStatus(id)
             {
