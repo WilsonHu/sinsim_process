@@ -59,6 +59,8 @@ import SaleReport from "../components/report/sale_report.vue"
 import DesignDep from "../components/designDep.vue"
 import DesignDepManage from "../components/design/design_manage.vue"
 import lxdFulfill from "../components/design/lxd_fulfill.vue"
+import optimize from "../components/design/optimize.vue"
+
 
 export default [{
         path: '/login',
@@ -264,10 +266,10 @@ export default [{
                         meta: '联系单落实'
                     },
                     {
-                        path: '/home/designDep/optimization',
-                        component: lxdFulfill,
-                        name: 'lxd_fulfill',
-                        meta: '优化测试'
+                        path: '/home/designDep/optimize',
+                        component: optimize,
+                        name: 'optimize',
+                        meta: '优化试验'
                     },
 
                 ],
