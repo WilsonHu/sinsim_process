@@ -167,6 +167,7 @@
                                                     v-model="optimizeForm.orderNum"
                                                     @change="onOrderChanged(optimizeForm.orderNum)"
                                                     clearable
+                                                    placeholder="请选择订单号"
                                                     filterable >
                                                 <el-option
                                                         v-for="item in allOrderList"
@@ -178,7 +179,7 @@
                                     </el-col>
                                     <el-col :span="4" :offset="1">
                                         <el-form-item label="机型："  :label-width="formLabelWidthSmall">
-                                            <el-input v-model="optimizeForm.headNum" clearable>
+                                            <el-input v-model="optimizeForm.machineType" clearable>
                                             </el-input>
                                         </el-form-item >
                                     </el-col >
@@ -203,7 +204,7 @@
                                             <el-input type="textarea" v-model="optimizeForm.projectName"
                                                       clearable
                                                       :rows="1"
-                                                      :disabled="notWritter()||mode==SIGN_MODE">
+                                                      :disabled="notWritter()">
                                             </el-input>
                                         </el-form-item>
                                     </el-col>
@@ -214,16 +215,16 @@
                                             <el-input type="textarea" v-model="optimizeForm.optimizePart"
                                                       clearable
                                                       :rows="1"
-                                                      :disabled="notWritter()||mode==SIGN_MODE">
+                                                      :disabled="notWritter()">
                                             </el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col  :span="6"  >
                                         <el-form-item label="工时" :label-width="longFormLabelWidth"  >
-                                            <el-input type="textarea" v-model="optimizeForm.optimizePart"
+                                            <el-input type="textarea" v-model="optimizeForm.workingHours"
                                                       clearable
                                                       :rows="1"
-                                                      :disabled="notWritter()||mode==SIGN_MODE">
+                                                      :disabled="notWritter()">
                                             </el-input>
                                         </el-form-item>
                                     </el-col>
@@ -259,7 +260,7 @@
                                         <el-col :span="6" >
                                             <el-form-item label="创建日期" :label-width="longFormLabelWidth"  >
                                                 <el-date-picker
-                                                        disabled
+                                                        :disabled="notWritter() "
                                                         style="width: 100%"
                                                         v-model="optimizeForm.createpDate"
                                                         type="date"
@@ -270,7 +271,7 @@
                                         <el-col :span="6" >
                                             <el-form-item label="更新日期" :label-width="longFormLabelWidth"  >
                                                 <el-date-picker
-                                                        disabled
+                                                        :disabled="notWritter() "
                                                         style="width: 100%"
                                                         v-model="optimizeForm.updateDate"
                                                         type="date"
@@ -287,7 +288,7 @@
                                             </el-col>
                                             <el-col :span="2" style="margin-left:20px;">
                                                 <el-button
-                                                        :disabled="notWritter()||mode==SIGN_MODE"
+                                                        :disabled="notWritter()"
                                                         size="small"
                                                         type="success"
                                                         style="float:left; margin-left:5px;"
@@ -309,7 +310,7 @@
                                                         size="small"
                                                         type="danger"
                                                         icon="el-icon-delete"
-                                                        :disabled=" haveNoAttachedFile(optimizeForm.attachedFile)||notWritter()||mode==SIGN_MODE"
+                                                        :disabled=" haveNoAttachedFile(optimizeForm.attachedFile)||notWritter()"
                                                         @click="handAttachedDelete(optimizeForm)">删除
                                                 </el-button>
                                             </el-col>
@@ -336,7 +337,7 @@
                                 <el-button
                                         v-show="mode == ADD_MODE||mode==EDIT_MODE"
                                         type="primary"
-                                        @click="onAddOrEdit('ruleForm')"
+                                        @click="onAddOrEdit()"
                                         icon="el-icon-check"
                                 >保 存
                                 </el-button>
@@ -1225,51 +1226,20 @@
 
                 //用于保存设计内容
                 optimizeForm: {
-
+                    projectName: '',
+                    optimizePart: '',
                     orderNum: '',
-                    order_id: '', ////
-                    saleman: '',
-                    guestName: '',
-                    country: '',
-                    machineNum: '',
-                    remark: '',
-                    orderStatus: CONTRACT_INITIAL,
+                    machineType: '',
+                    purpose: '',
+                    owner: '',
 
-                    designer: '',
-                    drawingMan:'', //图纸更新人
-                    loadingMan:'', //装车单更新人
-                    tubeMan:'', //方管 的更新人
-                    holeMan:'',
-                    bomMan:'',
-                    coverMan:'',
-//                    designCreatedDate: new Date(),
-                    machineSpec: '',
-                    keywords: '',
-                    drawingFileDone: 0,
-                    loadingFileDone: 0,
-                    drawingLoadingiles:'',
-//                    drawing_loading_done: 0,
-                    bomRequired:0,
-                    holeDone: 0,
-                    tubeDone: 0,
-                    holeFiles:'',
-                    tubeFiles:'',
-//                    hole_tube_done: '',
-                    bomDone: 0,
-                    coverDone: 0,
-                    coverFile:'',
-                    createdDate: new Date(),
+                    workingHours:'', //工时
+                    results:'', //效果
+                    files:'', //附件
+
+                    createDate: new Date(),
                     updatedDate: new Date(),
 
-                    orderSignStatus: 0,
-
-                    //更新时间会在后台完成，然后
-                    drawingUpdateTime: new Date(),
-                    loadingUpdateTime: new Date(),
-                    holeUpdateTime: new Date(),
-                    tubeUpdateTime: new Date(),
-                    bomUpdateTime: new Date(),
-                    coverUpdateTime: new Date(),
                 },
 
                 lxdForm: {
@@ -1596,16 +1566,11 @@
                 formData.append("type", _this.uploadFileType);
 
                 //在第一次新建时上传文件，designDepInfoID为空，需要把日期在前端准备好
-                if(_this.designForm.id == null) {
-                    _this.designForm.drawingUpdateTime = new Date();
-                    _this.designForm.loadingUpdateTime = new Date();
-                    _this.designForm.holeUpdateTime = new Date();
-                    _this.designForm.tubeUpdateTime = new Date();
-                    _this.designForm.bomUpdateTime = new Date();
-                    _this.designForm.coverUpdateTime = new Date();
+                if(_this.optimizeForm.id == null) {
+                    _this.optimizeForm.createDate = new Date();
                 } else {
-                    // 在编辑时，设计页已经保存过了，只需要上传ID，让后端设定更新时间
-                    formData.append("designDepInfoID", _this.designForm.id);
+                    // 在编辑时，优化页已经保存过了，只需要上传ID，让后端设定更新时间
+                    formData.append("designDepInfoID", _this.optimizeForm.id);
                 }
 
                 $.ajax({
@@ -1718,15 +1683,15 @@
                 this.addOptimizeVisible = true;
             },
 
-            fetchDesignData(formId) {
+            fetchoptimizeData(formId) {
                 $.ajax({
-                    url: HOST + 'design/dep/info/detail',
+                    url: HOST + 'optimize/detail',
                     type: 'POST',
                     dataType: 'json',
                     data: {id: formId},
                     success: function (res) {
                         if (res.code == 200) {
-                            _this.designForm=res.data;
+                            _this.optimizeForm=res.data;
 //                            if(_this.lxdForm.contactForm.contactType.indexOf("变更")>=0)//变更
 //                            {
 //                                _this.checkedChangeTypes=_this.lxdForm.contactForm.contactContent.split(",");
@@ -1773,35 +1738,13 @@
             },
             onAdd()
             {
-//                //先获取 order_id
-//                $.ajax({
-//                    url: HOST + 'machine/order/selectOrders',
-//                    type: 'POST',
-//                    dataType: 'json',
-//                    data: {order_num: _this.designForm.orderNum},
-//                    success: function (res) {
-//                        if (res.code == 200) {
-//                            _this.designForm.order_id = res.data.list[0].id;
-//                            console.log("_this.designForm.order_id :" + _this.designForm.order_id );
-//                        } else {
-//                            console.log("getMachineOrderData err:" + res.message);
-//                            _this.errorMsg = '获取order_id出错！';
-//                            _this.isError = true;
-//                        }
-//                    },
-//                    error: function (info) {
-//                        _this.errorMsg = '服务器访问出错！';
-//                        _this.isError = true;
-//                    }
-//                });
-
-                let submitData=JSON.stringify(_this.designForm);
+                let submitData=JSON.stringify(_this.optimizeForm);
                 $.ajax({
-                    url: HOST + 'design/dep/info/add',
+                    url: HOST + 'optimize/add',
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        jsonDesignDepInfoFormAllInfo:submitData,
+                        jsonOptimizeFormAllInfo:submitData,
                     },
                     success: function (res) {
                         _this.isError = res.code != 200;
@@ -1809,7 +1752,7 @@
                             //_this.addLxdVisible = false;
                             showMessage(_this, '添加成功', 1);
                             //新需求:赋值主键ID,UI不关闭，继续可编辑，变成更新页面
-                            _this.designForm.id = res.data;
+                            _this.optimizeForm.id = res.data;
                             _this.mode = _this.EDIT_MODE;
                             _this.changeUIMode();
 //                            _this.fetchLxdData(res.data);
@@ -1839,8 +1782,8 @@
             },
 
             onEdit() {
-                _this.designForm.updatedDate = new Date();
-                let submitData=JSON.stringify(_this.designForm);
+                _this.optimizeForm.updatedDate = new Date();
+                let submitData=JSON.stringify(_this.optimizeForm);
                 $.ajax({
                     url: HOST + 'design/dep/info/update',
                     type: 'POST',
@@ -1871,7 +1814,7 @@
                 return false;
             },
 
-            onAddOrEdit(formName) {
+            onAddOrEdit() {
 
                 //在此检查变更内容
                 _this.isError = this.validDesignContent();
@@ -1929,15 +1872,7 @@
                     success: function (res) {
                         if (res.code == 200) {
                             //因为订单号唯一 所以返回的值应该只有一个。
-                            _this.designForm.saleman = res.data.list[0].sellman;
-                            _this.designForm.guestName = res.data.list[0].customer;
-                            _this.designForm.country = res.data.list[0].country;
-                            _this.designForm.machineNum = res.data.list[0].machineNum;
-                            _this.designForm.orderstatus = res.data.list[0].status;
-                            _this.designForm.order_id = res.data.list[0].id;
-                            _this.designForm.orderSignStatus = res.data.list[0].status;
-                            _this.form.contactFormDetailList = res.data.list[0].contactFormDetailList;
-                            console.log(' 200, 获取 订单信息 OK, orderSignStatus:' + _this.designForm.orderSignStatus);
+                            _this.optimizeForm.machineType = res.data.list[0].machineType.name;
                         } else {
                             console.error('获取 订单信息失败，res.code: ' + res.code);
                         }
@@ -1988,65 +1923,39 @@
                 this.errorMsg = '';
                 this.dialogTitle = '新增优化测试项目';
                 this.addOptimizeVisible = true;
-                this.resetDesignFormEmpty();
+                this.resetOptimizeFormEmpty();
 
             },
 
-            resetDesignFormEmpty(){
-                _this.designForm =  {
+            resetOptimizeFormEmpty(){
+                _this.optimizeForm =  {
+                    projectName: '',
+                    optimizePart: '',
                     orderNum: '',
-                    order_id: '', ////
-                    saleman: '',
-                    guestName: '',
-                    country: '',
-                    machineNum: '',
-                    remark: '',
-                    orderStatus: CONTRACT_INITIAL,
+                    machineType: '',
+                    purpose: '',
+                    owner: '',
 
-                    designer: '',
-                    drawingMan:'', //图纸更新人
-                    loadingMan:'', //装车单更新人
-                    tubeMan:'', //方管 的更新人
-                    holeMan:'',
-                    bomMan:'',
-                    coverMan:'',
-                    machineSpec: '',
-                    keywords: '',
-                    drawingFileDone: 0,
-                    loadingFileDone: 0,
-                    holeDone: 0,
-                    tubeDone: 0,
-                    bomDone: 0,
-                    bomRequired: 0,
-                    holeFiles:'',
-                    tubeFiles:'',
-//                    hole_tube_done: '',
-                    coverDone: 0,
-                    coverFile:'',
-                    createdDate: new Date(),
+                    workingHours:'', //工时
+                    results:'', //效果
+                    files:'', //附件
+
+                    createDate: new Date(),
                     updatedDate: new Date(),
 
-                    orderSignStatus: 0,
-                      //更新时间会在后台完成，然后
-                    drawingUpdateTime: new Date(),
-                    loadingUpdateTime: new Date(),
-                    holeUpdateTime: new Date(),
-                    tubeUpdateTime: new Date(),
-                    bomUpdateTime: new Date(),
-                    coverUpdateTime: new Date(),
                 };
             },
 
             dialogCloseCallback() {
                 //reset after dialog closed
                 //用于保存合同内容
-                _this.resetDesignFormEmpty();
+                _this.resetOptimizeFormEmpty();
                 _this.addOptimizeVisible = false;
 //                _this.selectContracts();
             },
             dialogClose() {
                 _this.addOptimizeVisible = false;
-                _this.resetDesignFormEmpty();
+                _this.resetOptimizeFormEmpty();
                 _this.searchOptimizeList();
             },
             changeDesignContentDisable(item) {
