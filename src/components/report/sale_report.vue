@@ -162,6 +162,10 @@ export default {
       currentPage: 1,
       startRow: 0,
       totalRecords: 0,
+      totalEquipmentsAtThisPage: 0, //注意：后续这些都是本页的数据，不是全部，不包括其他页
+      totalMachineNumAtThisPage: 0,   //本页台数
+      totalDiscountsAtThisPage: 0,    //本页优惠
+      totalAmountAtThisPage: 0,    //本页总价
       loadingUI: false,
       pickerOptions: {
         shortcuts: [
@@ -205,6 +209,55 @@ export default {
       }
       return res;
     },
+
+    //计算当前页的各种总计
+    calculateTotal(){
+      var tmp1 = 0;
+
+      //计算装备
+      for (var i = 0; i <_this.tableData.length; i++)
+      {
+        tmp1 += this.getEquipmentAmount(_this.tableData[i].equipment);
+      }
+      _this.totalEquipmentsAtThisPage = tmp1;
+
+      tmp1 = 0;
+      //计算机器台数
+      for (var i = 0; i <_this.tableData.length; i++)
+      {
+        tmp1 += _this.tableData[i].machineNum;
+      }
+      _this.totalMachineNumAtThisPage = tmp1;
+
+      tmp1 = 0;
+      //计算 优惠
+      for (var i = 0; i <_this.tableData.length; i++)
+      {
+        tmp1 +=  parseInt( _this.tableData[i].orderTotalDiscounts);
+      }
+      _this.totalDiscountsAtThisPage = tmp1;
+
+      tmp1 = 0;
+      //计算 总价
+      for (var i = 0; i <_this.tableData.length; i++)
+      {
+        tmp1 += _this.getTotalAmountWithInteger(_this.tableData[i]) ;//_this.tableData[i].equipment;
+      }
+      _this.totalAmountAtThisPage = tmp1;
+
+    },
+
+    getTotalAmountWithInteger(data) {
+      let totalAmount = 0;
+      let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
+      //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
+      totalAmount =
+              [equipAmount + parseInt(data.machinePrice)] *
+              parseInt(data.machineNum) -
+              parseInt(data.orderTotalDiscounts);
+      return  totalAmount ;
+    },
+
     getTotalAmount(data) {
       let totalAmount = 0;
       let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
@@ -215,6 +268,7 @@ export default {
         parseInt(data.orderTotalDiscounts);
       return number_format(totalAmount, 2, '.', ' ');
     },
+
     getEquipmentFromJSON(strData) {
       let res = [];
       if (strData != null && strData.length > 0) {
@@ -228,6 +282,11 @@ export default {
       sums[0] = '合计';
       sums[1] = '总数：';
       sums[2] = _this.totalRecords;
+      sums[5] = '后面是本页数据：';
+      sums[6] = _this.totalEquipmentsAtThisPage;
+      sums[8] = _this.totalMachineNumAtThisPage;
+      sums[9] = _this.totalDiscountsAtThisPage;
+      sums[10] = _this.totalAmountAtThisPage;
       return sums;
     },
     handleCurrentChange(val) {
@@ -276,6 +335,8 @@ export default {
             _this.totalRecords = res.data.total;
             _this.tableData = res.data.list;
             _this.startRow = res.data.startRow;
+            _this.calculateTotal();
+
           }
           _this.loadingUI = false;
         }
