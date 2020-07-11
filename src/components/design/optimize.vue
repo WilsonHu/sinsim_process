@@ -102,12 +102,12 @@
                         <div>{{scope.row.machineType}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="designer" label="工时">
+                <el-table-column align="center" label="工时">
                     <template scope="scope">
                         <div>{{scope.row.workingHours}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="designCostDates" label="负责人">
+                <el-table-column align="center"  label="负责人">
                     <template scope="scope">
                         {{(scope.row.owner)}}
                     </template>
@@ -236,7 +236,7 @@
                                                     clearable
                                                     filterable >
                                                 <el-option
-                                                        v-for="item in disgnerList"
+                                                        v-for="item in ownerList"
                                                         :label="item.account"
                                                         :value="item.account">
                                                 </el-option>
@@ -249,7 +249,7 @@
                                     <el-row>
                                         <el-col :span="22" :offset="1">
                                             <el-form-item label="优化目的："   >
-                                                <el-input type="textarea" v-model="optimizeForm.machineSpec"
+                                                <el-input type="textarea" v-model="optimizeForm.purpose"
                                                           :rows="5" clearable>
                                                 </el-input>
                                             </el-form-item >
@@ -262,7 +262,7 @@
                                                 <el-date-picker
                                                         :disabled="notWritter() "
                                                         style="width: 100%"
-                                                        v-model="optimizeForm.createpDate"
+                                                        v-model="optimizeForm.createDate"
                                                         type="date"
                                                 >
                                                 </el-date-picker>
@@ -301,7 +301,7 @@
                                                         size="small"
                                                         type="success"
                                                         icon="el-icon-download"
-                                                        :disabled=" haveNoAttachedFile(optimizeForm.attachedFile)"
+                                                        :disabled=" haveNoAttachedFile(optimizeForm.files)"
                                                         @click="onAttachedDownload(optimizeForm)">下载
                                                 </el-button>
                                             </el-col>
@@ -310,7 +310,7 @@
                                                         size="small"
                                                         type="danger"
                                                         icon="el-icon-delete"
-                                                        :disabled=" haveNoAttachedFile(optimizeForm.attachedFile)||notWritter()"
+                                                        :disabled=" haveNoAttachedFile(optimizeForm.files)||notWritter()"
                                                         @click="handAttachedDelete(optimizeForm)">删除
                                                 </el-button>
                                             </el-col>
@@ -400,7 +400,7 @@
             <el-dialog title="删除" :visible.sync="deleteConfirmVisible" width="30%" append-to-body>
                 <span style="font-size: 22px">
                            确认要删除订单号为[
-                            <b style="color: #F56C6C;font-weight: bold">{{selectedItem.orderNum}}</b> ] 的该设计单吗？
+                            <b style="color: #F56C6C;font-weight: bold">{{selectedItem.orderNum}}</b> ] 的该优化记录吗？
                 </span>
                 <span slot="footer" class="dialog-footer">
                             <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
@@ -1047,7 +1047,7 @@
     var _this;
 
     export default {
-        name: 'design_dep_manage',
+        name: 'optimize_test',
         data() {
             _this = this;
             return {
@@ -1145,9 +1145,8 @@
                 },
 
                 allOrderList:[],
-                disgnerList:[],
+                ownerList:[],
                 queryMachineTypeURL: HOST + 'machine/type/list',
-                deleteUrl: HOST + 'design/dep/info/delete',
                 allMachineType: [],
                 filters: {
                     customer: '',
@@ -1238,57 +1237,9 @@
                     files:'', //附件
 
                     createDate: new Date(),
-                    updatedDate: new Date(),
-
+                    updatedDate: new Date()
                 },
 
-                lxdForm: {
-                    contactForm: {
-                        id: "",
-                        num: "",
-                        orderNum: "",
-                        contactTitle: "",
-                        contactType: "",
-                        applicantDepartment: "",
-                        createDate: new Date(),
-                        hopeDate: "",
-                        applicantPerson: "",
-                        status: 0,
-                        contactContent: "", //工作联系单内容
-                        attachedFile: "",
-                        contactContentElse: "", // 选中“其他变更”时的输入
-                        contactContentElseIsChecked: false // “其他变更” 是否被选中。
-                    },
-                    changeItemList: [
-                        {
-                            //变更单内容
-                            id: "",
-                            contactFormId: "",
-                            oldInfo: "",
-                            newInfo: "",
-                            remarks: ""
-                        }
-                    ],
-                    contactSign: {
-                        id: "",
-                        contactFormId: "",
-                        currentStep: "",
-                        createTime: "",
-                        signContent: [
-                            {
-                                number: "",
-                                roleId: "",
-                                signType: "",
-                                date: "",
-                                user: "",
-                                result: "",
-                                comment: "",
-                                shenHeEnabled: true
-                            }
-                        ]
-                    }
-                },
-                designExist: false,
                 rules: {
                     orderNum: [
 //                        {  type: 'string',required: true, message: '请填写订单号!', trigger: 'change' }
@@ -1321,11 +1272,6 @@
                     }
                 }
                 return result;
-            },
-
-            handleViewContact(id) {
-                _this.getContactAllData(id);
-                this.addLxdVisible = true;
             },
 
             contactDialogCloseCallback() {
@@ -1426,36 +1372,6 @@
                 return result;
             },
 
-            getContactAllData(formId) {
-                $.ajax({
-                    url: HOST + "contact/form/getAllInfo",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        contactFormId: formId
-                    },
-                    success: function(res) {
-                        if (res.code == 200) {
-                            res.data.contactSign.signContent = JSON.parse(
-                                    res.data.contactSign.signContent
-                            );
-                            _this.lxdForm = res.data;
-                            if (_this.lxdForm.contactForm.contactType.indexOf("变更") >= 0) {
-                                //变更
-                                _this.checkedChangeTypes = _this.lxdForm.contactForm.contactContent.split(
-                                        ","
-                                );
-                                if (_this.lxdForm.contactForm.contactContentElse != "") {
-                                    _this.lxdForm.contactForm.contactContentElseIsChecked = true;
-                                }
-                            }
-                        } else {
-                            console.log("getContactAllData:" + res.message);
-                        }
-                    }
-                });
-            },
-
             formatDate(timeStamp) {
                 return new Date(timeStamp).format("yyyy-MM-dd");
             },
@@ -1473,7 +1389,7 @@
             onConfirmDelete: function () {
                 _this.deleteConfirmVisible = false;
                 $.ajax({
-                    url: _this.deleteUrl,
+                    url:  HOST + 'optimize/test/delete',
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
@@ -1583,32 +1499,6 @@
                     processData: false,
                     success: function (res) {
                         if (res.code === 200) {
-
-                            if(_this.uploadFileType == "图纸") {
-                                _this.designForm.drawingFiles = res.data;
-                                _this.designForm.drawingUpdateTime = new Date();
-                                _this.designForm.drawingMan = _this.userInfo.account;
-                            }  else if(_this.uploadFileType == "装车单") {
-                                _this.designForm.loadingFiles = res.data;
-                                _this.designForm.loadingMan = _this.userInfo.account;
-                                _this.designForm.loadingUpdateTime = new Date();
-                            } else if(_this.uploadFileType == "点孔") {
-                                _this.designForm.holeFiles = res.data;
-                                _this.designForm.holeUpdateTime = new Date();
-                                _this.designForm.holeMan = _this.userInfo.account;
-                            }  else if(_this.uploadFileType == "方管") {
-                                _this.designForm.tubeFiles = res.data;
-                                _this.designForm.tubeUpdateTime = new Date();
-                                _this.designForm.tubeMan = _this.userInfo.account;
-                            } else if(_this.uploadFileType == "罩盖") {
-                                _this.designForm.coverFile = res.data;
-                                _this.designForm.coverMan = _this.userInfo.account;
-                                _this.designForm.coverUpdateTime = new Date();
-                            }  else if(_this.uploadFileType == "BOM") {
-                                //BOM 没附件
-                                _this.designForm.bomUpdateTime = new Date();
-                            }
-
                             showMessage(_this, "文件上传/更新成功！", 1);
 
                             _this.uploadDialogVisible = false;
@@ -1676,32 +1566,24 @@
                 this.dialogTitle = '编辑';
                 this.mode = this.EDIT_MODE;
                 this.selectedItem = copyObject(item);
-                _this.fetchDesignData(item.id);
+                _this.fetchOptimizeData(item.id);
 
                 //联系单信息也会用到
                 _this.getMachineOrderData(item.orderNum);
                 this.addOptimizeVisible = true;
             },
 
-            fetchoptimizeData(formId) {
+            fetchOptimizeData(formId) {
                 $.ajax({
-                    url: HOST + 'optimize/detail',
+                    url: HOST + 'optimize/test/detail',
                     type: 'POST',
                     dataType: 'json',
                     data: {id: formId},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.optimizeForm=res.data;
-//                            if(_this.lxdForm.contactForm.contactType.indexOf("变更")>=0)//变更
-//                            {
-//                                _this.checkedChangeTypes=_this.lxdForm.contactForm.contactContent.split(",");
-//                                if(_this.lxdForm.contactForm.contactContentElse != "" ){
-//                                    _this.lxdForm.contactForm.contactContentElseIsChecked = true;
-//                                }
-//                            }
-
                         } else {
-                            console.log("fetchDesignData:" + res.message);
+                            console.log("fetchOptimizeData:" + res.message);
                         }
                     }
                 });
@@ -1740,7 +1622,7 @@
             {
                 let submitData=JSON.stringify(_this.optimizeForm);
                 $.ajax({
-                    url: HOST + 'optimize/add',
+                    url: HOST + 'optimize/test/add',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -1785,11 +1667,11 @@
                 _this.optimizeForm.updatedDate = new Date();
                 let submitData=JSON.stringify(_this.optimizeForm);
                 $.ajax({
-                    url: HOST + 'design/dep/info/update',
+                    url: HOST + 'optimize/test/update',
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        jsonDesignDepInfoFormAllInfo:submitData,
+                        jsonOptimizeFormAllInfo:submitData,
                     },
                     success: function (res) {
                         _this.isError = res.code != 200;
@@ -1809,15 +1691,8 @@
                 });
             },
 
-            validDesignContent(){
-                //todo
-                return false;
-            },
-
             onAddOrEdit() {
 
-                //在此检查变更内容
-                _this.isError = this.validDesignContent();
                 if (_this.isError) {
                     console.log('提交的表单有问题，error submit!!');
                     return false;
@@ -1898,7 +1773,7 @@
                 });
             },
 
-            fetchDisgnerList() {
+            fetchOwnerList() {
                 $.ajax({
                     url: HOST + 'user/selectUsers',
                     type: 'POST',
@@ -1906,7 +1781,7 @@
                     data: {roleId: 27}, ///写死先
                     success: function (res) {
                         if (res.code == 200) {
-                            _this.disgnerList = res.data.list;
+                            _this.ownerList = res.data.list;
                         }
                     }
                 });
@@ -1958,15 +1833,6 @@
                 _this.resetOptimizeFormEmpty();
                 _this.searchOptimizeList();
             },
-            changeDesignContentDisable(item) {
-                return (
-                        (item.status != CONTRACT_INITIAL &&
-                        item.status != CONTRACT_REJECTED &&
-                        item.status != CONTRACT_SPLITED &&
-                        item.status != CONTRACT_CHANGED)
-                );
-            },
-
             getSummaries(param) {
                 const { columns, data } = param;
                 const sums = [];
@@ -1993,7 +1859,6 @@
                     saleman: _this.filters.saleman,
                     orderStatus:_this.filters.orderStatus,
                     drawingLoadingDoneStatus:_this.filters.drawingLoadingDoneStatus,
-                    machineSpec: _this.filters.machineSpec,
                     keywords: _this.filters.keywords,
                     designer: _this.filters.designer,
                     page: _this.currentPage,
@@ -2011,7 +1876,7 @@
                     );
                 }
                 $.ajax({
-                    url: HOST + 'optimize/selectOptimizeList',
+                    url: HOST + 'optimize/test/selectOptimizeList',
                     type: 'POST',
                     dataType: 'json',
                     data: condition,
@@ -2094,22 +1959,6 @@
             }
         },
         computed: {
-            isShowChangeContactForm: function() {
-                //test为计算属性，调用时和调用属性一样调用test即可
-                let res = _this.lxdForm.contactForm.contactType.indexOf("变更") >= 0;
-                //_this.rules.hopeDate[0].required=res;
-                return res;
-            },
-
-            isShowWorkContactForm: function() {
-                //test为计算属性，调用时和调用属性一样调用test即可
-                let res = _this.lxdForm.contactForm.contactType.indexOf("工作") >= 0;
-                if (res) {
-                    /// 这是一个workAround, 因为工作联系单里本来是不需要hopeDate
-                    _this.lxdForm.contactForm.hopeDate = new Date();
-                }
-                return res;
-            }
         },
         filters: {
             filterRole(id) {
@@ -2180,9 +2029,6 @@
                 }
                 return result;
             },
-            filterDesignStatus(status){ //未计划  设计中   完成（全部完成）/改单
-
-            }
 
         },
         created: function() {
@@ -2199,7 +2045,7 @@
 //        _this.selectContacts();
             _this.searchOptimizeList();
             _this.fetchAllOrderList();
-            _this.fetchDisgnerList();
+            _this.fetchOwnerList();
         }
     };
 </script>
