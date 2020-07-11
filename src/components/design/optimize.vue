@@ -1052,28 +1052,10 @@
             _this = this;
             return {
 
-                orderStatusList: OrderStatusList,
-                drawingLoadingDoneStatusList:doneStatusList,
-                addLxdVisible: false,
-                lxdTypes: ["变更", "工作"],
-                //变更联系单的变更类型(变更内容)
-                lxdChangeTypes: [
-                    "设计变更",
-                    "材料变更",
-                    "工艺变更",
-                    "模具设备",
-                    "工艺夹具",
-                    "制造场所",
-                    "新供应商",
-                    "包装运输",
-                    "检验方法",
-                    "其他变更，需说明"
-                ],
-                checkedChangeTypes: [],
                 normalSignRoleList: [],
                 uploadDialogVisible: false,
 //                差一个字符，会导致”blocked by CORS policy: No 'Access-Control-Allow-Origin' “错误，小心被误导。
-                uploadURL: HOST + "design/dep/info/uploadDesignFile",
+                uploadURL: HOST + "optimize/test/uploadOptimizeFile",
                 fileLists:[],
                 //查看订单页面
                 addContractVisible:false,
@@ -1215,13 +1197,11 @@
                 mode: 1,
                 ADD_MODE: 1,
                 EDIT_MODE: 2,
-                VIEW_MODE: 3,
                 formLabelWidth: '100px',
                 longFormLabelWidth: '125px',
                 verylongFormLabelWidth: '185px',
                 formLabelWidthMiddle: '80px',
                 formLabelWidthSmall: '60px',
-
 
                 //用于保存设计内容
                 optimizeForm: {
@@ -1260,22 +1240,6 @@
                 } else {
                     return false;
                 }
-            },
-
-            filterOrderStatus(id)
-            {
-                var result = _this.orderStatusList[0].name;
-                for (var i = 0; i < _this.orderStatusList.length; i++) {
-                    if (id == _this.orderStatusList[i].value) {
-                        result = _this.orderStatusList[i].name;
-                        break;
-                    }
-                }
-                return result;
-            },
-
-            contactDialogCloseCallback() {
-                _this.addLxdVisible = false;
             },
 
             removeAbsolutePath(fullPath) {
@@ -1412,19 +1376,6 @@
             onUpload(type)
             {
                 _this.fileLists = [];
-                if(type == 1) {
-                    _this.uploadFileType = "图纸";
-                } else if(type == 2) {
-                    _this.uploadFileType = "装车单";
-                } else if(type == 3) {
-                    _this.uploadFileType = "点孔";
-                } else if(type == 4) {
-                    _this.uploadFileType = "方管";
-                } else if(type == 5) {
-                    _this.uploadFileType = "罩盖";
-                } else {
-                    _this.uploadFileType = "其他";
-                }
                 _this.uploadDialogVisible = true;
             },
 
@@ -1478,8 +1429,7 @@
                 }
                 var formData = new FormData($("#uploadForm")[0]);
                 formData.append("file", _this.fileLists[0].name);
-                formData.append("orderNum", _this.designForm.orderNum);
-                formData.append("type", _this.uploadFileType);
+                formData.append("orderNum", _this.optimizeForm.orderNum);
 
                 //在第一次新建时上传文件，designDepInfoID为空，需要把日期在前端准备好
                 if(_this.optimizeForm.id == null) {
@@ -1490,7 +1440,7 @@
                 }
 
                 $.ajax({
-                    url:  HOST + "design/dep/info/uploadDesignFile",// 需要链接到服务器地址
+                    url:  HOST + "optimize/test/uploadOptimizeFile",// 需要链接到服务器地址
                     type: 'POST',
                     data: formData,
                     async: false,
@@ -1500,7 +1450,7 @@
                     success: function (res) {
                         if (res.code === 200) {
                             showMessage(_this, "文件上传/更新成功！", 1);
-
+                            _this.optimizeForm.files = res.data;
                             _this.uploadDialogVisible = false;
 
                         }
@@ -1536,7 +1486,7 @@
                     success: function (res) {
                         if (res.code == 200) {
                             if (res.data.length > 0) {
-                                var downLoadURL = DOWNLOADPATH_LXD + res.data;
+                                var downLoadURL = DOWNLOADPATH_OPTIMIZE + res.data;
                                 _this.downloadFile(downLoadURL);
                             }
                         }
@@ -1649,14 +1599,11 @@
                     success: function (res) {
                         _this.isError = res.code != 200;
                         if (!_this.isError) {
-                            //_this.addLxdVisible = false;
                             showMessage(_this, '添加成功', 1);
                             //新需求:赋值主键ID,UI不关闭，继续可编辑，变成更新页面
                             _this.optimizeForm.id = res.data;
                             _this.mode = _this.EDIT_MODE;
                             _this.changeUIMode();
-//                            _this.fetchLxdData(res.data);
-//                            _this.selectContacts();
                         } else {
                             _this.errorMsg = res.message;
                             showMessage(_this, _this.errorMsg, 0);
@@ -1694,7 +1641,6 @@
                     success: function (res) {
                         _this.isError = res.code != 200;
                         if (!_this.isError) {
-                            //_this.addLxdVisible = false;
                             showMessage(_this, '更新成功', 1);
                             _this.searchOptimizeList();
                         } else {
@@ -1986,31 +1932,6 @@
                         result = _this.allRoles[i].roleName;
                         break;
                     }
-                }
-                return result;
-            },
-            filterOrderStatus(id) {
-                var result = '';
-                if(id==0){
-                    result = "未提交审核"
-                } else if(id==1){
-                    result = "审核中"
-                } else if(id==2){
-                    result = "审核完成"
-                } else if(id==3){
-                    result = "已改单"
-                } else if(id==4){
-                    result = "已拆单"
-                } else if(id==5){
-                    result = "已驳回"
-                } else if(id==6){
-                    result = "已取消"
-                } else if(id==7){
-                    result = "已拆单 不必再审核"
-                } else if(id==1){
-                    result = "已改单 不必再审核"
-                } else {
-                    result = "/"
                 }
                 return result;
             },
