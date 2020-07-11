@@ -153,7 +153,7 @@
                         <el-tooltip placement="top">
                             <div slot="content">删除</div>
                             <el-button size="mini" type="danger" icon="el-icon-delete"
-                                       :disabled="!modifyAllowedRow(scope.row)"
+                                       :disabled="!deleteAllowedRow(scope.row)"
                                        @click="handleDelete(scope.$index, scope.row)"></el-button>
                         </el-tooltip>
                     </template>
@@ -609,8 +609,7 @@
 
             <el-dialog title="删除" :visible.sync="deleteFulfillVisible" width="30%" append-to-body>
                 <span style="font-size: 22px">
-                           确认要删除对应联系单号为[
-                            <b style="color: #F56C6C;font-weight: bold">{{selectedItem.orderNum}}</b> ] 的该落实单吗？
+                           确认要删除该落实信息吗？
                 </span>
                 <span slot="footer" class="dialog-footer">
                             <el-button @click="deleteFulfillVisible = false" icon="el-icon-back">取 消</el-button>
@@ -1296,6 +1295,23 @@
                     } else {
                         //除了管理员和技术部经理，被指定的落实人员 能改自己的东西
                         return this.userInfo.account == row.fulfillMan;
+                    }
+                }
+                return false;
+            },
+
+            deleteAllowedRow(row)
+            {
+                if (this.userInfo!= null) {
+                    //是管理员， 允许修改，
+                    if(this.userInfo.role.id == 1){
+                        return true;
+                    } else if(this.userInfo.role.id == 8) {
+                        //技术部经理 8
+                        return true;
+                    } else {
+                        // 即使是被指定的落实人员 不允许删除
+                        return false;
                     }
                 }
                 return false;

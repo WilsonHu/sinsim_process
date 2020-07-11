@@ -140,7 +140,7 @@
                         <el-tooltip placement="top">
                             <div slot="content">删除</div>
                             <el-button size="mini" type="danger" icon="el-icon-delete"
-                                       :disabled="!modifyAllowedRow(scope.row)"
+                                       :disabled="!deleteAllowedRow(scope.row)"
                                        @click="handleDelete(scope.$index, scope.row)"></el-button>
                         </el-tooltip>
                     </template>
@@ -1612,12 +1612,30 @@
                         //技术部经理 8
                         return true;
                     } else {
-                        //除了管理员和技术部经理，设计员只能改自己的东西
-                        return this.userInfo.account == row.designer;
+                        //除了管理员和技术部经理，负责人只能改自己的东西
+                        return this.userInfo.account == row.owner;
                     }
                 }
                 return false;
             },
+
+            deleteAllowedRow(row)
+            {
+                if (this.userInfo!= null) {
+                    //是管理员， 允许修改，
+                    if(this.userInfo.role.id == 1){
+                        return true;
+                    } else if(this.userInfo.role.id == 8) {
+                        //技术部经理 8
+                        return true;
+                    } else {
+                        // 即使是被指定的落实人员 不允许删除
+                        return false;
+                    }
+                }
+                return false;
+            },
+
             onAdd()
             {
                 let submitData=JSON.stringify(_this.optimizeForm);
