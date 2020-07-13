@@ -1,21 +1,21 @@
 <template>
     <div>
         <el-col class="well well-lg" style="background-color: white;">
-            <el-form :model="filters" label-position="right" label-width="80px">
+            <el-form :model="thisFilters" label-position="right" label-width="80px">
                 <el-row>
                     <el-col :span="4">
                         <el-form-item label="订单号:">
-                            <el-input v-model="filters.orderNum" placeholder="" auto-complete="off" clearable></el-input>
+                            <el-input v-model="thisFilters.orderNum" placeholder="" auto-complete="off" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
                         <el-form-item label="销售员:">
-                            <el-input v-model="filters.saleman" placeholder="" auto-complete="off" clearable></el-input>
+                            <el-input v-model="thisFilters.saleman" placeholder="" auto-complete="off" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
                         <el-form-item label="客户:">
-                            <el-input v-model="filters.customer" placeholder="" auto-complete="off" clearable></el-input>
+                            <el-input v-model="thisFilters.customer" placeholder="" auto-complete="off" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <!--<el-col :span="6">-->
@@ -30,7 +30,7 @@
                     <!--</el-col>-->
                     <el-col :span="4">
                         <el-form-item label="审核状态:">
-                            <el-select v-model="filters.orderStatus" clearable>
+                            <el-select v-model="thisFilters.orderStatus" clearable>
                                 <el-option
                                         v-for="item in orderStatusList"
                                         :value="item.value"
@@ -41,7 +41,7 @@
                     </el-col>
                     <el-col :span="4">
                         <el-form-item label="图纸状态:">
-                            <el-select v-model="filters.drawingLoadingDoneStatus" clearable>
+                            <el-select v-model="thisFilters.drawingLoadingDoneStatus" clearable>
                                 <el-option
                                         v-for="item in drawingLoadingDoneStatusList"
                                         :value="item.value"
@@ -55,25 +55,25 @@
                 <el-row>
                     <el-col :span="4">
                         <el-form-item label="设备规格:">
-                            <el-input v-model="filters.machineSpec" placeholder="" auto-complete="off" clearable
+                            <el-input v-model="thisFilters.machineSpec" placeholder="" auto-complete="off" clearable
                                       placeholder="1-2-3*4">
                             </el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
                         <el-form-item label="关键字:">
-                            <el-input v-model="filters.keywords" placeholder="" auto-complete="off" clearable></el-input>
+                            <el-input v-model="thisFilters.keywords" placeholder="" auto-complete="off" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
                         <el-form-item label="设计人员:">
-                            <el-input v-model="filters.designer" placeholder="" auto-complete="off" clearable></el-input>
+                            <el-input v-model="thisFilters.designer" placeholder="" auto-complete="off" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="8">
                         <el-form-item label="更新日期:">
-                            <el-date-picker v-model="filters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
+                            <el-date-picker v-model="thisFilters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" :offset="0" >
@@ -203,7 +203,7 @@
                                 </div>
                                 <el-row>
                                     <el-col :span="6"  >
-                                        <el-form-item label="订单号:" :label-width="longFormLabelWidth" prop="orderNum">
+                                        <el-form-item label="订单号:" :label-width="longFormLabelWidth" >
                                             <el-select
                                                     :disabled="notWritter() "
                                                     v-model="designForm.orderNum"
@@ -268,7 +268,7 @@
                                 </div>
                                 <el-row>
                                     <el-col :span="6"  >
-                                        <el-form-item label="设计人员:" :label-width="longFormLabelWidth" prop="orderNum">
+                                        <el-form-item label="设计人员:" :label-width="longFormLabelWidth" >
                                             <el-select
                                                     :disabled="notWritter() "
                                                     v-model="designForm.designer"
@@ -1865,7 +1865,8 @@
                 queryMachineTypeURL: HOST + 'machine/type/list',
                 deleteUrl: HOST + 'design/dep/info/delete',
                 allMachineType: [],
-                filters: {
+
+                thisFilters: {
                     customer: '',
                     contract_num: '',
                     orderNum: '',
@@ -2057,17 +2058,18 @@
                 }
             },
 
-            filterOrderStatus(id)
-            {
-                var result = _this.orderStatusList[0].name;
-                for (var i = 0; i < _this.orderStatusList.length; i++) {
-                    if (id == _this.orderStatusList[i].value) {
-                        result = _this.orderStatusList[i].name;
-                        break;
-                    }
-                }
-                return result;
-            },
+            //filter里才用到
+//            filterOrderStatus(id)
+//            {
+//                var result = _this.orderStatusList[0].name;
+//                for (var i = 0; i < _this.orderStatusList.length; i++) {
+//                    if (id == _this.orderStatusList[i].value) {
+//                        result = _this.orderStatusList[i].name;
+//                        break;
+//                    }
+//                }
+//                return result;
+//            },
 
             handleViewContact(id) {
                 _this.getContactAllData(id);
@@ -2110,53 +2112,7 @@
                     success: function(res) {
                         if (res.code == 200) {
                             _this.allRoles = res.data.list;
-//                            _this.requestSalePersonList();
-                            _this.fetchSignProcesses();
                         }
-                    }
-                });
-            },
-            fetchSignProcesses() {
-                $.ajax({
-                    url: HOST + "sign/process/list",
-                    type: "POST",
-                    dataType: "json",
-                    success: function(data) {
-                        if (data.code == 200) {
-                            let tmpList = data.data.list;
-                            for (let i = 0; i < tmpList.length; i++) {
-                                if (
-                                        tmpList[i].processName != null &&
-                                        tmpList[i].processName.indexOf("正常") != -1
-                                ) {
-                                    _this.normalSignRoleList.push({
-                                        roleId: "",
-                                        name: "全部",
-                                        choosed: _this.filters.roleName == "" ? true : false
-                                    });
-                                    var temp = JSON.parse(tmpList[i].processContent);
-                                    if (temp != null && temp.length > 0) {
-                                        for (let j = 0; j < temp.length; j++) {
-                                            _this.normalSignRoleList.push({
-                                                roleId: temp[j].roleId,
-                                                name: _this.getRoleNameById(temp[j].roleId),
-                                                choosed:
-                                                        _this.filters.roleName ==
-                                                        _this.getRoleNameById(temp[j].roleId)
-                                                                ? true
-                                                                : false
-                                            });
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                        } else {
-                            showMessage(_this, data.message, 0);
-                        }
-                    },
-                    error: function(data) {
-                        showMessage(_this, "服务器访问出错", 0);
                     }
                 });
             },
@@ -2811,27 +2767,27 @@
 
             onSearchDetailData() {
                 var condition = {
-                    guestName: _this.filters.customer,
-                    contract_num: _this.filters.contract_num,
-                    orderNum: _this.filters.orderNum,
+                    guestName: _this.thisFilters.customer,
+                    contract_num: _this.thisFilters.contract_num,
+                    orderNum: _this.thisFilters.orderNum,
                     is_fuzzy: true,
-                    saleman: _this.filters.saleman,
-                    orderStatus:_this.filters.orderStatus,
-                    drawingLoadingDoneStatus:_this.filters.drawingLoadingDoneStatus,
-                    machineSpec: _this.filters.machineSpec,
-                    keywords: _this.filters.keywords,
-                    designer: _this.filters.designer,
+                    saleman: _this.thisFilters.saleman,
+                    orderStatus:_this.thisFilters.orderStatus,
+                    drawingLoadingDoneStatus:_this.thisFilters.drawingLoadingDoneStatus,
+                    machineSpec: _this.thisFilters.machineSpec,
+                    keywords: _this.thisFilters.keywords,
+                    designer: _this.thisFilters.designer,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
                 if (
-                        _this.filters.selectDate != null &&
-                        _this.filters.selectDate.length > 0
+                        _this.thisFilters.selectDate != null &&
+                        _this.thisFilters.selectDate.length > 0
                 ) {
-                    condition.updateDateStart = _this.filters.selectDate[0].format(
+                    condition.updateDateStart = _this.thisFilters.selectDate[0].format(
                             'yyyy-MM-dd'
                     );
-                    condition.updateDateEnd = _this.filters.selectDate[1].format(
+                    condition.updateDateEnd = _this.thisFilters.selectDate[1].format(
                             'yyyy-MM-dd'
                     );
                 }
@@ -2853,33 +2809,33 @@
 
             onExport() {
                 var condition = {
-                    customer: _this.filters.customer,
-                    contract_num: _this.filters.contract_num,
-                    order_num: _this.filters.orderNum,
+                    customer: _this.thisFilters.customer,
+                    contract_num: _this.thisFilters.contract_num,
+                    order_num: _this.thisFilters.orderNum,
                     is_fuzzy: true,
-                    sellman: _this.filters.sellman,
+                    sellman: _this.thisFilters.sellman,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
                 if (
-                        _this.filters.selectDate != null &&
-                        _this.filters.selectDate.length > 0
+                        _this.thisFilters.selectDate != null &&
+                        _this.thisFilters.selectDate.length > 0
                 ) {
-                    condition.queryStartTime = _this.filters.selectDate[0].format(
+                    condition.queryStartTime = _this.thisFilters.selectDate[0].format(
                             'yyyy-MM-dd'
                     );
-                    condition.queryFinishTime = _this.filters.selectDate[1].format(
+                    condition.queryFinishTime = _this.thisFilters.selectDate[1].format(
                             'yyyy-MM-dd'
                     );
                 }
                 if (
-                        _this.filters.selectDate != null &&
-                        _this.filters.selectDate.length > 0
+                        _this.thisFilters.selectDate != null &&
+                        _this.thisFilters.selectDate.length > 0
                 ) {
-                    condition.query_start_time = _this.filters.selectDate[0].format(
+                    condition.query_start_time = _this.thisFilters.selectDate[0].format(
                             'yyyy-MM-dd'
                     );
-                    condition.query_finish_time = _this.filters.selectDate[1].format(
+                    condition.query_finish_time = _this.thisFilters.selectDate[1].format(
                             'yyyy-MM-dd'
                     );
                 }
