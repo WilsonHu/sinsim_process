@@ -127,7 +127,7 @@
                 <el-table-column align="center" label="操作" width="240">
                     <template scope="scope">
                         <el-tooltip placement="top">
-                            <div slot="content">装车单</div>
+                            <div slot="content">附件</div>
                             <el-button size="mini" type="info" icon="el-icon-download"
                                        @click="onDownload(scope.row)"></el-button>
                         </el-tooltip>
@@ -1431,12 +1431,9 @@
                 formData.append("file", _this.fileLists[0].name);
                 formData.append("orderNum", _this.optimizeForm.orderNum);
 
-                //在第一次新建时上传文件，designDepInfoID为空，需要把日期在前端准备好
+                //在第一次新建时上传文件，optimizeTestID为空，需要把日期在前端准备好
                 if(_this.optimizeForm.id == null) {
                     _this.optimizeForm.createDate = new Date();
-                } else {
-                    // 在编辑时，优化页已经保存过了，只需要上传ID，让后端设定更新时间
-                    formData.append("designDepInfoID", _this.optimizeForm.id);
                 }
 
                 $.ajax({
@@ -1472,16 +1469,15 @@
                 }
             },
 
-            onAttachedDownload(item, fileType)
+            onAttachedDownload(item)
             {
                 _this.selectedItem = copyObject(item);
                 $.ajax({
-                    url: HOST + "design/dep/info/getDesignAttachedFile",
+                    url: HOST + "optimize/test/getOptimizeAttachedFile",
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        designDepInfoId: _this.selectedItem.id,
-                        fileType: fileType
+                        optimizeTestId: _this.selectedItem.id,
                     },
                     success: function (res) {
                         if (res.code == 200) {
@@ -1496,8 +1492,7 @@
 
             onDownload(item)
             {
-//                _this.selectedItem = copyObject(item);
-                _this.onAttachedDownload( item, '装车单');
+                _this.onAttachedDownload( item);
             },
 
             downloadFile(url)
@@ -1692,6 +1687,7 @@
             handleViewContract(orderNum){
                 this.isError = false;
                 this.errorMsg = '';
+                this.getMachineOrderData(orderNum);
                 _this.addContractVisible = true;
             },
             contractDialogCloseCallback() {
@@ -1824,7 +1820,6 @@
                     orderStatus:_this.filters.orderStatus,
                     drawingLoadingDoneStatus:_this.filters.drawingLoadingDoneStatus,
                     keywords: _this.filters.keywords,
-                    designer: _this.filters.designer,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
