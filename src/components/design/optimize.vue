@@ -52,7 +52,7 @@
 
                     <el-col :span="8">
                         <el-form-item label="更新日期:">
-                            <el-date-picker v-model="filters.selectDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
+                            <el-date-picker v-model="filters.selectUpdateDate" type="daterange" align="left" unlink-panels range-separator="—" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" :offset="0" >
@@ -314,6 +314,13 @@
                                                         @click="handAttachedDelete(optimizeForm)">删除
                                                 </el-button>
                                             </el-col>
+                                            <el-col :span="10">
+                                                <el-form-item label="" :label-width="longFormLabelWidth">
+                                            <span style="float:left;">
+                                                {{removeAbsolutePath(optimizeForm.files)}}
+                                            </span>
+                                                </el-form-item>
+                                            </el-col>
                                         </div>
                                     </el-row>
                                     <el-row>
@@ -405,6 +412,16 @@
                 <span slot="footer" class="dialog-footer">
                             <el-button @click="deleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
                             <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
+                        </span>
+            </el-dialog>
+
+            <el-dialog title="删除附件" :visible.sync="attachedDeleteConfirmVisible" width="30%" append-to-body>
+                        <span style="font-size: 22px">
+                            确认要删除该附件吗？
+                        </span>
+                <span slot="footer" class="dialog-footer">
+                            <el-button @click="attachedDeleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
+                            <el-button type="primary" @click="onConfirmDeleteAttached" icon="el-icon-check">确 定</el-button>
                         </span>
             </el-dialog>
 
@@ -1131,12 +1148,14 @@
                 queryMachineTypeURL: HOST + 'machine/type/list',
                 allMachineType: [],
                 filters: {
-                    customer: '',
-                    contract_num: '',
+                    projectName: '',
+                    optimizePart: '',
                     orderNum: '',
-                    //machineLength: '',
-                    sellman: '',
-                    selectDate: [new Date(), new Date()], //默认查询当天
+                    machineType: '',
+                    purpose: '',
+                    owner:'',
+                    selectCreateDate: '',
+                    selectUpdateDate: [new Date(), new Date()] //默认查询当天
                 },
                 tableData: [],
                 pageSize: EveryPageNum, //每一页的num
@@ -1230,9 +1249,48 @@
                 //给后端保存文件命名用。
                 uploadFileType: '',
                 deleteConfirmVisible: false,
+                attachedDeleteConfirmVisible: false,
             };
         },
         methods: {
+
+            // 附件删除
+            handAttachedDelete(item) {
+                this.selectedItem = copyObject(item);
+                if (this.selectedItem) {
+                    _this.attachedDeleteConfirmVisible = true;
+                }
+            },
+
+            onConfirmDeleteAttached(item){
+                _this.attachedDeleteConfirmVisible = false;
+                _this.optimizeForm.files = "";
+
+                let submitData=JSON.stringify(_this.optimizeForm);
+                $.ajax({
+                    url: HOST + 'optimize/test/update',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        jsonOptimizeFormAllInfo:submitData,
+                    },
+                    success: function (res) {
+                        _this.isError = res.code != 200;
+                        if (!_this.isError) {
+                            //_this.addLxdVisible = false;
+                            showMessage(_this, '附件删除成功', 1);
+                            _this.onSearchDetailData();
+                        } else {
+                            _this.errorMsg = res.message;
+                            showMessage(_this, _this.errorMsg, 0);
+                        }
+                    },
+                    error: function (info) {
+                        _this.errorMsg = '服务器访问出错！';
+                        _this.isError = true;
+                    }
+                });
+            },
 
             contactFormDetailListIsEmpty(contactFormDetailList){
                 if(contactFormDetailList == null || contactFormDetailList =='' || contactFormDetailList.isEmpty){
@@ -1812,27 +1870,25 @@
 
             onSearchDetailData() {
                 var condition = {
-                    guestName: _this.filters.customer,
-                    contract_num: _this.filters.contract_num,
+                    projectName: _this.filters.projectName,
+                    optimizePart: _this.filters.optimizePart,
                     orderNum: _this.filters.orderNum,
-                    is_fuzzy: true,
-                    saleman: _this.filters.saleman,
-                    orderStatus:_this.filters.orderStatus,
-                    drawingLoadingDoneStatus:_this.filters.drawingLoadingDoneStatus,
-                    keywords: _this.filters.keywords,
+                    machineType: _this.filters.machineType,
+                    purpose: _this.filters.purpose,
+                    owner:_this.filters.owner,
                     page: _this.currentPage,
                     size: _this.pageSize
                 };
-                if (
-                        _this.filters.selectDate != null &&
-                        _this.filters.selectDate.length > 0
-                ) {
-                    condition.updateDateStart = _this.filters.selectDate[0].format(
-                            'yyyy-MM-dd'
-                    );
-                    condition.updateDateEnd = _this.filters.selectDate[1].format(
-                            'yyyy-MM-dd'
-                    );
+                if (_this.filters.selectCreateDate != null &&
+                        _this.filters.selectCreateDate.length > 0) {
+                    condition.queryStartTimeCreate = _this.filters.selectCreateDate[0].format('yyyy-MM-dd');
+                    condition.queryFinishTimeCreate = _this.filters.selectCreateDate[1].format('yyyy-MM-dd');
+                }
+
+                if (_this.filters.selectUpdateDate != null &&
+                        _this.filters.selectUpdateDate.length > 0) {
+                    condition.queryStartTimeUpdate = _this.filters.selectUpdateDate[0].format('yyyy-MM-dd');
+                    condition.queryFinishTimeUpdate = _this.filters.selectUpdateDate[1].format('yyyy-MM-dd');
                 }
                 $.ajax({
                     url: HOST + 'optimize/test/selectOptimizeList',

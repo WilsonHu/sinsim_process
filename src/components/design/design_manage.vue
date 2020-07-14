@@ -804,6 +804,16 @@
                         </span>
             </el-dialog>
 
+            <el-dialog title="删除附件" :visible.sync="attachedDeleteConfirmVisible" width="30%" append-to-body>
+                        <span style="font-size: 22px">
+                            确认要删除该附件吗？
+                        </span>
+                <span slot="footer" class="dialog-footer">
+                            <el-button @click="attachedDeleteConfirmVisible = false" icon="el-icon-back">取 消</el-button>
+                            <el-button type="primary" @click="onConfirmDeleteAttached(selectedItem)" icon="el-icon-check">确 定</el-button>
+                        </span>
+            </el-dialog>
+
             <div class="block" style="text-align: center; margin-top: 20px">
                 <el-pagination
                         background
@@ -1965,10 +1975,11 @@
                     drawingFileDone: 0,
                     loadingFileDone: 0,
                     drawingLoadingiles:'',
-//                    drawing_loading_done: 0,
                     bomRequired:0,
                     holeDone: 0,
                     tubeDone: 0,
+                    drawingFiles:'',
+                    loadingFiles:'',
                     holeFiles:'',
                     tubeFiles:'',
 //                    hole_tube_done: '',
@@ -2046,9 +2057,69 @@
                 //给后端保存文件命名用。
                 uploadFileType: '',
                 deleteConfirmVisible: false,
+                attachedDeleteConfirmVisible: false,
+                deleteType:'',
             };
         },
         methods: {
+
+            // 附件删除
+            handAttachedDelete(item) {
+                _this.attachedDeleteConfirmVisible = true;
+
+                if(item.indexOf("图纸") >= 0){
+                    _this.deleteType = "图纸";
+                } else if(item.indexOf("装车单") >= 0){
+                    _this.deleteType = "装车单";
+                } else if(item.indexOf("点孔") >= 0){
+                    _this.deleteType = "点孔";
+                } else if(item.indexOf("方管") >= 0){
+                    _this.deleteType = "方管";
+                } else if(item.indexOf("罩盖") >= 0){
+                    _this.deleteType = "罩盖";
+                }
+
+            },
+
+            onConfirmDeleteAttached(item){
+                _this.attachedDeleteConfirmVisible = false;
+                if(_this.deleteType.indexOf("图纸") >=0 ) {
+                    _this.designForm.drawingFiles = "";
+                } else if(_this.deleteType.indexOf("装车单") >=0 ) {
+                    _this.designForm.loadingFiles = "";
+                } else if(_this.deleteType.indexOf("点孔") >=0 ) {
+                    _this.designForm.holeFiles = "";
+                } else if(_this.deleteType.indexOf("方管") >=0 ) {
+                    _this.designForm.tubeFiles = "";
+                } else if(_this.deleteType.indexOf("罩盖") >=0 ) {
+                    _this.designForm.coverFile = "";
+                }
+
+                    let submitData=JSON.stringify(_this.designForm);
+                $.ajax({
+                    url: HOST + 'design/form/update',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        jsonOptimizeFormAllInfo:submitData,
+                    },
+                    success: function (res) {
+                        _this.isError = res.code != 200;
+                        if (!_this.isError) {
+                            //_this.addLxdVisible = false;
+                            showMessage(_this, '附件删除成功', 1);
+                            _this.onSearchDetailData();
+                        } else {
+                            _this.errorMsg = res.message;
+                            showMessage(_this, _this.errorMsg, 0);
+                        }
+                    },
+                    error: function (info) {
+                        _this.errorMsg = '服务器访问出错！';
+                        _this.isError = true;
+                    }
+                });
+            },
 
             contactFormDetailListIsEmpty(contactFormDetailList){
                 if(contactFormDetailList == null || contactFormDetailList =='' || contactFormDetailList.isEmpty){
@@ -2165,10 +2236,8 @@
             handleDelete(index, item) {
                 this.selectedItem = copyObject(item);
                 if (this.selectedItem) {
-                    console.log("ooooooo");
                     _this.deleteConfirmVisible = true;
                 } else{
-                    console.log("aaaaaaa");
                 }
             },
 
@@ -2708,6 +2777,8 @@
                     tubeDone: 0,
                     bomDone: 0,
                     bomRequired: 0,
+                    drawingFiles:'',
+                    loadingFiles:'',
                     holeFiles:'',
                     tubeFiles:'',
 //                    hole_tube_done: '',

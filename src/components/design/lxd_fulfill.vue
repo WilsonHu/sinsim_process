@@ -269,8 +269,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="6"  v-show="isShowChangeContactForm
-                                                                && (lxdForm.contactForm.orderNum != null)
-                                                                && (lxdForm.contactForm.orderNum.length != 0)">
+                                                                && (lxdForm.contactForm.orderNum != null)">
                                         <el-button type="warning" plain size="medium"
                                                    @click="handleViewContract(lxdForm.contactForm.orderNum)">查看订单 {{lxdForm.contactForm.orderNum}}</el-button>
 
