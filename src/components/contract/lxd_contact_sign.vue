@@ -45,6 +45,28 @@
                         <el-form :model="filters" label-position="right" label-width="80px">
                             <el-row>
                                 <el-col :span="4">
+                                    <el-form-item label="联系单号:">
+                                        <el-input v-model="filters.num" placeholder="联系单号" auto-complete="off"
+                                                  clearable></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-form-item label="主题:">
+                                        <el-input v-model="filters.contactTitle" placeholder="主题" auto-complete="off"
+                                                  clearable></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-form-item label="发起人:">
+                                        <el-input v-model="filters.applicantPerson" placeholder="发起人"
+                                                  auto-complete="off" clearable></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4">
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="4">
                                     <el-form-item label="类型:">
                                         <el-input v-model="filters.contactType" placeholder="类型" auto-complete="off"
                                                   clearable></el-input>
@@ -1812,10 +1834,12 @@
             },
             selectContacts() {
                 var condition = {
+                    contactNum:_this.filters.num,
+                    contactTitle: _this.filters.contactTitle,
                     contactType: _this.filters.contactType,
                     orderNum: _this.filters.orderNum,
                     applicantDepartment: '',
-                    //applicantPerson: _this.userInfo.account,
+                    applicantPerson: _this.filters.applicantPerson,
                     status:_this.filters.status,
                     currentStep:_this.filters.roleName,
                     queryStartTime: '',
