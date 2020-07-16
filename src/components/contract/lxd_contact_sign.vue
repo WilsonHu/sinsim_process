@@ -405,7 +405,7 @@
                                         </el-col>
                                         <el-col :span="2" style="margin-left:20px;">
                                             <el-button
-                                                    :disabled="notWritter()||mode==SIGN_MODE"
+                                                    :disabled="notWritterForAttachedFile()||mode==SIGN_MODE"
                                                     size="small"
                                                     type="success"
                                                     style="float:left; margin-left:5px;"
@@ -1794,6 +1794,21 @@
                 }
                 return true;
             },
+
+            notWritterForAttachedFile()
+            {
+                //审核开始了，不应该再修改除了审核部门之外内容，否则审核没意义。--> 允许改附件
+                //驳回的话，应该允许修改。
+//                if(_this.lxdForm.contactSign.currentStep !="" && _this.lxdForm.contactForm.status.indexOf("联系单审核被拒") == -1 ){
+//                    return true;
+//                }
+
+                if (this.userInfo!= null) {
+                    return this.userInfo.account!=_this.lxdForm.contactForm.applicantPerson;
+                }
+                return true;
+            },
+
             onUpload()
             {
                 _this.fileLists = [];
