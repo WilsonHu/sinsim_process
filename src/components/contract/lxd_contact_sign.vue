@@ -2284,9 +2284,9 @@
 
             onAddOrEdit(formName) {
                 this.$refs[formName].validate((valid) => {
+                    //在此检查变更内容
+                    _this.isError = this.validContactContent();
                     if (valid) {
-                        //在此检查变更内容
-                        _this.isError = this.validContactContent();
                         if (_this.isError) {
                             showMessage(_this, _this.errorMsg, 0);
                         } else {
@@ -2302,6 +2302,7 @@
                         }
                     } else {
                         console.log('提交的表单有问题，error submit!!');
+                        showMessage(_this, _this.errorMsg, 0);
                         return false;
                     }
                 });
@@ -2314,9 +2315,40 @@
                 {
                     _this.lxdForm.contactForm.contactContent = _this.getLxdChangeTypes();
                 }
-                if(_this.lxdForm.contactForm.contactContent == null || _this.lxdForm.contactForm.contactContent.length ==0){
-                    iserror = true;
-                    this.errorMsg = '联系单内容不能为空';
+
+                //给用户弹框提示信息
+                if(_this.lxdForm.contactForm.contactType.indexOf("变更")>=0)//类型：变更联系单
+                { ///只要有任意一个为空都会提示
+                    if(_this.lxdForm.contactForm.createDate == null || _this.lxdForm.contactForm.createDate.length ==0 ){
+                        iserror = true;
+                        this.errorMsg = '申请日期不能为空';
+                    } else if(_this.lxdForm.contactForm.hopeDate == null || _this.lxdForm.contactForm.hopeDate.length ==0){
+                        iserror = true;
+                        this.errorMsg = 'ECO希望日期不能为空';
+                    } else if(_this.lxdForm.contactForm.orderNum == null || _this.lxdForm.contactForm.orderNum.length ==0){
+                        iserror = true;
+                        this.errorMsg = '订单号不能为空';
+                    } else if(_this.lxdForm.contactForm.contactTitle == null || _this.lxdForm.contactForm.contactTitle.length ==0){
+                        iserror = true;
+                        this.errorMsg = '联络主题不能为空';
+                    } else if(_this.lxdForm.contactForm.contactContent == null || _this.lxdForm.contactForm.contactContent.length ==0){
+                        iserror = true;
+                        this.errorMsg = '变更内容不能为空';
+                    }
+
+                }
+                else if (_this.lxdForm.contactForm.contactType.indexOf("工作")>=0)//类型： 工作联系单
+                {
+                    if(_this.lxdForm.contactForm.createDate == null || _this.lxdForm.contactForm.createDate.length == 0){
+                        iserror = true;
+                        this.errorMsg = '申请日期不能为空';
+                    } else if(_this.lxdForm.contactForm.contactTitle == null || _this.lxdForm.contactForm.contactTitle.length == 0 ){
+                        iserror = true;
+                        this.errorMsg = '联络主题不能为空';
+                    } else if(_this.lxdForm.contactForm.contactContent == null || _this.lxdForm.contactForm.contactContent.length == 0 ){
+                        iserror = true;
+                        this.errorMsg = '变更内容不能为空';
+                    }
                 }
                 return iserror;
             },
