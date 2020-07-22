@@ -410,7 +410,7 @@
                                                     type="success"
                                                     style="float:left; margin-left:5px;"
                                                     icon="el-icon-upload"
-                                                    @click="onUpload()">上传
+                                                    @click="onUpload(LXD_ATTACHED_FILE_BY_CREATER)">上传
                                             </el-button>
                                         </el-col>
                                         <el-col :span="2" style="margin-left:20px;">
@@ -419,7 +419,7 @@
                                                     type="success"
                                                     icon="el-icon-download"
                                                     :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedFile)"
-                                                    @click="onAttachedDownload(lxdForm.contactForm)">下载
+                                                    @click="onAttachedDownload(lxdForm.contactForm, LXD_ATTACHED_FILE_BY_CREATER)">下载
                                             </el-button>
                                         </el-col>
                                         <el-col :span="2" style="margin-left:20px;">
@@ -442,7 +442,56 @@
                                         </el-form-item>
                                       </el-col>
                                 </el-row>
-                        
+
+                            <el-row style="margin-top:10px;">
+                                <div>
+                                    <el-col :span="2">
+                                        <el-form-item label="签核附件: " :label-width="longFormLabelWidth">
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="2" style="margin-left:20px;">
+                                        <el-button
+                                                :disabled="notWritterForAttachedFile()||mode==SIGN_MODE"
+                                                size="small"
+                                                type="success"
+                                                style="float:left; margin-left:5px;"
+                                                icon="el-icon-upload"
+                                                @click="onUpload(LXD_ATTACHED_FILE_DURING_SIGN)">上传
+                                        </el-button>
+                                    </el-col>
+                                    <el-col :span="2" style="margin-left:20px;">
+                                        <el-button
+                                                size="small"
+                                                type="success"
+                                                icon="el-icon-download"
+                                                :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedDuringSign)"
+                                                @click="onAttachedDownload(lxdForm.contactForm, LXD_ATTACHED_FILE_DURING_SIGN)">下载
+                                        </el-button>
+                                    </el-col>
+                                    <el-col :span="2" style="margin-left:20px;">
+                                        <el-button
+                                                size="small"
+                                                type="danger"
+                                                icon="el-icon-delete"
+                                                :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedDuringSign)||notWritter()||mode==SIGN_MODE"
+                                                @click="handAttachedDelete(lxdForm.contactForm)">删除
+                                        </el-button>
+                                    </el-col>
+                                    <el-col :span="5">
+                                        <el-form-item label="(签核过程中总共可以添加一个附件)" >
+                                        </el-form-item>
+                                    </el-col>
+                                </div>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="20">
+                                    <el-form-item label="" :label-width="longFormLabelWidth">
+                                            <span style="float:left;">
+                                                {{removeAbsolutePath(lxdForm.contactForm.attachedDuringSign)}}
+                                            </span>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
                         </el-card>
 
                         <el-card class="box-card" style="margin: 25px">
@@ -1284,6 +1333,8 @@
         data() {
             _this = this;
             return {
+                LXD_ATTACHED_FILE_BY_CREATER: STRING_LXD_ATTACHED_FILE_BY_CREATER,
+                LXD_ATTACHED_FILE_DURING_SIGN: STRING_LXD_ATTACHED_FILE_DURING_SIGN,
                 editUrl: HOST + 'contact/form/update',
                 deleteUrl: HOST + 'contact/form/delete',
                 isError: false,
@@ -1323,6 +1374,8 @@
                         status: 0,
                         contactContent: "", //工作联系单内容
                         attachedFile:"",
+                        attachedDuringSign:"",      //签核过程中的附件
+                        attachedDuringSignMan:"",   //签核过程中的附件的上传或者更新人
                         contactContentElse: "", // 选中“其他变更”时的输入
                         contactContentElseIsChecked: false, // “其他变更” 是否被选中。
                     },
@@ -1436,6 +1489,9 @@
                 ],
                 checkedChangeTypes:[],
                 uploadDialogVisible:false,
+
+                //是哪种附件： 创建人的附件或签核过程的附件
+                attachedFileType:'',
                 fileLists:[],
                 uploadForm:{},
                 uploadURL: HOST + "contact/form/uploadAttachedFile",
@@ -1625,6 +1681,7 @@
                 var formData = new FormData($("#uploadForm")[0]);
                 formData.append("file", _this.fileLists[0].name);
                 formData.append("lxdNum", _this.lxdForm.contactForm.num);
+                formData.append("type", _this.attachedFileType);
                 $.ajax({
                     url: _this.uploadURL,// 需要链接到服务器地址
                     type: 'POST',
@@ -1635,13 +1692,26 @@
                     processData: false,
                     success: function (res) {
                         if (res.code === 200) {
-                            if (_this.lxdForm.contactForm.attachedFile != null &&_this.lxdForm.contactForm.attachedFile .length> 0) {
-                                showMessage(_this, "附件更新成功！", 1);
+                            if( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >= 0){
+                                if (_this.lxdForm.contactForm.attachedFile != null &&_this.lxdForm.contactForm.attachedFile .length> 0) {
+                                    showMessage(_this, "附件更新成功！", 1);
+                                }
+                                else {
+                                    showMessage(_this, "附件上传成功！", 1);
+                                }
+                                _this.lxdForm.contactForm.attachedFile=res.data;
+                            } else if( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_DURING_SIGN) >= 0){
+                                if (_this.lxdForm.contactForm.attachedDuringSign != null &&_this.lxdForm.contactForm.attachedDuringSign .length> 0) {
+                                    showMessage(_this, "签核附件更新成功！", 1);
+                                }
+                                else {
+                                    showMessage(_this, "签核附件上传成功！", 1);
+                                }
+                                _this.lxdForm.contactForm.attachedDuringSign=res.data;
+                            } else {
+                                showMessage(_this, "签核附件类型异常！", 1);
                             }
-                            else {
-                                showMessage(_this, "附件上传成功！", 1);
-                            }
-                            _this.lxdForm.contactForm.attachedFile=res.data;
+
                             _this.uploadDialogVisible = false;
                         }
                         else {
@@ -1654,7 +1724,7 @@
                 });
             },
 
-            onAttachedDownload(item)
+            onAttachedDownload(item, theFlag)
             {
                 _this.selectedItem = copyObject(item);
                 $.ajax({
@@ -1663,6 +1733,7 @@
                     dataType: 'json',
                     data: {
                         contact_form_id: _this.selectedItem.id,
+                        flag: theFlag, // 签核过程中上传的附件
                     },
                     success: function (res) {
                         if (res.code == 200) {
@@ -1677,7 +1748,11 @@
             
             onConfirmDeleteAttached(item){
                 _this.attachedDeleteConfirmVisible = false;
-                _this.lxdForm.contactForm.attachedFile = "";
+                if( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >= 0){
+                    _this.lxdForm.contactForm.attachedFile = "";
+                } else if ( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_DURING_SIGN) >= 0){
+                    _this.lxdForm.contactForm.attachedDuringSign = "";
+                }
 
                 let submitData=JSON.stringify(_this.lxdForm);
                 $.ajax({
@@ -1691,7 +1766,11 @@
                         _this.isError = res.code != 200;
                         if (!_this.isError) {
                             //_this.addLxdVisible = false;
-                            showMessage(_this, '附件删除成功', 1);
+                            if( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >= 0) {
+                                showMessage(_this, '附件删除成功', 1);
+                            } else if ( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_DURING_SIGN) >= 0){
+                                showMessage(_this, '签核附件删除成功', 1);
+                            }
                             _this.selectContacts();
                         } else {
                             _this.errorMsg = res.message;
@@ -1809,10 +1888,11 @@
                 return true;
             },
 
-            onUpload()
+            onUpload(type)
             {
                 _this.fileLists = [];
                 _this.uploadDialogVisible = true;
+                _this.attachedFileType = type;
             },
             addChangeItem() {
                 _this.lxdForm.changeItemList.push({
@@ -2121,6 +2201,8 @@
                         status: 0,
                         contactContent: "", //工作联系单内容
                         attachedFile:"",
+                        attachedDuringSign:"",      //签核过程中的附件
+                        attachedDuringSignMan:"",
                     },
                     changeItemList: [],
                     contactSign:{
