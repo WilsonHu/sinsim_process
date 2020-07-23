@@ -451,7 +451,7 @@
                                     </el-col>
                                     <el-col :span="2" style="margin-left:20px;">
                                         <el-button
-                                                :disabled="notWritterForAttachedFile()||mode==SIGN_MODE"
+                                                :disabled="notWritterForAttachedFileDuringSign() "
                                                 size="small"
                                                 type="success"
                                                 style="float:left; margin-left:5px;"
@@ -478,9 +478,16 @@
                                         </el-button>
                                     </el-col>
                                     <el-col :span="5">
-                                        <el-form-item label="(签核过程中总共可以添加一个附件)" >
+                                        <el-form-item label="" :label-width="formLabelWidth">
+                                            <span style="float:left;">
+                                                上传人：{{(lxdForm.contactForm.attachedDuringSignMan)}}
+                                            </span>
                                         </el-form-item>
                                     </el-col>
+                                    <!--<el-col :span="5">-->
+                                        <!--<el-form-item label="(签核过程中添加)" >-->
+                                        <!--</el-form-item>-->
+                                    <!--</el-col>-->
                                 </div>
                             </el-row>
                             <el-row>
@@ -654,6 +661,55 @@
                           </div>
                     </el-dialog>
 
+                    <!--使用新的dialog,而非共用，可以省掉非常多的逻辑！ -->
+                    <el-dialog title="签核期间附件上传" :visible.sync="uploadDuringSignDialogVisible"
+                               width="35%" right @close="fileListsDuringSign=[]" :modal="false">
+                        <el-form id="uploadForm">
+                            <el-row>
+                                <el-form-item>
+                                    <el-col :span="24">
+                                        <el-upload
+                                                class="upload-demo"
+                                                ref="upload"
+                                                :action="uploadURLDuringSign"
+                                                :multiple="false"
+                                                :on-change="handleFileChangeDuringSign"
+                                                :before-upload="handleBefore"
+                                                :on-preview="handlePreview"
+                                                :on-remove="handleRemoveDuringSign"
+                                                :file-list="fileListsDuringSign"
+                                                :auto-upload="false"
+                                                :limit="1"
+                                        >
+                                            <el-button slot="trigger" size="small"
+                                                       plain
+                                                       type="primary">选取文件
+                                            </el-button>
+                                            <el-button style="margin-left: 10px;" size="small"
+                                                       icon="el-icon-upload"
+                                                       :disabled="fileListsDuringSign.length==0"
+                                                       type="success" @click="submitUploadForDuringSign">
+                                                上传到服务器
+                                            </el-button>
+                                            <div slot="tip" class="el-upload__tip"
+                                                 style="font-size: 12px;color: gray">
+                                                上传文件
+                                            </div>
+                                        </el-upload>
+                                    </el-col>
+                                </el-form-item>
+                            </el-row>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer" style="margin-bottom: 30px">
+                            <el-col :span="24" style="margin-bottom: 30px;">
+                                <el-button icon="el-icon-close"
+                                           size="normal"
+                                           type="danger"
+                                           @click="uploadDuringSignDialogVisible = false">关 闭
+                                </el-button>
+                            </el-col>
+                        </div>
+                    </el-dialog>
                     <el-dialog title="删除附件" :visible.sync="attachedDeleteConfirmVisible" width="30%" append-to-body>
                         <span style="font-size: 22px">
                             确认要删除该附件吗？
@@ -1489,12 +1545,15 @@
                 ],
                 checkedChangeTypes:[],
                 uploadDialogVisible:false,
+                uploadDuringSignDialogVisible:false,
 
                 //是哪种附件： 创建人的附件或签核过程的附件
                 attachedFileType:'',
                 fileLists:[],
+                fileListsDuringSign:[],
                 uploadForm:{},
                 uploadURL: HOST + "contact/form/uploadAttachedFile",
+                uploadURLDuringSign: HOST + "contact/form/uploadAttachedFileDuringSign",
                 rules: {
                     contactType: [
                         { type: 'string', required: true, message: '请选择联系单类型!', trigger: 'change' }
@@ -1661,10 +1720,45 @@
                 _this.fileLists = fileList;
             },
 
+            handleFileChangeDuringSign(file, fileList)
+            {
+                var errorMsg = "";
+                var xlsFile = file.name.split('.');
+                if (xlsFile == null || xlsFile.length < 2) {
+                    errorMsg = "上传的文件没有后缀名，不能上传！";
+                }
+                // else if (xlsFile[1] !== "xls" && xlsFile[1] !== "xlsx") {
+                //     errorMsg = "只能上传xls/xlsx文件，请重新上传！";
+                // }
+                if (!isStringEmpty(errorMsg)) {
+                    var removeIndex = -1;
+                    for (var i = 0; i < fileList.length; i++) {
+                        if (fileList[i].name == file.name) {
+                            removeIndex = i;
+                            break;
+                        }
+                    }
+                    if (removeIndex > -1) {
+                        fileList.splice(removeIndex, 1);
+                    }
+                    fileList = [];
+                    showMessage(_this, errorMsg, 0)
+                } else {
+                    fileList = [];
+                    fileList.push(file);
+                }
+                _this.fileListsDuringSign = fileList;
+            },
             handleRemove(file, fileList) {
                 _this.fileLists = fileList;
                 console.log("remove file" + file.name);
             },
+
+            handleRemoveDuringSign(file, fileList) {
+                _this.fileListsDuringSign = fileList;
+                console.log("remove file" + file.name);
+            },
+
             handlePreview(file) {
               console.log(handlePreview);
             },
@@ -1681,7 +1775,6 @@
                 var formData = new FormData($("#uploadForm")[0]);
                 formData.append("file", _this.fileLists[0].name);
                 formData.append("lxdNum", _this.lxdForm.contactForm.num);
-                formData.append("type", _this.attachedFileType);
                 $.ajax({
                     url: _this.uploadURL,// 需要链接到服务器地址
                     type: 'POST',
@@ -1692,27 +1785,59 @@
                     processData: false,
                     success: function (res) {
                         if (res.code === 200) {
-                            if( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >= 0){
-                                if (_this.lxdForm.contactForm.attachedFile != null &&_this.lxdForm.contactForm.attachedFile .length> 0) {
-                                    showMessage(_this, "附件更新成功！", 1);
-                                }
-                                else {
-                                    showMessage(_this, "附件上传成功！", 1);
-                                }
-                                _this.lxdForm.contactForm.attachedFile=res.data;
-                            } else if( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_DURING_SIGN) >= 0){
-                                if (_this.lxdForm.contactForm.attachedDuringSign != null &&_this.lxdForm.contactForm.attachedDuringSign .length> 0) {
-                                    showMessage(_this, "签核附件更新成功！", 1);
-                                }
-                                else {
-                                    showMessage(_this, "签核附件上传成功！", 1);
-                                }
-                                _this.lxdForm.contactForm.attachedDuringSign=res.data;
-                            } else {
-                                showMessage(_this, "签核附件类型异常！", 1);
+                            if (_this.lxdForm.contactForm.attachedFile != null &&_this.lxdForm.contactForm.attachedFile .length> 0) {
+                                showMessage(_this, "附件更新成功！", 1);
                             }
-
+                            else {
+                                showMessage(_this, "附件上传成功！", 1);
+                            }
+                            _this.lxdForm.contactForm.attachedFile=res.data;
                             _this.uploadDialogVisible = false;
+                        }
+                        else {
+                            showMessage(_this, '上传失败！', 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '上传失败！', 0);
+                    }
+                });
+            },
+
+            submitUploadForDuringSign(){
+                if (_this.fileListsDuringSign == null || _this.fileListsDuringSign.length == 0) {
+                    showMessage(_this, "上传文件不能为空！", 0)
+                    return;
+                }
+                var formData = new FormData($("#uploadForm")[0]);
+                formData.append("filesDuringSign", _this.fileListsDuringSign[0].name);
+                formData.append("lxdNum", _this.lxdForm.contactForm.num);
+                formData.append("type", _this.attachedFileType);
+
+                formData.append("lxdFormId", _this.lxdForm.contactForm.id);
+                formData.append("attachedDuringSignMan", _this.userInfo.account);
+
+                $.ajax({
+                    url: _this.uploadURLDuringSign,// 需要链接到服务器地址
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        if (res.code === 200) {
+                            if (_this.lxdForm.contactForm.attachedDuringSign != null &&_this.lxdForm.contactForm.attachedDuringSign.length> 0) {
+                                showMessage(_this, "签核附件更新成功！", 1);
+                            }
+                            else {
+                                showMessage(_this, "签核附件上传成功！", 1);
+                            }
+                            _this.lxdForm.contactForm.attachedDuringSign=res.data;
+
+                            //因为后端以及更新过附件信息了 使用要重新获取。
+                            _this.getContactAllData(_this.lxdForm.contactForm.id);
+                            _this.uploadDuringSignDialogVisible = false;
                         }
                         else {
                             showMessage(_this, '上传失败！', 0);
@@ -1882,18 +2007,39 @@
 //                    return true;
 //                }
 
+                //审核完成了就不要修改了。
+                 if(_this.lxdForm.contactSign.currentStep.indexOf("签核完成") >=0 ){
+                     return true;
+                }
+
                 if (this.userInfo!= null) {
                     return this.userInfo.account!=_this.lxdForm.contactForm.applicantPerson;
                 }
                 return true;
             },
 
+            notWritterForAttachedFileDuringSign()
+            {
+                //审核没有开始 则不允许上传，开始之后，无论是谁都可以
+                if(_this.lxdForm.contactSign.currentStep ==""  ){
+                    return true;
+                }
+
+                return false;
+            },
+
             onUpload(type)
             {
                 _this.fileLists = [];
-                _this.uploadDialogVisible = true;
+                _this.fileListsDuringSign = [];
+                if(type.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >=0) {
+                    _this.uploadDialogVisible = true;
+                } else {
+                    _this.uploadDuringSignDialogVisible = true;
+                }
                 _this.attachedFileType = type;
             },
+
             addChangeItem() {
                 _this.lxdForm.changeItemList.push({
                     id:'',
@@ -2952,7 +3098,10 @@
     input[type="file"] {
         display: none;
     }
-
+    /*很关键 ??? todo: 两个附件连续上传会有问题*/
+    input[type="filesDuringSign"] {
+        display: none;
+    }
     .el-upload-list {
         height: 100px;
     }
