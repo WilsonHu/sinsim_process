@@ -21,8 +21,8 @@ var ScrollTimerInterval = 5000;
 var DisableScroll = 1;
 var COM_CMD_INTERVAL = 5000;
 
-var STRING_LXD_ATTACHED_FILE_BY_CREATER = "联系单创建者上传的附件";
-var STRING_LXD_ATTACHED_FILE_DURING_SIGN = "签核过程中上传的附件";
+var STRING_LXD_ATTACHED_FILE_BY_CREATER = "联系单附件";
+var STRING_LXD_ATTACHED_FILE_DURING_SIGN = "联系单签核过程附件";
 
 //总装，部装
 const INSTALLTYPE = {
