@@ -23,6 +23,8 @@ var ScrollTimerInterval = 5000;
 var DisableScroll = 1;
 var COM_CMD_INTERVAL = 5000;
 
+var STRING_LXD_ATTACHED_FILE_BY_CREATER = "联系单附件";
+var STRING_LXD_ATTACHED_FILE_DURING_SIGN = "联系单签核过程附件";
 
 const CONST_STR_FULFILL_STATUS_INITIAL = "落实单初始化";
 const CONST_STR_FULFILL_STATUS_UN_ASSIGN = "未指定落实人员";
