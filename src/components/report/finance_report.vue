@@ -104,9 +104,21 @@
             <div>{{scope.row.nameplate}}</div>
           </template>
         </el-table-column>-->
-        <el-table-column align="center"   label="机型">
+        <!--<el-table-column align="center"   label="机型">-->
+          <!--<template scope="scope">-->
+            <!--<div>{{scope.row.machineType.name}}</div>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
+        <el-table-column align="center" prop="machineType" label="机器信息"min-width="145">
           <template scope="scope">
-            <div>{{scope.row.machineType.name}}</div>
+            <div>{{scope.row.machineType.name +"/"
+              + scope.row.needleNum +"/"
+              + scope.row.headNum +"/"
+              + scope.row.headDistance +"/"
+              + scope.row.xDistance +"/"
+              + scope.row.yDistance +"/"
+              + scope.row.electricTrim +"/"
+              + scope.row.electricPc}}</div>
           </template>
         </el-table-column>
         <!--<el-table-column align="center" prop="" label="机架长度" />-->
