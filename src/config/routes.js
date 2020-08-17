@@ -19,6 +19,8 @@ import Abnormal from "../components/abnormal.vue"
 import AbnormalTypeManage from "../components/abnormal/abnormal_type_manage.vue"
 import AbnormalStatisticManage from "../components/abnormal/abnormal_statistic_manage.vue"
 import AbnormalQualityManage from "../components/abnormal/abnormal_quality_manage.vue"
+import QualityInspectContent from "../components/abnormal/quality_inspect_content.vue"
+
 
 //task
 import Task from "../components/task.vue"
@@ -173,7 +175,7 @@ export default [{
                         path: '/home/abnormal/abnormal_statistic_manage',
                         component: AbnormalStatisticManage,
                         name: 'abnormal_statistic_manage',
-                        meta: '安装异常'
+                        meta: '过程检验'
                     },
                     {
                         path: '/home/abnormal/abnormal_quality_manage',
@@ -188,17 +190,18 @@ export default [{
                         meta: '异常分类'
                     },
                     {
-                        path: '/home/abnormal/abnormal_type_manage',
-                        component: AbnormalTypeManage,
-                        name: 'abnormal_type_manage',
+                        path: '/home/abnormal/quality_inspect_content',
+                        component: QualityInspectContent,
+                        name: 'quality_inspect_content',
                         meta: '质检内容'
-                    },
-                    {
-                        path: '/home/abnormal/abnormal_type_manage',
-                        component: AbnormalTypeManage,
-                        name: 'abnormal_type_manage',
-                        meta: '质检数据'
                     }
+                    // ,
+                    // {
+                    //     path: '/home/abnormal/abnormal_type_manage',
+                    //     component: AbnormalTypeManage,
+                    //     name: 'abnormal_type_manage',
+                    //     meta: '质检数据'
+                    // }
                 ],
             },
 
