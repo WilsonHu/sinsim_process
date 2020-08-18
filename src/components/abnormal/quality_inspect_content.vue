@@ -89,7 +89,7 @@
         </el-col>
         <el-dialog title="提示" :visible.sync="deleteConfirmVisible" width="30%"
                    append-to-body>
-            <span>确认要删除异常类型[ </span>
+            <span>确认要删除[ </span>
             <span style="color: red; font-size: 20px; font-weight: bold">{{selectedItem.inspectName}}</span>
             <span> ]吗？</span>
             <span slot="footer" class="dialog-footer">
@@ -98,34 +98,101 @@
             </span>
         </el-dialog>
 
-        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="50%">
+        <el-dialog :title="dialogTitle" :visible.sync="addDialogVisible" width="70%">
             <el-form :model="addForm" label-position="right" label-width="120px">
-                <!--<el-row>-->
-                    <!--<el-col :span="8">-->
-                        <!--<el-form-item label="异常名称：">-->
-                            <!--<el-input type="text"-->
-                                      <!--v-model="addForm.abnormalName"-->
-                                      <!--placeholder="异常名称"-->
-                                      <!--style="width:100%"-->
-                                      <!--clearable></el-input>-->
-                        <!--</el-form-item>-->
-                    <!--</el-col>-->
-                    <!--<el-col :span="8">-->
-                        <!--<el-form-item label="有效性：">-->
-                            <!--<el-select v-model="addForm.valid"-->
-                                       <!--placeholder=""-->
-                                       <!--clearable-->
-                                       <!--style="width: 100%">-->
-                                <!--<el-option-->
-                                        <!--v-for="item in validList"-->
-                                        <!--:key="item.value"-->
-                                        <!--:label="item.name"-->
-                                        <!--:value="item.value">-->
-                                <!--</el-option>-->
-                            <!--</el-select>-->
-                        <!--</el-form-item>-->
-                    <!--</el-col>-->
-                <!--</el-row>-->
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="质检条目名称：">
+                            <el-input type="text"
+                                      v-model="addForm.inspectName"
+                                      placeholder=""
+                                      style="width:100%"
+                                      clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="类型：">
+                        <el-select v-model="addForm.inspectType"
+                                   placeholder=""
+                                   clearable
+                                   style="width: 100%">
+                            <el-option
+                                    v-for="item in qualityInspectTypeList"
+                                    :key="item.value"
+                                    :label="item.name"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="内容：">
+                            <el-input type="text"
+                                      v-model="addForm.inspectContent"
+                                      placeholder=""
+                                      style="width:100%"
+                                      clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="等级：">
+                            <el-select v-model="addForm.level"
+                                       placeholder=""
+                                       clearable
+                                       style="width: 100%">
+                                <el-option
+                                        v-for="item in qualityInspectLevelList"
+                                        :key="item.value"
+                                        :label="item.name"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="阶段：">
+                            <el-select v-model="addForm.phase"
+                                       placeholder=""
+                                       clearable
+                                       style="width: 100%">
+                                <el-option
+                                        v-for="item in qualityInspectPhaseList"
+                                        :key="item.value"
+                                        :label="item.name"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="对应工序：">
+
+                                <el-select v-model="addForm.taskName" placeholder="工序" clearable>
+                                    <el-option v-for="item in workTaskList"
+                                               :key="item.id"
+                                               :label="item.taskName"
+                                               :value="item.taskName">
+                                    </el-option>
+                                </el-select>
+
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="有效性：">
+                            <el-select v-model="addForm.valid"
+                                       placeholder=""
+                                       clearable
+                                       style="width: 100%">
+                                <el-option
+                                        v-for="item in validList"
+                                        :key="item.value"
+                                        :label="item.name"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                       :title="errorMsg"
@@ -164,6 +231,11 @@
                 currentPage: 1,
                 startRow: 1,
                 validList: ValidList,
+                qualityInspectTypeList:QualityInspectTypeList,
+                qualityInspectLevelList:QualityInspectLevelList,
+                qualityInspectPhaseList:QualityInspectPhaseList,
+
+                workTaskList:[],
                 isEdit: true,
                 addDialogVisible: false,
                 cantEdit: false,
@@ -189,6 +261,30 @@
 
         },
         methods: {
+            getWorkTask() {
+                $.ajax({
+                    url: HOST + "task/list",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                    },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            if(res.data.list.length>0)
+                            {
+                                _this.workTaskList=[];
+                                res.data.list.forEach(item=>{
+                                    _this.workTaskList.push({
+                                        id:item.id,
+                                        taskName:item.taskName,
+                                    })
+                                });
+                            }
+                        }
+                    }
+                })
+            },
+
             filterValidTable(value, row) {
                 return row.valid === value;
             },
@@ -247,7 +343,7 @@
             },
             editWithItem(index, data){
                 _this.selectedItem = copyObject(data);
-                _this.dialogTitle = "修改异常";
+                _this.dialogTitle = "修改质检条目";
                 _this.isEdit = true;
                 _this.isError = false;
                 _this.addForm = copyObject(data);
@@ -263,7 +359,12 @@
                         dataType: 'json',
                         data: {
                             "id": _this.addForm.id,
-                            "abnormalName": _this.addForm.abnormalName,
+                            "inspectName": _this.addForm.inspectName,
+                            "inspectType": _this.addForm.inspectType,
+                            "inspectContent": _this.addForm.inspectContent,
+                            "level": _this.addForm.level,
+                            "taskName": _this.addForm.taskName,
+                            "phase": _this.addForm.phase,
                             "valid": _this.addForm.valid,
                         },
                         success: function (res) {
@@ -282,10 +383,15 @@
             },
             addDialogShow(){
                 _this.addForm = {
-                    abnormalName:"",
-                    valid: 1
+                    inspectName: "",
+                    inspectType:"",
+                    inspectContent:"",
+                    level:"",
+                    taskName:"",
+                    phase:"",
+                    valid: 1,
                 };
-                _this.dialogTitle = "添加异常";
+                _this.dialogTitle = "添加质检条目";
                 _this.isEdit = false;
                 _this.isError = false;
                 _this.errorMsg = '';
@@ -294,8 +400,28 @@
 
             onSubmit()
             {
-                if (isStringEmpty(this.addForm.abnormalName)) {
-                    _this.errorMsg = "异常名称不能为空";
+                if (isStringEmpty(this.addForm.inspectName)) {
+                    _this.errorMsg = "质检条目的名称不能为空";
+                    _this.isError = true;
+                    return;
+                }
+                if (isStringEmpty(this.addForm.inspectType)) {
+                    _this.errorMsg = "质检条目的类型不能为空";
+                    _this.isError = true;
+                    return;
+                }
+                if (isStringEmpty(this.addForm.inspectContent)) {
+                    _this.errorMsg = "质检条目的内容不能为空";
+                    _this.isError = true;
+                    return;
+                }
+                if (isStringEmpty(this.addForm.level)) {
+                    _this.errorMsg = "质检条目的等级不能为空";
+                    _this.isError = true;
+                    return;
+                }
+                if (isStringEmpty(this.addForm.phase)) {
+                    _this.errorMsg = "质检条目的阶段不能为空";
                     _this.isError = true;
                     return;
                 }
@@ -314,7 +440,13 @@
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                            "abnormalName": _this.addForm.abnormalName,
+//                            "id": _this.addForm.id,
+                            "inspectName": _this.addForm.inspectName,
+                            "inspectType": _this.addForm.inspectType,
+                            "inspectContent": _this.addForm.inspectContent,
+                            "level": _this.addForm.level,
+                            "taskName": _this.addForm.taskName,
+                            "phase": _this.addForm.phase,
                             "valid": _this.addForm.valid,
                         },
                         success: function (res) {
@@ -359,6 +491,7 @@
         computed: {},
         created: function () {
             _this.getStatisticsData();
+            _this.getWorkTask();
         },
         mounted: function () {
 

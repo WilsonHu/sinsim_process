@@ -82,6 +82,26 @@ const ValidList = [
     {value: 0, name: '无效'},
 ];
 
+//质检类型
+const QualityInspectTypeList = [
+    {value: '过程检验', name: '过程检验'},
+    {value: '出厂检验', name: '出厂检验'},
+];
+
+//质检等级
+const QualityInspectLevelList = [
+    {value: '重要', name: '重要'},
+    {value: '一般', name: '一般'},
+];
+
+//阶段
+const QualityInspectPhaseList = [
+    {value: '阶段1', name: '阶段1'},
+    {value: '阶段2', name: '阶段2'},
+    {value: '阶段3', name: '阶段3'},
+];
+
+
 //机器流程配置状态
 const ConfigStatusList = [
     {value: 1, name: '未配置'},
