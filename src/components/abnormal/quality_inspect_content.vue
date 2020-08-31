@@ -32,6 +32,9 @@
                 <el-table-column label="等级" align="center">
                     <template scope="scope">{{ scope.row.level }}</template>
                 </el-table-column>
+                <el-table-column label="阶段" align="center">
+                    <template scope="scope">{{ scope.row.phase }}</template>
+                </el-table-column>
                 <el-table-column label="对应工序" align="center">
                     <template scope="scope">{{ scope.row.taskName }}</template>
                 </el-table-column>
@@ -46,9 +49,7 @@
                             {{ scope.row.valid | filterValid}}
                         </div>
                     </template>
-                </el-table-column>
-                <el-table-column label="阶段" align="center">
-                    <template scope="scope">{{ scope.row.phase }}</template>
+                    <!--todo: 后续再补上查询功能 -->
                 </el-table-column>
 
                 <el-table-column label="编辑" width="100" align="center">
@@ -126,12 +127,18 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="内容：">
-                            <el-input type="text"
-                                      v-model="addForm.inspectContent"
-                                      placeholder=""
-                                      style="width:100%"
-                                      clearable></el-input>
+                        <el-form-item label="阶段：">
+                            <el-select v-model="addForm.phase"
+                                       placeholder=""
+                                       clearable
+                                       style="width: 100%">
+                                <el-option
+                                        v-for="item in qualityInspectPhaseList"
+                                        :key="item.value"
+                                        :label="item.name"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -142,21 +149,6 @@
                                        style="width: 100%">
                                 <el-option
                                         v-for="item in qualityInspectLevelList"
-                                        :key="item.value"
-                                        :label="item.name"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="阶段：">
-                            <el-select v-model="addForm.phase"
-                                       placeholder=""
-                                       clearable
-                                       style="width: 100%">
-                                <el-option
-                                        v-for="item in qualityInspectPhaseList"
                                         :key="item.value"
                                         :label="item.name"
                                         :value="item.value">
@@ -190,6 +182,18 @@
                                         :value="item.value">
                                 </el-option>
                             </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col >
+                        <el-form-item label="内容：">
+                            <el-input type="text"
+                                      v-model="addForm.inspectContent"
+                                      placeholder=""
+                                      style="width:100%"
+                                      clearable></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
