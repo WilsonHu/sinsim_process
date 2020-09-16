@@ -1155,7 +1155,7 @@
                     purpose: '',
                     owner:'',
                     selectCreateDate: '',
-                    selectUpdateDate: [new Date(), new Date()] //默认查询当天
+                    selectUpdateDate:''//默认查询当天  [new Date(), new Date()]
                 },
                 tableData: [],
                 pageSize: EveryPageNum, //每一页的num

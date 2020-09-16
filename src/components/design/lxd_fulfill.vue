@@ -139,11 +139,11 @@
 
                 <el-table-column align="center" label="操作" width="240">
                     <template scope="scope">
-                        <el-tooltip placement="top">
-                            <div slot="content">装车单</div>
-                            <el-button size="mini" type="info" icon="el-icon-download"
-                                       @click="onDownload(scope.row)"></el-button>
-                        </el-tooltip>
+                        <!--<el-tooltip placement="top">-->
+                            <!--<div slot="content">装车单</div>-->
+                            <!--<el-button size="mini" type="info" icon="el-icon-download"-->
+                                       <!--@click="onDownload(scope.row)"></el-button>-->
+                        <!--</el-tooltip>-->
                         <el-tooltip placement="top">
                             <div slot="content">编辑</div>
                             <el-button size="mini" type="primary" icon="el-icon-edit"

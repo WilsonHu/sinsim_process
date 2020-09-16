@@ -6,7 +6,8 @@
 //var HOST = IP + ":8111/";
 var DOWNLOADPATH = IP + "/oll/";
 var DOWNLOADPATH_LXD = IP + "/lxdAttached/";
-var DOWNLOADPATH_OPTIMIZE = IP + "/Attached/";
+var DOWNLOADPATH_DESIGN = IP + "/designAttached/";
+var DOWNLOADPATH_OPTIMIZE = IP + "/optimizeAttached/";
 var SOCKECT_ADDR = "ws://127.0.0.1:9998";//CRHService IP address(Windows service)
 var SYSTEMNAME = "SinSim流程管理系统";
 

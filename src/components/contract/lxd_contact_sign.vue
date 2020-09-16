@@ -171,7 +171,7 @@
                                     <el-tooltip placement="top">
                                         <div slot="content">编辑</div>
                                         <el-button
-                                                v-show="!notWritterRow(scope.row)"
+                                                v-show="!notWritterRowEdit(scope.row)"
                                                 size="mini" type="primary" icon="el-icon-edit"
                                                 @click="handleEdit(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
@@ -1923,6 +1923,9 @@
 
             isRowHasPermissionToShow(row)
             {
+                if (_this.userInfo.role.id == 1) {
+                    return true;
+                }
                 if(_this.mode==_this.SIGN_MODE)
                 {
                     if(row.shenHeEnabled)
@@ -2015,6 +2018,20 @@
                 return true;
             },
 
+            //操作-- 是否允许编辑
+            notWritterRowEdit(row)
+            {
+                if (this.userInfo!= null) {
+                    //是管理员， 允许修改， 设计部的经理，要允许，因为设计部经理要编辑落实信息。
+                    if(this.userInfo.role.id == 1 || this.userInfo.role.id == 8){
+                        return false;
+                    } else {
+                        //不是管理员， 就看登录账号是否等于联系单申请者
+                        return this.userInfo.account != row.applicantPerson;
+                    }
+                }
+                return true;
+            },
             notWritterForAttachedFile()
             {
                 //审核开始了，不应该再修改除了审核部门之外内容，否则审核没意义。--> 允许改附件

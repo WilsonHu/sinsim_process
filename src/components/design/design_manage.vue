@@ -79,9 +79,10 @@
                     <el-col :span="2" :offset="0" >
                         <el-button icon="el-icon-search" size="normal" type="primary" @click="searchDesignList">查询 </el-button>
                     </el-col>
-                    <el-col :span="2" :offset="0">
-                        <el-button icon="el-icon-plus" size="normal" type="danger" @click="handleAdd">设计</el-button>
-                    </el-col>
+
+                    <!--<el-col :span="2" :offset="0">-->
+                        <!--<el-button icon="el-icon-plus" size="normal" type="danger" @click="handleAdd">设计</el-button>-->
+                    <!--</el-col>-->
                 </el-row>
             </el-form>
             <el-table
@@ -113,11 +114,11 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" prop="updatedDate" min-width="95" label="订单审核更新">
-                    <template scope="scope">
-                        {{(scope.row.updateTime)|filterDateString}}
-                    </template>
-                </el-table-column>
+                <!--<el-table-column align="center" prop="updatedDate" min-width="95" label="订单审核更新">-->
+                    <!--<template scope="scope">-->
+                        <!--{{(scope.row.updateTime)|filterDateString}}-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
 
                 <el-table-column align="center" prop="nameplate" min-width="125" label="设备规格">
                     <template scope="scope">
@@ -1882,7 +1883,7 @@
                     orderNum: '',
                     //machineLength: '',
                     sellman: '',
-                    selectDate: [new Date(), new Date()], //默认查询当天
+                    selectDate:'' , //默认查询当天 [new Date(), new Date()]
                 },
                 tableData: [],
                 pageSize: EveryPageNum, //每一页的num
@@ -2422,7 +2423,7 @@
                     success: function (res) {
                         if (res.code == 200) {
                             if (res.data.length > 0) {
-                                var downLoadURL = DOWNLOADPATH_LXD + res.data;
+                                var downLoadURL = DOWNLOADPATH_DESIGN + res.data;
                                 _this.downloadFile(downLoadURL);
                             }
                         }
