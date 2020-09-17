@@ -172,6 +172,7 @@
                         <el-tooltip placement="top">
                             <div slot="content">装车单</div>
                             <el-button size="mini" type="info" icon="el-icon-download"
+                                       :disabled="scope.row.loadingFiles==null||scope.row.loadingFiles==''"
                                        @click="onDownload(scope.row)"></el-button>
                         </el-tooltip>
                         <el-tooltip placement="top">

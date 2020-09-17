@@ -137,7 +137,7 @@
                 </el-table-column>
 
 
-                <el-table-column align="center" label="操作" width="240">
+                <el-table-column align="center" label="操作" width="140">
                     <template scope="scope">
                         <!--<el-tooltip placement="top">-->
                             <!--<div slot="content">装车单</div>-->

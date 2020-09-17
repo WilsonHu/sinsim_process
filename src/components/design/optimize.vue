@@ -129,6 +129,7 @@
                         <el-tooltip placement="top">
                             <div slot="content">附件</div>
                             <el-button size="mini" type="info" icon="el-icon-download"
+                                       :disabled="scope.row.files==null||scope.row.files==''"
                                        @click="onDownload(scope.row)"></el-button>
                         </el-tooltip>
                         <el-tooltip placement="top">
@@ -1796,7 +1797,7 @@
                     url: HOST + 'user/selectUsers',
                     type: 'POST',
                     dataType: 'json',
-                    data: {roleId: 27}, ///写死先
+                    data: {roleId: 10},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.ownerList = res.data.list;
