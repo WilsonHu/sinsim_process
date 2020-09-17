@@ -599,7 +599,9 @@
                         </el-card>
 
                         <!--联系单的落实-->
-                        <el-card class="box-card" style="margin: 25px">
+                        <!-- 只让技术部的可见-->
+                        <el-card class="box-card" style="margin: 25px"
+                                 v-show="fulfillShow()">
                             <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
                                 联系单落实跟踪
                             </div>
@@ -2001,6 +2003,17 @@
                     }
                 }
                 //其他情况，可改
+                return false;
+            },
+
+            //落实单可见
+            fulfillShow(){
+                if (this.userInfo!= null) {
+                    if(this.userInfo.role.id == 8 || this.userInfo.role.id == 10 || this.userInfo.role.id == 1) {
+                        // 技术部经理,技术部人员， 管理员，可见
+                        return true;
+                    }
+                }
                 return false;
             },
 
