@@ -148,14 +148,14 @@
                             <el-table-column align="center" prop="createDate" width="95" label="创建时间">
                                 <template scope="scope">
                                     <div>
-                                        {{formatDate(scope.row.createDate)}}
+                                        {{scope.row.createDate != null && scope.row.createDate != "" ? formatDate(scope.row.createDate) : "/"}}
                                     </div>
                                 </template>
                             </el-table-column>
                             <el-table-column align="center" width="95" label="更新时间">
                                 <template scope="scope">
                                     <div>
-                                        {{scope.row.updateTime != null ? formatDate(scope.row.updateTime) : "/"}}
+                                        {{scope.row.updateDate != null && scope.row.updateDate != "" ? formatDate(scope.row.updateDate) : "/"}}
                                     </div>
                                 </template>
                             </el-table-column>

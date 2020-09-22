@@ -1115,7 +1115,7 @@
                     url: HOST + 'user/selectUsers',
                     type: 'POST',
                     dataType: 'json',
-                    data: {roleId: 10}, //技术员
+                    data: {roleId: 27}, //设计员
                     success: function (res) {
                         if (res.code == 200) {
                             _this.fulfillManList = res.data.list;
