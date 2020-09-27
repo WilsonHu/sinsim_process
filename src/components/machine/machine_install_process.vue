@@ -1453,7 +1453,8 @@
 
             onConfirmRecover() {
                 var taskRecord = copyObjectByJSON(_this.selectedTaskItem);
-                taskRecord.status = TaskStatusList[2].value;//工序从跳过恢复后，处于待安装状态
+//    //            taskRecord.status = TaskStatusList[2].value;//工序从跳过恢复后，处于待安装状态
+                taskRecord.status = TaskStatusList[7].value;//工序从跳过恢复后， 点击恢复之后，APP上还要去解决异常。否则机器都安装完成了，这个异常还需要专门去web上点击解决。
                 _this.onUpdateData(taskRecord);
                 ///"生产中且包含跳过工序" --> 改为 "生产中";
                 _this.setMachineInInstallIncludeSkipTask(MachineStatusList[3].value);
