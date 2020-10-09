@@ -1357,9 +1357,10 @@
 
         },
         methods: {
+            // 技术部的人和设计员 都要允许上传
             notTechnicalTeam() {
                 if (this.userinfo.role != null && this.userinfo.role.roleName != null) {
-                    if (this.userinfo.role.roleName.indexOf("技术") != -1) {
+                    if (this.userinfo.role.roleName.indexOf("技术") != -1 || this.userinfo.role.roleName.indexOf("设计员") != -1) {
                         return false;
                     } else {
                         return true;

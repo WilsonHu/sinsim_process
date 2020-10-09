@@ -1592,8 +1592,6 @@
                 checkedChangeTypes:[],
                 uploadDialogVisible:false,
 
-                //是哪种附件： 创建人的附件或签核过程的附件
-                attachedFileType:'',
                 fileLists:[],
                 uploadForm:{},
                 uploadURL: HOST + "contact/form/uploadAttachedFile",
@@ -1705,6 +1703,8 @@
 
                 //给后端保存文件命名用。
                 uploadFileType: '',
+                //是哪种附件： 创建人的附件或签核过程的附件
+//                attachedFileType:'',  /// 用同一个
             };
 
         },
@@ -1861,9 +1861,9 @@
             
             onConfirmDeleteAttached(item){
                 _this.attachedDeleteConfirmVisible = false;
-                if( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >= 0){
+                if( _this.uploadFileType.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >= 0){
                     _this.lxdForm.contactForm.attachedFile = "";
-                } else if ( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_DURING_SIGN) >= 0){
+                } else if ( _this.uploadFileType.indexOf(_this.LXD_ATTACHED_FILE_DURING_SIGN) >= 0){
                     _this.lxdForm.contactForm.attachedDuringSign = "";
                 }
 
@@ -1879,9 +1879,9 @@
                         _this.isError = res.code != 200;
                         if (!_this.isError) {
                             //_this.addLxdVisible = false;
-                            if( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >= 0) {
+                            if( _this.uploadFileType.indexOf(_this.LXD_ATTACHED_FILE_BY_CREATER) >= 0) {
                                 showMessage(_this, '附件删除成功', 1);
-                            } else if ( _this.attachedFileType.indexOf(_this.LXD_ATTACHED_FILE_DURING_SIGN) >= 0){
+                            } else if ( _this.uploadFileType.indexOf(_this.LXD_ATTACHED_FILE_DURING_SIGN) >= 0){
                                 showMessage(_this, '签核附件删除成功', 1);
                             }
                             _this.selectContacts();
@@ -2735,6 +2735,14 @@
                             }
                         } else {
                             console.log("getContactAllData:"+res.message);
+                        }
+                        ///关闭页面后，重新打开页面，要对这个类型赋值
+                        if(_this.lxdForm.contactForm.attachedFile.length>0) {
+                            _this.uploadFileType = "联系单附件";
+                        } else if(_this.lxdForm.contactForm.attachedDuringSign.length>0) {
+                            _this.uploadFileType = "联系单签核过程附件";
+                        } else {
+                            _this.uploadFileType = "其他";
                         }
                     }
                 });
