@@ -427,7 +427,7 @@
                                                     size="small"
                                                     type="danger"
                                                     icon="el-icon-delete"
-                                                    :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedFile)||notWritter()||mode==SIGN_MODE"
+                                                    :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedFile)||notWritterForAttachedFile()||mode==SIGN_MODE"
                                                     @click="handAttachedDelete(lxdForm.contactForm)">删除
                                             </el-button>
                                         </el-col>
@@ -473,7 +473,7 @@
                                                 size="small"
                                                 type="danger"
                                                 icon="el-icon-delete"
-                                                :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedDuringSign)||notWritter()||mode==SIGN_MODE"
+                                                :disabled=" haveNoAttachedFile(lxdForm.contactForm.attachedDuringSign)||notWritterForAttachedFileDuringSign()||mode==SIGN_MODE"
                                                 @click="handAttachedDelete(lxdForm.contactForm)">删除
                                         </el-button>
                                     </el-col>
@@ -596,6 +596,32 @@
                                     </el-table>
                                   </el-col>
                                 </el-row>
+                        </el-card>
+
+                        <!-- 联系单签核 支持选择指定具体某一个销售经理签核-->
+                        <el-card class="box-card" style="margin: 25px"
+                                 v-show="designateSaleManagerSelectShow()">
+                            <div style="text-align: center; font-size: 18px;font-weight: bold;margin-bottom: 20px;margin-top: 20px;">
+                                指定签核的销售部经理
+                            </div>
+                            <el-row>
+                                <el-col :span="6"  >
+                                    <el-form-item label="销售部经理:" :label-width="longFormLabelWidth" >
+                                        <el-select
+                                                :disabled="designatedSaleManagerNotWrite()  "
+                                                v-model="lxdForm.contactForm.designatedSaleManager"
+                                                clearable
+                                                v-show ="true"
+                                                filterable >
+                                            <el-option
+                                                    v-for="item in saleManagerList"
+                                                    :label="item.account"
+                                                    :value="item.account">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
                         </el-card>
 
                         <!--联系单的落实-->
@@ -1466,7 +1492,8 @@
                         attachedDuringSign:"",      //签核过程中的附件
                         attachedDuringSignMan:'',   //签核过程中，上传/更新了附件的人
                         contactContentElse: "", // 选中“其他变更”时的输入
-                        contactContentElseIsChecked: false, // “其他变更” 是否被选中。
+                        contactContentElseIsChecked: false, // “其他变更” 是否被选中。,
+                        designatedSaleManager:''
                     },
                     changeItemList: [{ //变更单内容
                         id:'',
@@ -1479,6 +1506,7 @@
                     contactFulfill:{
 //                        id: "",
                         fulfillMan: "",
+                        saleManager:"", //联系单给 哪个具体销售经理
                         message: "",
                         createDate: new Date(),
                         updateDate: '',
@@ -1501,10 +1529,12 @@
                             result: "",
                             comment: "",
                             shenHeEnabled:true,
-                        }]
-                    },
+                        }],
+                        updateTime:''
+                    }
                   },
                 fulfillManList:[],
+                saleManagerList:[],
                 normalSignProcess:[],
                 defaultSignProcess:[],
 
@@ -1723,6 +1753,20 @@
                     }
                 });
             },
+            fetchSaleManagerList(){
+                $.ajax({
+                    url: HOST + 'user/selectUsers',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {roleId: 7}, //销售经理
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.saleManagerList = res.data.list;
+                        }
+                    }
+                });
+            },
+
             handleDownload(index, item) {
                 $.ajax({
                     url: HOST + 'contact/form/buildLxdExcel',
@@ -2005,6 +2049,10 @@
                 //其他情况，可改
                 return false;
             },
+            // 指定销售部经理的不可写
+            designatedSaleManagerNotWrite(){
+                return false;
+            },
 
             //落实单可见
             fulfillShow(){
@@ -2015,6 +2063,21 @@
                     }
                 }
                 return false;
+            },
+
+            //需要销售部签核才需要指定经理，也可以不指定，不指定则所有经理都可见。
+            designateSaleManagerSelectShow(){
+                let saleDepartmentIncluded = false;
+                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++)
+                {
+                    if(_this.lxdForm.contactSign.signContent[i].roleId == 7
+                            && _this.lxdForm.contactSign.signContent[i].shenHeEnabled )
+                    {
+                        saleDepartmentIncluded = true;
+                        break;
+                    }
+                }
+                return saleDepartmentIncluded;
             },
 
             notWritterRow(row)
@@ -2133,6 +2196,7 @@
                     currentStep:_this.filters.roleName,
                     queryStartTime: '',
                     queryFinishTime: '',
+                    designatedSaleManager: '',
                     isFuzzy:true,
                     page: _this.currentPage,
                     size: _this.pageSize
@@ -2155,6 +2219,18 @@
 //                    condition.applicantDepartment = '';
 //                }
 
+                 // 销售部经理，只看指派给自己的联系单。 或者没有指派的联系单，以及自己发起的联系单。以及旧的联系单。
+                if(this.userInfo.role.roleName == "销售部经理" ) {
+                        condition.designatedSaleManager = _this.userInfo.account;
+                }
+
+                // 但是所有人 都要看 自己发起的联系单 --> 后端做了
+                // 销售部经理A发起联系单，指定给其他销售经理B: A、B可见联系单，其他销售经理看不到联系单
+                // 销售部经理A发起联系单，指定给非销售部经理C: 销售部经理都看不到联系单，A，C等可以
+                // 非销售部经理D发起联系单，指定给销售部经理A：A可见，B不可见
+                // 非销售部经理D发起联系单，指定给非销售部经理E：AB不可见，DE等其他可见。
+
+                //对于 旧的联系单。没有指定签核的销售部经理，
                 condition.applicantDepartment = _this.filters.applicantDepartment;
                 $.ajax({
                     url: HOST + 'contact/form/selectContacts',
@@ -2397,11 +2473,13 @@
                         attachedFile:"",
                         attachedDuringSign:"",      //签核过程中的附件
                         attachedDuringSignMan:"",
+                        designatedSaleManager:'',
                     },
                     //落实单
                     contactFulfill:{
 //                        id: "",
                         fulfillMan: "",
+                        saleManager:"",
                         message: "",
                         createDate: new Date(),
                         updateDate: '',
@@ -2417,8 +2495,11 @@
                         currentStep:'',
                         createTime:'',
                         signContent:[ 
-                        ]
-                    }, 
+                        ],
+
+                        updateTime:'',
+
+                    }
                   },
                 _this.selectContacts();
             },
@@ -2736,6 +2817,7 @@
                         } else {
                             console.log("getContactAllData:"+res.message);
                         }
+
                         ///关闭页面后，重新打开页面，要对这个类型赋值
                         if(_this.lxdForm.contactForm.attachedFile.length>0) {
                             _this.uploadFileType = "联系单附件";
@@ -3101,6 +3183,7 @@
             }
             _this.initAllRoles();
             _this.fetchFulfillManList();
+            _this.fetchSaleManagerList();
         },
         mounted: function () {
             _this.selectContacts();
