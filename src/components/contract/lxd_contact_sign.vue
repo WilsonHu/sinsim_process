@@ -2067,17 +2067,18 @@
 
             //需要销售部签核才需要指定经理，也可以不指定，不指定则所有经理都可见。
             designateSaleManagerSelectShow(){
-                let saleDepartmentIncluded = false;
-                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++)
-                {
-                    if(_this.lxdForm.contactSign.signContent[i].roleId == 7
-                            && _this.lxdForm.contactSign.signContent[i].shenHeEnabled )
-                    {
-                        saleDepartmentIncluded = true;
-                        break;
-                    }
-                }
-                return saleDepartmentIncluded;
+                return false; ///二期不启用该功能。
+//                let saleDepartmentIncluded = false;
+//                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++)
+//                {
+//                    if(_this.lxdForm.contactSign.signContent[i].roleId == 7
+//                            && _this.lxdForm.contactSign.signContent[i].shenHeEnabled )
+//                    {
+//                        saleDepartmentIncluded = true;
+//                        break;
+//                    }
+//                }
+//                return saleDepartmentIncluded;
             },
 
             notWritterRow(row)
@@ -2220,6 +2221,7 @@
 //                }
 
                  // 销售部经理，只看指派给自己的联系单。 或者没有指派的联系单，以及自己发起的联系单。以及旧的联系单。
+                // 新的前端加了指定销售部经理，可以配旧的后端，只是不起作用而已。
                 if(this.userInfo.role.roleName == "销售部经理" ) {
                         condition.designatedSaleManager = _this.userInfo.account;
                 }

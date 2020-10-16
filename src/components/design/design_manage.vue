@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div>
         <el-col class="well well-lg" style="background-color: white;">
             <el-form :model="thisFilters" label-position="right" label-width="80px">
@@ -103,7 +103,11 @@
                 </el-table-column>
                 <el-table-column align="center" label="订单号" min-width="105">
                     <template scope="scope">
-                        <span>{{scope.row.orderNum}}</span>
+                        <!--<span>{{scope.row.orderNum}}</span>-->
+                        <div v-on:click="handleReadOnly(scope.$index, scope.row)" style="font-weight: bold;"
+                             class="btn btn-link">
+                            {{scope.row.orderNum}}
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="80" prop="orderSignStatus" label="审核状态">
@@ -2451,7 +2455,7 @@
             handleEdit(index, item) {
                 this.isError = false;
                 this.errorMsg = '';
-                this.dialogTitle = '编辑';
+                this.dialogTitle = '编辑设计单';
                 this.mode = this.EDIT_MODE;
                 this.selectedItem = copyObject(item);
                 _this.fetchDesignData(item.id);
@@ -2461,6 +2465,18 @@
                 this.addDesignVisible = true;
             },
 
+            handleReadOnly(index, item) {
+                this.isError = false;
+                this.errorMsg = '';
+                this.dialogTitle = '查看设计单';
+                this.mode = this.VIEW_MODE;
+                this.selectedItem = copyObject(item);
+                _this.fetchDesignData(item.id);
+
+                //联系单信息也会用到
+                _this.getMachineOrderData(item.orderNum);
+                this.addDesignVisible = true;
+            },
             fetchDesignData(formId) {
                 $.ajax({
                     url: HOST + 'design/dep/info/detail',

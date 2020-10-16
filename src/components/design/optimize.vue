@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div>
         <el-col class="well well-lg" style="background-color: white;">
             <el-form :model="filters" label-position="right" label-width="80px">
@@ -81,7 +81,11 @@
                 </el-table-column>
                 <el-table-column align="center" label="项目名称" min-width="105">
                     <template scope="scope">
-                        <span>{{scope.row.projectName}}</span>
+                        <!--<span>{{scope.row.projectName}}</span>-->
+                        <div v-on:click="handleReadOnly(scope.$index, scope.row)" style="font-weight: bold;"
+                             class="btn btn-link">
+                            {{scope.row.projectName}}
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="80" prop="orderSignStatus" label="优化部件">
@@ -343,7 +347,7 @@
                                     关 闭
                                 </el-button>
                                 <el-button
-                                        v-show="mode == ADD_MODE||mode==EDIT_MODE"
+                                        v-show="showSaveButton()"
                                         type="primary"
                                         @click="onAddOrEdit()"
                                         icon="el-icon-check"
@@ -1217,6 +1221,7 @@
                 mode: 1,
                 ADD_MODE: 1,
                 EDIT_MODE: 2,
+                READ_ONLY_MODE:3,
                 formLabelWidth: '100px',
                 longFormLabelWidth: '125px',
                 verylongFormLabelWidth: '185px',
@@ -1254,6 +1259,19 @@
             };
         },
         methods: {
+
+            showSaveButton(){
+                if(_this.mode==_this.ADD_MODE )
+                {
+                    return true;
+                } else if(_this.mode == _this.EDIT_MODE
+                        &&( _this.userInfo.account == _this.optimizeForm.owner || _this.userInfo.role.id == 8||_this.userInfo.role.id == 1))
+                { //编辑模式，也只负责人，技术部经理，有管理员才可以编辑-保存。
+                    return true;
+                }
+
+                return false;
+            },
 
             // 附件删除
             handAttachedDelete(item) {
@@ -1576,7 +1594,18 @@
                 _this.getMachineOrderData(item.orderNum);
                 this.addOptimizeVisible = true;
             },
+            handleReadOnly(index, item) {
+                this.isError = false;
+                this.errorMsg = '';
+                this.dialogTitle = '查看';
+                this.mode = this.READ_ONLY_MODE;
+                this.selectedItem = copyObject(item);
+                _this.fetchOptimizeData(item.id);
 
+                //联系单信息也会用到
+                _this.getMachineOrderData(item.orderNum);
+                this.addOptimizeVisible = true;
+            },
             fetchOptimizeData(formId) {
                 $.ajax({
                     url: HOST + 'optimize/test/detail',

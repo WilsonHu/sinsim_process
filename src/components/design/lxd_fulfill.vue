@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div>
         <el-col class="well well-lg" style="background-color: white;">
             <el-form :model="filters" label-position="right" label-width="80px">
@@ -86,7 +86,11 @@
 
                 <el-table-column align="center" label="联系单号" min-width="95">
                     <template scope="scope">
-                        <span>{{scope.row.contactForm.num}}</span>
+                        <!--<span>{{scope.row.contactForm.num}}</span>-->
+                        <div v-on:click="handleReadOnly(scope.$index, scope.row)" style="font-weight: bold;"
+                             class="btn btn-link">
+                            {{scope.row.contactForm.num}}
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="订单号" min-width="145">
@@ -927,6 +931,16 @@
 
         methods: {
 
+            handleReadOnly(index, item) {
+                this.isError = false;
+                this.errorMsg = '';
+                this.dialogTitle = '查看联系单的落实';
+
+                this.mode = this.VIEW_MODE;
+                this.selectedItem = copyObject(item);
+                _this.getContactAllData(item.contactFormId);
+                this.editFulfillVisible = true;
+            },
             handleEdit(index, item) {
                 this.isError = false;
                 this.errorMsg = '';
@@ -1103,7 +1117,7 @@
                     return true;
                 }
                 //联系单的落实，需要技术部经理编辑联系单的落实信息
-                if(_this.userInfo.role.id == 8){
+                if(_this.userInfo.role.id == 8 ){
                     return true;
                 }
 
