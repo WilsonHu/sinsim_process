@@ -1073,7 +1073,7 @@
         data() {
             _this = this;
             return {
-
+//                currentUserRoleScope: {},
                 normalSignRoleList: [],
                 uploadDialogVisible: false,
 //                差一个字符，会导致”blocked by CORS policy: No 'Access-Control-Allow-Origin' “错误，小心被误导。
@@ -1822,18 +1822,54 @@
             },
 
             fetchOwnerList() {
+
+//                $.ajax({
+//                    url: HOST + 'user/selectUsers',
+//                    type: 'POST',
+//                    dataType: 'json',
+//                    data: {roleId: 10},
+//                    success: function (res) {
+//                        if (res.code == 200) {
+//                            _this.ownerList = res.data.list;
+//                        }
+//                    }
+//                });
+                // 有优化测试权限的人都可以成为负责人
                 $.ajax({
-                    url: HOST + 'user/selectUsers',
+                    url: HOST + 'user/getUsersHaveThatPermit',
                     type: 'POST',
                     dataType: 'json',
-                    data: {roleId: 10},
+                    data: {thatPermit: "/home/designDep/optimize"},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.ownerList = res.data.list;
                         }
                     }
                 });
+
             },
+
+//            fetchUserRoleScope(roleId) {
+//                $.ajax({
+//                    url: HOST + 'role/detail',
+//                    type: 'POST',
+//                    dataType: 'json',
+//                    data: { id: roleId },
+//                    success: function(data) {
+//                        if (data.code == 200) {
+//                            _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+////                            if (_this.currentUserRoleScope.designDep.length > 0) {
+////                                _this.$router.push(_this.currentUserRoleScope.designDep[0]);
+////                            }
+//                        } else {
+//                            showMessage(_this, data.message, 0);
+//                        }
+//                    },
+//                    error: function(data) {
+//                        showMessage(_this, '服务器访问出错！', 0);
+//                    }
+//                });
+//            },
 
             notWritter()
             {
@@ -2059,6 +2095,8 @@
             }
             _this.initMachineType();
             _this.initAllRoles();
+
+//            _this.fetchUserRoleScope(this.userInfo.role.id);
         },
 
         mounted: function () {
