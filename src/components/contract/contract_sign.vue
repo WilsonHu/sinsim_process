@@ -2862,7 +2862,35 @@ const DefaultOrderDetail = {
   specialTapingHead: "",
   specialTowelNeedle: "",
   driverHorizonNum: 0,
-  driverVerticalNum: 0
+  driverVerticalNum: 0,
+
+  driverMethod:"",
+  driverReelHole:"",
+  driverReel:"",
+  driverTypeList:"",
+  frameworkStopList:"",
+  frameworkPoleHeight:"",
+  frameworkBracketList:"",
+  frameworkRingList:"",
+  frameworkPlatenColorList:"",
+  frameworkPlatenList:"",
+  frameworkColorList:"",
+  axleUpperThread:"",
+  axleJump:"",
+  axleHook:"",
+  axleNeedleType:"",
+  axleNeedle:"",
+  axleSplit:"",
+  electricOil:"",
+  colorChangeMode:"",
+  electricPowerList:"",
+  electricTrim:"",
+  electricMotorXy:"",
+  electricMotor:"",
+  electricLanguage:"",
+  electricPc:"",
+//  specialTowelNeedle:"",
+//  specialTapingHead:"",
 };
 export default {
   name: "contract_sign",
@@ -3955,6 +3983,9 @@ export default {
         _this.currentCopyItem = JSON.parse(item);
         _this.currentSelectOrder.title = targetItem.title;
         _this.confirmPasteDialog = true;
+        //status is initial
+        _this.currentCopyItem.machineOrder.status = 0;
+
       } else {
         showMessage(_this, "没有可以粘贴的需求单！请先复制!", 0);
       }
@@ -3968,11 +3999,17 @@ export default {
           break;
         }
       }
-      _this.currentCopyItem = copyObjectByJSON(_this.currentCopyItem);
+      //_this.currentCopyItem = copyObjectByJSON(_this.currentCopyItem);
+      // 获取属性，即订单的X行程等，赋给 _this.requisitionForms
+
       Object.keys(_this.requisitionForms[index].orderDetail).forEach(key => {
         _this.requisitionForms[index].orderDetail[key] =
           _this.currentCopyItem.orderDetail[key];
       });
+
+      // 赋值 具体的值 给_this.requisitionForms
+//      _this.requisitionForms[index].orderDetail = 不需要写
+
       Object.assign(
         _this.requisitionForms[index].orderDetail,
         _this.currentCopyItem.orderDetail
@@ -4186,7 +4223,23 @@ export default {
         name: "1",
         //保存需求单数据
         machineOrder: {
+          // 初始化后，在拷贝订单后，才可以修改，没有初始过无法修改。
           brand: "SINSIM",
+          needleNum:"0",
+          headNum:"0",
+
+//          machineNum:"",
+          headDistance:"",
+          xDistance:"",
+          yDistance:"",
+          packageMethod:"",
+          maintainType:"",
+          mark:"",
+          equipment:"",
+          machinePrice:"",
+          packageMark: "",
+
+
           createTime: new Date().format("yyyy-MM-dd"),
           orderTotalPrice: 0,
           machineNum: 1,
@@ -5246,14 +5299,16 @@ export default {
     },
 
     changeOrderContentDisable(item) {
-      return (
-        item.status == ORDER_CHANGED ||
-        item.status == ORDER_CHECKING_FINISHED ||
-        item.status == ORDER_CANCELED ||
-        item.status == ORDER_SPLITED ||
-        item.status == ORDER_CHECKING ||
-        this.mode == this.SIGN_MODE
-      );
+      var editable = (
+      item.status == ORDER_CHANGED ||
+      item.status == ORDER_CHECKING_FINISHED ||
+      item.status == ORDER_CANCELED ||
+      item.status == ORDER_SPLITED ||
+      item.status == ORDER_CHECKING ||
+      this.mode == this.SIGN_MODE
+    )
+    
+      return editable;
     },
 
     changeContractContentDisable(item) {
