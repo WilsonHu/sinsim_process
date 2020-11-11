@@ -2808,10 +2808,10 @@
                                 for(let i=0; i<_this.lxdForm.contactSign.signContent.length; i++) {
                                     if (_this.lxdForm.contactSign.signContent[i].roleName == '成本核算员'
                                             || _this.lxdForm.contactSign.signContent[i].roleName == '财务经理'
-                                            || _this.lxdForm.contactSign.signContent[i].roleId == 13
-                                            || _this.lxdForm.contactSign.signContent[i].roleId == 14) {
+                                            || _this.lxdForm.contactSign.signContent[i].roleId == 13    //也是 成本核算员
+                                            || _this.lxdForm.contactSign.signContent[i].roleId == 14) { //也是财务经理
                                         if (_this.lxdForm.contactSign.signContent[i].comment.length != 0) {
-                                            _this.lxdForm.contactSign.signContent[i].comment = "-";
+                                            _this.lxdForm.contactSign.signContent[i].comment = "--";
                                         }
                                     }
                                 }
