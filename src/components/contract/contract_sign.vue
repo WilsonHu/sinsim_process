@@ -5381,26 +5381,26 @@ export default {
               let orderDetail = copyObjectByJSON(tempList[i].orderDetail);
               let orderSign = copyObjectByJSON(tempList[i].orderSign);
               let orderChangeRecord = copyObjectByJSON(
-                tempList[i].orderChangeRecord
+                      tempList[i].orderChangeRecord
               );
               let orderSplitRecord = copyObjectByJSON(
-                tempList[i].orderSplitRecord
+                      tempList[i].orderSplitRecord
               );
               if (orderSign != null) {
                 orderSign.signContent =
-                  orderSign.signContent != null
-                    ? JSON.parse(orderSign.signContent)
-                    : [];
+                        orderSign.signContent != null
+                                ? JSON.parse(orderSign.signContent)
+                                : [];
               }
               let machineOrder = copyObjectByJSON(tempList[i]);
               machineOrder.machineType = machineOrder.machineType.id;
               //由于装置中保存的是JSON字符串，需要转换成Object
               machineOrder.equipment =
-                machineOrder.equipment != null && machineOrder.equipment != ""
-                  ? JSON.parse(machineOrder.equipment)
-                  : [];
+                      machineOrder.equipment != null && machineOrder.equipment != ""
+                              ? JSON.parse(machineOrder.equipment)
+                              : [];
               machineOrder.createTime = new Date(
-                machineOrder.createTime
+                      machineOrder.createTime
               ).format("yyyy-MM-dd");
               machineOrder.orderDetail = null;
               machineOrder.orderSign = null;
@@ -5429,13 +5429,30 @@ export default {
                 newItem.title = newItem.title + "（已取消）";
               }
               _this.isShowConfirmPlanDate = _this.checkPlanDateIsShow(
-                machineOrder
+                      machineOrder
               );
+              // 财务(财务会计，财务经理，成本核算员)的意见，仅特定人员可见
+              if (_this.userInfo.role.roleName != "成本核算员"
+                      && _this.userInfo.role.roleName != "财务经理"
+                      && _this.userInfo.role.roleName != "销售部经理"
+                      && _this.userInfo.role.roleName != "总经理"
+                      && _this.userInfo.role.roleName != "超级管理员") {
+                for (let i = 0; i < newItem.orderSign.signContent.length; i++) {
+                  if (newItem.orderSign.signContent[i].roleId == 13 //
+                          || newItem.orderSign.signContent[i].roleId == 14
+                          || newItem.orderSign.signContent[i].roleId == 15) {
+                    if (newItem.orderSign.signContent[i].comment.length != 0) {
+                      newItem.orderSign.signContent[i].comment = "--"
+                    }
+                  }
+                }
+              }
               _this.requisitionForms.push(newItem);
               if (_this.editContract.orderNum == machineOrder.orderNum) {
                 _this.editableTabsValue = newTabName;
               }
               _this.tabIndex = i + 1;
+
             }
           }
         },
