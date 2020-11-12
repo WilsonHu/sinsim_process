@@ -5431,11 +5431,13 @@ export default {
               _this.isShowConfirmPlanDate = _this.checkPlanDateIsShow(
                       machineOrder
               );
+              // 注意： 没有权限去看金额的角色，审核流程不能放在后面，否则也会造成意见覆盖为“--”。
               // 财务(财务会计，财务经理，成本核算员)的意见，仅特定人员可见
               if (_this.userInfo.role.roleName != "成本核算员"
                       && _this.userInfo.role.roleName != "财务经理"
                       && _this.userInfo.role.roleName != "销售部经理"
                       && _this.userInfo.role.roleName != "总经理"
+                      && _this.userInfo.role.roleName != "财务会计"  //否则财务会计签核时会把成本核算员的意见覆盖为“--”
                       && _this.userInfo.role.roleName != "超级管理员") {
                 for (let i = 0; i < newItem.orderSign.signContent.length; i++) {
                   if (newItem.orderSign.signContent[i].roleId == 13 //
