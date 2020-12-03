@@ -3678,9 +3678,10 @@ export default {
       let result = false;
       for (let i = 0; i < this.requisitionForms.length; i++) {
         if (
-          this.requisitionForms[i].machineOrder.status == ORDER_REJECTED &&
-          _this.contractForm.recordUser == _this.userInfo.account
+          this.requisitionForms[i].machineOrder.status == ORDER_REJECTED
+//          && _this.contractForm.recordUser == _this.userInfo.account
           ///驳回以后，只允许录单人自己才可以修改，才显示保存按钮。
+          /// 2020-11-20改: 销售经理可以修改录单员录的【销售订单】 包括销售经理驳回后的，提交审核后不能修改，要驳回后才能修改
         ) {
           result = true;
           break;
