@@ -734,15 +734,9 @@
                     </el-col>
                   </el-row>
 
-                  <el-row>
+                  <el-row v-if="isFinanceVisible()">
                     <el-col :span="5">
                       <el-form-item label="订单类型：" :label-width="formLabelWidth">
-                        <!--<el-autocomplete-->
-                                <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
-                                <!--v-model="item.machineOrder.orderType"-->
-                                <!--:fetch-suggestions="orderTypeList"-->
-                        <!--&gt;</el-autocomplete>-->
-
                         <el-select
                                 style="width: 100%"
                                 v-model="item.machineOrder.orderType"
