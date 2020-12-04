@@ -733,6 +733,62 @@
                       >删除</el-button>
                     </el-col>
                   </el-row>
+
+                  <el-row>
+                    <el-col :span="5">
+                      <el-form-item label="订单类型：" :label-width="formLabelWidth">
+                        <!--<el-autocomplete-->
+                                <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                <!--v-model="item.machineOrder.orderType"-->
+                                <!--:fetch-suggestions="orderTypeList"-->
+                        <!--&gt;</el-autocomplete>-->
+
+                        <el-select
+                                style="width: 100%"
+                                v-model="item.machineOrder.orderType"
+                                :readonly="changeOrderContentDisable(item.machineOrder)"
+                                clearable
+                                placeholder="请选择订单类型">
+                          <el-option
+                                  v-for="item in orderTypeList"
+                                  :key="item.text"
+                                  :label="item.text"
+                                  :value="item.text"
+                          ></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="5">
+                      <el-form-item label="毛利率：" :label-width="formLabelWidth">
+                        <el-input
+                                v-model="item.machineOrder.grossProfit"
+                                :readonly="changeOrderContentDisable(item.machineOrder)"
+                                placeholder="特定人员可见"
+                        ></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-form-item label="业务费：" :label-width="formLabelWidth">
+                        <el-input
+                                v-model="item.machineOrder.businessExpense"
+                                :readonly="changeOrderContentDisable(item.machineOrder)"
+                                placeholder="特定人员可见"
+                        ></el-input>
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="5">
+                      <el-form-item label="保修费：" :label-width="formLabelWidth">
+                        <el-input
+                                v-model="item.machineOrder.warrantyFee"
+                                :readonly="changeOrderContentDisable(item.machineOrder)"
+                                placeholder="特定人员可见"
+                        ></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+
                   <el-row>
                     <el-col :span="2" style="font-size: 20px; margin-bottom: 10px;margin-top: 10px">
                       <el-form-item label="联系单：" :label-width="formLabelWidth"></el-form-item>
@@ -740,11 +796,11 @@
                     <el-col :span="22" style="text-align: left">
                       <span v-for="contact in item.machineOrder.contactFormDetailList">
                         <el-button
-                          type="warning"
-                          plain
-                          size="medium"
-                          style="margin: 10px;font-size: 20px;font-weight: bold"
-                          @click="handleViewContact(contact.id)"
+                                type="warning"
+                                plain
+                                size="medium"
+                                style="margin: 10px;font-size: 20px;font-weight: bold"
+                                @click="handleViewContact(contact.id)"
                         >{{contact.num}}</el-button>
                       </span>
                     </el-col>
@@ -2971,6 +3027,7 @@ export default {
       specialTowelNeedleList: SpecialTowelNeedleList,
       colorChangeModeList: ColorChangeModeList,
 
+      orderTypeList: OrderTypeList,
       //增加对话框
       addContractVisible: false,
       collapseActiveNames: ["1"],
@@ -3432,6 +3489,7 @@ export default {
         check(results);
       }, 800 * Math.random());
     },
+
     requestSalePersonList() {
       var roleId = 0;
       for (var i = 0; i < _this.allRoles.length; i++) {
