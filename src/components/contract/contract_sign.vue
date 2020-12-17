@@ -2325,14 +2325,17 @@
                           <span>{{scope.row.date != null && scope.row.date != "" ? formatDate(scope.row.date) : "未提交" }}</span>
                         </template>
                       </el-table-column>
+
                       <el-table-column align="center" label="意见">
                         <template slot-scope="scope">
+                          <div v-if="isFinanceVisibleForComment(scope.row)" >
                           <el-input
                             :readonly="signDisable(item.orderSign.signContent,scope.row,item.machineOrder.status)"
                             type="textarea"
                             v-model="scope.row.comment"
                             auto-complete="off"
                           ></el-input>
+                          </div>
                         </template>
                       </el-table-column>
                       <el-table-column align="center" label="操作" width="200">
@@ -3572,6 +3575,30 @@ export default {
         return true;
       } else {
         return false;
+      }
+    },
+
+    // 财务(财务会计，财务经理，成本核算员)的意见，仅特定人员可见
+
+    isFinanceVisibleForComment(item) {
+      if (
+              (this.userInfo != "" &&
+              (this.userInfo.role.roleName.indexOf("销售") != -1 ||
+              this.userInfo.role.roleName.indexOf("财务") != -1)) ||
+              this.userInfo.role.roleName.indexOf("总经理") != -1 ||
+              this.userInfo.role.roleName.indexOf("成本核算") != -1 ||
+              this.userInfo.role.id == 1
+      ) {
+        // 上述人员  可看全部意见
+        return true;
+      } else {
+        // 其他人员，不允许查看 财务(财务会计，财务经理，成本核算员)的意见，其他人的意见还是可以看。
+        if(item.roleId == 15||item.roleId == 14||item.roleId == 13 ){
+          return false;
+        } else {
+          // 非财务的意见，谁都可以看。
+          return true;
+        }
       }
     },
 
@@ -5484,25 +5511,25 @@ export default {
               _this.isShowConfirmPlanDate = _this.checkPlanDateIsShow(
                       machineOrder
               );
-              // 注意： 没有权限去看金额的角色，审核流程不能放在后面，否则也会造成意见覆盖为“--”。
+           
               // 财务(财务会计，财务经理，成本核算员)的意见，仅特定人员可见
-              if (_this.userInfo.role.roleName != "成本核算员"
-                      && _this.userInfo.role.roleName != "财务经理"
-                      && _this.userInfo.role.roleName != "销售部经理"
-                      && _this.userInfo.role.roleName != "销售员"
-                      && _this.userInfo.role.roleName != "总经理"
-                      && _this.userInfo.role.roleName != "财务会计"  //否则财务会计签核时会把成本核算员的意见覆盖为“--”
-                      && _this.userInfo.role.roleName != "超级管理员") {
-                for (let i = 0; i < newItem.orderSign.signContent.length; i++) {
-                  if (newItem.orderSign.signContent[i].roleId == 13 //
-                          || newItem.orderSign.signContent[i].roleId == 14
-                          || newItem.orderSign.signContent[i].roleId == 15) {
-                    if (newItem.orderSign.signContent[i].comment.length != 0) {
-                      newItem.orderSign.signContent[i].comment = "--"
-                    }
-                  }
-                }
-              }
+//              if (_this.userInfo.role.roleName != "成本核算员"
+//                      && _this.userInfo.role.roleName != "财务经理"
+//                      && _this.userInfo.role.roleName != "销售部经理"
+//                      && _this.userInfo.role.roleName != "销售员"
+//                      && _this.userInfo.role.roleName != "总经理"
+//                      && _this.userInfo.role.roleName != "财务会计"  //否则财务会计签核时会把成本核算员的意见覆盖为“--”
+//                      && _this.userInfo.role.roleName != "超级管理员") {
+//                for (let i = 0; i < newItem.orderSign.signContent.length; i++) {
+//                  if (newItem.orderSign.signContent[i].roleId == 13 //
+//                          || newItem.orderSign.signContent[i].roleId == 14
+//                          || newItem.orderSign.signContent[i].roleId == 15) {
+//                    if (newItem.orderSign.signContent[i].comment.length != 0) {
+//                      newItem.orderSign.signContent[i].comment = "--"
+//                    }
+//                  }
+//                }
+//              }
               _this.requisitionForms.push(newItem);
               if (_this.editContract.orderNum == machineOrder.orderNum) {
                 _this.editableTabsValue = newTabName;
