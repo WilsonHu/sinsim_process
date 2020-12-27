@@ -148,18 +148,18 @@ const OrderStatusList = [
 // public static final String STR_DESIGN_STATUS_COVER_DONE = "罩盖完成";
 // public static final String STR_DESIGN_STATUS_BOM_DONE = "BOM完成";
 // public static final String STR_DESIGN_STATUS_ALL_DONE = "全部完成";
-const DesignToughStatusList = [
-    {value: 0, name: '待计划'},
-    {value: 1, name: '已计划'},
-    {value: 2, name: '图纸完成'},
-    {value: 3, name: '装车单完成'},
-    {value: 4, name: '点孔完成'},
-    {value: 5, name: '方管完成'},
-    {value: 6, name: '罩盖完成'},
-    {value: 7, name: 'BOM完成'},
-    {value: 8, name: '全部完成'},
-    {value: 1, name: '进行中'}
-];
+// const DesignToughStatusList = [
+//     {value: 0, name: '待计划'},
+//     {value: 1, name: '已计划'},
+//     {value: 2, name: '图纸完成'},
+//     {value: 3, name: '装车单完成'},
+//     {value: 4, name: '点孔完成'},
+//     {value: 5, name: '方管完成'},
+//     {value: 6, name: '罩盖完成'},
+//     {value: 7, name: 'BOM完成'},
+//     {value: 8, name: '全部完成'},
+//     {value: 9, name: '进行中'}
+// ];
 //xxx完成状态
 const doneStatusList = [
     {value: 0, name: '未完成'},

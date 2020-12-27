@@ -3,13 +3,13 @@
         <el-form :model="filters" label-position="right" label-width="80px">
             <el-row>
 
-                <!--<el-col :span="6">-->
-                    <!--<el-form-item label="订单号 :">-->
-                        <!--<el-input v-model="filters.orderNum"-->
-                                  <!--placeholder="订单号"-->
-                                  <!--auto-complete="off"></el-input>-->
-                    <!--</el-form-item>-->
-                <!--</el-col>-->
+                <el-col :span="4">
+                    <el-form-item label="订单号 :">
+                        <el-input v-model="filters.orderNumber"
+                                  placeholder="订单号"
+                                  auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-col>
 
                 <!--<el-col :span="4">-->
                     <!--<el-form-item label="异常:">-->
@@ -128,9 +128,9 @@
                 <el-table-column label="序号" width="70" align="center">
                     <template scope="scope">{{ scope.$index+startRow}}</template>
                 </el-table-column>
-                <!--<el-table-column label="订单号" align="center">-->
-                    <!--<template scope="scope">{{ scope.row.orderNum}}</template>-->
-                <!--</el-table-column>-->
+                <el-table-column label="订单号" align="center">
+                    <template scope="scope">{{ scope.row.orderNumber}}</template>
+                </el-table-column>
                 <el-table-column label="机器编号" align="center">
                     <template scope="scope">{{ scope.row.machineNameplate}}</template>
                 </el-table-column>
@@ -366,11 +366,17 @@
                 taskList: {},
                 filters: {
                     nameplate: "",
-                    orderNum: "",
+                    orderNumber: "",
                     abnormalType: "",
                     taskName: "",
                     finishStatus: 2,
-                    selectDate: []
+                    selectDate: [],
+
+                    recordStatus:"",
+                    inspectName:"",
+                    inspectPerson:"",
+                    recordRemark:"",
+                    reInspect:""
                 },
                 statusList: [
                     {text: "质检合格", value: "质检合格"},
@@ -452,7 +458,7 @@
                 var condition = {
                     nameplate: _this.filters.nameplate,
                     abnormalType: _this.filters.abnormalType,
-                    orderNum: _this.filters.orderNum,
+                    orderNumber: _this.filters.orderNumber,
                     taskName: _this.filters.taskName,
                     finishStatus: _this.filters.finishStatus,
                     queryStartTime: '',
@@ -465,7 +471,7 @@
                     condition.queryFinishTime = _this.filters.selectDate[1].format("yyyy-MM-dd");
                 }
                 $.ajax({
-                    url: HOST + "abnormal/record/export",
+                    url: HOST + "quality/inspect/record/export",
                     type: 'POST',
                     dataType: 'json',
                     data: condition,
@@ -489,7 +495,7 @@
                 var condition = {
                     nameplate: _this.filters.nameplate,
                     abnormalType: _this.filters.abnormalType,
-                    orderNum: _this.filters.orderNum,
+                    orderNumber: _this.filters.orderNumber,
                     taskName: _this.filters.taskName,
                     recordStatus: _this.filters.recordStatus,
                     inspectName: _this.filters.inspectName,

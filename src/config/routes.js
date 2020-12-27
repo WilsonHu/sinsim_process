@@ -194,7 +194,7 @@ export default [{
                         path: '/home/abnormal/quality_inspect_content',
                         component: QualityInspectContent,
                         name: 'quality_inspect_content',
-                        meta: '质检内容'
+                        meta: '质检条目'
                     },
                     {
                         path: '/home/abnormal/quality_inspect_data',

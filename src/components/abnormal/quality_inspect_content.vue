@@ -1,93 +1,153 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div>
-        <el-col class="well well-lg" style="background-color: white;">
+        <el-form :model="filters" label-position="right" label-width="80px">
+            <el-col class="well well-lg" style="background-color: white;">
+                <el-row>
 
+                    <el-col :span="4">
+                        <el-form-item label="质检名称:">
+                            <el-input v-model="filters.inspectName"
+                                      placeholder="质检项名称"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+                    </el-col>
 
-            <div align="right" style="margin-bottom: 20px">
-                <el-button
-                        icon="el-icon-plus"
-                        size="normal"
-                        type="primary"
-                        @click="addDialogShow">质检条目
-                </el-button>
-            </div>
-            <el-table
-                    :data="tableData"
-                    border
-                    style="width: 100%;"
-                    @selection-change="handleSelectionChange"
-                    v-loading="listLoading">
-                <el-table-column label="序号" width="70" align="center">
-                    <template scope="scope">{{ scope.$index+startRow}}</template>
-                </el-table-column>
-                <el-table-column label="名称" align="center">
-                    <template scope="scope">{{ scope.row.inspectName }}</template>
-                </el-table-column>
-                <el-table-column label="类型" align="center">
-                    <template scope="scope">{{ scope.row.inspectType }}</template>
-                </el-table-column>
-                <el-table-column label="质检内容" align="center">
-                    <template scope="scope">{{ scope.row.inspectContent }}</template>
-                </el-table-column>
-                <el-table-column label="等级" align="center">
-                    <template scope="scope">{{ scope.row.level }}</template>
-                </el-table-column>
-                <el-table-column label="阶段" align="center">
-                    <template scope="scope">{{ scope.row.phase }}</template>
-                </el-table-column>
-                <el-table-column label="对应工序" align="center">
-                    <template scope="scope">{{ scope.row.taskName }}</template>
-                </el-table-column>
-                <el-table-column
-                        prop="valid"
-                        label="有效性" width="200" align="center"
-                        :filters="[{ text: '有效', value: 1 }, { text: '无效', value: 0 }]"
-                        :filter-method="filterValidTable"
-                        filter-placement="bottom-end">
-                    <template scope="scope">
-                        <div :class="scope.row.valid | filterValidClass">
-                            {{ scope.row.valid | filterValid}}
-                        </div>
-                    </template>
-                    <!--todo: 后续再补上查询功能 -->
-                </el-table-column>
+                    <el-col :span="4">
+                        <el-form-item label="类型:">
+                            <el-input v-model="filters.inspectType"
+                                      placeholder="类型"
+                                      clearable>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-form-item label="对应工序:">
+                            <el-select v-model="filters.taskName" clearable>
+                                <el-option
+                                        v-for="item in taskList"
+                                        v-bind:value="item.taskName"
+                                        v-bind:label="item.taskName">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-form-item label="阶段:">
+                            <el-input v-model="filters.inspectPhase"
+                                      placeholder="阶段"
+                                      clearable>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-form-item label="内容:">
+                            <el-input v-model="filters.inspectContent"
+                                      placeholder="内容信息"
+                                      clearable>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
 
-                <el-table-column label="编辑" width="100" align="center">
-                    <template scope="scope" style="text-align: center">
+                    <div align="right" style="margin-bottom: 20px">
                         <el-button
-                                size="small"
+                                icon="el-icon-search"
+                                size="normal"
                                 type="primary"
-                                icon="el-icon-edit"
-                                :disabled="cantEdit"
-                                @click="editWithItem(scope.$index, scope.row)">编辑
+                                @click="getStatisticsData">搜索
                         </el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column label="删除" width="100" align="center">
-                    <template scope="scope" style="text-align: center">
-                        <el-button
-                                size="small"
-                                icon="el-icon-delete"
-                                type="danger"
-                                @click="deleteWithItem(scope.row)">删除
-                        </el-button>
-                    </template>
-                </el-table-column>
+                    </div>
 
-            </el-table>
-            <br>
-            <div class="block" align="center">
-                <el-pagination
-                        background
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-size="pageSize"
-                        layout="total,prev, pager, next, jumper"
-                        :total="totalNum">
-                </el-pagination>
-            </div>
-            <br>
-        </el-col>
+                </el-row>
+                <el-row>
+                    <div align="right" style="margin-bottom: 20px">
+                        <el-button
+                                icon="el-icon-plus"
+                                size="normal"
+                                type="primary"
+                                @click="addDialogShow">质检
+                        </el-button>
+                    </div>
+                </el-row>
+
+                <el-table
+                        :data="tableData"
+                        border
+                        style="width: 100%;"
+                        @selection-change="handleSelectionChange"
+                        v-loading="listLoading">
+                    <el-table-column label="序号" width="70" align="center">
+                        <template scope="scope">{{ scope.$index+startRow}}</template>
+                    </el-table-column>
+                    <el-table-column label="名称" align="center">
+                        <template scope="scope">{{ scope.row.inspectName }}</template>
+                    </el-table-column>
+                    <el-table-column label="类型" align="center">
+                        <template scope="scope">{{ scope.row.inspectType }}</template>
+                    </el-table-column>
+                    <el-table-column label="质检内容" align="center">
+                        <template scope="scope">{{ scope.row.inspectContent }}</template>
+                    </el-table-column>
+                    <el-table-column label="等级" align="center">
+                        <template scope="scope">{{ scope.row.level }}</template>
+                    </el-table-column>
+                    <el-table-column label="阶段" align="center">
+                        <template scope="scope">{{ scope.row.phase }}</template>
+                    </el-table-column>
+                    <el-table-column label="对应工序" align="center">
+                        <template scope="scope">{{ scope.row.taskName }}</template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="valid"
+                            label="有效性" width="200" align="center"
+                            :filters="[{ text: '有效', value: 1 }, { text: '无效', value: 0 }]"
+                            :filter-method="filterValidTable"
+                            filter-placement="bottom-end">
+                        <template scope="scope">
+                            <div :class="scope.row.valid | filterValidClass">
+                                {{ scope.row.valid | filterValid}}
+                            </div>
+                        </template>
+                        <!--todo: 后续再补上查询功能 -->
+                    </el-table-column>
+
+                    <el-table-column label="编辑" width="100" align="center">
+                        <template scope="scope" style="text-align: center">
+                            <el-button
+                                    size="small"
+                                    type="primary"
+                                    icon="el-icon-edit"
+                                    :disabled="cantEdit"
+                                    @click="editWithItem(scope.$index, scope.row)">编辑
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="删除" width="100" align="center">
+                        <template scope="scope" style="text-align: center">
+                            <el-button
+                                    size="small"
+                                    icon="el-icon-delete"
+                                    type="danger"
+                                    @click="deleteWithItem(scope.row)">删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+
+                </el-table>
+                <br>
+                <div class="block" align="center">
+                    <el-pagination
+                            background
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-size="pageSize"
+                            layout="total,prev, pager, next, jumper"
+                            :total="totalNum">
+                    </el-pagination>
+                </div>
+                <br>
+            </el-col>
+        </el-form>
+
         <el-dialog title="提示" :visible.sync="deleteConfirmVisible" width="30%"
                    append-to-body>
             <span>确认要删除[ </span>
@@ -261,6 +321,14 @@
                 errorMsg: '',
                 isError: false,
                 dialogTitle: '',
+
+                filters: {
+                    inspectName: "",
+                    inspectType: "",
+                    taskName: "",
+                    inspectContent: "",
+                    inspectPhase: "",
+                },
             }
 
         },
