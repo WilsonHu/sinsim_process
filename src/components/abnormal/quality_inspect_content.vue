@@ -8,6 +8,7 @@
                         <el-form-item label="质检名称:">
                             <el-input v-model="filters.inspectName"
                                       placeholder="质检项名称"
+                                      clearable
                                       auto-complete="off"></el-input>
                         </el-form-item>
                     </el-col>
@@ -82,16 +83,16 @@
                         <template scope="scope">{{ scope.row.inspectName }}</template>
                     </el-table-column>
                     <el-table-column label="类型" align="center">
-                        <template scope="scope">{{ scope.row.inspectType }}</template>
+                        <template scope="scope">{{ scope.row.qualityInspect.inspectType }}</template>
                     </el-table-column>
                     <el-table-column label="质检内容" align="center">
-                        <template scope="scope">{{ scope.row.inspectContent }}</template>
+                        <template scope="scope">{{ scope.row.qualityInspect.inspectContent }}</template>
                     </el-table-column>
                     <el-table-column label="等级" align="center">
-                        <template scope="scope">{{ scope.row.level }}</template>
+                        <template scope="scope">{{ scope.row.qualityInspect.level }}</template>
                     </el-table-column>
                     <el-table-column label="阶段" align="center">
-                        <template scope="scope">{{ scope.row.phase }}</template>
+                        <template scope="scope">{{ scope.row.qualityInspect.phase }}</template>
                     </el-table-column>
                     <el-table-column label="对应工序" align="center">
                         <template scope="scope">{{ scope.row.taskName }}</template>
@@ -104,7 +105,7 @@
                             filter-placement="bottom-end">
                         <template scope="scope">
                             <div :class="scope.row.valid | filterValidClass">
-                                {{ scope.row.valid | filterValid}}
+                                {{ scope.row.qualityInspect.valid | filterValid}}
                             </div>
                         </template>
                         <!--todo: 后续再补上查询功能 -->
@@ -220,7 +221,7 @@
                         <el-form-item label="对应工序：">
 
                                 <el-select v-model="addForm.taskName" placeholder="工序" clearable>
-                                    <el-option v-for="item in workTaskList"
+                                    <el-option v-for="item in taskList"
                                                :key="item.id"
                                                :label="item.taskName"
                                                :value="item.taskName">
@@ -300,6 +301,7 @@
                 qualityInspectPhaseList:QualityInspectPhaseList,
 
                 workTaskList:[],
+                taskList: {},
                 isEdit: true,
                 addDialogVisible: false,
                 cantEdit: false,
@@ -333,6 +335,24 @@
 
         },
         methods: {
+            getTaskList() {
+                $.ajax({
+                    url: HOST + "/task/list",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {},
+                    success: function (res) {
+                        if (res.code == 200) {
+                            _this.taskList = res.data.list;
+                        } else {
+                            showMessage(_this, res.data.message, 0)
+                        }
+                    },
+                    error: function (res) {
+                        showMessage(_this, "服务器访问出错！", 0)
+                    }
+                })
+            },
             getWorkTask() {
                 $.ajax({
                     url: HOST + "task/list",
@@ -370,11 +390,21 @@
             },
             getStatisticsData() {
                 _this.listLoading = true;
+                var condition = {
+
+                    inspectName: _this.filters.inspectName,
+                    inspectType: _this.filters.inspectType,
+                    taskName: _this.filters.taskName,
+                    inspectPhase: _this.filters.inspectPhase,
+                    inspectContent: _this.filters.inspectContent,
+                    page: _this.currentPage,
+                    size: _this.pageSize
+                };
                 $.ajax({
-                    url: HOST + "quality/inspect/list",
+                    url: HOST + "quality/inspect/record/selectQualityInspectRecordDetail",
                     type: 'POST',
                     dataType: 'json',
-                    data: {page : _this.currentPage, size : _this.pageSize},
+                    data: condition,
                     success: function (res) {
                         if (res.code == 200) {
                             _this.tableData = res.data.list;
@@ -564,6 +594,7 @@
         created: function () {
             _this.getStatisticsData();
             _this.getWorkTask();
+            _this.getTaskList();
         },
         mounted: function () {
 
