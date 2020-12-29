@@ -83,16 +83,16 @@
                         <template scope="scope">{{ scope.row.inspectName }}</template>
                     </el-table-column>
                     <el-table-column label="类型" align="center">
-                        <template scope="scope">{{ scope.row.qualityInspect.inspectType }}</template>
+                        <template scope="scope">{{ scope.row.inspectType }}</template>
                     </el-table-column>
                     <el-table-column label="质检内容" align="center">
-                        <template scope="scope">{{ scope.row.qualityInspect.inspectContent }}</template>
+                        <template scope="scope">{{ scope.row.inspectContent }}</template>
                     </el-table-column>
                     <el-table-column label="等级" align="center">
-                        <template scope="scope">{{ scope.row.qualityInspect.level }}</template>
+                        <template scope="scope">{{ scope.row.level }}</template>
                     </el-table-column>
                     <el-table-column label="阶段" align="center">
-                        <template scope="scope">{{ scope.row.qualityInspect.phase }}</template>
+                        <template scope="scope">{{ scope.row.phase }}</template>
                     </el-table-column>
                     <el-table-column label="对应工序" align="center">
                         <template scope="scope">{{ scope.row.taskName }}</template>
@@ -105,7 +105,7 @@
                             filter-placement="bottom-end">
                         <template scope="scope">
                             <div :class="scope.row.valid | filterValidClass">
-                                {{ scope.row.qualityInspect.valid | filterValid}}
+                                {{ scope.row.valid | filterValid}}
                             </div>
                         </template>
                         <!--todo: 后续再补上查询功能 -->
@@ -391,7 +391,7 @@
             getStatisticsData() {
                 _this.listLoading = true;
                 var condition = {
-
+                    isValid:1,
                     inspectName: _this.filters.inspectName,
                     inspectType: _this.filters.inspectType,
                     taskName: _this.filters.taskName,
@@ -401,7 +401,9 @@
                     size: _this.pageSize
                 };
                 $.ajax({
-                    url: HOST + "quality/inspect/record/selectQualityInspectRecordDetail",
+//                    url: HOST + "quality/inspect/record/selectQualityInspectRecordDetail",
+                    url: HOST + "quality/inspect/getQualityInspect",
+
                     type: 'POST',
                     dataType: 'json',
                     data: condition,
