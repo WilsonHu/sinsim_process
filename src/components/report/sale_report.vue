@@ -85,6 +85,11 @@
             <span>{{scope.row.orderNum}}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="毛利率" min-width="145">
+          <template scope="scope">
+            <span>{{scope.row.grossProfit}}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="machineType" label="机器信息"min-width="145">
           <template scope="scope">
             <div>{{scope.row.machineType.name +"/"
@@ -282,11 +287,11 @@ export default {
       sums[0] = '合计';
       sums[1] = '总数：';
       sums[2] = _this.totalRecords;
-      sums[5] = '后面是本页数据：';
-      sums[6] = _this.totalEquipmentsAtThisPage;
-      sums[8] = _this.totalMachineNumAtThisPage;
-      sums[9] = _this.totalDiscountsAtThisPage;
-      sums[10] = _this.totalAmountAtThisPage;
+      sums[6] = '后面是本页数据：';
+      sums[7] = _this.totalEquipmentsAtThisPage;
+      sums[9] = _this.totalMachineNumAtThisPage;
+      sums[10] = _this.totalDiscountsAtThisPage;
+      sums[11] = _this.totalAmountAtThisPage;
       return sums;
     },
     handleCurrentChange(val) {

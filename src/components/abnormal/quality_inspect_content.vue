@@ -557,10 +557,10 @@
                             if (res.code == 200) {
                                 showMessage(_this, "添加成功", 1)
                                 _this.getStatisticsData();
+                                _this.addDialogVisible = false;
                             } else {
-                                showMessage(_this, "添加失败", 0)
+                                showMessage(_this, "添加失败: " + res.message  , 0)
                             }
-                            _this.addDialogVisible = false;
 
                         },
                     })

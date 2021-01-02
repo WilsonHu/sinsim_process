@@ -753,15 +753,16 @@
                       </el-form-item>
                     </el-col>
 
-                    <el-col :span="5">
-                      <el-form-item label="毛利率：" :label-width="formLabelWidth">
-                        <el-input
-                                v-model="item.machineOrder.grossProfit"
-                                :readonly="changeOrderContentDisable(item.machineOrder)"
-                                placeholder="特定人员可见"
-                        ></el-input>
-                      </el-form-item>
-                    </el-col>
+                    <!-- 订单中【毛利率】取消单独录入，改为财务意见栏填写，格式为【毛利率：20%，偏低5%】样式，需要财务部统一按格式录入，财务报表中显示【毛利率】一栏 -->
+                    <!--<el-col :span="5">-->
+                      <!--<el-form-item label="毛利率：" :label-width="formLabelWidth">-->
+                        <!--<el-input-->
+                                <!--v-model="item.machineOrder.grossProfit"-->
+                                <!--:readonly="changeOrderContentDisable(item.machineOrder)"-->
+                                <!--placeholder="特定人员可见"-->
+                        <!--&gt;</el-input>-->
+                      <!--</el-form-item>-->
+                    <!--</el-col>-->
                     <el-col :span="5">
                       <el-form-item label="业务费：" :label-width="formLabelWidth">
                         <el-input
