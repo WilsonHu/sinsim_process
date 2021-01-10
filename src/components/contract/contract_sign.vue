@@ -541,23 +541,28 @@
                       placeholder="付款方式"
                       type="textarea"
                       :autosize="{ minRows: 3}"
-                      :readonly="changeContractContentDisable(contractForm)"
                       v-model="contractForm.payMethod"
                     ></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
+
+              <!-- 联系单签核完成后，订单改单中付款方式、金额、备注改为可编辑状态,
+                   ：直接把这个付款方式，备注改为可写，这样比较简单，而且不会影响到其他的，因为”保存“按钮不显示，即使这里是可编辑，也不会被保存 -->
+              <!-- readonly="changeContractContentDisable(contractForm)" -->
+
               <el-row>
                 <el-col :span="24">
                   <el-form-item label="备注信息：" :label-width="formLabelWidth">
                     <el-input
                       type="textarea"
                       :autosize="{ minRows: 3}"
-                      :readonly="changeContractContentDisable(contractForm)"
                       v-model="contractForm.mark"
                     ></el-input>
                   </el-form-item>
                 </el-col>
+
+                <!--:readonly="changeContractContentDisable(contractForm)"-->
               </el-row>
             </el-form>
           </el-card>
