@@ -94,11 +94,6 @@
             <span>{{scope.row.orderNum}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="毛利率" min-width="145">
-          <template scope="scope">
-            <span>{{scope.row.grossProfit}}</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" prop="nameplate" label="铭牌号">
           <template scope="scope">
             <div>{{scope.row.nameplate}}</div>
@@ -126,7 +121,11 @@
               + scope.row.electricPc}}</div>
           </template>
         </el-table-column>
-        <!--<el-table-column align="center" prop="" label="机架长度" />-->
+        <el-table-column align="center" prop="" label="机架长度" >
+          <template scope="scope">
+            <span>{{scope.row.machineFrameLength}}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="packageMethod" label="包装方式" />
         <el-table-column align="center" prop="equipment" label="装置" width="380">
           <template slot-scope="item">
@@ -190,7 +189,12 @@
         <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
         <el-table-column align="center" prop="payMethod" label="付款方式" width="200"></el-table-column>
         <!--<el-table-column align="center" prop=" " label="定金率"></el-table-column>-->
-        <!--<el-table-column align="center" prop=" " label="毛利"></el-table-column>-->
+        <el-table-column align="center" prop=" " label="毛利">
+          <template scope="scope">
+            <span>{{scope.row.grossProfit}}</span>
+          </template>
+        </el-table-column>
+
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px">
         <el-pagination
