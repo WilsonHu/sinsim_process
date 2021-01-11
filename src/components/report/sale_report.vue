@@ -131,6 +131,11 @@
         </el-table-column>
         <el-table-column align="center" prop="orderType" label="订单类型" />
         <el-table-column align="center" prop="warrantyFee" label="保修费" />
+        <el-table-column align="center" prop=" " label="填表日期">
+        <template scope="scope">
+          <span>{{scope.row.createTime|filterDateString}}</span>
+        </template>
+      </el-table-column>
 
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px;">
@@ -431,6 +436,15 @@ export default {
     },
     filterNumberFormat(ndata) {
       return number_format(ndata, 0, '.', ' ');
+    },
+
+    filterDateString(strDate) {
+      //为空的时间不要显示为1970xxxx，而是显示横杠就好
+      if(strDate == null){
+        return "-";
+      }
+      var resDate = new Date(strDate);
+      return resDate.format("yyyy-MM-dd");
     }
   },
   created: function() {

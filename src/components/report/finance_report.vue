@@ -94,11 +94,11 @@
             <span>{{scope.row.orderNum}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="nameplate" label="铭牌号">
-          <template scope="scope">
-            <div>{{scope.row.nameplate}}</div>
-          </template>
-        </el-table-column>
+        <!--<el-table-column align="center" prop="nameplate" label="铭牌号">-->
+          <!--<template scope="scope">-->
+            <!--<div>{{scope.row.nameplate}}</div>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
         <!-- <el-table-column align="center" prop="nameplate" label="机器编号">
           <template scope="scope">
             <div>{{scope.row.nameplate}}</div>
@@ -192,6 +192,11 @@
         <el-table-column align="center" prop="warrantyFee" label="保修费"></el-table-column>
         <el-table-column align="center" prop="maintainPerson" label="保修人员"></el-table-column>
         <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
+        <el-table-column align="center" prop=" " label="填表日期">
+          <template scope="scope">
+            <span>{{scope.row.createTime|filterDateString}}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="payMethod" label="付款方式" width="200"></el-table-column>
         <!--<el-table-column align="center" prop=" " label="定金率"></el-table-column>-->
         <el-table-column align="center" prop=" " label="毛利">
@@ -360,10 +365,10 @@ export default {
       sums[0] = '合计';
       sums[1] = '总数：';
       sums[2] = _this.totalRecords;
-      sums[8] = '注意，后面都是本页数据： ' + _this.totalEquipmentsAtThisPage;
-      sums[10] = _this.totalMachineNumAtThisPage;
-      sums[11] = _this.totalDiscountsAtThisPage;
-      sums[12] = _this.totalAmountAtThisPage;
+      sums[7] = '注意，后面都是本页数据： ' + _this.totalEquipmentsAtThisPage;
+      sums[9] = _this.totalMachineNumAtThisPage;
+      sums[10] = _this.totalDiscountsAtThisPage;
+      sums[11] = _this.totalAmountAtThisPage;
       return sums;
     },
     handleCurrentChange(val) {
@@ -482,7 +487,16 @@ export default {
         }
       }
       return result;
-    }
+    },
+
+      filterDateString(strDate) {
+        //为空的时间不要显示为1970xxxx，而是显示横杠就好
+        if(strDate == null){
+          return "-";
+        }
+        var resDate = new Date(strDate);
+        return resDate.format("yyyy-MM-dd");
+      },
   },
   created: function() {
     this.userinfo = JSON.parse(sessionStorage.getItem('user'));
