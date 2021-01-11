@@ -3650,13 +3650,13 @@ export default {
       if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
         machineTotalPrice = 0;
       } else {
-        machineTotalPrice = parseInt(item.machinePrice);
+        machineTotalPrice = parseFloat(item.machinePrice);
         if (item.equipment != null && item.equipment != "") {
           for (let i = 0; i < item.equipment.length; i++) {
             machineTotalPrice =
               machineTotalPrice +
-              parseInt(item.equipment[i].number) *
-                parseInt(item.equipment[i].price);
+              parseFloat(item.equipment[i].number) *
+              parseFloat(item.equipment[i].price);
           }
         }
       }
@@ -3671,12 +3671,12 @@ export default {
         discounts = 0;
       } else {
         discounts =
-          parseInt(item.discounts) * item.machineNum +
-          parseInt(item.orderTotalDiscounts);
+                parseFloat(item.discounts) * item.machineNum +
+                parseFloat(item.orderTotalDiscounts);
       }
       return (
-        this.calculateMachineTotalPrice(item) * parseInt(item.machineNum) -
-        parseInt(discounts)
+        this.calculateMachineTotalPrice(item) * parseFloat(item.machineNum) -
+        parseFloat(discounts)
       );
     },
 
@@ -3699,8 +3699,8 @@ export default {
           discounts = 0;
         } else {
           discounts =
-            parseInt(item.discounts) * item.machineNum +
-            parseInt(item.orderTotalDiscounts);
+                  parseFloat(item.discounts) * item.machineNum +
+                  parseFloat(item.orderTotalDiscounts);
         }
         total += discounts;
       }
@@ -4470,20 +4470,20 @@ export default {
     },
     calculateOrderPrice(machineOrder) {
       let total = 0;
-      total = parseInt(machineOrder.machinePrice);
+      total = parseFloat(machineOrder.machinePrice);
       if (machineOrder.equipment != null && machineOrder.equipment != "") {
         for (let i = 0; i < machineOrder.equipment.length; i++) {
           total =
             total +
-            parseInt(machineOrder.equipment[i].number) *
-              parseInt(machineOrder.equipment[i].price);
+            parseFloat(machineOrder.equipment[i].number) *
+            parseFloat(machineOrder.equipment[i].price);
         }
       }
       //total = total - parseInt(machineOrder.discounts);
       total =
-        parseInt(machineOrder.machineNum) * total -
-        parseInt(machineOrder.discounts) * machineOrder.machineNum -
-        parseInt(machineOrder.orderTotalDiscounts);
+              parseFloat(machineOrder.machineNum) * total -
+              parseFloat(machineOrder.discounts) * machineOrder.machineNum -
+              parseFloat(machineOrder.orderTotalDiscounts);
       return total;
     },
     caculateOrderEquipmentPrice(machineOrder) {
@@ -4492,8 +4492,8 @@ export default {
         for (let i = 0; i < machineOrder.equipment.length; i++) {
           total =
             total +
-            parseInt(machineOrder.equipment[i].number) *
-              parseInt(machineOrder.equipment[i].price);
+            parseFloat(machineOrder.equipment[i].number) *
+            parseFloat(machineOrder.equipment[i].price);
         }
       }
       return total;
@@ -4868,7 +4868,7 @@ export default {
           );
           //增加销售员信息，因为之前是绑定信息是在合同contractForm里面 --No.3
           obj[i].machineOrder.sellman = this.contractForm.sellman;
-          if (parseInt(obj[i].machineOrder.machinePrice) <= 0) {
+          if (parseFloat(obj[i].machineOrder.machinePrice) <= 0) {
             showMessage(
               _this,
               "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！",
@@ -4968,10 +4968,10 @@ export default {
             obj[i].machineOrder.equipment = JSON.stringify(
               obj[i].machineOrder.equipment
             );
-            if (parseInt(obj[i].machineOrder.machinePrice) <= 0) {
+            if (parseFloat(obj[i].machineOrder.machinePrice) <= 0) {
               showMessage(
                 _this,
-                "需求单" + (i + 1).toString() + "的合同价格不能为空，请检查！",
+                "需求单" + (i + 1).toString() + "的机器价格不能为空，请检查！",
                 0
               );
               return;
