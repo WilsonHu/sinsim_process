@@ -123,11 +123,14 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="currencyType" label="币种" />
+        <el-table-column align="center" prop="businessExpense" label="业务费" />
         <el-table-column align="center" label="毛利率" min-width="145">
           <template scope="scope">
             <span>{{scope.row.grossProfit}}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" prop="orderType" label="订单类型" />
+        <el-table-column align="center" prop="warrantyFee" label="保修费" />
 
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px;">

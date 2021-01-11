@@ -184,7 +184,12 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="currencyType" label="币种" />
-        <!--<el-table-column align="center" prop=" " label="保修费"></el-table-column>-->
+        <el-table-column align="center" prop=" " label="业务费">
+          <template scope="scope">
+            <span>{{scope.row.businessExpense}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="warrantyFee" label="保修费"></el-table-column>
         <el-table-column align="center" prop="maintainPerson" label="保修人员"></el-table-column>
         <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
         <el-table-column align="center" prop="payMethod" label="付款方式" width="200"></el-table-column>
@@ -195,6 +200,7 @@
           </template>
         </el-table-column>
 
+        <el-table-column align="center" prop="orderType" label="订单类型"></el-table-column>
       </el-table>
       <div class="block" style="text-align: center; margin-top: 20px">
         <el-pagination
