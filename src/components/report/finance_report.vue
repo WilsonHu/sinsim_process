@@ -48,7 +48,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="终审日期:">
+            <el-form-item label="更新日期:">
               <el-date-picker
                       style="float:left;"
                       v-model="filters.selectDateSign"
@@ -165,22 +165,49 @@
             <!--<span>{{getEquipmentAmount(scope.row.equipment)|filterNumberFormat}}</span>-->
           <!--</template>-->
         <!--</el-table-column>-->
-        <el-table-column align="center" prop="machinePrice" label="机器单价" width="80">
+        <el-table-column align="center" prop="" label="机器单价" width="80">
           <template scope="scope">
-            <span>{{scope.row.machinePrice|filterNumberFormat}}</span>
+            <div v-if="scope.row.status == 3 || scope.row.status == 4 || scope.row.status == 5"  >
+            <span>{{0}}</span>
+              </div>
+            <div v-else>
+              <span>{{scope.row.machinePrice|filterNumberFormat}}</span>
+              </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="machineNum" label="机器台数" width="80"></el-table-column>
+        <el-table-column align="center" prop="" label="机器台数" width="80">
+          <template scope="scope">
+          <div v-if="scope.row.status == 3 || scope.row.status == 4 || scope.row.status == 5"  >
+            <span>{{0}}</span>
+          </div>
+          <div v-else>
+            <span>{{scope.row.machineNum}}</span>
+          </div>
+          </template>
+        </el-table-column>
         <!--<el-table-column align="center" prop="machinePrice" label="单台价格 NG" width="150">-->
         <!--<template scope="scope">-->
           <!--<span>{{scope.row.machinePrice|filterNumberFormat}}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
-        <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="80" />
-
+        <el-table-column align="center" prop="" label="优惠金额" width="80" >
+          <template scope="scope">
+            <div v-if="scope.row.status == 3 || scope.row.status == 4 || scope.row.status == 5"  >
+              <span>{{0}}</span>
+            </div>
+            <div v-else>
+              <span>{{scope.row.orderTotalDiscounts|filterNumberFormat}}</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="订单总价" width="100">
           <template scope="scope">
-            <span>{{getTotalAmount(scope.row)}}</span>
+            <div v-if="scope.row.status == 3 || scope.row.status == 4 || scope.row.status == 5"  >
+              <span>{{0}}</span>
+            </div>
+            <div v-else>
+              <span>{{getTotalAmount(scope.row)}}</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="currencyType" label="币种" />
@@ -246,7 +273,7 @@ export default {
       startRow: 0,
       totalRecords: 0,
       totalEquipmentsAtThisPage: 0, //注意：后续这些都是本页的数据，不是全部，不包括其他页
-      totalMachineNumAtThisPage: 0,   //本页台数
+      totalMachineNumAtThisPage: 0,   //本页台数， 不包括已改单、已拆单、已取消
       totalDiscountsAtThisPage: 0,    //本页优惠
       totalAmountAtThisPage: 0,    //本页总价
       loadingUI: false,
@@ -380,14 +407,17 @@ export default {
       _this.onSearchDetailData();
     },
     onSearchDetailData() {
+
       var condition = {
         customer: _this.filters.customer,
         contract_num: _this.filters.contract_num,
         order_num: _this.filters.orderNum,
         is_fuzzy: true,
         sellman: _this.filters.sellman,
+        //只筛选 审核中、审核完成、拆单 不必再审核、改单 不必再审核。     不包含：已改单，已拆单，已取消，已驳回
+        status: ORDER_CHECKING + "," + ORDER_CHECKING_FINISHED + "," + ORDER_SPLIT_FINISHED + "," + ORDER_CHANGE_FINISHED,
         page: _this.currentPage,
-        size: _this.pageSize
+        size: _this.pageSize,
       };
       if (
               _this.filters.selectDate != null &&
@@ -435,9 +465,35 @@ export default {
         contract_num: _this.filters.contract_num,
         order_num: _this.filters.orderNum,
         is_fuzzy: true,
-        sellman: _this.filters.sellman
+        sellman: _this.filters.sellman,
+        //只筛选 审核中、审核完成、拆单 不必再审核、改单 不必再审核，不管已改单，已拆单，已取消，已驳回
+        status: ORDER_CHECKING + "," + ORDER_CHECKING_FINISHED + "," + ORDER_SPLIT_FINISHED + "," + ORDER_CHANGE_FINISHED,
+        page: _this.currentPage,
+        size: _this.pageSize,
       };
+      if (
+              _this.filters.selectDate != null &&
+              _this.filters.selectDate.length > 0
+      ) {
+        condition.query_start_time = _this.filters.selectDate[0].format(
+                "yyyy-MM-dd"
+        );
+        condition.query_finish_time = _this.filters.selectDate[1].format(
+                "yyyy-MM-dd"
+        );
+      }
 
+      if (
+              _this.filters.selectDateSign != null &&
+              _this.filters.selectDateSign.length > 0
+      ) {
+        condition.queryStartTimeSign = _this.filters.selectDateSign[0].format(
+                "yyyy-MM-dd"
+        );
+        condition.queryFinishTimeSign = _this.filters.selectDateSign[1].format(
+                "yyyy-MM-dd"
+        );
+      }
       $.ajax({
         url: HOST + '/machine/order/exportToFinaceExcel',
         type: 'POST',
