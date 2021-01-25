@@ -138,6 +138,22 @@ const OrderStatusList = [
     {value: 7, name: '拆单前已审核联系单'},
     {value: 8, name: '改单前已审核联系单'}
 ];
+
+//                3期新质检
+//                * "10" --> 未开始质检
+//                * "11" --> 无此检验条目
+//                * "12" --> 质检不合格
+//                * "13" --> 质检合格
+//                * "14" --> 未检
+//3期新质检状态
+const QualityInspectRecordStatusList = [
+    {value: 10, name: '未开始质检'},
+    {value: 11, name: '无此检验条目'},
+    {value: 12, name: '质检不合格'},
+    {value: 13, name: '质检合格'},
+    {value: 14, name: '未检'},
+];
+
 //设计单状态
 // public static final String STR_DESIGN_STATUS_UNPLANNED = "待计划"; //未指定设计人员
 // public static final String STR_DESIGN_STATUS_PLANNED = "已计划";

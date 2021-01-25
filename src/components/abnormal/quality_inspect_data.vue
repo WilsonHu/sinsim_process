@@ -7,7 +7,9 @@
                     <el-form-item label="订单号 :">
                         <el-input v-model="filters.orderNumber"
                                   placeholder="订单号"
-                                  auto-complete="off"></el-input>
+                                  auto-complete="off"
+                                  clearable>
+                        </el-input>
                     </el-form-item>
                 </el-col>
 
@@ -79,9 +81,9 @@
                                   clearable>
                         <el-select v-model="filters.recordStatus" clearable>
                             <el-option
-                                    v-for="item in statusList"
+                                    v-for="item in qualityInspectRecordstatusList"
                                     v-bind:value="item.value"
-                                    v-bind:label="item.text">
+                                    v-bind:label="item.name">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -145,7 +147,7 @@
                     <template scope="scope">{{ scope.row.inspectName}}</template>
                 </el-table-column>
                 <el-table-column label="质检结果" align="center"  >
-                    <template scope="scope">{{ scope.row.recordStatus}}</template>
+                    <template scope="scope">{{(scope.row.recordStatus)|formatInspectStatus }}</template>
                 </el-table-column>
                 <el-table-column label="备注" align="center"  >
                     <template scope="scope">{{ scope.row.recordRemark}}</template>
@@ -378,10 +380,7 @@
                     recordRemark:"",
                     reInspect:""
                 },
-                statusList: [
-                    {text: "质检合格", value: "质检合格"},
-                    {text: "质检不合格", value: "质检不合格"},
-                ],
+                qualityInspectRecordstatusList: QualityInspectRecordStatusList,
                 inspectNameList:{},
                 pickerOptions1: {
                     disabledDate(time) {
@@ -693,7 +692,18 @@
                     }
                 }
                 return result;
-            }
+            },
+
+            formatInspectStatus(recordStatus) {
+                var result = _this.qualityInspectRecordstatusList[0].name;
+                for (var i = 0; i < _this.qualityInspectRecordstatusList.length; i++) {
+                    if (recordStatus == _this.qualityInspectRecordstatusList[i].value) {
+                        result = _this.qualityInspectRecordstatusList[i].name;
+                        break;
+                    }
+                }
+                return result;
+            },
         },
 
         computed: {},
