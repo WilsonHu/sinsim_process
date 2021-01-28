@@ -884,7 +884,8 @@
                                             timespan = endDay.getTime() - beginDay.getTime();
                                             timespan =_this.filterTimeSpanByHours(timespan/(1000*60*60));
                                         }
-                                        if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
+//                                        if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
+                                        if (parseInt(item.taskStatus) == 3)//进行中
                                         {
                                             itemObj.currentTaskList.push(`${item.text} (${timespan})`);
                                         }
@@ -897,8 +898,11 @@
                                                 let tsStr= _this.filterTimeSpanByHours(item.waitTimespan);
                                                 itemObj.currentTaskList.push(`待 ${item.text} (${tsStr})`);
                                             }
-                                        }
-                                        if (parseInt(item.taskStatus) == 6) {//完成
+                                        } 
+                                    /** 完成 --安装和质检不关联，安装页面web这里的完成 指安装完成
+                                     *  6是为了和以前的数据兼容，以前安装完成就直接把工序状态设为6--“质检完成”
+                                     */
+                                    if (parseInt(item.taskStatus) == 4 || parseInt(item.taskStatus) == 6) {
                                             itemObj.finishedCount++;
                                         }
                                     });
@@ -1284,17 +1288,39 @@
                         _this.addForm.abnormalCount = 0;
                         _this.addForm.skipCount = 0;
                         _this.addForm.totalTaskCount = taskList.nodeDataArray.length - 2;//去掉开始，结束.
+                        /**  Task(工序)安装状态
+                         * "0" --> 初始化状态
+                         * "1" --> 已计划 （没轮到安装）
+                         * "2" --> 待安装
+                         * "3" --> 开始安装
+                         * "4" --> 安装完成
+                         * "5" --> 质检中  --弃用
+                         * "6" --> 质检完成
+                         * "7" --> 安装异常
+                         * "8" --> 质检异常
+                         * "9" --> 跳过
+                         *  3期新质检
+                         * "10" --> 未开始质检
+                         * "11" --> 无此检验条目
+                         * "12" --> 质检不合格
+                         * "13" --> 质检合格
+                         * "14" --> 未检
+                         */
                         taskList.nodeDataArray.forEach(item => {
                             if (item.category != "Start" && item.category != "End") {
                                 if (parseInt(item.taskStatus) == 2)//待安装
                                 {
                                     item.category = ProcessCatergory.Waiting;
                                 }
-                                else if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
+//                                else if (parseInt(item.taskStatus) > 2 && parseInt(item.taskStatus) < 6)//进行中
+//                                {
+//                                    item.category = ProcessCatergory.Working;
+//                                }
+                                else if (parseInt(item.taskStatus) == 3 )//进行中
                                 {
                                     item.category = ProcessCatergory.Working;
                                 }
-                                else if (parseInt(item.taskStatus) == 6) {//完成
+                                else if (parseInt(item.taskStatus) == 6 || parseInt(item.taskStatus) == 4) {//完成
                                     item.category = ProcessCatergory.Finished;
                                     _this.addForm.finishedCount++;
                                 }

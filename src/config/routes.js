@@ -18,7 +18,7 @@ import TradeZoneManage from '../components/system/trade_zone_manage.vue'
 import Abnormal from "../components/abnormal.vue"
 import AbnormalTypeManage from "../components/abnormal/abnormal_type_manage.vue"
 import AbnormalStatisticManage from "../components/abnormal/abnormal_statistic_manage.vue"
-import AbnormalQualityManage from "../components/abnormal/abnormal_quality_manage.vue"
+// import AbnormalQualityManage from "../components/abnormal/abnormal_quality_manage.vue"
 import QualityInspectContent from "../components/abnormal/quality_inspect_content.vue"
 import QualityInspectData from "../components/abnormal/quality_inspect_data.vue"
 
@@ -178,17 +178,17 @@ export default [{
                         name: 'abnormal_statistic_manage',
                         meta: '过程检验'
                     },
-                    {
-                        path: '/home/abnormal/abnormal_quality_manage',
-                        component: AbnormalQualityManage,
-                        name: 'abnormal_quality_manage',
-                        meta: '质检异常'
-                    },
+                    // {
+                    //     path: '/home/abnormal/abnormal_quality_manage',
+                    //     component: AbnormalQualityManage,
+                    //     name: 'abnormal_quality_manage',
+                    //     meta: '质检异常'
+                    // },
                     {
                         path: '/home/abnormal/abnormal_type_manage',
                         component: AbnormalTypeManage,
                         name: 'abnormal_type_manage',
-                        meta: '异常分类'
+                        meta: '过程异常分类'
                     },
                     {
                         path: '/home/abnormal/quality_inspect_content',

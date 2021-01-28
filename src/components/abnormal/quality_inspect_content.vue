@@ -529,6 +529,13 @@
                     _this.isError = true;
                     return;
                 }
+//               已确认： 所有质检条目都有  对应工序
+                if (isStringEmpty(this.addForm.taskName)) {
+                    _this.errorMsg = "质检条目的工序不能为空";
+                    _this.isError = true;
+                    return;
+                }
+
                 if (!_this.isEdit) {
                     _this.onAdd();
                 }

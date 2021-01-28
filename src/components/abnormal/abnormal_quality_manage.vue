@@ -10,6 +10,11 @@
                     </el-form-item>
                 </el-col>
 
+
+                <!-- 最初的质检 并没有在使用 -->
+                <!-- 有三期质检之后, 这个页面不需要了,已在routes.js 里移除 -->
+
+
                 <!--<el-col :span="5">-->
                 <!--<el-form-item label="异常:">-->
                 <!--<el-select v-model="filters.abnormalType" clearable>-->

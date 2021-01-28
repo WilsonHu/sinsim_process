@@ -125,6 +125,7 @@
             <el-table
                     :data="tableData"
                     border
+                    empty-text="暂无数据...（注意：上传机器位置时，生成质检数据。APP提交质检时，更新质检结果）"
                     style="width: 100%;"
                     v-loading="listLoading">
                 <el-table-column label="序号" width="70" align="center">
@@ -450,7 +451,7 @@
                 if (timeStamp == null || timeStamp == "") {
                     return "";
                 } else {
-                    return new Date(timeStamp).format("yyyy-MM-dd hh:mm:ss");
+                    return new Date(timeStamp).format("yyyy-MM-dd hh:mm");
                 }
             },
             exportData() {
