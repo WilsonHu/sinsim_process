@@ -76,30 +76,30 @@
                         style="width: 100%;"
                         @selection-change="handleSelectionChange"
                         v-loading="listLoading">
-                    <el-table-column label="序号" width="70" align="center">
+                    <el-table-column label="序号" width="50" align="center">
                         <template scope="scope">{{ scope.$index+startRow}}</template>
                     </el-table-column>
-                    <el-table-column label="名称" align="center">
+                    <el-table-column label="名称" width="130"align="center">
                         <template scope="scope">{{ scope.row.inspectName }}</template>
                     </el-table-column>
-                    <el-table-column label="类型" align="center">
+                    <el-table-column label="类型" width="90" align="center">
                         <template scope="scope">{{ scope.row.inspectType }}</template>
                     </el-table-column>
-                    <el-table-column label="质检内容" align="center">
+                    <el-table-column label="质检内容"  align="center">
                         <template scope="scope">{{ scope.row.inspectContent }}</template>
                     </el-table-column>
-                    <el-table-column label="等级" align="center">
+                    <el-table-column label="等级" width="60"align="center">
                         <template scope="scope">{{ scope.row.level }}</template>
                     </el-table-column>
-                    <el-table-column label="阶段" align="center">
+                    <el-table-column label="阶段" width="65"align="center">
                         <template scope="scope">{{ scope.row.phase }}</template>
                     </el-table-column>
-                    <el-table-column label="对应工序" align="center">
+                    <el-table-column label="对应工序" width="110"align="center">
                         <template scope="scope">{{ scope.row.taskName }}</template>
                     </el-table-column>
                     <el-table-column
                             prop="valid"
-                            label="有效性" width="200" align="center"
+                            label="有效性" width="65" align="center"
                             :filters="[{ text: '有效', value: 1 }, { text: '无效', value: 0 }]"
                             :filter-method="filterValidTable"
                             filter-placement="bottom-end">

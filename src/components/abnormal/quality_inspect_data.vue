@@ -183,16 +183,16 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column width="100" align="center">
-                    <template scope="scope" style="text-align: center">
-                        <el-button
-                                size="small"
-                                type="primary"
-                                icon="el-icon-edit"
-                                @click="editWithItem(scope.$index, scope.row)">操作
-                        </el-button>
-                    </template>
-                </el-table-column>
+                <!--<el-table-column width="100" align="center">-->
+                    <!--<template scope="scope" style="text-align: center">-->
+                        <!--<el-button-->
+                                <!--size="small"-->
+                                <!--type="primary"-->
+                                <!--icon="el-icon-edit"-->
+                                <!--@click="editWithItem(scope.$index, scope.row)">操作-->
+                        <!--</el-button>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
             </el-table>
             <br>
             <div class="block" align="center">
@@ -373,7 +373,7 @@
                     abnormalType: "",
                     taskName: "",
                     finishStatus: 2,
-                    selectDate: [],
+                    selectDate: [new Date(), new Date()],
 
                     recordStatus:"",
                     inspectName:"",
