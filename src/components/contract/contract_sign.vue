@@ -3939,7 +3939,7 @@ export default {
           item.machineOrder.machineNum >
           this.requisitionChangingItem.machineOrder.machineNum
         ) {
-          //机器数增加，审核流程要变
+          //机器数增加，审核流程要变 --> 已改，有联系单通过之后，不需要再审核新改、拆的订单
           item.orderSign.signContent = _this.normalOrderSignArray;
           //原合同签核改成改单的，之前的contract sign记录需要在后台设置成拆单状态
           this.contractSignForms[0].contractSignData =
@@ -4211,7 +4211,7 @@ export default {
       //清空之前的需求单中id(数据库对应)
       newItem.machineOrder.id = null;
       //为了清除前面订单签核的内容,先设置改单的签核流程，后面还需要监控机器数是否改变
-      newItem.orderSign.signContent = _this.splitOrderSignArray;
+//      newItem.orderSign.signContent = _this.splitOrderSignArray;
       //添加原需求单的订单号
       newItem.machineOrder.originalOrderId = this.requisitionSplitItem.machineOrder.id;
       //新需求单的状态设置为“ORDER_INITIAL”
@@ -4272,8 +4272,8 @@ export default {
         ")";
       //清空之前的需求单中id(数据库对应)
       newItem.machineOrder.id = null;
-      //为了清除前面订单签核的内容,先设置改单的签核流程，后面还需要监控机器数是否改变
-      newItem.orderSign.signContent = _this.changeOrderSignArray;
+      //为了清除前面订单签核的内容,先设置改单的签核流程，后面还需要监控机器数是否改变  -->有联系单后，改单拆单的审核都不需要了，联系单通过后，就算审核通过。所以不需要清除。
+//      newItem.orderSign.signContent = _this.changeOrderSignArray;
       //添加原需求单的订单号
       newItem.machineOrder.originalOrderId = this.requisitionChangingItem.machineOrder.id;
       //新需求单的状态设置为“ORDER_INITIAL”

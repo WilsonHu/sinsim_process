@@ -224,6 +224,21 @@
             <span>{{scope.row.createTime|filterDateString}}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" prop=" " label="终审日期">
+          <template scope="scope">
+            <span>{{scope.row.orderSign.updateTime|filterDateString}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop=" " label="合同交货日期">
+        <template scope="scope">
+          <span>{{scope.row.contractShipDate|filterDateString}}</span>
+        </template>
+      </el-table-column>
+        <el-table-column align="center" prop=" " label="地区">
+        <template scope="scope">
+          <span>{{scope.row.domesticTradeZone}}</span>
+        </template>
+      </el-table-column>
         <el-table-column align="center" prop="payMethod" label="付款方式" width="200"></el-table-column>
         <!--<el-table-column align="center" prop=" " label="定金率"></el-table-column>-->
         <el-table-column align="center" prop=" " label="毛利">
