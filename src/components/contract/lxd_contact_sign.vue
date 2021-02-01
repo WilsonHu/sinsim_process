@@ -2067,18 +2067,18 @@
 
             //需要销售部签核才需要指定经理，也可以不指定，不指定则所有经理都可见。
             designateSaleManagerSelectShow(){
-                return false; ///二期不启用该功能。
-//                let saleDepartmentIncluded = false;
-//                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++)
-//                {
-//                    if(_this.lxdForm.contactSign.signContent[i].roleId == 7
-//                            && _this.lxdForm.contactSign.signContent[i].shenHeEnabled )
-//                    {
-//                        saleDepartmentIncluded = true;
-//                        break;
-//                    }
-//                }
-//                return saleDepartmentIncluded;
+//                return false; ///二期不启用该功能。 3期启用OK
+                let saleDepartmentIncluded = false;
+                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++)
+                {
+                    if(_this.lxdForm.contactSign.signContent[i].roleId == 7
+                            && _this.lxdForm.contactSign.signContent[i].shenHeEnabled )
+                    {
+                        saleDepartmentIncluded = true;
+                        break;
+                    }
+                }
+                return saleDepartmentIncluded;
             },
 
             notWritterRow(row)
@@ -2223,7 +2223,8 @@
                  // 销售部经理，只看指派给自己的联系单。 或者没有指派的联系单，以及自己发起的联系单。以及旧的联系单。
                 // 新的前端加了指定销售部经理，可以配旧的后端，只是不起作用而已。
                 if(this.userInfo.role.roleName == "销售部经理" ) {
-                        condition.designatedSaleManager = _this.userInfo.account;
+//                    -->改：没有指派给自己，可以看，不能审核
+                //        condition.designatedSaleManager = _this.userInfo.account;
                 }
 
                 // 但是所有人 都要看 自己发起的联系单 --> 后端做了
@@ -2540,6 +2541,13 @@
                     _this.lxdForm.contactForm.contactContent = _this.getLxdChangeTypes();
                 }
 
+                if(_this.designateSaleManagerSelectShow) {
+                    if (_this.lxdForm.contactForm.designatedSaleManager == null || _this.lxdForm.contactForm.designatedSaleManager.length == 0) {
+                        iserror = true;
+                        this.errorMsg = '请指定具体审核的销售经理';
+                    }
+                }
+
                 //给用户弹框提示信息
                 if(_this.lxdForm.contactForm.contactType.indexOf("变更")>=0)//类型：变更联系单
                 { ///只要有任意一个为空都会提示
@@ -2657,11 +2665,12 @@
                     return true;
                 }
 
-                //轮到当前角色审核， 且当前联系单属于“审核中”、登陆的用户有权限签核 并且合同currentStep处于属于该角色签核
+                //轮到当前角色审核， 且当前联系单属于“审核中”、登陆的用户有权限签核 并且合同currentStep处于属于该角色签核，并且（如果是指定的销售部经理且被指定才可以审核，否则没有指派给自己，可以看，不能审核）
                 if (row.roleId == _this.userInfo.role.id
                         && _this.lxdForm.contactForm.status.indexOf("审核中")>=0
                         && row.shenHeEnabled
                         && _this.lxdForm.contactSign.currentStep == _this.userInfo.role.roleName
+                        && (_this.lxdForm.contactSign.currentStep != '销售部经理' || _this.lxdForm.contactForm.designatedSaleManager == _this.userInfo.account)
                 ) {
                    return false;
                 } else {
