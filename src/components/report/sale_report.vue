@@ -219,7 +219,7 @@ export default {
       let dataArray = _this.getEquipmentFromJSON(strData);
       var res = 0;
       for (var i = 0; i < dataArray.length; i++) {
-        res += parseInt(dataArray[i].price) * dataArray[i].number;
+        res += parseFloat(dataArray[i].price) * dataArray[i].number;
       }
       return res;
     },
@@ -247,7 +247,7 @@ export default {
       //计算 优惠
       for (var i = 0; i <_this.tableData.length; i++)
       {
-        tmp1 +=  parseInt( _this.tableData[i].orderTotalDiscounts);
+        tmp1 +=  parseFloat( _this.tableData[i].orderTotalDiscounts);
       }
       _this.totalDiscountsAtThisPage = tmp1;
 
@@ -266,9 +266,9 @@ export default {
       let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
       //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
       totalAmount =
-              [equipAmount + parseInt(data.machinePrice)] *
-              parseInt(data.machineNum) -
-              parseInt(data.orderTotalDiscounts);
+              [equipAmount + parseFloat(data.machinePrice)] *
+              parseFloat(data.machineNum) -
+              parseFloat(data.orderTotalDiscounts);
       return  totalAmount ;
     },
 
@@ -277,9 +277,9 @@ export default {
       let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
       //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
       totalAmount =
-        [equipAmount + parseInt(data.machinePrice)] *
-          parseInt(data.machineNum) -
-        parseInt(data.orderTotalDiscounts);
+        [equipAmount + parseFloat(data.machinePrice)] *
+        parseFloat(data.machineNum) -
+        parseFloat(data.orderTotalDiscounts);
       return number_format(totalAmount, 2, '.', ' ');
     },
 

@@ -171,8 +171,19 @@
             <span>{{0}}</span>
               </div>
             <div v-else>
-              <span>{{scope.row.machinePrice|filterNumberFormat}}</span>
+              <!--<span>{{scope.row.machinePrice|filterNumberFormat}}</span>-->
+              <span>{{scope.row.machinePrice}}</span>
               </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="" label="单台价格" width="80">
+          <template scope="scope">
+            <div v-if="scope.row.status == 3 || scope.row.status == 4 || scope.row.status == 5"  >
+              <span>{{0}}</span>
+            </div>
+            <div v-else>
+              <span>{{calculateMachineTotalPrice(scope.row)}}</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="" label="机器台数" width="80">
@@ -185,11 +196,6 @@
           </div>
           </template>
         </el-table-column>
-        <!--<el-table-column align="center" prop="machinePrice" label="单台价格 NG" width="150">-->
-        <!--<template scope="scope">-->
-          <!--<span>{{scope.row.machinePrice|filterNumberFormat}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
         <el-table-column align="center" prop="" label="优惠金额" width="80" >
           <template scope="scope">
             <div v-if="scope.row.status == 3 || scope.row.status == 4 || scope.row.status == 5"  >
@@ -220,6 +226,7 @@
         <el-table-column align="center" prop="maintainPerson" label="保修人员"></el-table-column>
         <el-table-column align="center" prop="sellman" label="销售人员"></el-table-column>
         <el-table-column align="center" prop=" " label="填表日期">
+          <!-- (改单拆单的创建，是在联系单审核之后才创建，所以填表日期 在终审日期之后或同一天)-->
           <template scope="scope">
             <span>{{scope.row.createTime|filterDateString}}</span>
           </template>
@@ -331,7 +338,7 @@ export default {
       let dataArray = _this.getEquipmentFromJSON(strData);
       var res = 0;
       for (var i = 0; i < dataArray.length; i++) {
-        res += parseInt(dataArray[i].price) * dataArray[i].number;
+        res += parseFloat(dataArray[i].price) * dataArray[i].number;
       }
       return res;
     },
@@ -359,7 +366,7 @@ export default {
       //计算 优惠
       for (var i = 0; i <_this.tableData.length; i++)
       {
-        tmp1 +=  parseInt( _this.tableData[i].orderTotalDiscounts);
+        tmp1 +=  parseFloat( _this.tableData[i].orderTotalDiscounts);
       }
       _this.totalDiscountsAtThisPage = tmp1;
 
@@ -378,9 +385,9 @@ export default {
       let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
       //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
       totalAmount =
-              [equipAmount + parseInt(data.machinePrice)] *
-              parseInt(data.machineNum) -
-              parseInt(data.orderTotalDiscounts);
+              [equipAmount + parseFloat(data.machinePrice)] *
+              parseFloat(data.machineNum) -
+              parseFloat(data.orderTotalDiscounts);
       return  totalAmount ;
     },
 
@@ -389,10 +396,26 @@ export default {
       let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
       //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
       totalAmount =
-        [equipAmount + parseInt(data.machinePrice)] *
-          parseInt(data.machineNum) -
-        parseInt(data.orderTotalDiscounts);
+        [equipAmount + parseFloat(data.machinePrice)] *
+        parseFloat(data.machineNum) -
+        parseFloat(data.orderTotalDiscounts);
       return number_format(totalAmount, 2, '.', ' ');
+    },
+
+    // 单台价格: 机器单价 + 该机器配的配件总价
+    calculateMachineTotalPrice(item) {  // item.row.equipment
+      let machineTotalPrice = 0;
+      if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
+        machineTotalPrice = 0;
+      } else {
+        machineTotalPrice = parseFloat(item.machinePrice);
+
+        let equipAmount = _this.getEquipmentAmount(item.equipment); //装置总金额
+        machineTotalPrice = machineTotalPrice + equipAmount
+      }
+      return machineTotalPrice != null && machineTotalPrice != ""
+              ? machineTotalPrice
+              : 0;
     },
     getEquipmentFromJSON(strData) {
       let res = [];
@@ -547,7 +570,7 @@ export default {
 
   filters: {
     filterNumberFormat(ndata) {
-      return number_format(ndata, 0, '.', ' ');
+      return number_format(ndata, 2, '.', ' ');
     },
     filterMachineType(id) {
       var result = '';
