@@ -42,7 +42,7 @@
         <el-col
           :span="2"
           :offset="2"
-          v-if="userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1"
+          v-if="userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1 || userInfo.role.id == 30"
         >
           <el-button icon="el-icon-plus" size="normal" type="danger" @click="handleAdd">合同</el-button>
         </el-col>
@@ -220,7 +220,7 @@
                     <div slot="content">编辑</div>
 
                     <el-button
-                      v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)"
+                      v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)|| userInfo.role.id == 30"
                       size="mini"
                       type="primary"
                       icon="el-icon-edit"
@@ -243,7 +243,7 @@
                     <div slot="content">删除</div>
 
                     <el-button
-                      v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1)&&(scope.row.status>=5||scope.row.status==0)"
+                      v-show="(userInfo.role.roleName.indexOf('销售') != -1 || userInfo.role.id == 1 || userInfo.role.id == 30)&&(scope.row.status>=5||scope.row.status==0)"
                       size="mini"
                       type="danger"
                       icon="el-icon-delete"
@@ -2213,7 +2213,7 @@
                               ref="editor"
                               v-model="item.orderDetail.axleAddition"
                               :readonly="changeOrderContentDisable(item.machineOrder)
-                                                                  ||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0)"
+                                                                  ||(userInfo.role.roleName.indexOf('销售') < 0 && userInfo.role.roleName.indexOf('超级管理员') < 0 && userInfo.role.roleName.indexOf('外贸总监') < 0)"
                             ></tinymce>
                           </div>
                         </el-form-item>
@@ -2306,12 +2306,23 @@
                     >
                       <el-table-column align="center" label="签核步骤" width="80">
                         <template scope="scope">
+                          <div v-if="domesticTradeAndForeiginDirector(item.orderSign, scope.row)" style="color: darkorange">
                           <el-button
                             style="font-size: 14px; font-weight: bold"
                             type="primary"
                             round
                             size="mini"
+                            disabled
                           >{{scope.row.number}}</el-button>
+                          </div>
+                          <div v-else>
+                            <el-button
+                                    style="font-size: 14px; font-weight: bold"
+                                    type="primary"
+                                    round
+                                    size="mini"
+                            >{{scope.row.number}}</el-button>
+                          </div>
                         </template>
                       </el-table-column>
                       <el-table-column align="center" width="150" label="签核角色">
@@ -3576,6 +3587,7 @@ export default {
             this.userInfo.role.roleName.indexOf("财务") != -1)) ||
         this.userInfo.role.roleName.indexOf("总经理") != -1 ||
         this.userInfo.role.roleName.indexOf("成本核算") != -1 ||
+        this.userInfo.role.roleName.indexOf("外贸总监") != -1 ||
         this.userInfo.role.id == 1
       ) {
         return true;
@@ -3585,7 +3597,6 @@ export default {
     },
 
     // 财务(财务会计，财务经理，成本核算员)的意见，仅特定人员可见
-
     isFinanceVisibleForComment(item) {
       if (
               (this.userInfo != "" &&
@@ -3593,6 +3604,7 @@ export default {
               this.userInfo.role.roleName.indexOf("财务") != -1)) ||
               this.userInfo.role.roleName.indexOf("总经理") != -1 ||
               this.userInfo.role.roleName.indexOf("成本核算") != -1 ||
+              this.userInfo.role.roleName.indexOf("外贸总监") != -1 ||
               this.userInfo.role.id == 1
       ) {
         // 上述人员  可看全部意见
@@ -3606,6 +3618,15 @@ export default {
           return true;
         }
       }
+    },
+    //内贸部的订单，且步骤为外贸总监，要disable
+    domesticTradeAndForeiginDirector(orderSign, signConent){
+      if(orderSign.salesDepartment.indexOf("内贸") != -1
+          && signConent.roleId == 30){
+        return true
+      }
+      return false;
+
     },
 
     filterMachineStatus(status) {
@@ -4032,9 +4053,15 @@ export default {
           "yyyy-MM-dd"
         );
       }
-      //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
-      if (_this.userInfo.role.id == 7 || _this.userInfo.role.id == 9) {
+      /**
+       * marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
+       * 已改为：一部二部，统一到外贸部经理曹建挺签核，然后到总监骆晓军签核
+       */
+      if (_this.userInfo.role.id == 7 || _this.userInfo.role.id == 9 ) {
         condition.marketGroupName = _this.userInfo.marketGroupName;
+      } else if ( _this.userInfo.role.id == 30) {
+        // workaround
+        condition.marketGroupName = "外贸部";
       }
       $.ajax({
         url: HOST + "contract/selectContracts",
@@ -4886,6 +4913,12 @@ export default {
             _this.userInfo.marketGroupName != ""
               ? _this.userInfo.marketGroupName
               : "";
+
+          //外贸总监
+          if(_this.userInfo.role.id == 30) {
+            // workaround
+            _this.contractForm.marketGroupName = "外贸部";
+          }
         }
 
         $.ajax({

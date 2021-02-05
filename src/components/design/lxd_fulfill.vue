@@ -1103,6 +1103,7 @@
                         this.userInfo.role.roleName.indexOf('财务') != -1)) ||
                         this.userInfo.role.roleName.indexOf('总经理') != -1 ||
                         this.userInfo.role.roleName.indexOf('成本核算') != -1 ||
+                        this.userInfo.role.roleName.indexOf("外贸总监") != -1 ||
                         this.userInfo.role.id == 1
                 ) {
                     return true;
