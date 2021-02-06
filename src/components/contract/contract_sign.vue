@@ -3621,9 +3621,11 @@ export default {
     },
     //内贸部的订单，且步骤为外贸总监，要disable
     domesticTradeAndForeiginDirector(orderSign, signConent){
-      if(orderSign.salesDepartment.indexOf("内贸") != -1
-          && signConent.roleId == 30){
-        return true
+      if(orderSign.salesDepartment != null && orderSign.salesDepartment != "") {
+        if (orderSign.salesDepartment.indexOf("内贸") != -1
+                && signConent.roleId == 30) {
+          return true
+        }
       }
       return false;
 

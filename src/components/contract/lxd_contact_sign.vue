@@ -2541,7 +2541,17 @@
                     _this.lxdForm.contactForm.contactContent = _this.getLxdChangeTypes();
                 }
 
-                if(_this.designateSaleManagerSelectShow) {
+                let saleDepartmentIncluded = false;
+                for(let i=0;i<_this.lxdForm.contactSign.signContent.length;i++)
+                {
+                    if(_this.lxdForm.contactSign.signContent[i].roleId == 7
+                            && _this.lxdForm.contactSign.signContent[i].shenHeEnabled )
+                    {
+                        saleDepartmentIncluded = true;
+                        break;
+                    }
+                }
+                if(saleDepartmentIncluded) {
                     if (_this.lxdForm.contactForm.designatedSaleManager == null || _this.lxdForm.contactForm.designatedSaleManager.length == 0) {
                         iserror = true;
                         this.errorMsg = '请指定具体审核的销售经理';
