@@ -975,6 +975,7 @@
                             if( _this.userInfo.role.roleName != "成本核算员"
                                     && _this.userInfo.role.roleName != "财务经理"
                                     && _this.userInfo.role.roleName != "销售部经理"
+                                    && _this.userInfo.role.roleName != "外贸总监"
                                     && _this.userInfo.role.roleName != "总经理"
                                     && _this.userInfo.role.roleName != "超级管理员" ){
 
