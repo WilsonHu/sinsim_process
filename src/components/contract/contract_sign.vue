@@ -3518,7 +3518,8 @@ export default {
         type: "POST",
         dataType: "JSON",
         data: {
-          roleId: roleId //USER_ROLE.ROLE_SALEPERSON
+          roleId: roleId, //USER_ROLE.ROLE_SALEPERSON,
+          valid: 1
         },
         success: function(res) {
           if (res.code == 200) {

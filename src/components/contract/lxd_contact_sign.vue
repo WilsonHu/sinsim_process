@@ -1745,7 +1745,9 @@
                     url: HOST + 'user/selectUsers',
                     type: 'POST',
                     dataType: 'json',
-                    data: {roleId: 10}, //技术员
+                    data: {roleId: 10 , //技术员
+                            valid: 1
+                        },
                     success: function (res) {
                         if (res.code == 200) {
                             _this.fulfillManList = res.data.list;
@@ -1758,7 +1760,9 @@
                     url: HOST + 'user/selectUsers',
                     type: 'POST',
                     dataType: 'json',
-                    data: {roleId: 7}, //销售经理
+                    data: {roleId: 7, //销售经理,
+                            valid: 1
+                        },
                     success: function (res) {
                         if (res.code == 200) {
                             _this.saleManagerList = res.data.list;

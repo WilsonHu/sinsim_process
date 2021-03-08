@@ -1131,7 +1131,10 @@
                     url: HOST + 'user/selectUsers',
                     type: 'POST',
                     dataType: 'json',
-                    data: {roleId: 27}, //设计员
+                    data: {
+                        roleId: 27, ///27是设计员
+                        valid: 1
+                    },
                     success: function (res) {
                         if (res.code == 200) {
                             _this.fulfillManList = res.data.list;
@@ -1337,7 +1340,9 @@
                     url: HOST + 'user/selectUsers',
                     type: 'POST',
                     dataType: 'json',
-                    data: {roleId: 27}, ///写死先
+                    data: {roleId: 27, ///27是设计员
+                        valid: 1
+                    },
                     success: function (res) {
                         if (res.code == 200) {
                             _this.disgnerList = res.data.list;

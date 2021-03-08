@@ -607,7 +607,7 @@
                     url: _this.userListUrl,
                     type: 'POST',
                     dataType: 'JSON',
-                    data: {},
+                    data: { valid: 1},
                     success: function (res) {
                         if (res.code == 200) {
                             _this.userList = res.data.list;

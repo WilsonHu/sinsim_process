@@ -148,21 +148,25 @@ export default {
         type: 'POST',
         dataType: 'json',
         //限定是销售经理
-        data: {roleId: '7'},
-        success: function(data) {
+        data: {
+          roleId: '7',
+          valid: 1
+        },
+        success: function (data) {
           if (data.code == 200) {
             _this.userList = [];
             for (var i = 0; i < data.data.list.length; i++) {
               if (
-                data.data.list[i].account != 'admin' &&
-                data.data.list[i].valid == 1
+                      data.data.list[i].account != 'admin' &&
+                      data.data.list[i].valid == 1
               ) {
                 _this.userList.push(data.data.list[i]);
               }
             }
           }
         },
-        error: function(data) {}
+        error: function (data) {
+        }
       });
     },
 
