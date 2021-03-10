@@ -2735,6 +2735,9 @@
                     success: function(res) {
                         if (res.code == 200) {
                             showMessage(_this, '提交审核成功', 1);
+
+                            ///提交后， 提交按钮灰掉 （避免流程到了下一步后，下一步的人签核了，前一步因为没有关闭页面，还可能继续提交。）
+                            _this.fetchLxdData(_this.lxdForm.contactForm.id);
                         } else {
                         showMessage(_this, res.message, 0);
                         }
@@ -2789,6 +2792,9 @@
                     success: function(res) {
                         if (res.code == 200) {
                             showMessage(_this, '驳回成功', 1);
+
+                            ///提交后， 提交按钮灰掉 （避免流程到了下一步后，下一步的人签核了，前一步因为没有关闭页面，还可能继续提交。）
+                            _this.fetchLxdData(_this.lxdForm.contactForm.id);
                         } else {
                             showMessage(_this, res.message, 0);
                         }
