@@ -1400,7 +1400,10 @@
                     condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
                 }
                 //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
-                if( _this.userinfo.role.id == 7 || _this.userinfo.role.id == 9){
+                // 普通销售员的权限也改吗？二部一部相互看？-->不是，不要改， 只有外贸销售部经理要改，即销售部经理，不仅仅是外贸销售一部经理，二部经理，而是销售整个部的经理
+                if( _this.userinfo.role.id == 7){
+                    //   condition.marketGroupName = _this.userinfo.marketGroupName;
+                } else if(  _this.userinfo.role.id == 9) { //外贸销售员，一部二部之间还是保持限制不互看。
                     condition.marketGroupName = _this.userinfo.marketGroupName;
                 }
                 $.ajax({
