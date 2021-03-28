@@ -658,11 +658,14 @@
                   <el-row>
                     <el-col :span="5" style="font-size: 20px; margin-bottom: 10px;margin-top: 10px">
                       <el-form-item label="订单号：" :label-width="formLabelWidth">
+                        <!-- 在多次改单时可能造成订单号长度超过31（excel的sheet里最长31），所以允许用户改订单号。 拆单的维持原样。-->
+                        <!--:disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"-->
+                        <!-- :readonly="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && mode == 4)" -->
                         <el-input
                           v-model="item.machineOrder.orderNum"
                           placeholder="订单号"
-                          :disabled="(mode == 4 || mode == 5) && item.machineOrder.status != 0"
-                          :readonly="changeOrderContentDisable(item.machineOrder) || (item.machineOrder.originalOrderId != 0 && mode == 4)"
+                          :disabled="(  mode == 5) && item.machineOrder.status != 0"
+                          :readonly="changeOrderContentDisable(item.machineOrder) "
                         ></el-input>
                       </el-form-item>
                     </el-col>
@@ -5077,6 +5080,13 @@ export default {
             ) {
               _this.isError = true;
               _this.errorMsg = "改单编号不能为空！";
+            }
+
+            if (
+                    this.requisitionForms[i].machineOrder.orderNum.length >31
+            ) {
+              _this.isError = true;
+              _this.errorMsg = "改单的订单编号不能大于31个字，请修改订单号！";
             }
           }
         }
