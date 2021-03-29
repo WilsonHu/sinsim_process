@@ -10,7 +10,7 @@
           </el-col>
 
           <el-col :span="6">
-            <el-form-item label="合同号:">
+            <el-form-item label="合同:">
               <el-input
                       v-model="filters.contract_num"
                       placeholder="合同号"
@@ -20,9 +20,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="订单号:">
+            <el-form-item label="订单:">
               <el-input v-model="filters.orderNum" placeholder="订单号" auto-complete="off" clearable></el-input>
             </el-form-item>
+          </el-col>
+          <el-col :span="2" :offset="2">
+            <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询</el-button>
+          </el-col>
+          <el-col :span="2" :offset="0">
+            <el-button icon="el-icon-share" size="normal" type="danger" @click="onExport">导出</el-button>
           </el-col>
         </el-row>
 
@@ -37,29 +43,50 @@
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="下单日期:">
+
+          <el-col :span="6" >
+            <el-form-item label="部门:">
+              <el-input
+                      v-model="filters.marketGroupName"
+                      placeholder="部门"
+                      auto-complete="off"
+                      clearable
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <!--<el-col :span="6">-->
+            <!--<el-form-item label="下单日期:">-->
+              <!--<el-date-picker-->
+                <!--style="float:left;"-->
+                <!--v-model="filters.selectDate"-->
+                <!--type="daterange"-->
+                <!--align="left"-->
+                <!--unlink-panels-->
+                <!--range-separator="—"-->
+                <!--start-placeholder="开始日期"-->
+                <!--end-placeholder="结束日期"-->
+                <!--:picker-options="pickerOptions"-->
+                <!--clearable-->
+              <!--&gt;</el-date-picker>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+          <el-col :span="8">
+            <el-form-item label="签核完成:">
               <el-date-picker
-                style="float:left;"
-                v-model="filters.selectDate"
-                type="daterange"
-                align="left"
-                unlink-panels
-                range-separator="—"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions"
-                clearable
+                      style="float:left;"
+                      v-model="filters.selectDate"
+                      type="daterange"
+                      align="left"
+                      unlink-panels
+                      range-separator="—"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      :picker-options="pickerOptions"
+                      clearable
               ></el-date-picker>
             </el-form-item>
           </el-col>
 
-          <el-col :span="2" :offset="8">
-            <el-button icon="el-icon-search" size="normal" type="primary" @click="search">查询</el-button>
-          </el-col>
-          <el-col :span="2" :offset="0">
-            <el-button icon="el-icon-share" size="normal" type="danger" @click="onExport">导出</el-button>
-          </el-col>
         </el-row>
       </el-form>
       <el-table
@@ -169,7 +196,8 @@ export default {
         selectDate: '',
         machineTypeName: '',
         contract_num: '',
-        order_num: ''
+        order_num: '',
+        marketGroupName:''
       },
       tableData: [],
       pageSize: EveryPageNum, //每一页的num
@@ -316,10 +344,13 @@ export default {
         customer: _this.filters.customer,
         contract_num: _this.filters.contract_num,
         order_num: _this.filters.orderNum,
-        marketGroupName: '',
+        marketGroupName:  _this.filters.marketGroupName, //部门
         query_start_time: '',
         query_finish_time: '',
+        queryStartTimeSign: '',
+        queryFinishTimeSign: '',
         machine_name: _this.filters.machineTypeName, //这个是机型
+
         //只筛选 审核中、审核完成、拆单 不必再审核、改单 不必再审核。     不包含：已改单，已拆单，已取消，已驳回
         status: ORDER_CHECKING + "," + ORDER_CHECKING_FINISHED + "," + ORDER_SPLIT_FINISHED + "," + ORDER_CHANGE_FINISHED,
         is_fuzzy: true,
@@ -327,19 +358,29 @@ export default {
         size: _this.pageSize
       };
       //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
-      if( _this.userinfo.role.id == 7 || _this.userinfo.role.id == 9){
+      if (_this.userinfo.marketGroupName == '内贸部'  ) {
         condition.marketGroupName = _this.userinfo.marketGroupName;
+      } else if ((_this.userinfo.marketGroupName == '外贸一部' || _this.userinfo.marketGroupName == '外贸二部') &&_this.userinfo.role.id == 7) {   //外贸经理 （目前曹建挺归为外贸二部经理，）
+        condition.marketGroupName = "外贸"; //但是要有整个外贸部的权限
+      } else if (_this.userinfo.marketGroupName == '外贸一部' &&_this.userinfo.role.id == 9) {   //外贸一部销售员
+        condition.marketGroupName = "外贸一部"; //
+      } else if (_this.userinfo.marketGroupName == '外贸二部' &&_this.userinfo.role.id == 9) {   //外贸二部销售员
+        condition.marketGroupName = "外贸二部"; //
+      } else if (_this.userinfo.role.id == 30) {   //外贸总监
+        condition.marketGroupName = "外贸"; //
       }
       if (
         _this.filters.selectDate != null &&
         _this.filters.selectDate.length > 0
       ) {
-        condition.query_start_time = _this.filters.selectDate[0].format(
+        condition.queryStartTimeSign = _this.filters.selectDate[0].format(
           'yyyy-MM-dd'
         );
-        condition.query_finish_time = _this.filters.selectDate[1].format(
+        condition.queryFinishTimeSign = _this.filters.selectDate[1].format(
           'yyyy-MM-dd'
         );
+        //销售报表页面，如果使用了 “签核完成”这个查询时间，则加上条件：订单签核完成
+        condition.oderSignCurrentStep = '签核完成';
       }
       $.ajax({
         url: _this.onSearchDetailDataUrl,
@@ -363,10 +404,11 @@ export default {
         customer: _this.filters.customer,
         contract_num: _this.filters.contract_num,
         order_num: _this.filters.orderNum,
-        marketGroupName: '',
+        marketGroupName:  _this.filters.marketGroupName, //部门
         query_start_time: '',
         query_finish_time: '',
         machine_name: _this.filters.machineTypeName, //这个是机型
+
         //只筛选 审核中、审核完成、拆单 不必再审核、改单 不必再审核。     不包含：已改单，已拆单，已取消，已驳回
         status: ORDER_CHECKING + "," + ORDER_CHECKING_FINISHED + "," + ORDER_SPLIT_FINISHED + "," + ORDER_CHANGE_FINISHED,
         is_fuzzy: true,
@@ -381,12 +423,14 @@ export default {
               _this.filters.selectDate != null &&
               _this.filters.selectDate.length > 0
       ) {
-        condition.query_start_time = _this.filters.selectDate[0].format(
+        condition.queryStartTimeSign = _this.filters.selectDate[0].format(
                 'yyyy-MM-dd'
         );
-        condition.query_finish_time = _this.filters.selectDate[1].format(
+        condition.queryFinishTimeSign = _this.filters.selectDate[1].format(
                 'yyyy-MM-dd'
         );
+        //销售报表页面，如果使用了 “签核完成”这个查询时间，则加上条件：订单签核完成
+        condition.oderSignCurrentStep = '签核完成';
       }
       $.ajax({
         url: HOST + '/machine/order/exportToSaleExcel',

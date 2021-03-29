@@ -1401,10 +1401,21 @@
                 }
                 //marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
                 // 普通销售员的权限也改吗？二部一部相互看？-->不是，不要改， 只有外贸销售部经理要改，即销售部经理，不仅仅是外贸销售一部经理，二部经理，而是销售整个部的经理
-                if( _this.userinfo.role.id == 7){
-                    //   condition.marketGroupName = _this.userinfo.marketGroupName;
-                } else if(  _this.userinfo.role.id == 9) { //外贸销售员，一部二部之间还是保持限制不互看。
+//                if( _this.userinfo.role.id == 7){
+//                    //   condition.marketGroupName = _this.userinfo.marketGroupName;
+//                } else if(  _this.userinfo.role.id == 9) { //外贸销售员，一部二部之间还是保持限制不互看。
+//                    condition.marketGroupName = _this.userinfo.marketGroupName;
+//                }
+                if (_this.userinfo.marketGroupName == '内贸部'  ) {
                     condition.marketGroupName = _this.userinfo.marketGroupName;
+                } else if ((_this.userinfo.marketGroupName == '外贸一部' || _this.userinfo.marketGroupName == '外贸二部') &&_this.userinfo.role.id == 7) {   //外贸经理 （目前曹建挺归为外贸二部经理，）
+                    condition.marketGroupName = "外贸"; //但是要有整个外贸部的权限
+                } else if (_this.userinfo.marketGroupName == '外贸一部' &&_this.userinfo.role.id == 9) {   //外贸一部销售员
+                    condition.marketGroupName = "外贸一部"; //
+                } else if (_this.userinfo.marketGroupName == '外贸二部' &&_this.userinfo.role.id == 9) {   //外贸二部销售员
+                    condition.marketGroupName = "外贸二部"; //
+                } else if (_this.userinfo.role.id == 30) {   //外贸总监
+                    condition.marketGroupName = "外贸"; //
                 }
                 $.ajax({
                     url: HOST + "machine/order/selectOrders",

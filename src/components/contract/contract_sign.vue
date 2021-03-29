@@ -4062,12 +4062,25 @@ export default {
       /**
        * marketGroupName已经改用，作为部门了，只有销售才需要传部门，后端做可见限制。
        * 已改为：一部二部，统一到外贸部经理曹建挺签核，然后到总监骆晓军签核
+       *
+       * 订单属于哪个市场部（仅仅分内贸部，外贸一部，外贸二部，没有“外贸部”）
+       * 查询时， contract.market_group_name的内容有3钟：”内贸部","外贸一部", "外贸二部"
+       *                              如果是内贸经理、内贸销售员：只看内贸订单，查询用词"内贸部“
+       *                              如果是外贸经理：看外贸一部、二部订单，查询用词"外贸“ 两个字，后台会匹配“外贸一部”和“外贸二部”
+       *                              如果是外贸一部销售员：只看外贸一部订单，查询用词"外贸一部“ 4个字
+       *                              如果是外贸二部销售员：只看外贸二部订单，查询用词"外贸二部“ 4个字
+       *                              如果是外贸总监：看外贸一部、二部订单，查询用词"外贸“ 两个字，后台会匹配“外贸一部”和“外贸二部”
        */
-      if (_this.userInfo.role.id == 7 || _this.userInfo.role.id == 9 ) {
+      if (_this.userInfo.marketGroupName == '内贸部'  ) {
         condition.marketGroupName = _this.userInfo.marketGroupName;
-      } else if ( _this.userInfo.role.id == 30) {
-        // workaround
-        condition.marketGroupName = "外贸部";
+       } else if ((_this.userInfo.marketGroupName == '外贸一部' || _this.userInfo.marketGroupName == '外贸二部') &&_this.userInfo.role.id == 7) {   //外贸经理 （目前曹建挺归为外贸二部经理，但是 外贸一部二部都要看）
+        condition.marketGroupName = "外贸"; //但是要有整个外贸部的权限
+      } else if (_this.userInfo.marketGroupName == '外贸一部' &&_this.userInfo.role.id == 9) {   //外贸一部销售员
+        condition.marketGroupName = "外贸一部"; //
+      } else if (_this.userInfo.marketGroupName == '外贸二部' &&_this.userInfo.role.id == 9) {   //外贸二部销售员
+        condition.marketGroupName = "外贸二部"; //
+      } else if (_this.userInfo.role.id == 30) {   //外贸总监
+        condition.marketGroupName = "外贸"; //
       }
       $.ajax({
         url: HOST + "contract/selectContracts",
