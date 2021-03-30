@@ -344,7 +344,8 @@ export default {
         customer: _this.filters.customer,
         contract_num: _this.filters.contract_num,
         order_num: _this.filters.orderNum,
-        marketGroupName:  _this.filters.marketGroupName, //部门
+        marketGroupName:  '',                             //// 这个是自动限制的，根据角色自动限制查看哪些订单可见
+        searchDepartment: _this.filters.marketGroupName,  //// 查询框里输入 查询部门，注意，这个和marketGroupName互不干涉
         query_start_time: '',
         query_finish_time: '',
         queryStartTimeSign: '',
