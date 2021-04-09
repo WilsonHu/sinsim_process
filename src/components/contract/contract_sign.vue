@@ -3698,8 +3698,9 @@ export default {
         discounts = 0;
       } else {
         discounts =
-                parseFloat(item.discounts) * item.machineNum +
-                parseFloat(item.orderTotalDiscounts);
+                parseFloat(item.discounts) * item.machineNum  //每台的优惠
+                + parseFloat(item.orderTotalDiscounts)        //
+                + parseFloat(item.intermediaryPrice) * item.machineNum  ;//每台的居间费用
       }
       return (
         this.calculateMachineTotalPrice(item) * parseFloat(item.machineNum) -
