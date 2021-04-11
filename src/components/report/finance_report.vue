@@ -383,22 +383,24 @@ export default {
     getTotalAmountWithInteger(data) {
       let totalAmount = 0;
       let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
-      //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
+      //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额 -每台的优惠金额
       totalAmount =
               [equipAmount + parseFloat(data.machinePrice)] *
-              parseFloat(data.machineNum) -
-              parseFloat(data.orderTotalDiscounts);
+              parseFloat(data.machineNum)
+              - parseFloat(data.orderTotalDiscounts)
+              - parseFloat(data.discounts) * data.machineNum;
       return  totalAmount ;
     },
 
     getTotalAmount(data) {
       let totalAmount = 0;
       let equipAmount = _this.getEquipmentAmount(data.equipment); //装置总金额
-      //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额
+      //总金额=（装置总金额+机器单价）* 机器数量-优惠总金额 -每台的优惠金额
       totalAmount =
         [equipAmount + parseFloat(data.machinePrice)] *
-        parseFloat(data.machineNum) -
-        parseFloat(data.orderTotalDiscounts);
+        parseFloat(data.machineNum)
+        - parseFloat(data.orderTotalDiscounts)
+        - parseFloat(data.discounts) * data.machineNum;
       return number_format(totalAmount, 2, '.', ' ');
     },
 

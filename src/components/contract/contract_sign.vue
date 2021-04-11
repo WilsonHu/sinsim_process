@@ -3692,6 +3692,9 @@ export default {
         : 0;
     },
 
+// 订单总价： 不包括 居间费，即订单总价和居间费无关，不需要加上。 其他的比如业务费。保修费都不被包含，这些通常是一个百分比数。
+// 订单总价： 要减去每台的优惠金额
+// 订单总价： 要减去订单的总优惠金额
     calculateOrderTotalPrice(item) {
       let discounts = 0;
       if (item.status == ORDER_CHANGED || item.status == ORDER_CANCELED) {
@@ -3699,12 +3702,12 @@ export default {
       } else {
         discounts =
                 parseFloat(item.discounts) * item.machineNum  //每台的优惠
-                + parseFloat(item.orderTotalDiscounts)        //
-                + parseFloat(item.intermediaryPrice) * item.machineNum  ;//每台的居间费用
+                + parseFloat(item.orderTotalDiscounts);        //总价再优惠
       }
       return (
         this.calculateMachineTotalPrice(item) * parseFloat(item.machineNum) -
         parseFloat(discounts)
+//        + parseFloat(item.intermediaryPrice) * item.machineNum   //每台的居间费用
       );
     },
 
