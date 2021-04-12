@@ -106,6 +106,8 @@
           <template scope="scope">{{scope.$index+startRow}}</template>
         </el-table-column>
         <el-table-column align="center" prop="contractNum" min-width="85" label="合同号"></el-table-column>
+        <el-table-column align="center" prop="country" min-width="85" label="国家"></el-table-column>
+        <el-table-column align="center" prop="domesticTradeZone" min-width="85" label="区域"></el-table-column>
         <el-table-column align="center" min-width="110" prop="customer" label="客户"></el-table-column>
         <el-table-column align="center" label="订单号" min-width="145">
           <template scope="scope">
@@ -132,7 +134,7 @@
             >{{equip.name}}:{{equip.number}}个</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="装置金额" width="80">
+        <el-table-column align="center" label="装置总价" width="80">
           <template scope="scope">
             <span>{{getEquipmentAmount(scope.row.equipment)|filterNumberFormat}}</span>
           </template>
@@ -144,23 +146,33 @@
         </el-table-column>
         <el-table-column align="center" prop="machineNum" label="机器台数"></el-table-column>
         <el-table-column align="center" prop="orderTotalDiscounts" label="优惠金额" width="80" />
-        <el-table-column align="center" label="订单总价" width="100">
+        <el-table-column align="center" label="订单总价(美元)" width="120">
           <template scope="scope">
-            <span>{{getTotalAmount(scope.row)}}</span>
+            <span  v-if="scope.row.currencyType=='美元'">  {{getTotalAmount(scope.row)}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="currencyType" label="币种" />
+        <el-table-column align="center" label="订单总价(人民币)" width="130">
+          <template scope="scope">
+            <span  v-if="scope.row.currencyType=='人民币'">  {{getTotalAmount(scope.row)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="订单总价(欧元)" width="120">
+          <template scope="scope">
+            <span  v-if="scope.row.currencyType=='欧元'">  {{getTotalAmount(scope.row)}}</span>
+          </template>
+        </el-table-column>
+        <!--<el-table-column align="center" prop="currencyType" label="币种" />-->
         <el-table-column align="center" prop="businessExpense" label="业务费" />
-        <el-table-column align="center" label="毛利率" min-width="145">
+        <el-table-column align="center" label="毛利率" min-width="125">
           <template scope="scope">
             <span>{{scope.row.grossProfit}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="orderType" label="订单类型" />
         <el-table-column align="center" prop="warrantyFee" label="保修费" />
-        <el-table-column align="center" prop=" " label="填表日期">
+        <el-table-column align="center" prop=" " label="签核完成日期">
         <template scope="scope">
-          <span>{{scope.row.createTime|filterDateString}}</span>
+          <span>{{scope.row.orderSign.updateTime|filterDateString}}</span>
         </template>
       </el-table-column>
 
@@ -207,7 +219,10 @@ export default {
       totalEquipmentsAtThisPage: 0, //注意：后续这些都是本页的数据，不是全部，不包括其他页
       totalMachineNumAtThisPage: 0,   //本页台数
       totalDiscountsAtThisPage: 0,    //本页优惠
-      totalAmountAtThisPage: 0,    //本页总价
+      totalAmountUSDAtThisPage: 0,    //本页总价-美元
+      totalAmountRMBAtThisPage: 0,    //本页总价-人民币
+      totalAmountEURAtThisPage: 0,    //本页总价-欧元
+      totalEquipmentsNumberAtThisPage: 0, //本页装置数量总计
       loadingUI: false,
       pickerOptions: {
         shortcuts: [
@@ -243,6 +258,7 @@ export default {
     };
   },
   methods: {
+    //该订单装置的价格总价
     getEquipmentAmount(strData) {
       let dataArray = _this.getEquipmentFromJSON(strData);
       var res = 0;
@@ -252,16 +268,34 @@ export default {
       return res;
     },
 
+    //该订单的装置的数量总计
+    getEquipmentNumberAmount(strData) {
+      let dataArray = _this.getEquipmentFromJSON(strData);
+      var res = 0;
+      for (var i = 0; i < dataArray.length; i++) {
+        res +=  dataArray[i].number;
+      }
+      return res;
+    },
     //计算当前页的各种总计
     calculateTotal(){
       var tmp1 = 0;
 
-      //计算装备
+      //计算装备总 价
       for (var i = 0; i <_this.tableData.length; i++)
       {
         tmp1 += this.getEquipmentAmount(_this.tableData[i].equipment);
       }
       _this.totalEquipmentsAtThisPage = tmp1;
+
+      //计算装备数量总 计
+      tmp1 = 0;
+      for (var i = 0; i <_this.tableData.length; i++)
+      {
+        tmp1 += this.getEquipmentNumberAmount(_this.tableData[i].equipment);
+      }
+      _this.totalEquipmentsNumberAtThisPage = tmp1;
+
 
       tmp1 = 0;
       //计算机器台数
@@ -279,13 +313,25 @@ export default {
       }
       _this.totalDiscountsAtThisPage = tmp1;
 
-      tmp1 = 0;
-      //计算 总价
+      var tmpUSD = 0;
+      var tmpRMB = 0;
+      var tmpEUR = 0;
+      //计算 总价-美元/人民币/欧元
       for (var i = 0; i <_this.tableData.length; i++)
       {
-        tmp1 += _this.getTotalAmountWithInteger(_this.tableData[i]) ;//_this.tableData[i].equipment;
+        if(_this.tableData[i].currencyType =='美元') {
+          tmpUSD += _this.getTotalAmountWithInteger(_this.tableData[i]);
+        }
+        if(_this.tableData[i].currencyType =='人民币') {
+          tmpRMB += _this.getTotalAmountWithInteger(_this.tableData[i]);
+        }
+        if(_this.tableData[i].currencyType =='欧元') {
+          tmpEUR += _this.getTotalAmountWithInteger(_this.tableData[i]);
+        }
       }
-      _this.totalAmountAtThisPage = tmp1;
+      _this.totalAmountUSDAtThisPage = tmpUSD;
+      _this.totalAmountRMBAtThisPage = tmpRMB;
+      _this.totalAmountEURAtThisPage = tmpEUR;
 
     },
 
@@ -327,11 +373,15 @@ export default {
       sums[0] = '合计';
       sums[1] = '总数：';
       sums[2] = _this.totalRecords;
-      sums[5] = '后面是本页数据：';
-      sums[6] = _this.totalEquipmentsAtThisPage;
-      sums[8] = _this.totalMachineNumAtThisPage;
-      sums[9] = _this.totalDiscountsAtThisPage;
-      sums[10] = _this.totalAmountAtThisPage;
+      sums[6] = '后面是本页数据：';
+      sums[7] = _this.totalEquipmentsNumberAtThisPage;
+      sums[8] = _this.totalEquipmentsAtThisPage;
+      sums[10] = _this.totalMachineNumAtThisPage;
+      sums[11] = _this.totalDiscountsAtThisPage;
+      sums[12] = _this.totalAmountUSDAtThisPage;
+      sums[13] = _this.totalAmountRMBAtThisPage;
+      sums[14] = _this.totalAmountEURAtThisPage;
+
       return sums;
     },
     handleCurrentChange(val) {
