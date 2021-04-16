@@ -2274,6 +2274,11 @@
 //                }
                 ///2020-0303 销售组 改为 部门，代码里名称不改。
                 _this.lxdForm.contactForm.applicantDepartment = this.userInfo.marketGroupName;
+                //外贸总监 特殊 （外贸总监不属于一部、二部，联系单按一部处理）
+                if(this.userInfo.role.roleName == '外贸总监'){
+                    _this.lxdForm.contactForm.applicantDepartment = "外贸一部";
+                }
+
                 _this.lxdForm.contactForm.applicantPerson = this.userInfo.account;
                 _this.lxdForm.contactForm.contactType = _this.lxdTypes[0];
                 //_this.lxdForm.contactForm.createDate = new Date().format('yyyy-MM-dd hh:mm:ss');
@@ -2373,6 +2378,11 @@
                         break;
 
                 }
+                //外贸总监 特殊,还是归为外贸一部
+                if(this.userInfo.role.roleName == '外贸总监'){
+                    department = "外1";
+                }
+
                 //流水号： 部门和年份为单位 比如 外1-20-111 表示 外贸一部 2020年 第111个联系单
                 //为允许多个联系单同时在编辑，把流水号后端放在生成。也避免了点击了新建联系单但是又没保存的情况
                 //部门代表字 + 年份（2位） + 部门内部流水号
