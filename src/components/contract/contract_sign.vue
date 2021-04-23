@@ -4081,8 +4081,10 @@ export default {
         condition.marketGroupName = "外贸"; //但是要有整个外贸部的权限
       } else if (_this.userInfo.marketGroupName == '外贸一部' &&_this.userInfo.role.id == 9) {   //外贸一部销售员
         condition.marketGroupName = "外贸一部"; //
+//        condition.marketGroupName = "外贸"; // 外贸一部二部之间，骆说了不能互看
       } else if (_this.userInfo.marketGroupName == '外贸二部' &&_this.userInfo.role.id == 9) {   //外贸二部销售员
         condition.marketGroupName = "外贸二部"; //
+//        condition.marketGroupName = "外贸"; //  外贸一部二部之间，骆说了不能互看
       } else if (_this.userInfo.role.id == 30) {   //外贸总监
         condition.marketGroupName = "外贸"; //
       }
@@ -4938,9 +4940,11 @@ export default {
               : "";
 
           //外贸总监
+          //那就是骆还是算一部，但是他跟傅两人都能看到全部的订单
+          //骆的订单是算一部的，在以后查询销售报表统计的时候也是算在一部的
           if(_this.userInfo.role.id == 30) {
             // workaround
-            _this.contractForm.marketGroupName = "外贸部";
+            _this.contractForm.marketGroupName = "外贸一部";
           }
         }
 
