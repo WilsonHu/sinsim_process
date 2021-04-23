@@ -1412,6 +1412,10 @@
                     condition.marketGroupName = "外贸"; //但是要有整个外贸部的权限
                 } else if (_this.userinfo.marketGroupName == '外贸一部' &&_this.userinfo.role.id == 9) {   //外贸一部销售员
                     condition.marketGroupName = "外贸一部"; //
+                    //傅筱玲 她作为一部销售员，也要看到二部订单
+                    if(_this.userinfo.account == '傅筱玲'){
+                        condition.marketGroupName = "外贸";
+                    }
                 } else if (_this.userinfo.marketGroupName == '外贸二部' &&_this.userinfo.role.id == 9) {   //外贸二部销售员
                     condition.marketGroupName = "外贸二部"; //
                 } else if (_this.userinfo.role.id == 30) {   //外贸总监

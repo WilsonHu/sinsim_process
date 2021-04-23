@@ -4080,8 +4080,11 @@ export default {
        } else if ((_this.userInfo.marketGroupName == '外贸一部' || _this.userInfo.marketGroupName == '外贸二部') &&_this.userInfo.role.id == 7) {   //外贸经理 （目前曹建挺归为外贸二部经理，但是 外贸一部二部都要看）
         condition.marketGroupName = "外贸"; //但是要有整个外贸部的权限
       } else if (_this.userInfo.marketGroupName == '外贸一部' &&_this.userInfo.role.id == 9) {   //外贸一部销售员
-        condition.marketGroupName = "外贸一部"; //
-//        condition.marketGroupName = "外贸"; // 外贸一部二部之间，骆说了不能互看
+        condition.marketGroupName = "外贸一部"; // "外贸"; // 外贸一部二部之间，骆说了不能互看
+        // 傅筱玲 她作为一部销售员，也要看到二部订单
+        if(_this.userInfo.account == '傅筱玲'){
+          condition.marketGroupName = "外贸";
+        }
       } else if (_this.userInfo.marketGroupName == '外贸二部' &&_this.userInfo.role.id == 9) {   //外贸二部销售员
         condition.marketGroupName = "外贸二部"; //
 //        condition.marketGroupName = "外贸"; //  外贸一部二部之间，骆说了不能互看
