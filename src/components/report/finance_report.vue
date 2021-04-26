@@ -48,7 +48,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="更新日期:">
+            <el-form-item label="签核完成:">
               <el-date-picker
                       style="float:left;"
                       v-model="filters.selectDateSign"
@@ -287,7 +287,7 @@ export default {
         //machineLength: '',
         sellman: '',
         selectDate: "",     //这个查 创建日期
-        selectDateSign: ""  //这个查 签核更新日期
+        selectDateSign: ""  //这个查 签核完成日期
       },
       tableData: [],
       pageSize: EveryPageNum, //每一页的num
@@ -463,24 +463,19 @@ export default {
               _this.filters.selectDate != null &&
               _this.filters.selectDate.length > 0
       ) {
-        condition.query_start_time = _this.filters.selectDate[0].format(
-                "yyyy-MM-dd"
-        );
-        condition.query_finish_time = _this.filters.selectDate[1].format(
-                "yyyy-MM-dd"
-        );
+        condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
+        condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
       }
 
       if (
               _this.filters.selectDateSign != null &&
               _this.filters.selectDateSign.length > 0
       ) {
-        condition.queryStartTimeSign = _this.filters.selectDateSign[0].format(
-                "yyyy-MM-dd"
+        condition.queryStartTimeSign = _this.filters.selectDateSign[0].format("yyyy-MM-dd"
         );
-        condition.queryFinishTimeSign = _this.filters.selectDateSign[1].format(
-                "yyyy-MM-dd"
-        );
+        condition.queryFinishTimeSign = _this.filters.selectDateSign[1].format("yyyy-MM-dd");
+        //财务报表页面，如果使用了 “签核完成”这个查询时间，则加上条件：订单签核完成
+        condition.oderSignCurrentStep = '签核完成';
       }
       $.ajax({
         url: _this.onSearchDetailDataUrl,
@@ -515,12 +510,8 @@ export default {
               _this.filters.selectDate != null &&
               _this.filters.selectDate.length > 0
       ) {
-        condition.query_start_time = _this.filters.selectDate[0].format(
-                "yyyy-MM-dd"
-        );
-        condition.query_finish_time = _this.filters.selectDate[1].format(
-                "yyyy-MM-dd"
-        );
+        condition.query_start_time = _this.filters.selectDate[0].format("yyyy-MM-dd");
+        condition.query_finish_time = _this.filters.selectDate[1].format("yyyy-MM-dd");
       }
 
       if (
@@ -533,6 +524,8 @@ export default {
         condition.queryFinishTimeSign = _this.filters.selectDateSign[1].format(
                 "yyyy-MM-dd"
         );
+        //销售报表页面，如果使用了 “签核完成”这个查询时间，则加上条件：订单签核完成
+        condition.oderSignCurrentStep = '签核完成';
       }
       $.ajax({
         url: HOST + '/machine/order/exportToFinaceExcel',

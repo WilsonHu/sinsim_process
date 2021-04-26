@@ -431,12 +431,8 @@ export default {
         _this.filters.selectDate != null &&
         _this.filters.selectDate.length > 0
       ) {
-        condition.queryStartTimeSign = _this.filters.selectDate[0].format(
-          'yyyy-MM-dd'
-        );
-        condition.queryFinishTimeSign = _this.filters.selectDate[1].format(
-          'yyyy-MM-dd'
-        );
+        condition.queryStartTimeSign = _this.filters.selectDate[0].format('yyyy-MM-dd');
+        condition.queryFinishTimeSign = _this.filters.selectDate[1].format('yyyy-MM-dd');
         //销售报表页面，如果使用了 “签核完成”这个查询时间，则加上条件：订单签核完成
         condition.oderSignCurrentStep = '签核完成';
       }
@@ -493,12 +489,8 @@ export default {
               _this.filters.selectDate != null &&
               _this.filters.selectDate.length > 0
       ) {
-        condition.queryStartTimeSign = _this.filters.selectDate[0].format(
-                'yyyy-MM-dd'
-        );
-        condition.queryFinishTimeSign = _this.filters.selectDate[1].format(
-                'yyyy-MM-dd'
-        );
+        condition.queryStartTimeSign = _this.filters.selectDate[0].format('yyyy-MM-dd');
+        condition.queryFinishTimeSign = _this.filters.selectDate[1].format('yyyy-MM-dd');
         //销售报表页面，如果使用了 “签核完成”这个查询时间，则加上条件：订单签核完成
         condition.oderSignCurrentStep = '签核完成';
       }
