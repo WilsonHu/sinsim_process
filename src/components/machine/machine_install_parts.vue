@@ -167,6 +167,15 @@
                                             @click="showDetailItem(scope.row)">
                                     </el-button>
                             </el-tooltip>
+                                <el-tooltip placement="top">
+                                    <div slot="content">删除计划</div>
+                                    <el-button
+                                            size="mini"
+                                            type="danger"
+                                            icon="el-icon-delete"
+                                            @click="toDeletePlanConfirm(scope.row)">
+                                    </el-button>
+                                </el-tooltip>
 
                         </template>
                     </el-table-column>
@@ -497,6 +506,14 @@
             </span >
 
         </el-dialog >
+
+        <el-dialog title="提示" :visible.sync="deletePlanDialogVisible" width="25%">
+            <span style="font-size: 16px">确认要删除<b>{{deleteData.nameplate}}</b>的<b>{{deleteData.groupName}}</b>  作业计划？</span>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="deletePlanDialogVisible = false" icon="el-icon-close">取 消</el-button>
+            <el-button type="primary" @click="deletePlan()" icon="el-icon-check">确 定</el-button>
+          </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -587,6 +604,9 @@
                 itemDetailForm: {},
 
                 allOrderList:[],
+
+                deletePlanDialogVisible: false,
+                deleteData: "",
             }
 
         },
@@ -1107,6 +1127,32 @@
             },
             formatDate(timeStamp) {
                 return new Date(timeStamp).format("yyyy-MM-dd");
+            },
+
+            toDeletePlanConfirm(data) {
+                this.deleteData = data;
+                this.deletePlanDialogVisible = true;
+            },
+
+            deletePlan() {
+                $.ajax({
+                    url: HOST + "install/plan/delete",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {id: _this.deleteData.id},
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.onSearchDetailData(); 
+                            showMessage(_this, "删除计划成功！", 1);
+                        } else {
+                            showMessage(_this, "删除计划失败！", 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, data.message, 0);
+                    }
+                })
+                this.deletePlanDialogVisible = false;
             },
         },
 
