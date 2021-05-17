@@ -225,6 +225,17 @@
                         </el-select >
                     </el-form-item >
                 </el-col >
+                <el-col :span="6" >
+                    <el-form-item label="消息推送："  :label-width="formLabelWidth">
+                        <el-select v-model="form.acceptWxMsg" @change="onChange">
+                            <el-option
+                                    v-for="item in acceptWxMsg"
+                                    v-bind:value="item.acceptWxMsg"
+                                    v-bind:label="item.name" >
+                            </el-option >
+                        </el-select >
+                    </el-form-item >
+                </el-col >
             </el-form >
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                       :title="errorMsg"
@@ -304,6 +315,17 @@
                         </el-select >
                     </el-form-item >
                 </el-col >
+                <el-col :span="6" >
+                    <el-form-item label="消息推送："  :label-width="formLabelWidth">
+                        <el-select v-model="modifyForm.acceptWxMsg" @change="onChange">
+                            <el-option
+                                    v-for="item in acceptWxMsg"
+                                    v-bind:value="item.acceptWxMsg"
+                                    v-bind:label="item.name" >
+                            </el-option >
+                        </el-select >
+                    </el-form-item >
+                </el-col >
             </el-form >
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                       :title="errorMsg"
@@ -357,6 +379,7 @@
 					groupId: "",
                     marketGroupName:"",
                     valid:1,
+                    acceptWxMsg:"",
                     extranetPermit:0,
                 },
 			    formLabelWidth: '100px',
@@ -373,6 +396,7 @@
                     groupId: "",
                     marketGroupName:"",
                     valid:"",
+                    acceptWxMsg:"",
                     extranetPermit:0
 			    },
 			    filters: {
@@ -386,6 +410,7 @@
                 allGroups: [],
                 allMarketGroups: [],
                 valid: [{"valid":1, "name":"在职"},{"valid":0, "name":"离职"}],
+                acceptWxMsg: [{"acceptWxMsg":1, "name":"推送"},{"acceptWxMsg":0, "name":"不推送"}],
 			    loadingUI: false,
 		    }
 	    },
@@ -462,6 +487,8 @@
                 this.modifyForm.password =  "";
                 this.modifyForm.confirmpwd =  "";
                 this.modifyForm.valid =  item.valid;
+                this.modifyForm.acceptWxMsg =  item.acceptWxMsg;
+
                 this.modifyForm.extranetPermit =  item.extranetPermit;
                 this.isError = this.validateForm(this.modifyForm, true);
 			    this.modifyDialogVisible = true;
