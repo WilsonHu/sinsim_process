@@ -58,7 +58,7 @@
                                     icon="el-icon-search"
                                     size="normal"
                                     type="primary"
-                                    @click="searchPlaned">查询
+                                    @click="onSearchPlanedData">查询
                             </el-button>
                         </el-col>
                         <el-col :span="1" :offset="1">
@@ -235,7 +235,7 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            label="操作" width="60">
+                            label="操作" width="120">
                         <template scope="scope">
                             <el-tooltip placement="top">
                                 <div slot="content">删除计划</div>
@@ -246,7 +246,16 @@
                                         icon="el-icon-delete"
                                         @click="toDeletePlanConfirm(scope.row)">
                                 </el-button>
-                            </el-tooltip>
+                            </el-tooltip><el-tooltip placement="top">
+                            <div slot="content">修改日期</div>
+                            <el-button
+                                    size="mini"
+                                    type="primary"
+                                    v-show="scope.row.status == 1 || scope.row.status == 2"
+                                    icon="el-icon-edit"
+                                    @click="editWithItem(scope.row)">
+                            </el-button>
+                        </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -307,7 +316,7 @@
                                     icon="el-icon-search"
                                     size="normal"
                                     type="primary"
-                                    @click="search">查询
+                                    @click="onSearchPlanningData">查询
                             </el-button>
                         </el-col>
                     </el-row>
@@ -627,6 +636,44 @@
                 </el-row>
             </el-row>
         </el-dialog>
+
+        <el-dialog title="修改计划日期" :visible.sync="modifyDialogVisible" append-to-body width="70%">
+            <el-form :model="modifyForm" >
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="机器铭牌号：" :label-width="formLabelWidth">
+                            <!--<el-input v-model="modifyForm.machine.nameplate"  disabled >-->
+                            <!--</el-input>-->
+                            <el-input type="text"
+                                      v-model="modifyForm.machine.nameplate"
+                                      style="width:100%"
+                                      disabled>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="工序：" :label-width="formLabelWidth">
+                            <el-input v-model="modifyForm.taskName"  disabled >
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="日期：" :label-width="formLabelWidth">
+                            <el-date-picker
+                                    v-model="modifyForm.taskPlan.planTime"
+                                    type="date"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form >
+            <span slot="footer" class="dialog-footer" style="margin-bottom: 20px; padding-top:30px;" >
+                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
+                <el-button type="primary" @click="onModify" icon="el-icon-check">保 存</el-button >
+            </span >
+
+        </el-dialog >
     </el-main>
 </template>
 
@@ -748,10 +795,54 @@
                         }
                     }]
                 },
+                //修改
+                modifyForm: {
+                    id: "",
+                    machine: {
+                        nameplate: ""
+                    },
+                        taskName: "" ,
+                    taskPlan:{
+                        id:"",
+                        taskRecordId:"",
+                        planType:"",
+                        planTime:"",
+                        deadline:"",
+                        userId:"",
+                        createTime:"",
+                        updateTime:""
+                    }
+                },
+                selectedItem: {},
+                modifyDialogVisible: false,
             }
 
         },
         methods: {
+            onModify() {
+                $.ajax({
+                    url: HOST + "task/plan/update",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        "taskPlan": JSON.stringify(_this.modifyForm.taskPlan)
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.modifyDialogVisible = false;
+                            _this.onSearchPlanedData();
+                            _this.onSearchPlanningData();
+                            showMessage(_this, '修改成功', 1);
+                        } else {
+                            _this.isError = true;
+                            _this.errorMsg = data.message;
+                        }
+                    },
+                    error: function (data) {
+                        _this.errorMsg = '服务器访问出错！';
+                    }
+                })
+            },
             exportData() {
                 var condition = {
                     orderNum: _this.planedFilters.orderNum,
@@ -791,6 +882,13 @@
                         showMessage(_this, data.message, 0);
                     }
                 })
+            },
+
+            editWithItem(data) {
+                _this.selectedItem = copyObject(data);
+                _this.isError = false;
+                _this.modifyForm =  copyObject(_this.selectedItem);
+                this.modifyDialogVisible = true;
             },
             toDeletePlanConfirm(data) {
                 this.deleteData = data;
@@ -918,8 +1016,8 @@
                     }
                 });
             },
-            addTaskPlans() {
 
+            addTaskPlans() {
                 let addedTasks = [];
                 if (this.planForm.planType == 1) {
                     //日计划,保存task_record的ID值
@@ -967,12 +1065,6 @@
             },
             handleCurrentChangePlaned(val) {
                 this.currentPagePlaned = val;
-                this.onSearchPlanedData();
-            },
-            search() {
-                this.onSearchPlanningData();
-            },
-            searchPlaned() {
                 this.onSearchPlanedData();
             },
             onSearchPlanningData(){
