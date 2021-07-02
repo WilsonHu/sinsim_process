@@ -1,6 +1,7 @@
 //Server root address
-//var IP = "http://127.0.0.1";
-//var IP = "http://115.231.6.43";
+ var IP = "http://127.0.0.1";
+// var IP = "http://115.231.6.43";
+// var IP = "http://8.130.50.136";
 //var IP = "http://47.101.141.182";
  var HOST = IP + ":8004/";//#是为了在本地方便和售后端联调，售后用的是8080，生产部用的是8004
 //var HOST = IP + ":8111/";

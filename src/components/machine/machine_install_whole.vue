@@ -225,7 +225,7 @@
                         </el-form-item >
                     </el-col >
                     <el-col :span="4" >
-                        <el-form-item label="针数："  :label-width="formLabelWidthSmall">
+                        <el-form-item label="平绣针数："  :label-width="formLabelWidthSmall">
                             <el-input v-model="addForm.needleNum" @change="onChange" clearable></el-input>
                         </el-form-item >
                     </el-col >
@@ -285,7 +285,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                    label="针数" align="center" width="60">
+                                    label="平绣针数" align="center" width="60">
                                 <template slot-scope="scope">
                                     {{ scope.row.needleNum}}
                                 </template>
@@ -556,7 +556,7 @@
 
                 if (!iserror && isStringEmpty(formObj.needleNum)) {
                     iserror = true;
-                    this.errorMsg = "针数不能为空";
+                    this.errorMsg = "平绣针数不能为空";
                 }
                 if (!iserror && formObj.headNum == "") {
                     iserror = true;

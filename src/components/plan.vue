@@ -564,7 +564,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="3" :offset="0">
-                    <el-form-item label="针数:">
+                    <el-form-item label="平绣针数:">
                         <span style="font-size: 15px">{{machineDoPlaning.needleNum }}</span>
                     </el-form-item>
                 </el-col> 

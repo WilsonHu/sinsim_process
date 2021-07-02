@@ -896,7 +896,7 @@
                       </el-col>
                       <el-col :span="6">
                         <el-form-item
-                          label="针数："
+                          label="平绣针数："
                           :label-width="formLabelWidth"
                           :class="classWithDifferentValue(item, 'needleNum', false)"
                         >
@@ -984,7 +984,7 @@
                     <div class="panel-body">
                       <el-col :span="6">
                         <el-form-item
-                          label="色数："
+                          label="毛巾色数："
                           :label-width="formLabelWidth"
                           :class="classWithDifferentValue(item, 'specialTowelColor', true)"
                         >
@@ -4605,7 +4605,7 @@ export default {
       }
       if (!iserror && isStringEmpty(formObj.machineOrder.needleNum)) {
         iserror = true;
-        this.errorMsg = "请填写针数";
+        this.errorMsg = "请填写平绣针数";
       }
       if (!iserror && isStringEmpty(formObj.machineOrder.headNum)) {
         iserror = true;
@@ -4626,7 +4626,7 @@ export default {
 
       if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelColor)) {
         iserror = true;
-        this.errorMsg = "色数不能为空";
+        this.errorMsg = "毛巾色数不能为空";
       }
       if (!iserror && isStringEmpty(formObj.orderDetail.specialTowelDaxle)) {
         iserror = true;

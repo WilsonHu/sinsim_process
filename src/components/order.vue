@@ -466,7 +466,7 @@
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6" :offset="0">
-                                    <el-form-item label="针数：" :label-width="formLabelWidth">
+                                    <el-form-item label="平绣针数：" :label-width="formLabelWidth">
                                         <el-input style="float: left;"
                                                   readonly
                                                  v-model="form.needleNum">
@@ -517,7 +517,7 @@
                             </div>
                             <div class="panel-body">
                                 <el-col :span="6">
-                                    <el-form-item label="色数：" :label-width="formLabelWidth">
+                                    <el-form-item label="毛巾色数：" :label-width="formLabelWidth">
                                         <el-select
                                                 readonly
                                                 style="width: 100%"
