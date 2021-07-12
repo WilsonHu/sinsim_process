@@ -418,10 +418,12 @@ export default {
           condition.marketGroupName = _this.userinfo.marketGroupName;
         } else if ((_this.userinfo.marketGroupName == '外贸一部' || _this.userinfo.marketGroupName == '外贸二部') &&_this.userinfo.role.id == 7) {   //外贸经理 （目前曹建挺归为外贸二部经理，）
           condition.marketGroupName = "外贸"; //但是要有整个外贸部的权限
-        } else if (_this.userinfo.marketGroupName == '外贸一部' &&_this.userinfo.role.id == 9) {   //外贸一部销售员
-          condition.marketGroupName = "外贸一部"; //
+        } else if (_this.userinfo.marketGroupName == '外贸一部' &&_this.userinfo.role.id == 9) {   //外贸一部销售员 --
+//          condition.marketGroupName = "外贸一部"; //
+          condition.marketGroupName = "外贸"; //已改，外贸一部 二部统一了,相互能看
         } else if (_this.userinfo.marketGroupName == '外贸二部' &&_this.userinfo.role.id == 9) {   //外贸二部销售员
-          condition.marketGroupName = "外贸二部"; //
+//          condition.marketGroupName = "外贸二部"; //
+          condition.marketGroupName = "外贸"; //已改，外贸一部 二部统一了,相互能看
         } else if (_this.userinfo.role.id == 30) {   //外贸总监
           condition.marketGroupName = "外贸"; //
         }
